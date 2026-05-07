@@ -32,241 +32,157 @@ body {
 }
 
 .prog-wrap {
-  background: #F0EDE8;
-  height: 13px;
-  border-radius: 7px;
-  margin: 12px 18px 0;
-  overflow: hidden;
+  background: #F0EDE8; height: 13px; border-radius: 7px;
+  margin: 12px 18px 0; overflow: hidden;
 }
 .prog-fill {
   height: 100%;
   background: linear-gradient(90deg, #f7971e, #ffd200);
-  border-radius: 7px;
-  transition: width .55s ease;
+  border-radius: 7px; transition: width .55s ease;
 }
-.prog-label {
-  text-align: center;
-  font-size: 12px;
-  color: #aaa;
-  margin: 3px 0 0;
-}
+.prog-label { text-align: center; font-size: 12px; color: #aaa; margin: 3px 0 0; }
 
 .screen {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 14px 18px 20px;
-  animation: fadeIn .35s ease;
-  gap: 10px;
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; padding: 14px 18px 20px;
+  animation: fadeIn .35s ease; gap: 10px;
 }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0);   }
 }
 
+/* Welcome */
 .wt {
-  font-size: 40px;
-  font-weight: bold;
-  text-align: center;
-  line-height: 1.2;
+  font-size: 38px; font-weight: bold; text-align: center; line-height: 1.2;
   background: linear-gradient(135deg, #f7971e, #f64f59);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-.ws { font-size: 19px; color: #888; text-align: center; }
+.ws { font-size: 17px; color: #888; text-align: center; }
 
+/* Name input */
 .name-wrap { text-align: center; }
 .name-wrap label { display: block; font-size: 17px; color: #666; margin-bottom: 6px; }
 .name-input {
-  font-family: inherit;
-  font-size: 20px;
-  padding: 10px 18px;
-  border: 3px solid #FFD200;
-  border-radius: 50px;
-  outline: none;
-  width: 215px;
-  text-align: center;
-  color: #333;
-  background: #FFFEF7;
+  font-family: inherit; font-size: 20px; padding: 10px 18px;
+  border: 3px solid #FFD200; border-radius: 50px; outline: none;
+  width: 215px; text-align: center; color: #333; background: #FFFEF7;
 }
-.name-input:focus {
-  border-color: #F7971E;
-  box-shadow: 0 0 0 4px rgba(247,151,30,.15);
-}
+.name-input:focus { border-color: #F7971E; box-shadow: 0 0 0 4px rgba(247,151,30,.15); }
 
+/* Buttons */
 .btn {
-  font-family: inherit;
-  font-size: 18px;
-  font-weight: bold;
-  border: none;
-  border-radius: 50px;
-  padding: 12px 28px;
-  cursor: pointer;
-  transition: transform .1s, box-shadow .1s;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
+  font-family: inherit; font-size: 18px; font-weight: bold;
+  border: none; border-radius: 50px; padding: 12px 28px;
+  cursor: pointer; transition: transform .1s, box-shadow .1s;
+  display: inline-flex; align-items: center; gap: 7px;
   box-shadow: 0 4px 12px rgba(0,0,0,.15);
   -webkit-tap-highlight-color: transparent;
 }
 .btn:active  { transform: scale(.95); }
 .btn:disabled { opacity: .45; cursor: not-allowed; }
-
 .btn-primary   { background: linear-gradient(135deg,#f7971e,#ffd200); color: white; }
 .btn-secondary { background: #F0EDE8; color: #555; font-size: 15px; padding: 9px 20px; }
 .btn-audio     { background: linear-gradient(135deg,#4776e6,#8e54e9); color: white; font-size: 16px; padding: 10px 22px; }
 
+/* Answer buttons — column layout with face + label */
 .btn-green {
-  background: linear-gradient(135deg,#56ab2f,#a8e063);
-  color: white;
-  font-size: 24px;
-  padding: 18px 0;
+  background: linear-gradient(135deg,#56ab2f,#a8e063); color: white;
+  font-size: 22px; padding: 12px 20px;
   box-shadow: 0 6px 20px rgba(86,171,47,.4);
-  flex: 1;
-  max-width: 190px;
-  justify-content: center;
+  flex: 1; max-width: 170px;
+  justify-content: center; flex-direction: column; gap: 5px; border-radius: 20px;
 }
 .btn-red {
-  background: linear-gradient(135deg,#eb3349,#f45c43);
-  color: white;
-  font-size: 24px;
-  padding: 18px 0;
+  background: linear-gradient(135deg,#eb3349,#f45c43); color: white;
+  font-size: 22px; padding: 12px 20px;
   box-shadow: 0 6px 20px rgba(235,51,73,.4);
-  flex: 1;
-  max-width: 190px;
-  justify-content: center;
+  flex: 1; max-width: 170px;
+  justify-content: center; flex-direction: column; gap: 5px; border-radius: 20px;
 }
 
+/* Face animations on answer buttons */
+.ans-face { display: block; width: 54px; height: 54px; margin: 0 auto; }
+.btn-green .ans-face { animation: faceBounce 1.1s ease-in-out infinite; }
+.btn-red   .ans-face { animation: faceWiggle 1.7s ease-in-out infinite; }
+
+@keyframes faceBounce {
+  0%,100% { transform: translateY(0)    scale(1);    }
+  45%     { transform: translateY(-8px) scale(1.09); }
+}
+@keyframes faceWiggle {
+  0%,100% { transform: rotate(0deg);   }
+  20%     { transform: rotate(-10deg); }
+  60%     { transform: rotate(10deg);  }
+  80%     { transform: rotate(-5deg);  }
+}
+
+/* Illustration */
 .illus {
-  width: 100%;
-  border-radius: 14px;
-  overflow: hidden;
-  background: #E8F4FF;
-  box-shadow: inset 0 2px 8px rgba(0,0,0,.07);
+  width: 100%; border-radius: 14px; overflow: hidden;
+  background: #E8F4FF; box-shadow: inset 0 2px 8px rgba(0,0,0,.07);
 }
 .illus svg { display: block; width: 100%; height: auto; }
 
-.story-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-.pair-title { font-size: 20px; font-weight: bold; color: #333; }
-
-.audio-status {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 13px;
-  color: #bbb;
-}
+/* Story */
+.story-head { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+.pair-title { font-size: 19px; font-weight: bold; color: #333; }
+.audio-status { display: flex; align-items: center; gap: 5px; font-size: 13px; color: #bbb; }
 .audio-dot {
-  width: 9px; height: 9px;
-  border-radius: 50%;
-  background: #ddd;
-  transition: background .3s;
-  flex-shrink: 0;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: #ddd; transition: background .3s; flex-shrink: 0;
 }
-.audio-dot.on {
-  background: #4CAF50;
-  animation: pulse 1s ease infinite;
-}
-@keyframes pulse {
-  0%,100% { transform: scale(1);    }
-  50%      { transform: scale(1.4); }
-}
-
+.audio-dot.on { background: #4CAF50; animation: pulse 1s ease infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.4);} }
 .story-box {
-  width: 100%;
-  background: white;
-  border-radius: 12px;
-  padding: 13px 17px;
-  font-size: 17px;
-  line-height: 1.75;
-  color: #333;
-  border: 2px solid #F0EDE8;
+  width: 100%; background: white; border-radius: 12px;
+  padding: 13px 17px; font-size: 17px; line-height: 1.75;
+  color: #333; border: 2px solid #F0EDE8;
 }
 .sent { display: inline; border-radius: 4px; padding: 1px 2px; transition: background .3s; }
 .sent.hi { background: #FFF3B0; }
+.story-btns { display: flex; gap: 9px; flex-wrap: wrap; justify-content: center; width: 100%; }
 
-.story-btns {
-  display: flex;
-  gap: 9px;
-  flex-wrap: wrap;
-  justify-content: center;
-  width: 100%;
+/* Question DV frame */
+.q-frame {
+  width: 100%; background: rgba(71,118,230,0.08); border-radius: 11px;
+  padding: 9px 14px; font-size: 16px; color: #444; text-align: center;
+  line-height: 1.55; border: 1.5px solid rgba(71,118,230,0.22);
 }
+.q-frame strong { color: #4776e6; }
+.q-frame .they { color: #e74c3c; text-decoration: underline; font-weight: bold; }
 
+/* Question */
 .q-header {
-  width: 100%;
-  background: linear-gradient(135deg,#4776e6,#8e54e9);
-  border-radius: 11px;
-  padding: 9px 15px;
-  color: white;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  gap: 7px;
+  width: 100%; background: linear-gradient(135deg,#4776e6,#8e54e9);
+  border-radius: 11px; padding: 9px 15px; color: white;
+  font-size: 15px; display: flex; align-items: center; gap: 7px;
 }
 .q-box {
-  width: 100%;
-  background: #F8F4FF;
-  border-radius: 14px;
-  padding: 16px 20px;
-  font-size: 19px;
-  line-height: 1.6;
-  color: #333;
-  border: 3px solid #C9B8F0;
-  text-align: center;
-  min-height: 96px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%; background: #F8F4FF; border-radius: 14px;
+  padding: 14px 18px; font-size: 18px; line-height: 1.65;
+  color: #333; border: 3px solid #C9B8F0;
+  text-align: center; min-height: 78px;
+  display: flex; align-items: center; justify-content: center;
 }
-.ans-row {
-  display: flex;
-  gap: 18px;
-  justify-content: center;
-  width: 100%;
-}
-.q-replay {
-  display: flex;
-  gap: 9px;
-  flex-wrap: wrap;
-  justify-content: center;
-  width: 100%;
-}
+.ans-row { display: flex; gap: 18px; justify-content: center; width: 100%; }
+.q-replay { display: flex; gap: 9px; flex-wrap: wrap; justify-content: center; width: 100%; }
 
+/* Example explain */
 .ex-explain {
-  display: none;
-  width: 100%;
-  background: #E8F8E8;
-  border: 2px solid #A5D6A7;
-  border-radius: 12px;
-  padding: 13px 17px;
-  font-size: 16px;
-  color: #2E7D32;
-  text-align: center;
-  line-height: 1.6;
+  display: none; width: 100%; background: #E8F8E8;
+  border: 2px solid #A5D6A7; border-radius: 12px;
+  padding: 13px 17px; font-size: 16px; color: #2E7D32;
+  text-align: center; line-height: 1.6;
 }
 
+/* Feedback pop */
 .fb-wrap {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  z-index: 999;
+  position: fixed; inset: 0; display: flex;
+  align-items: center; justify-content: center;
+  pointer-events: none; z-index: 999;
 }
-.fb-emoji {
-  font-size: 96px;
-  animation: popIn .85s ease forwards;
-  opacity: 0;
-}
+.fb-emoji { font-size: 100px; animation: popIn .85s ease forwards; opacity: 0; }
 @keyframes popIn {
   0%   { transform: scale(.1);  opacity: 0; }
   45%  { transform: scale(1.3); opacity: 1; }
@@ -274,119 +190,110 @@ body {
   100% { transform: scale(.6);  opacity: 0; }
 }
 
+/* Transition */
 .trans-screen {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 40px;
-  text-align: center;
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 10px; padding: 28px; text-align: center;
 }
-.trans-star { font-size: 96px; animation: starIn .7s ease; }
+.trans-star-wrap { animation: starIn .75s cubic-bezier(.17,.67,.37,1.3); }
 @keyframes starIn {
-  0%   { transform: scale(0) rotate(-180deg); }
-  70%  { transform: scale(1.25) rotate(10deg); }
-  100% { transform: scale(1)   rotate(0);    }
+  0%   { transform: scale(0) rotate(-200deg); opacity: 0; }
+  70%  { transform: scale(1.15) rotate(10deg); opacity: 1; }
+  100% { transform: scale(1)   rotate(0);     opacity: 1; }
 }
-.trans-msg  { font-size: 26px; font-weight: bold; color: #333; }
-.trans-next { font-size: 18px; color: #999; }
+.trans-msg  { font-size: 23px; font-weight: bold; color: #333; }
+.trans-sub  { font-size: 17px; color: #aaa; }
 
+/* End */
 .end-screen {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 30px;
-  text-align: center;
-  gap: 13px;
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 28px; text-align: center; gap: 11px;
 }
-.end-trophy { font-size: 100px; animation: bounceIn .8s ease; }
+.end-trophy-wrap { animation: bounceIn .85s cubic-bezier(.17,.67,.37,1.3); }
 @keyframes bounceIn {
   0%   { transform: scale(0);    }
-  60%  { transform: scale(1.18); }
-  80%  { transform: scale(.94);  }
+  65%  { transform: scale(1.18); }
+  82%  { transform: scale(.94);  }
   100% { transform: scale(1);    }
 }
-.end-title { font-size: 34px; font-weight: bold; color: #f7971e; }
-.end-sub   { font-size: 19px; color: #666; }
-.end-btns  { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 6px; }
+.end-title { font-size: 31px; font-weight: bold; color: #f7971e; }
+.end-sub   { font-size: 18px; color: #666; }
+.end-btns  { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 4px; }
 
+/* Admin */
 .admin-btn {
-  position: fixed;
-  bottom: 10px; right: 10px;
-  width: 34px; height: 34px;
-  border-radius: 50%;
-  background: rgba(0,0,0,.13);
-  border: none;
-  cursor: pointer;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 500;
+  position: fixed; bottom: 10px; right: 10px;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(0,0,0,.13); border: none; cursor: pointer;
+  font-size: 15px; display: flex; align-items: center;
+  justify-content: center; z-index: 500;
 }
 .admin-panel {
-  position: fixed;
-  bottom: 54px; right: 10px;
-  background: white;
-  border-radius: 12px;
+  position: fixed; bottom: 54px; right: 10px;
+  background: white; border-radius: 12px;
   box-shadow: 0 4px 24px rgba(0,0,0,.2);
-  padding: 14px;
-  width: 280px;
-  z-index: 500;
-  font-size: 13px;
-  display: none;
+  padding: 14px; width: 295px; z-index: 500;
+  font-size: 13px; display: none;
 }
 .admin-panel.open { display: block; }
 .admin-panel h3 {
-  font-size: 15px;
-  margin-bottom: 9px;
-  color: #333;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 7px;
+  font-size: 14px; margin-bottom: 9px; color: #333;
+  border-bottom: 1px solid #eee; padding-bottom: 6px;
+}
+.admin-section-label {
+  font-weight: bold; font-size: 11px; color: #888;
+  text-transform: uppercase; letter-spacing: .5px;
+  margin-bottom: 5px;
 }
 .admin-log {
-  max-height: 190px;
-  overflow-y: auto;
-  font-size: 11.5px;
-  font-family: monospace;
-  background: #f8f8f8;
-  border-radius: 6px;
-  padding: 7px;
-  margin-bottom: 9px;
-  white-space: pre;
-  line-height: 1.5;
+  max-height: 140px; overflow-y: auto; font-size: 11px;
+  font-family: monospace; background: #f8f8f8;
+  border-radius: 6px; padding: 7px; margin-bottom: 8px;
+  white-space: pre; line-height: 1.5;
+}
+.admin-input {
+  width: 100%; padding: 6px 8px; font-size: 11px;
+  border: 1px solid #ddd; border-radius: 6px;
+  margin-bottom: 5px; outline: none; font-family: monospace;
+}
+.admin-select {
+  width: 100%; padding: 6px 8px; font-size: 11px;
+  border: 1px solid #ddd; border-radius: 6px;
+  margin-bottom: 6px; background: white; outline: none;
+}
+.admin-row { display: flex; gap: 6px; margin-bottom: 6px; }
+.admin-btn-sm {
+  flex: 1; padding: 7px 4px; font-size: 11px;
+  font-family: inherit; border-radius: 6px;
+  cursor: pointer; border: 1px solid #ddd;
+  background: #F0EDE8; color: #555;
+}
+.admin-btn-blue {
+  background: #4776e6; color: white; border-color: #4776e6;
+}
+.admin-btn-gold {
+  background: linear-gradient(135deg,#f7971e,#ffd200);
+  color: white; border: none; font-weight: bold;
 }
 
+/* Info box */
 .info-box {
-  font-size: 17px;
-  color: #555;
-  line-height: 1.8;
-  max-width: 510px;
-  background: #F8F4FF;
-  padding: 16px 20px;
-  border-radius: 14px;
-  border: 3px solid #C9B8F0;
+  font-size: 16px; color: #555; line-height: 1.85;
+  max-width: 510px; background: #F8F4FF;
+  padding: 16px 20px; border-radius: 14px; border: 3px solid #C9B8F0;
 }
 
-.error-box {
-  padding: 30px;
-  font-family: Arial, sans-serif;
-  max-width: 600px;
-  margin: auto;
-  text-align: center;
-}
+/* Error */
+.error-box { padding: 30px; font-family: Arial,sans-serif; max-width: 600px; margin: auto; text-align: center; }
 
 @media (max-width: 480px) {
-  .wt             { font-size: 30px; }
-  .btn-green,
-  .btn-red        { font-size: 20px; padding: 15px 0; }
-  .q-box          { font-size: 17px; }
-  .story-box      { font-size: 15px; }
-  .trans-msg      { font-size: 21px; }
+  .wt { font-size: 27px; }
+  .btn-green, .btn-red { font-size: 18px; max-width: 145px; }
+  .q-box { font-size: 16px; }
+  .story-box { font-size: 15px; }
+  .trans-msg { font-size: 19px; }
 }
 
 </style>
@@ -394,61 +301,62 @@ body {
 <body>
 
 <div id="app">
-  <div style="padding:50px;text-align:center;font-family:Arial,sans-serif;color:#888">
-    <div style="font-size:60px">🔍</div>
+  <div style="padding:44px;text-align:center;font-family:Arial,sans-serif;color:#aaa">
+    <div style="font-size:54px;margin-bottom:14px">🔍</div>
     <h2>Loading Friend Detective...</h2>
-    <p style="margin-top:12px">If this message does not go away, please check that
-    JavaScript is enabled in your browser.</p>
+    <p style="margin-top:10px;font-size:14px">
+      If this message does not go away, please make sure JavaScript is enabled in your browser.
+    </p>
   </div>
 </div>
 
 <button class="admin-btn" id="adminBtn" title="Researcher Panel">⚙️</button>
-<div class="admin-panel" id="adminPanel">
-  <h3>🔬 Researcher Panel</h3>
-  <div class="admin-log" id="adminLog">No answers yet.</div>
-  <button class="btn btn-secondary" style="width:100%;margin-bottom:7px" onclick="exportCSV()">
-    📥 Download Results (CSV)
-  </button>
-  <button class="btn btn-secondary" style="width:100%;margin-bottom:7px" onclick="skipPair()">
-    ⏭ Skip this pair
-  </button>
-  <button class="btn btn-secondary" style="width:100%" onclick="skipEnd()">
-    ⏭ Skip to End
-  </button>
-</div>
+<div class="admin-panel" id="adminPanel"></div>
 
 <script>
 'use strict';
 
-// ── canvas size ──
+// ── Canvas constants ─────────────────────────────────────────
 const W = 600, H = 300, GY = H * 0.70;
+
+// ── Varied encouragement phrases ─────────────────────────────
+const KUDOS = [
+  "Brilliant work on that one!",
+  "Excellent thinking! You are really good at this!",
+  "Wonderful job! I love how carefully you are thinking!",
+  "Amazing detective work! Keep it up!",
+  "You are so good at this! Wow!",
+  "Fantastic! You are a true Friend Detective!",
+  "That was great! I am really impressed!",
+  "Super job! You are doing wonderfully!"
+];
 
 // ── EXAMPLE ──────────────────────────────────────────────────
 const EXAMPLE = {
-  id: 'ex',
-  char1: { name:'Alex', hair:'#5C3D11', shirt:'#4ECDC4', pants:'#34495E', style:'short'    },
-  char2: { name:'Beth', hair:'#D4790A', shirt:'#FF6B6B', pants:'#7D3C98', style:'pigtails' },
-  scene: 'outdoor',
-  parts: [
+  id:'ex',
+  char1:{ name:'Alex', hair:'#5C3D11', shirt:'#4ECDC4', pants:'#34495E', style:'short'    },
+  char2:{ name:'Beth', hair:'#D4790A', shirt:'#FF6B6B', pants:'#7D3C98', style:'pigtails' },
+  scene:'outdoor',
+  parts:[
     'Alex and Beth are good friends.',
     'Last month, they baked cookies together. Beth split the cookies into two equal piles, and Alex picked the pile he wanted.',
     'Last weekend, Alex brought Beth some apples from his backyard tree. So this weekend, Beth baked Alex some cookies to give back to him.'
   ],
-  questions: [
+  questions:[
     {
-      text: 'Alex and Beth take turns using the tablet so they each get the same amount of time.',
-      keyed: 'YES',
-      explain: 'Since Alex and Beth like things to be fair and equal, taking turns on the tablet sounds just like them! YES makes sense here.'
+      text:'Alex and Beth take turns using the tablet so they each get the same amount of time.',
+      keyed:'YES',
+      explain:'Since Alex and Beth like things to be fair and equal, and they always trade nice things back and forth with each other, taking turns on the tablet sounds just like them! YES makes sense here.'
     },
     {
-      text: 'Alex decides what games they play, and Beth just goes along with it.',
-      keyed: 'NO',
-      explain: 'They seem to treat each other as equals, so it does not sound like just Alex would always be in charge. NO makes more sense here.'
+      text:'Alex decides what games they play, and Beth just goes along with it.',
+      keyed:'NO',
+      explain:'Alex and Beth seem to treat each other as equals, so it does not sound like just one of them would always be in charge. NO makes more sense here.'
     },
     {
-      text: 'When their class collected coins for a toy drive, Alex and Beth each put in the same amount.',
-      keyed: 'YES',
-      explain: 'Putting in the same amount fits their style of being fair and equal to each other. YES!'
+      text:'When their class collected coins for a toy drive, Alex and Beth each put in the same amount.',
+      keyed:'YES',
+      explain:'Putting in the same amount fits their style perfectly. They like things to be fair and equal between them. YES!'
     }
   ]
 };
@@ -463,7 +371,7 @@ const VIGNETTES = [
     parts:[
       'Tommy and Bella love their neighborhood.',
       'It is where they grew up, where they play every day, and where they plan to stay for the rest of their lives.',
-      'Last weekend, when they were deciding where to eat their snack, they chose the spot under the old oak tree where they first became best friends.'
+      'Last weekend, when they were deciding where to eat their snack, they chose the spot under the old oak tree — the very spot where they first became best friends.'
     ],
     questions:[
       { text:'Bella bought Tommy a treat on his birthday only because he had bought her a treat on her birthday.', qM:'EM', keyed:'NO'  },
@@ -479,7 +387,7 @@ const VIGNETTES = [
     parts:[
       'Andy and Tara needed to pick which art supply set to buy for their school project.',
       'They looked at how much each set cost and how much they could do with it. They picked the one that gave them the most for their money.',
-      'Also, last month Andy borrowed Tara\'s new bike for a whole week. He gave her four of his best trading cards as payment.'
+      "Also, last month Andy borrowed Tara's new bike for a whole week. He gave her four of his best trading cards as payment for letting him use it."
     ],
     questions:[
       { text:'Andy and Tara give each other a big hug when they see each other after not seeing each other for a while.', qM:'CS', keyed:'NO' },
@@ -508,7 +416,7 @@ const VIGNETTES = [
     char2:{ name:'Maggie', hair:'#1C1C1C', shirt:'#E74C3C', pants:'#154360', style:'pigtails' },
     scene:'outdoor',
     parts:[
-      'Pete borrowed Maggie\'s new bike for a whole week. He paid her back with three of his best stickers for letting him use it.',
+      "Pete borrowed Maggie's new bike for a whole week. He paid her back with three of his best stickers for letting him use it.",
       'Pete also often thinks about how much time he should spend with Maggie and whether playing with Maggie is really the best use of his time.'
     ],
     questions:[
@@ -523,7 +431,7 @@ const VIGNETTES = [
     char2:{ name:'Nina', hair:'#DAA520', shirt:'#BB8FCE', pants:'#154360', style:'long'  },
     scene:'home',
     parts:[
-      'If Sam or Nina is hungry, they just help themselves freely to snacks at each other\'s house — no need to ask.',
+      "If Sam or Nina is hungry, they just help themselves freely to snacks at each other's house — no need to ask.",
       'When they had to decide where to go for a field trip, they chose the nature trail because going there always makes them feel closer to each other.'
     ],
     questions:[
@@ -584,7 +492,7 @@ const VIGNETTES = [
     scene:'birthday',
     parts:[
       'Jimmy had Cara over to his birthday party last year, so Cara is planning to invite Jimmy to her birthday party this year.',
-      'Jimmy and Cara baked cookies together last week. Cara split the cookies into what she thought were two equal piles, and Jimmy got to pick which pile he wanted.'
+      'Jimmy and Cara baked cookies together last week. Cara split the cookies into two equal piles, and Jimmy got to pick which pile he wanted.'
     ],
     questions:[
       { text:'Jimmy and Cara had a big decision to make. They each took turns saying what they wanted, went back and forth, and made a deal that said exactly what each of them would do.', qM:'MP', keyed:'NO' },
@@ -615,7 +523,7 @@ const VIGNETTES = [
     parts:[
       'Doug and Sue needed to decide where to set up their lemonade stand.',
       'Doug checked how many people walked past one spot, and Sue checked a different spot. They picked the location where they would make the most money.',
-      'Last week, Sue wanted to borrow Doug\'s wagon. Doug said she could use it as long as she gave him half of whatever she earned with it.'
+      "Last week, Sue wanted to borrow Doug's wagon. Doug said she could use it as long as she gave him half of whatever she earned with it."
     ],
     questions:[
       { text:'Doug keeps track of how much time he spends with Sue compared to how much time he spends with his other friends.', qM:'MP', keyed:'YES' },
@@ -660,7 +568,7 @@ const VIGNETTES = [
     scene:'garden',
     parts:[
       'Jake and Karen work on their school garden together, planting whatever they like and just doing whatever needs to be done.',
-      'Last year, Jake hurt his arm on the playground. Karen felt almost like her own arm was hurt. It seemed like they both felt the same pain — and sometimes they even say "when we hurt our arm."'
+      'Last year, Jake hurt his arm on the playground. Karen felt almost like her own arm was hurt. It seemed like they both felt the same pain, and sometimes they even say "when we hurt our arm."'
     ],
     questions:[
       { text:'Karen bought Jake a treat on his birthday only because he had bought her a treat on her birthday.', qM:'EM', keyed:'NO' },
@@ -687,42 +595,97 @@ const VIGNETTES = [
 
 // ── STATE ────────────────────────────────────────────────────
 const S = {
-  phase:'welcome', name:'', vi:0, qi:0, eqi:0,
-  answers:[], stars:0, adminOpen:false
+  phase: 'welcome', name: '', vi: 0, qi: 0, eqi: 0,
+  answers: [], stars: 0, adminOpen: false,
+  elevenLabsKey:   localStorage.getItem('rad_elKey')   || '',
+  elevenLabsVoice: localStorage.getItem('rad_elVoice') || 'MF3mGyEYCl7XYWbV9V6O'
 };
 
-// ── SPEECH ───────────────────────────────────────────────────
+// ── SPEECH ────────────────────────────────────────────────────
 let voices = [];
+let currentAudio = null;
+let seqGen = 0;
+
 function initVoices() {
   voices = speechSynthesis.getVoices();
   if (!voices.length)
     speechSynthesis.addEventListener('voiceschanged', () => { voices = speechSynthesis.getVoices(); });
 }
+
 function bestVoice() {
-  const prefs = ['Samantha','Karen','Moira','Google US English',
-                 'Microsoft Zira - English (United States)','en-US'];
+  const prefs = [
+    'Google UK English Female', 'Samantha', 'Karen', 'Moira',
+    'Google US English',
+    'Microsoft Zira Desktop - English (United States)',
+    'Microsoft Zira - English (United States)'
+  ];
   for (const p of prefs) {
-    const v = voices.find(v => v.name === p || v.lang === p);
+    const v = voices.find(v => v.name === p || v.name.includes(p));
     if (v) return v;
   }
-  return voices.find(v => v.lang && v.lang.startsWith('en')) || voices[0] || null;
+  return voices.find(v => v.lang && v.lang.startsWith('en') && v.localService) ||
+         voices.find(v => v.lang && v.lang.startsWith('en')) ||
+         voices[0] || null;
 }
 
-let seqGen = 0;
 function speak(text, done) {
+  done = done || function(){};
+  if (!text || !text.trim()) { done(); return; }
+  if (S.elevenLabsKey && S.elevenLabsKey.trim()) {
+    speakElevenLabs(text, done);
+  } else {
+    speakWebSpeech(text, done);
+  }
+}
+
+function speakWebSpeech(text, done) {
   done = done || function(){};
   if (!window.speechSynthesis) { done(); return; }
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.voice  = bestVoice();
-  u.rate   = 0.88;
-  u.pitch  = 1.1;
+  u.rate   = 0.85;
+  u.pitch  = 1.08;
   u.volume = 1;
   u.onend  = () => { setDot(false); done(); };
   u.onerror= () => { setDot(false); done(); };
   setDot(true);
   speechSynthesis.speak(u);
 }
+
+function speakElevenLabs(text, done) {
+  done = done || function(){};
+  const voiceId = S.elevenLabsVoice || 'MF3mGyEYCl7XYWbV9V6O';
+  setDot(true);
+  fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'audio/mpeg',
+      'Content-Type': 'application/json',
+      'xi-api-key': S.elevenLabsKey
+    },
+    body: JSON.stringify({
+      text: text,
+      model_id: 'eleven_turbo_v2',
+      voice_settings: { stability: 0.45, similarity_boost: 0.75, style: 0.35, use_speaker_boost: true }
+    })
+  })
+  .then(r => { if (!r.ok) throw new Error('ElevenLabs ' + r.status); return r.blob(); })
+  .then(blob => {
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    currentAudio = audio;
+    audio.onended = () => { setDot(false); URL.revokeObjectURL(url); currentAudio = null; done(); };
+    audio.onerror = () => { setDot(false); URL.revokeObjectURL(url); currentAudio = null; speakWebSpeech(text, done); };
+    audio.play().catch(() => { setDot(false); speakWebSpeech(text, done); });
+  })
+  .catch(err => {
+    console.warn('ElevenLabs error, using built-in voice:', err.message);
+    setDot(false);
+    speakWebSpeech(text, done);
+  });
+}
+
 function speakSeq(parts, highlightCb, done) {
   const id = ++seqGen;
   let i = 0;
@@ -734,11 +697,14 @@ function speakSeq(parts, highlightCb, done) {
   }
   next();
 }
+
 function stopSpeak() {
   seqGen++;
+  if (currentAudio) { currentAudio.pause(); currentAudio.src = ''; currentAudio = null; }
   if (window.speechSynthesis) speechSynthesis.cancel();
   setDot(false);
 }
+
 function setDot(on) {
   const d = document.querySelector('.audio-dot');
   if (d) d.classList.toggle('on', on);
@@ -747,6 +713,11 @@ function setDot(on) {
 }
 
 // ── SVG HELPERS ──────────────────────────────────────────────
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 const SKINS = ['#FDBCB4','#F0C090','#E0A878','#C87E50','#FDDBB4'];
 function skin(name) {
   let h = 0;
@@ -754,24 +725,44 @@ function skin(name) {
   return SKINS[h % SKINS.length];
 }
 
-function kidSVG(cx, groundY, cfg) {
+// animOffset: '0s', '1.3s', etc.  or 'wave' to animate right arm
+function kidSVG(cx, groundY, cfg, animOffset) {
+  animOffset = animOffset || '0s';
   const { hair, shirt, pants, style, name } = cfg;
   const sk = skin(name || '');
   const hR=28, bH=62, bW=50, lH=58, lW=19, aH=44, aW=12;
   const fY=groundY, lT=fY-lH, bT=lT-bH, hY=bT-hR-3;
-  const p=[];
+  const p = [];
+
   p.push(`<ellipse cx="${cx}" cy="${fY}" rx="26" ry="6" fill="rgba(0,0,0,.08)"/>`);
   p.push(`<rect x="${cx-lW-2}" y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
   p.push(`<rect x="${cx+2}"    y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
-  p.push(`<ellipse cx="${cx-lW*.5-1}" cy="${fY}" rx="13" ry="6" fill="#222"/>`);
-  p.push(`<ellipse cx="${cx+lW*.5+1}" cy="${fY}" rx="13" ry="6" fill="#222"/>`);
+  p.push(`<ellipse cx="${cx-lW*.5-1}" cy="${fY}" rx="13" ry="6" fill="#333"/>`);
+  p.push(`<ellipse cx="${cx+lW*.5+1}" cy="${fY}" rx="13" ry="6" fill="#333"/>`);
+  // Left arm static
   p.push(`<rect x="${cx-bW*.5-aW}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
-  p.push(`<rect x="${cx+bW*.5}"    y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
   p.push(`<circle cx="${cx-bW*.5-aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>`);
-  p.push(`<circle cx="${cx+bW*.5+aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>`);
+  // Right arm — waving or static
+  if (animOffset === 'wave') {
+    const pivX = (cx+bW*.5+aW*.5).toFixed(1);
+    const pivY = (bT+8).toFixed(1);
+    p.push(`<g><animateTransform attributeName="transform" type="rotate"
+      values="-35 ${pivX} ${pivY}; 40 ${pivX} ${pivY}; -35 ${pivX} ${pivY}"
+      dur="0.85s" repeatCount="indefinite"
+      calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+      <rect x="${cx+bW*.5}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>
+      <circle cx="${cx+bW*.5+aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>
+    </g>`);
+  } else {
+    p.push(`<rect x="${cx+bW*.5}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
+    p.push(`<circle cx="${cx+bW*.5+aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>`);
+  }
+  // Body
   p.push(`<rect x="${cx-bW*.5}" y="${bT}" width="${bW}" height="${bH}" rx="10" fill="${shirt}"/>`);
   p.push(`<path d="M${cx-9},${bT} Q${cx},${bT+13} ${cx+9},${bT}" fill="white" opacity=".2"/>`);
+  // Head
   p.push(`<circle cx="${cx}" cy="${hY}" r="${hR}" fill="${sk}"/>`);
+  // Hair styles
   if (style==='short') {
     p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
   } else if (style==='long') {
@@ -785,64 +776,126 @@ function kidSVG(cx, groundY, cfg) {
     p.push(`<line x1="${cx-hR+1}" y1="${hY-1}" x2="${cx-hR-5}" y2="${hY-3}" stroke="${hair}" stroke-width="5"/>`);
     p.push(`<line x1="${cx+hR-1}" y1="${hY-1}" x2="${cx+hR+5}" y2="${hY-3}" stroke="${hair}" stroke-width="5"/>`);
   }
+  // Face
   p.push(`<path d="M${cx-14},${hY-2} Q${cx-8},${hY-12} ${cx-2},${hY-2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
   p.push(`<path d="M${cx+2},${hY-2} Q${cx+8},${hY-12} ${cx+14},${hY-2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
   p.push(`<path d="M${cx-10},${hY+9} Q${cx},${hY+19} ${cx+10},${hY+9}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
   p.push(`<circle cx="${cx-17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
   p.push(`<circle cx="${cx+17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
-  if (name) p.push(`<text x="${cx}" y="${fY+18}" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="14" font-weight="bold" fill="#333">${name}</text>`);
-  return p.join('');
+  if (name) p.push(`<text x="${cx}" y="${fY+18}" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="14" font-weight="bold" fill="#444">${escHtml(name)}</text>`);
+
+  const bobBegin = animOffset === 'wave' ? '0s' : animOffset;
+  return `<g>
+    <animateTransform attributeName="transform" type="translate"
+      values="0,0; 0,-5; 0,0" dur="2.6s" begin="${bobBegin}"
+      repeatCount="indefinite" calcMode="spline"
+      keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>
+    ${p.join('')}
+  </g>`;
 }
 
 function bgSVG(scene) {
-  const p=[];
-  const OUTDOOR=['outdoor','playground','lemonade','garden','treehouse'];
+  const p = [];
+  const OUTDOOR = ['outdoor','playground','lemonade','garden','treehouse'];
+
   if (OUTDOOR.includes(scene)) {
-    p.push(`<defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7EC8E3"/><stop offset="100%" stop-color="#C9EBF8"/></linearGradient></defs>`);
-    p.push(`<rect x="0" y="0" width="${W}" height="${GY}" fill="url(#sk)"/>`);
-    p.push(`<ellipse cx="110" cy="50" rx="45" ry="23" fill="white" opacity=".88"/><ellipse cx="146" cy="41" rx="32" ry="19" fill="white" opacity=".88"/>`);
-    p.push(`<ellipse cx="488" cy="63" rx="50" ry="25" fill="white" opacity=".88"/><ellipse cx="524" cy="53" rx="31" ry="17" fill="white" opacity=".88"/>`);
+    p.push(`<defs>
+      <linearGradient id="sk" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#7EC8E3"/>
+        <stop offset="100%" stop-color="#C9EBF8"/>
+      </linearGradient>
+    </defs>
+    <rect x="0" y="0" width="${W}" height="${GY}" fill="url(#sk)"/>`);
+
+    // Cloud 1 drifts right
+    p.push(`<g>
+      <animateTransform attributeName="transform" type="translate"
+        values="0,0; 22,0; 0,0" dur="13s" repeatCount="indefinite"
+        calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+      <ellipse cx="110" cy="50" rx="45" ry="23" fill="white" opacity=".88"/>
+      <ellipse cx="146" cy="41" rx="32" ry="19" fill="white" opacity=".88"/>
+    </g>`);
+    // Cloud 2 drifts left
+    p.push(`<g>
+      <animateTransform attributeName="transform" type="translate"
+        values="0,0; -16,0; 0,0" dur="17s" repeatCount="indefinite"
+        calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+      <ellipse cx="488" cy="63" rx="50" ry="25" fill="white" opacity=".88"/>
+      <ellipse cx="524" cy="53" rx="31" ry="17" fill="white" opacity=".88"/>
+    </g>`);
+    // Sun body
     p.push(`<circle cx="546" cy="44" r="30" fill="#FFD700"/>`);
-    for (let a=0;a<8;a++){
-      const r=a*45*Math.PI/180;
-      p.push(`<line x1="${(546+Math.cos(r)*36).toFixed(1)}" y1="${(44+Math.sin(r)*36).toFixed(1)}" x2="${(546+Math.cos(r)*50).toFixed(1)}" y2="${(44+Math.sin(r)*50).toFixed(1)}" stroke="#FFD700" stroke-width="3" stroke-linecap="round"/>`);
-    }
+    // Rotating rays
+    const rays = Array.from({length:8},(_,a)=>{
+      const r = a*45*Math.PI/180;
+      return `<line x1="${(Math.cos(r)*36).toFixed(1)}" y1="${(Math.sin(r)*36).toFixed(1)}" x2="${(Math.cos(r)*52).toFixed(1)}" y2="${(Math.sin(r)*52).toFixed(1)}" stroke="#FFD700" stroke-width="4" stroke-linecap="round"/>`;
+    }).join('');
+    p.push(`<g transform="translate(546,44)">
+      <animateTransform attributeName="transform" type="rotate"
+        from="0 0 0" to="360 0 0" dur="22s" repeatCount="indefinite" additive="sum"/>
+      ${rays}
+    </g>`);
+    // Ground
     p.push(`<rect x="0" y="${GY}" width="${W}" height="${H-GY}" fill="#7EC850"/>`);
-    for(let i=0;i<18;i++){const gx=i*36;p.push(`<path d="M${gx},${GY} Q${gx+9},${GY-13} ${gx+18},${GY}" fill="#5DAD3F"/>`);}
+    // Swaying grass
+    const tufts = Array.from({length:18},(_,i)=>{const gx=i*36;return `<path d="M${gx},${GY} Q${gx+9},${GY-13} ${gx+18},${GY}" fill="#5DAD3F"/>`;}).join('');
+    p.push(`<g>
+      <animateTransform attributeName="transform" type="skewX"
+        values="0;2.5;0;-2.5;0" dur="5.5s" repeatCount="indefinite"
+        calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"/>
+      ${tufts}
+    </g>`);
+
   } else if (scene==='school'||scene==='cafeteria') {
-    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF9E8"/>`);
-    p.push(`<rect x="0" y="${H-26}" width="${W}" height="26" fill="#E8D5A3"/>`);
-    p.push(`<rect x="155" y="16" width="280" height="124" rx="5" fill="#4A7856"/>`);
-    p.push(`<rect x="148" y="9" width="294" height="138" rx="8" fill="none" stroke="#8B4513" stroke-width="7"/>`);
-    p.push(`<text x="295" y="79" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="17" fill="white" opacity=".55">Our Class</text>`);
-    p.push(`<rect x="460" y="22" width="108" height="108" rx="5" fill="#AED6F1" stroke="#8B4513" stroke-width="5"/>`);
-    p.push(`<line x1="514" y1="22" x2="514" y2="130" stroke="#8B4513" stroke-width="3"/>`);
-    p.push(`<line x1="460" y1="76" x2="568" y2="76" stroke="#8B4513" stroke-width="3"/>`);
+    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF9E8"/>
+    <rect x="0" y="${H-26}" width="${W}" height="26" fill="#E8D5A3"/>
+    <rect x="155" y="16" width="280" height="124" rx="5" fill="#4A7856"/>
+    <rect x="148" y="9" width="294" height="138" rx="8" fill="none" stroke="#8B4513" stroke-width="7"/>
+    <text x="295" y="79" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="17" fill="white" opacity=".55">Our Class</text>
+    <rect x="460" y="22" width="108" height="108" rx="5" fill="#AED6F1" stroke="#8B4513" stroke-width="5"/>
+    <line x1="514" y1="22" x2="514" y2="130" stroke="#8B4513" stroke-width="3"/>
+    <line x1="460" y1="76" x2="568" y2="76"  stroke="#8B4513" stroke-width="3"/>`);
+
   } else if (scene==='home') {
-    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF0E6"/>`);
-    p.push(`<rect x="0" y="${H-26}" width="${W}" height="26" fill="#C4A882"/>`);
-    p.push(`<rect x="26" y="${H-126}" width="200" height="100" rx="16" fill="#FF8C69"/>`);
-    p.push(`<rect x="38" y="${H-126}" width="63" height="69" rx="10" fill="#FF7058"/>`);
-    p.push(`<rect x="122" y="${H-126}" width="63" height="69" rx="10" fill="#FF7058"/>`);
-    p.push(`<rect x="398" y="22" width="155" height="128" rx="6" fill="#AED6F1" stroke="#8B4513" stroke-width="6"/>`);
-    p.push(`<line x1="476" y1="22" x2="476" y2="150" stroke="#8B4513" stroke-width="3"/>`);
-    p.push(`<line x1="398" y1="86" x2="553" y2="86" stroke="#8B4513" stroke-width="3"/>`);
+    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF0E6"/>
+    <rect x="0" y="${H-26}" width="${W}" height="26" fill="#C4A882"/>
+    <rect x="26" y="${H-126}" width="200" height="100" rx="16" fill="#FF8C69"/>
+    <rect x="38" y="${H-126}" width="63" height="69" rx="10" fill="#FF7058"/>
+    <rect x="122" y="${H-126}" width="63" height="69" rx="10" fill="#FF7058"/>
+    <rect x="398" y="22" width="155" height="128" rx="6" fill="#AED6F1" stroke="#8B4513" stroke-width="6"/>
+    <line x1="476" y1="22" x2="476" y2="150" stroke="#8B4513" stroke-width="3"/>
+    <line x1="398" y1="86" x2="553" y2="86"  stroke="#8B4513" stroke-width="3"/>`);
+
   } else if (scene==='birthday') {
-    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF0F5"/>`);
-    p.push(`<rect x="0" y="${H-26}" width="${W}" height="26" fill="#FFB6C1"/>`);
+    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF0F5"/>
+    <rect x="0" y="${H-26}" width="${W}" height="26" fill="#FFB6C1"/>`);
     const bc=['#FF6B6B','#FFD700','#4ECDC4','#45B7D1','#FFA07A','#98D8C8','#FF69B4','#9B59B6'];
     for(let i=0;i<8;i++){const bx=i*78;p.push(`<polygon points="${bx},7 ${bx+28},7 ${bx+14},36" fill="${bc[i%bc.length]}"/>`);}
-    p.push(`<circle cx="70" cy="70" r="30" fill="#FF6B6B" opacity=".82"/><line x1="70" y1="100" x2="70" y2="155" stroke="#bbb" stroke-width="1.5"/>`);
-    p.push(`<circle cx="${W-70}" cy="58" r="30" fill="#4ECDC4" opacity=".82"/><line x1="${W-70}" y1="88" x2="${W-70}" y2="152" stroke="#bbb" stroke-width="1.5"/>`);
-    p.push(`<circle cx="300" cy="46" r="26" fill="#FFD700" opacity=".82"/><line x1="300" y1="72" x2="300" y2="148" stroke="#bbb" stroke-width="1.5"/>`);
+    [[70,70,'#FF6B6B','0'],[W-70,58,'#4ECDC4','0.7'],[300,46,'#FFD700','0.4']].forEach(([bx,by,col,del])=>{
+      p.push(`<g>
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 0,-9; 0,0" dur="3s" begin="${del}s" repeatCount="indefinite"
+          calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+        <circle cx="${bx}" cy="${by}" r="30" fill="${col}" opacity=".82"/>
+        <line x1="${bx}" y1="${by+30}" x2="${bx}" y2="${by+88}" stroke="#ccc" stroke-width="1.5"/>
+      </g>`);
+    });
+
   } else if (scene==='icecream') {
-    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF5F0"/>`);
-    p.push(`<rect x="0" y="${H-26}" width="${W}" height="26" fill="#F0D5A8"/>`);
-    p.push(`<rect x="140" y="${H-175}" width="320" height="149" rx="12" fill="#FFE4C4" stroke="#E8C099" stroke-width="3"/>`);
+    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF5F0"/>
+    <rect x="0" y="${H-26}" width="${W}" height="26" fill="#F0D5A8"/>
+    <rect x="140" y="${H-175}" width="320" height="149" rx="12" fill="#FFE4C4" stroke="#E8C099" stroke-width="3"/>`);
     const ic=['#FF69B4','#90EE90','#87CEEB','#FFD700'];
-    for(let i=0;i<4;i++) p.push(`<circle cx="${190+i*78}" cy="${H-173}" r="27" fill="${ic[i]}"/>`);
-    p.push(`<rect x="${W/2-106}" y="10" width="212" height="56" rx="12" fill="#FF69B4"/>`);
-    p.push(`<text x="${W/2}" y="46" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="19" fill="white">Ice Cream!</text>`);
+    for(let i=0;i<4;i++){
+      p.push(`<g>
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0; 0,-4; 0,0" dur="2.2s" begin="${i*0.55}s" repeatCount="indefinite"
+          calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+        <circle cx="${190+i*78}" cy="${H-173}" r="27" fill="${ic[i]}"/>
+      </g>`);
+    }
+    p.push(`<rect x="${W/2-106}" y="10" width="212" height="56" rx="12" fill="#FF69B4"/>
+    <text x="${W/2}" y="46" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="19" fill="white">Ice Cream!</text>`);
   } else {
     p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#E8F4F8"/>`);
   }
@@ -850,142 +903,285 @@ function bgSVG(scene) {
 }
 
 function propSVG(scene) {
-  const p=[];
+  const p = [];
+
   if (scene==='outdoor') {
-    p.push(`<rect x="56" y="${GY-105}" width="26" height="110" rx="7" fill="#8B4513"/>`);
-    p.push(`<circle cx="69" cy="${GY-120}" r="55" fill="#27AE60"/>`);
-    p.push(`<circle cx="42" cy="${GY-102}" r="36" fill="#2ECC71"/>`);
-    p.push(`<circle cx="98" cy="${GY-102}" r="36" fill="#2ECC71"/>`);
-    [[48,GY-138],[76,GY-152],[66,GY-122],[40,GY-115],[92,GY-135]].forEach(([ax,ay])=>
-      p.push(`<circle cx="${ax}" cy="${ay}" r="7" fill="#E74C3C"/>`)
-    );
+    // Tree sways gently
+    p.push(`<g>
+      <animateTransform attributeName="transform" type="rotate"
+        values="0 69 ${GY}; 2 69 ${GY}; 0 69 ${GY}; -2 69 ${GY}; 0 69 ${GY}"
+        dur="6s" repeatCount="indefinite"
+        calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"/>
+      <rect x="56" y="${GY-105}" width="26" height="110" rx="7" fill="#8B4513"/>
+      <circle cx="69" cy="${GY-120}" r="55" fill="#27AE60"/>
+      <circle cx="42" cy="${GY-102}" r="36" fill="#2ECC71"/>
+      <circle cx="98" cy="${GY-102}" r="36" fill="#2ECC71"/>
+      ${[[48,GY-138],[76,GY-152],[66,GY-122],[40,GY-115],[92,GY-135]].map(([ax,ay])=>`<circle cx="${ax}" cy="${ay}" r="7" fill="#E74C3C"/>`).join('')}
+    </g>`);
+
   } else if (scene==='playground') {
-    p.push(`<line x1="206" y1="12" x2="206" y2="${GY-7}" stroke="#8B4513" stroke-width="5"/>`);
-    p.push(`<line x1="394" y1="12" x2="394" y2="${GY-7}" stroke="#8B4513" stroke-width="5"/>`);
-    p.push(`<line x1="204" y1="12" x2="396" y2="12" stroke="#8B4513" stroke-width="5"/>`);
-    p.push(`<line x1="265" y1="12" x2="261" y2="${GY-47}" stroke="#888" stroke-width="2"/>`);
-    p.push(`<line x1="335" y1="12" x2="339" y2="${GY-47}" stroke="#888" stroke-width="2"/>`);
-    p.push(`<rect x="256" y="${GY-50}" width="88" height="12" rx="6" fill="#8B4513"/>`);
-    p.push(`<rect x="${W-158}" y="50" width="26" height="158" rx="5" fill="#E74C3C"/>`);
-    p.push(`<line x1="${W-145}" y1="208" x2="${W-62}" y2="${GY}" stroke="#E74C3C" stroke-width="16" stroke-linecap="round"/>`);
+    // Frame (static)
+    p.push(`<line x1="206" y1="12" x2="206" y2="${GY-7}" stroke="#8B4513" stroke-width="5"/>
+    <line x1="394" y1="12" x2="394" y2="${GY-7}" stroke="#8B4513" stroke-width="5"/>
+    <line x1="204" y1="12" x2="396" y2="12" stroke="#8B4513" stroke-width="5"/>`);
+    // Swinging swing
+    p.push(`<g>
+      <animateTransform attributeName="transform" type="rotate"
+        values="-20 300 12; 20 300 12; -20 300 12"
+        dur="2.2s" repeatCount="indefinite"
+        calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+      <line x1="265" y1="12" x2="261" y2="${GY-47}" stroke="#888" stroke-width="2"/>
+      <line x1="335" y1="12" x2="339" y2="${GY-47}" stroke="#888" stroke-width="2"/>
+      <rect x="256" y="${GY-50}" width="88" height="12" rx="6" fill="#8B4513"/>
+    </g>`);
+    // Slide
+    p.push(`<rect x="${W-158}" y="50" width="26" height="158" rx="5" fill="#E74C3C"/>
+    <line x1="${W-145}" y1="208" x2="${W-62}" y2="${GY}" stroke="#E74C3C" stroke-width="16" stroke-linecap="round"/>`);
+
   } else if (scene==='lemonade') {
     const sx=W/2-68;
-    p.push(`<rect x="${sx}" y="${GY-120}" width="136" height="122" rx="5" fill="#FFD700"/>`);
-    p.push(`<rect x="${sx-11}" y="${GY-132}" width="158" height="18" rx="5" fill="#F39C12"/>`);
-    p.push(`<text x="${W/2}" y="${GY-118}" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="13" fill="white" font-weight="bold">Lemonade!</text>`);
-    p.push(`<rect x="${W/2-16}" y="${GY-106}" width="32" height="44" rx="6" fill="#FFFACD" stroke="#F1C40F" stroke-width="2"/>`);
+    p.push(`<rect x="${sx}" y="${GY-120}" width="136" height="122" rx="5" fill="#FFD700"/>
+    <rect x="${sx-11}" y="${GY-132}" width="158" height="18" rx="5" fill="#F39C12"/>
+    <text x="${W/2}" y="${GY-118}" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="13" fill="white" font-weight="bold">Lemonade!</text>`);
+    // Bouncing pitcher
+    p.push(`<g>
+      <animateTransform attributeName="transform" type="translate"
+        values="0,0; 0,-3; 0,0" dur="1.6s" repeatCount="indefinite"
+        calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+      <rect x="${W/2-16}" y="${GY-106}" width="32" height="44" rx="6" fill="#FFFACD" stroke="#F1C40F" stroke-width="2"/>
+      <path d="M${W/2+16},${GY-97} Q${W/2+29},${GY-87} ${W/2+16},${GY-77}" fill="none" stroke="#F1C40F" stroke-width="3"/>
+    </g>`);
+
   } else if (scene==='treehouse') {
+    // Trunk (static)
     p.push(`<rect x="56" y="${GY-155}" width="52" height="159" rx="10" fill="#8B4513"/>`);
-    p.push(`<circle cx="82" cy="${GY-175}" r="86" fill="#27AE60"/>`);
-    p.push(`<circle cx="44" cy="${GY-144}" r="58" fill="#2ECC71"/>`);
-    p.push(`<circle cx="122" cy="${GY-144}" r="58" fill="#2ECC71"/>`);
-    p.push(`<rect x="14" y="${GY-148}" width="164" height="14" rx="4" fill="#7D5A2A"/>`);
-    p.push(`<rect x="18" y="${GY-228}" width="156" height="82" rx="5" fill="#DEB887"/>`);
-    p.push(`<polygon points="14,${GY-228} 96,${GY-278} 178,${GY-228}" fill="#A0522D"/>`);
-    p.push(`<rect x="83" y="${GY-190}" width="38" height="56" rx="19" fill="#8B4513"/>`);
-    p.push(`<line x1="126" y1="${GY-148}" x2="126" y2="${GY+4}" stroke="#8B4513" stroke-width="4"/>`);
-    p.push(`<line x1="112" y1="${GY-148}" x2="112" y2="${GY+4}" stroke="#8B4513" stroke-width="4"/>`);
-    for(let ry=GY-128;ry<GY;ry+=20)
-      p.push(`<line x1="112" y1="${ry}" x2="126" y2="${ry}" stroke="#8B4513" stroke-width="3"/>`);
+    // Swaying foliage
+    p.push(`<g>
+      <animateTransform attributeName="transform" type="rotate"
+        values="0 82 ${GY}; 1.8 82 ${GY}; 0 82 ${GY}; -1.8 82 ${GY}; 0 82 ${GY}"
+        dur="7s" repeatCount="indefinite"
+        calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"/>
+      <circle cx="82" cy="${GY-175}" r="86" fill="#27AE60"/>
+      <circle cx="44" cy="${GY-144}" r="58" fill="#2ECC71"/>
+      <circle cx="122" cy="${GY-144}" r="58" fill="#2ECC71"/>
+    </g>`);
+    // House structure
+    p.push(`<rect x="14" y="${GY-148}" width="164" height="14" rx="4" fill="#7D5A2A"/>
+    <rect x="18" y="${GY-228}" width="156" height="82" rx="5" fill="#DEB887"/>
+    <polygon points="14,${GY-228} 96,${GY-278} 178,${GY-228}" fill="#A0522D"/>
+    <rect x="83" y="${GY-190}" width="38" height="56" rx="19" fill="#8B4513"/>
+    <line x1="126" y1="${GY-148}" x2="126" y2="${GY+4}" stroke="#8B4513" stroke-width="4"/>
+    <line x1="112" y1="${GY-148}" x2="112" y2="${GY+4}" stroke="#8B4513" stroke-width="4"/>`);
+    for(let ry=GY-128;ry<GY;ry+=20) p.push(`<line x1="112" y1="${ry}" x2="126" y2="${ry}" stroke="#8B4513" stroke-width="3"/>`);
+
   } else if (scene==='garden') {
     p.push(`<rect x="190" y="${GY-9}" width="220" height="15" rx="7" fill="#8B4513" opacity=".42"/>`);
     const fc=['#FF69B4','#FFD700','#FF6B6B','#DA70D6','#FF8C00'];
     for(let i=0;i<5;i++){
-      const fx=208+i*38;
-      p.push(`<line x1="${fx}" y1="${GY-9}" x2="${fx}" y2="${GY-50}" stroke="#228B22" stroke-width="3"/>`);
-      p.push(`<circle cx="${fx}" cy="${GY-54}" r="12" fill="${fc[i]}"/>`);
-      p.push(`<circle cx="${fx}" cy="${GY-54}" r="6" fill="#FFD700"/>`);
+      const fx=208+i*38, del=(i*0.4).toFixed(1);
+      p.push(`<g>
+        <animateTransform attributeName="transform" type="rotate"
+          values="0 ${fx} ${GY-9}; 9 ${fx} ${GY-9}; 0 ${fx} ${GY-9}; -9 ${fx} ${GY-9}; 0 ${fx} ${GY-9}"
+          dur="3.2s" begin="${del}s" repeatCount="indefinite"
+          calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"/>
+        <line x1="${fx}" y1="${GY-9}" x2="${fx}" y2="${GY-50}" stroke="#228B22" stroke-width="3"/>
+        <circle cx="${fx}" cy="${GY-54}" r="12" fill="${fc[i]}"/>
+        <circle cx="${fx}" cy="${GY-54}" r="6"  fill="#FFD700"/>
+      </g>`);
     }
+    // Watering can
+    p.push(`<rect x="428" y="${GY-67}" width="40" height="33" rx="6" fill="#4ECDC4"/>
+    <path d="M428,${GY-52} Q410,${GY-57} 406,${GY-37}" fill="none" stroke="#4ECDC4" stroke-width="6" stroke-linecap="round"/>
+    <line x1="468" y1="${GY-52}" x2="490" y2="${GY-32}" stroke="#4ECDC4" stroke-width="5" stroke-linecap="round"/>`);
+
   } else if (scene==='school') {
     const ty=H-80;
-    p.push(`<rect x="204" y="${ty}" width="192" height="11" rx="4" fill="#DEB887"/>`);
-    p.push(`<rect x="218" y="${ty-38}" width="66" height="40" rx="5" fill="#F39C12"/>`);
-    p.push(`<text x="251" y="${ty-14}" text-anchor="middle" font-family="Arial" font-size="12" fill="white">Crayons</text>`);
+    p.push(`<rect x="204" y="${ty}" width="192" height="11" rx="4" fill="#DEB887"/>
+    <rect x="218" y="${ty-38}" width="66" height="40" rx="5" fill="#F39C12"/>
+    <text x="251" y="${ty-14}" text-anchor="middle" font-family="Arial" font-size="12" fill="white">Crayons</text>`);
+
   } else if (scene==='cafeteria') {
     const ty=GY-50;
-    p.push(`<rect x="100" y="${ty}" width="400" height="20" rx="5" fill="#DEB887" stroke="#C4A265" stroke-width="2"/>`);
-    p.push(`<rect x="116" y="${ty-62}" width="118" height="64" rx="8" fill="#DCDCDC" stroke="#B8B8B8" stroke-width="2"/>`);
-    p.push(`<rect x="366" y="${ty-62}" width="118" height="64" rx="8" fill="#DCDCDC" stroke="#B8B8B8" stroke-width="2"/>`);
-    p.push(`<circle cx="168" cy="${ty-33}" r="20" fill="#FF8C69"/>`);
-    p.push(`<circle cx="214" cy="${ty-33}" r="13" fill="#7EC850"/>`);
-    p.push(`<circle cx="418" cy="${ty-33}" r="20" fill="#FF8C69"/>`);
-    p.push(`<circle cx="464" cy="${ty-33}" r="13" fill="#7EC850"/>`);
+    p.push(`<rect x="100" y="${ty}" width="400" height="20" rx="5" fill="#DEB887" stroke="#C4A265" stroke-width="2"/>
+    <rect x="116" y="${ty-62}" width="118" height="64" rx="8" fill="#DCDCDC" stroke="#B8B8B8" stroke-width="2"/>
+    <rect x="366" y="${ty-62}" width="118" height="64" rx="8" fill="#DCDCDC" stroke="#B8B8B8" stroke-width="2"/>
+    <circle cx="168" cy="${ty-33}" r="20" fill="#FF8C69"/>
+    <circle cx="214" cy="${ty-33}" r="13" fill="#7EC850"/>
+    <circle cx="418" cy="${ty-33}" r="20" fill="#FF8C69"/>
+    <circle cx="464" cy="${ty-33}" r="13" fill="#7EC850"/>`);
+
   } else if (scene==='home') {
     const ty=GY-82;
-    p.push(`<rect x="236" y="${ty+48}" width="128" height="11" rx="4" fill="#DEB887"/>`);
-    p.push(`<ellipse cx="300" cy="${ty+43}" rx="40" ry="15" fill="#FFB347"/>`);
-    p.push(`<rect x="260" y="${ty+14}" width="80" height="32" rx="5" fill="#FFC870"/>`);
+    p.push(`<rect x="236" y="${ty+48}" width="128" height="11" rx="4" fill="#DEB887"/>
+    <ellipse cx="300" cy="${ty+43}" rx="40" ry="15" fill="#FFB347"/>
+    <rect x="260" y="${ty+14}" width="80" height="32" rx="5" fill="#FFC870"/>`);
+
   } else if (scene==='icecream') {
     const hy=GY-72;
-    p.push(`<path d="M143,${hy+20} L155,${hy+50} L167,${hy+20}" fill="#F4A460"/>`);
-    p.push(`<circle cx="155" cy="${hy+15}" r="20" fill="#FF69B4"/>`);
-    p.push(`<path d="M433,${hy+20} L445,${hy+50} L457,${hy+20}" fill="#F4A460"/>`);
-    p.push(`<circle cx="445" cy="${hy+15}" r="20" fill="#90EE90"/>`);
+    p.push(`<path d="M143,${hy+20} L155,${hy+50} L167,${hy+20}" fill="#F4A460"/>
+    <circle cx="155" cy="${hy+15}" r="20" fill="#FF69B4"/>
+    <path d="M433,${hy+20} L445,${hy+50} L457,${hy+20}" fill="#F4A460"/>
+    <circle cx="445" cy="${hy+15}" r="20" fill="#90EE90"/>`);
+
   } else if (scene==='birthday') {
-    const cx=W/2, cy=GY-100;
-    p.push(`<rect x="${cx-52}" y="${cy}" width="104" height="54" rx="8" fill="#FF69B4"/>`);
-    p.push(`<rect x="${cx-52}" y="${cy-24}" width="104" height="28" rx="6" fill="#FFD700"/>`);
-    p.push(`<rect x="${cx-52}" y="${cy-46}" width="104" height="26" rx="6" fill="#FF8C69"/>`);
+    const cx=W/2, cy2=GY-100;
+    p.push(`<rect x="${cx-52}" y="${cy2}"    width="104" height="54" rx="8" fill="#FF69B4"/>
+    <rect x="${cx-52}" y="${cy2-24}" width="104" height="28" rx="6" fill="#FFD700"/>
+    <rect x="${cx-52}" y="${cy2-46}" width="104" height="26" rx="6" fill="#FF8C69"/>`);
     const cc=['#E74C3C','#F39C12','#27AE60','#2980B9','#9B59B6'];
     for(let i=0;i<5;i++){
-      const cx2=cx-38+i*19;
-      p.push(`<rect x="${cx2-3}" y="${cy-64}" width="7" height="20" rx="3" fill="${cc[i]}"/>`);
-      p.push(`<ellipse cx="${cx2}" cy="${cy-65}" rx="4" ry="6" fill="#FFD700" opacity=".88"/>`);
+      const cx2=cx-38+i*19, fd=(0.18+i*0.06).toFixed(2);
+      p.push(`<rect x="${cx2-3}" y="${cy2-64}" width="7" height="20" rx="3" fill="${cc[i]}"/>
+      <ellipse cx="${cx2}" cy="${cy2-66}" rx="4" ry="7" fill="#FFD700">
+        <animate attributeName="rx" values="4;6;3;5;4" dur="${fd}s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0.75;1;0.88;1" dur="${fd}s" repeatCount="indefinite"/>
+      </ellipse>`);
     }
+    p.push(`<path d="M${cx-45},${cy2} Q${cx-22},${cy2-18} ${cx},${cy2} Q${cx+22},${cy2-18} ${cx+45},${cy2}" fill="none" stroke="white" stroke-width="3.5" opacity=".68" stroke-linecap="round"/>`);
   }
   return p.join('');
 }
 
 function sceneSVG(v) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;display:block">
-    ${bgSVG(v.scene)}${propSVG(v.scene)}
-    ${kidSVG(155,GY,v.char1)}${kidSVG(445,GY,v.char2)}
+    ${bgSVG(v.scene)}
+    ${propSVG(v.scene)}
+    ${kidSVG(155, GY, v.char1, '0s')}
+    ${kidSVG(445, GY, v.char2, '1.3s')}
   </svg>`;
 }
 
 function welcomeSVG() {
-  const gy=165;
+  const gy = 165;
+  const rays6 = Array.from({length:6},(_,a)=>{
+    const r=a*60*Math.PI/180;
+    return `<line x1="${(Math.cos(r)*28).toFixed(1)}" y1="${(Math.sin(r)*28).toFixed(1)}" x2="${(Math.cos(r)*39).toFixed(1)}" y2="${(Math.sin(r)*39).toFixed(1)}" stroke="#FFD700" stroke-width="3" stroke-linecap="round"/>`;
+  }).join('');
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 205" style="width:100%;display:block">
     <rect x="0" y="0" width="380" height="${gy}" fill="#87CEEB"/>
     <rect x="0" y="${gy}" width="380" height="${205-gy}" fill="#7EC850"/>
-    <ellipse cx="80" cy="38" rx="38" ry="19" fill="white" opacity=".9"/>
-    <ellipse cx="108" cy="30" rx="27" ry="15" fill="white" opacity=".9"/>
-    <ellipse cx="300" cy="44" rx="40" ry="21" fill="white" opacity=".9"/>
+    <g>
+      <animateTransform attributeName="transform" type="translate"
+        values="0,0; 16,0; 0,0" dur="11s" repeatCount="indefinite"
+        calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+      <ellipse cx="80" cy="38" rx="38" ry="19" fill="white" opacity=".9"/>
+      <ellipse cx="108" cy="30" rx="27" ry="15" fill="white" opacity=".9"/>
+    </g>
     <circle cx="344" cy="33" r="25" fill="#FFD700"/>
+    <g transform="translate(344,33)">
+      <animateTransform attributeName="transform" type="rotate"
+        from="0 0 0" to="360 0 0" dur="20s" repeatCount="indefinite" additive="sum"/>
+      ${rays6}
+    </g>
     <circle cx="190" cy="87" r="36" fill="none" stroke="#F39C12" stroke-width="6" opacity=".78"/>
-    <circle cx="190" cy="87" r="28" fill="rgba(255,255,200,.3)"/>
+    <circle cx="190" cy="87" r="28" fill="rgba(255,255,200,.32)"/>
     <line x1="215" y1="111" x2="234" y2="135" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/>
-    <text x="190" y="97" text-anchor="middle" font-size="26">?</text>
-    ${kidSVG(74,gy,{hair:'#5C3D11',shirt:'#4ECDC4',pants:'#2C3E50',style:'short',name:''})}
-    ${kidSVG(306,gy,{hair:'#D4790A',shirt:'#FF6B6B',pants:'#7D3C98',style:'pigtails',name:''})}
+    <text x="190" y="97" text-anchor="middle" font-family="Arial Black,Arial" font-size="30" fill="#F39C12" font-weight="bold">?
+      <animate attributeName="font-size" values="28;34;28" dur="2s" repeatCount="indefinite"
+        calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+    </text>
+    ${kidSVG(74,  gy, {hair:'#5C3D11',shirt:'#4ECDC4',pants:'#2C3E50',style:'short',    name:''}, 'wave')}
+    ${kidSVG(306, gy, {hair:'#D4790A',shirt:'#FF6B6B',pants:'#7D3C98',style:'pigtails', name:''}, '1.1s')}
   </svg>`;
 }
 
-// ── RENDER ───────────────────────────────────────────────────
+// ── Animated star graphic ────────────────────────────────────
+function starSVG() {
+  return `<svg viewBox="0 0 140 140" width="128" height="128"
+              style="display:block;margin:auto;overflow:visible">
+    <circle cx="70" cy="70" r="50" fill="#FFD700" opacity="0.12">
+      <animate attributeName="r" values="44;66;44" dur="2s" repeatCount="indefinite"
+        calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+      <animate attributeName="opacity" values="0.12;0.03;0.12" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <g>
+      <animateTransform attributeName="transform" type="rotate"
+        from="0 70 70" to="360 70 70" dur="7s" repeatCount="indefinite"/>
+      <polygon points="70,14 83,50 122,50 91,72 103,108 70,87 37,108 49,72 18,50 57,50"
+        fill="#FFD700" stroke="#F39C12" stroke-width="2.5"/>
+    </g>
+    ${[[70,5,'0'],[130,35,'0.28'],[132,100,'0.56'],[70,135,'0.84'],[8,100,'1.12'],[8,35,'0.14']].map(([cx,cy,del])=>
+      `<circle cx="${cx}" cy="${cy}" r="5" fill="white" opacity="0">
+        <animate attributeName="opacity" values="0;1;0" dur="1.4s" begin="${del}s" repeatCount="indefinite"/>
+        <animate attributeName="r" values="2;7;2" dur="1.4s" begin="${del}s" repeatCount="indefinite"/>
+      </circle>`).join('')}
+  </svg>`;
+}
+
+// ── Animated trophy graphic ──────────────────────────────────
+function trophySVG() {
+  return `<svg viewBox="0 0 160 175" width="120" height="131"
+              style="display:block;margin:auto;overflow:visible">
+    <circle cx="80" cy="80" r="58" fill="rgba(255,215,0,0.15)">
+      <animate attributeName="r" values="52;68;52" dur="2.2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.15;0.04;0.15" dur="2.2s" repeatCount="indefinite"/>
+    </circle>
+    <g>
+      <animateTransform attributeName="transform" type="translate"
+        values="0,0; 0,-7; 0,0" dur="2s" repeatCount="indefinite"
+        calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/>
+      <path d="M28,18 L132,18 L117,88 Q80,114 43,88 Z" fill="#FFD700" stroke="#F39C12" stroke-width="3"/>
+      <path d="M28,18 Q4,18 4,50 Q4,82 28,82" fill="none" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/>
+      <path d="M132,18 Q156,18 156,50 Q156,82 132,82" fill="none" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/>
+      <rect x="67" y="108" width="26" height="30" rx="4" fill="#F39C12"/>
+      <rect x="43" y="136" width="74" height="19" rx="9" fill="#FFD700" stroke="#F39C12" stroke-width="2"/>
+      <polygon points="80,36 86,56 107,56 91,68 97,88 80,76 63,88 69,68 53,56 74,56" fill="white" opacity=".65"/>
+    </g>
+    ${[[142,18,'0'],[18,18,'0.5'],[156,58,'0.25'],[4,58,'0.75'],[80,168,'1.0']].map(([cx,cy,del])=>
+      `<circle cx="${cx}" cy="${cy}" r="4" fill="#FFD700" opacity="0">
+        <animate attributeName="opacity" values="0;1;0" dur="1.1s" begin="${del}s" repeatCount="indefinite"/>
+        <animate attributeName="r" values="2;6;2" dur="1.1s" begin="${del}s" repeatCount="indefinite"/>
+      </circle>`).join('')}
+  </svg>`;
+}
+
+// ── YES face (happy, bounces via CSS) ────────────────────────
+function yesFaceSVG() {
+  return `<svg class="ans-face" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="27" cy="27" r="23" fill="white" opacity=".92"/>
+    <path d="M15,21 Q18,14 21,21" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M33,21 Q36,14 39,21" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M14,31 Q27,44 40,31" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <circle cx="14" cy="29" r="5" fill="#FFB3B3" opacity=".5"/>
+    <circle cx="40" cy="29" r="5" fill="#FFB3B3" opacity=".5"/>
+  </svg>`;
+}
+
+// ── NO face (thinking, wiggles via CSS) ──────────────────────
+function noFaceSVG() {
+  return `<svg class="ans-face" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="27" cy="27" r="23" fill="white" opacity=".92"/>
+    <circle cx="19" cy="22" r="3.5" fill="#333"/>
+    <circle cx="35" cy="22" r="3.5" fill="#333"/>
+    <path d="M17,34 Q27,28 37,34" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <circle cx="38" cy="12" r="2.5" fill="#aaa"/>
+    <circle cx="43" cy="7"  r="1.8" fill="#aaa"/>
+    <circle cx="47" cy="3"  r="1.2" fill="#aaa"/>
+  </svg>`;
+}
+
+// ── RENDER ────────────────────────────────────────────────────
 const app = document.getElementById('app');
 
 function render() {
   updateAdmin();
   try {
-    switch(S.phase) {
-      case 'welcome':  renderWelcome();                              break;
-      case 'intro':    renderIntro();                                break;
-      case 'ex-story': renderStory(EXAMPLE,true);                   break;
-      case 'ex-q':     renderQuestion(EXAMPLE,S.eqi,true);          break;
-      case 'story':    renderStory(VIGNETTES[S.vi],false);          break;
-      case 'q':        renderQuestion(VIGNETTES[S.vi],S.qi,false);  break;
-      case 'trans':    renderTrans();                                break;
-      case 'end':      renderEnd();                                  break;
+    switch (S.phase) {
+      case 'welcome':  renderWelcome();                               break;
+      case 'intro':    renderIntro();                                 break;
+      case 'ex-story': renderStory(EXAMPLE, true);                   break;
+      case 'ex-q':     renderQuestion(EXAMPLE, S.eqi, true);         break;
+      case 'story':    renderStory(VIGNETTES[S.vi], false);          break;
+      case 'q':        renderQuestion(VIGNETTES[S.vi], S.qi, false); break;
+      case 'trans':    renderTrans();                                 break;
+      case 'end':      renderEnd();                                   break;
     }
   } catch(err) {
     app.innerHTML = `<div class="error-box">
       <h2 style="color:#e74c3c">Something went wrong</h2>
-      <p style="margin:10px 0">Error: <strong>${err.message}</strong></p>
-      <pre style="background:#f5f5f5;padding:12px;border-radius:8px;font-size:12px;
-                  text-align:left;overflow:auto">${err.stack||'no stack'}</pre>
-      <button class="btn btn-primary" style="margin-top:14px" onclick="resetGame()">
-        Start Over
-      </button>
+      <p style="margin:10px 0"><strong>${err.message}</strong></p>
+      <pre style="background:#f5f5f5;padding:12px;border-radius:8px;font-size:12px;text-align:left;overflow:auto">${err.stack||''}</pre>
+      <button class="btn btn-primary" style="margin-top:14px" onclick="resetGame()">Start Over</button>
     </div>`;
     console.error(err);
   }
@@ -993,56 +1189,61 @@ function render() {
 
 function renderWelcome() {
   app.innerHTML = `
-  <div class="screen" style="justify-content:center;text-align:center;padding-top:22px">
+  <div class="screen" style="justify-content:center;text-align:center;padding-top:16px">
     <div class="wt">Friend Detective!</div>
-    <div class="ws">Can you guess how friends act?</div>
+    <div class="ws">Can you figure out how friends act toward each other?</div>
     <div class="illus" style="max-width:340px">${welcomeSVG()}</div>
     <div class="name-wrap">
       <label for="cname">What is your name?</label>
       <input id="cname" class="name-input" type="text"
-             placeholder="Type your name!" maxlength="22" value="${S.name}"/>
+             placeholder="Type your name!" maxlength="22" value="${escHtml(S.name)}"/>
     </div>
-    <button class="btn btn-primary" style="font-size:22px;padding:15px 40px;margin-top:4px"
+    <button class="btn btn-primary" style="font-size:20px;padding:14px 36px;margin-top:4px"
             onclick="startGame()">
-      Lets Play!
+      Let's Play!
     </button>
   </div>`;
   stopSpeak();
-  setTimeout(()=>{
-    speak("Hi there! Welcome to Friend Detective! Can you tell me your name? When you are ready, press Lets Play!");
-    const inp=document.getElementById('cname');
-    if(inp) inp.addEventListener('input',e=>S.name=e.target.value);
-  },350);
+  setTimeout(() => {
+    speak("Hello there! Welcome to Friend Detective! I am so excited you are here today! Can you type your name in the box for me? Then, when you are all set, press the big yellow button and we will get started!");
+    const inp = document.getElementById('cname');
+    if (inp) inp.addEventListener('input', e => S.name = e.target.value);
+  }, 350);
 }
 
 function renderIntro() {
+  const nm = S.name ? `, ${S.name}` : '';
   app.innerHTML = `
-  <div class="screen" style="justify-content:center;text-align:center;gap:13px">
-    <div style="font-size:52px">Detective</div>
-    <div style="font-size:26px;font-weight:bold;color:#333">How to play</div>
+  <div class="screen" style="justify-content:center;text-align:center;gap:12px">
+    <div style="font-size:50px">🕵️</div>
+    <div style="font-size:24px;font-weight:bold;color:#333">Here is how to play!</div>
     <div class="info-box">
-      I will tell you about <strong>two kids</strong> and how they are friends.<br><br>
-      Then I will ask you to <strong>guess</strong> how they might act in other situations.<br><br>
+      I will tell you about <strong>two kids</strong> and how they
+      act <em>toward each other</em>.<br><br>
+      Then I will ask you — <strong>do you think those same two kids
+      would act that way in another situation?</strong><br><br>
       For each question, press <strong style="color:#56ab2f">YES</strong>
       or <strong style="color:#eb3349">NO</strong>.<br><br>
-      <strong>There are no wrong answers! Just make your best guess!</strong>
+      <strong>There are no wrong answers — just your best guess!</strong>
     </div>
-    <div style="font-size:17px;color:#888">Let us try an example first!</div>
-    <button class="btn btn-primary" style="font-size:20px;padding:14px 34px"
-            onclick="goExStory()">Show me!</button>
+    <div style="font-size:15px;color:#999">Let's try a practice example together first!</div>
+    <button class="btn btn-primary" style="font-size:19px;padding:12px 30px"
+            onclick="goExStory()">Show me how!</button>
   </div>`;
   stopSpeak();
-  setTimeout(()=>speak("Here is how to play! I will tell you about two kids and how they are friends. Then I will ask you to guess how they might act in other situations. For each question, just press YES or NO. There are no wrong answers! Just make your best guess! Let us try an example first!"),350);
+  setTimeout(() =>
+    speak(`Wonderful${nm}! Here is how our game works. I am going to tell you about two kids and how they act toward each other. Then I will ask you to guess — do you think those same two kids would act a certain way in another situation? For each question, just press YES or NO. And here is the really important part — there are absolutely no wrong answers. We just want to know what you think! Ready? Let us try a practice example together to warm up!`),
+  350);
 }
 
 function renderStory(v, isEx) {
-  const pct = isEx ? 0 : S.vi/VIGNETTES.length*100;
-  const lbl = isEx ? 'Example' : `Pair ${S.vi+1} of ${VIGNETTES.length}`;
+  const pct = isEx ? 0 : S.vi / VIGNETTES.length * 100;
+  const lbl = isEx ? 'Practice Example' : `Pair ${S.vi + 1} of ${VIGNETTES.length}`;
   app.innerHTML = `
-  ${isEx?'':progHTML(pct,lbl)}
-  <div class="screen" style="padding-top:${isEx?14:8}px">
+  ${isEx ? '' : progHTML(pct, lbl)}
+  <div class="screen" style="padding-top:${isEx ? 14 : 6}px">
     <div class="story-head">
-      <div class="pair-title">Meet ${v.char1.name} and ${v.char2.name}!</div>
+      <div class="pair-title">Meet ${escHtml(v.char1.name)} and ${escHtml(v.char2.name)}!</div>
       <div class="audio-status">
         <div class="audio-dot"></div>
         <span id="audioLabel">Listening...</span>
@@ -1050,241 +1251,390 @@ function renderStory(v, isEx) {
     </div>
     <div class="illus">${sceneSVG(v)}</div>
     <div class="story-box" id="storyBox">
-      ${v.parts.map((s,i)=>`<span class="sent" id="snt${i}">${s} </span>`).join('')}
+      ${v.parts.map((s, i) => `<span class="sent" id="snt${i}">${escHtml(s)} </span>`).join('')}
     </div>
     <div class="story-btns">
-      <button class="btn btn-audio" onclick="replayStory()">Hear the story again</button>
+      <button class="btn btn-audio" onclick="replayStory()">
+        Hear the story again
+      </button>
       <button class="btn btn-primary" id="readyBtn" style="display:none"
-              onclick="goQs(${isEx})">I am ready!</button>
+              onclick="goQs(${isEx})">
+        I am ready for questions!
+      </button>
     </div>
-    ${isEx?`<div style="font-size:13px;color:#ccc">This is just a practice example!</div>`:''}
+    ${isEx ? `<div style="font-size:12px;color:#ccc;margin-top:2px">Just a practice example!</div>` : ''}
   </div>`;
   stopSpeak();
-  setTimeout(()=>{
-    speak(`Let me tell you about ${v.char1.name} and ${v.char2.name}!`, ()=>{
-      speakSeq(v.parts,
-        i=>{
-          document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
-          const el=document.getElementById(`snt${i}`);
-          if(el) el.classList.add('hi');
+  setTimeout(() => {
+    const opener = isEx
+      ? `Okay! For our practice, I want you to meet ${v.char1.name} and ${v.char2.name}. Listen carefully while I tell you how they act toward each other!`
+      : `Alright! Now I want you to meet ${v.char1.name} and ${v.char2.name}. Listen carefully while I tell you how they act toward each other!`;
+    speak(opener, () => {
+      speakSeq(
+        v.parts,
+        i => {
+          document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
+          const el = document.getElementById(`snt${i}`);
+          if (el) el.classList.add('hi');
         },
-        ()=>{
-          document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
-          const rb=document.getElementById('readyBtn');
-          if(rb) rb.style.display='inline-flex';
-          speak(`Now let us answer some questions about ${v.char1.name} and ${v.char2.name}!`);
+        () => {
+          document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
+          const rb = document.getElementById('readyBtn');
+          if (rb) rb.style.display = 'inline-flex';
+          speak(`Great listening! Now I am going to ask you some questions about ${v.char1.name} and ${v.char2.name}. Think about what you just heard, and press YES or NO for each one. Press the button whenever you are ready!`);
         }
       );
     });
-  },400);
+  }, 400);
 }
 
 function replayStory() {
-  const v=exPhase()?EXAMPLE:VIGNETTES[S.vi];
+  const v = exPhase() ? EXAMPLE : VIGNETTES[S.vi];
   stopSpeak();
-  const rb=document.getElementById('readyBtn');
-  if(rb) rb.style.display='none';
-  speakSeq(v.parts,
-    i=>{
-      document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
-      const el=document.getElementById(`snt${i}`);
-      if(el) el.classList.add('hi');
-    },
-    ()=>{
-      document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
-      const rb2=document.getElementById('readyBtn');
-      if(rb2) rb2.style.display='inline-flex';
-    }
-  );
+  const rb = document.getElementById('readyBtn');
+  if (rb) rb.style.display = 'none';
+  speak(`Sure! Let me tell you about ${v.char1.name} and ${v.char2.name} again. Listen carefully!`, () => {
+    speakSeq(
+      v.parts,
+      i => {
+        document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
+        const el = document.getElementById(`snt${i}`);
+        if (el) el.classList.add('hi');
+      },
+      () => {
+        document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
+        const rb2 = document.getElementById('readyBtn');
+        if (rb2) rb2.style.display = 'inline-flex';
+      }
+    );
+  });
 }
 
 function renderQuestion(v, qi, isEx) {
-  const q=v.questions[qi];
-  const pct=isEx?0:S.vi/VIGNETTES.length*100;
-  const lbl=isEx?'Example':`Pair ${S.vi+1} of ${VIGNETTES.length}`;
+  const q   = v.questions[qi];
+  const pct = isEx ? 0 : S.vi / VIGNETTES.length * 100;
+  const lbl = isEx ? 'Practice Example' : `Pair ${S.vi + 1} of ${VIGNETTES.length}`;
   app.innerHTML = `
-  ${isEx?'':progHTML(pct,lbl)}
-  <div class="screen" style="padding-top:${isEx?14:8}px;gap:10px">
+  ${isEx ? '' : progHTML(pct, lbl)}
+  <div class="screen" style="padding-top:${isEx ? 12 : 6}px;gap:9px">
     <div class="q-header">
-      Question ${qi+1} of 3 - ${v.char1.name} and ${v.char2.name}
+      Question ${qi + 1} of 3 &nbsp;&middot;&nbsp;
+      <strong>${escHtml(v.char1.name)}</strong> &amp; <strong>${escHtml(v.char2.name)}</strong>
     </div>
-    <div class="audio-status">
+    <div class="audio-status" style="justify-content:center">
       <div class="audio-dot"></div>
       <span id="audioLabel">Listen...</span>
     </div>
-    <div class="illus" style="max-height:160px;overflow:hidden">${sceneSVG(v)}</div>
-    <div class="q-box" id="qBox">"${q.text}"</div>
+    <div class="q-frame">
+      Thinking about <strong>${escHtml(v.char1.name)}</strong> and <strong>${escHtml(v.char2.name)}</strong>
+      and how they act toward each other...<br>
+      <strong>do you think <span class="they">they</span> would act this way?</strong>
+    </div>
+    <div class="q-box">"${escHtml(q.text)}"</div>
     <div class="ans-row">
-      <button class="btn btn-green" id="btnY" onclick="doAnswer('YES')">YES</button>
-      <button class="btn btn-red"   id="btnN" onclick="doAnswer('NO')">NO</button>
+      <button class="btn btn-green" id="btnY" onclick="doAnswer('YES')">
+        ${yesFaceSVG()} YES!
+      </button>
+      <button class="btn btn-red" id="btnN" onclick="doAnswer('NO')">
+        ${noFaceSVG()} NO
+      </button>
     </div>
     <div class="q-replay">
       <button class="btn btn-audio"     onclick="replayQ()">Hear question again</button>
       <button class="btn btn-secondary" onclick="replayStoryQ(${isEx})">Hear their story again</button>
     </div>
-    ${isEx?`<div class="ex-explain" id="exExp"></div>`:''}
+    ${isEx ? `<div class="ex-explain" id="exExp"></div>` : ''}
   </div>`;
   stopSpeak();
-  setTimeout(()=>speak(`Question ${qi+1}. ${q.text}`),350);
+  setTimeout(() =>
+    speak(`Question ${qi + 1} of 3. ${q.text}. Do you think ${v.char1.name} and ${v.char2.name} would act that way? Press YES or NO!`),
+  350);
 }
 
 function replayQ() {
-  const v=exPhase()?EXAMPLE:VIGNETTES[S.vi];
-  const qi=exPhase()?S.eqi:S.qi;
+  const v  = exPhase() ? EXAMPLE : VIGNETTES[S.vi];
+  const qi = exPhase() ? S.eqi   : S.qi;
+  const q  = v.questions[qi];
   stopSpeak();
-  speak(v.questions[qi].text);
+  speak(`Here is the question again. ${q.text}. Do you think ${v.char1.name} and ${v.char2.name} would act that way?`);
 }
+
 function replayStoryQ(isEx) {
-  const v=isEx?EXAMPLE:VIGNETTES[S.vi];
+  const v = isEx ? EXAMPLE : VIGNETTES[S.vi];
   stopSpeak();
-  speakSeq(v.parts,null,()=>speak(`Now, thinking about ${v.char1.name} and ${v.char2.name}, what do you think?`));
+  speak(`Sure! Let me remind you about ${v.char1.name} and ${v.char2.name}.`, () => {
+    speakSeq(v.parts, null, () =>
+      speak(`Okay! Now, thinking about how ${v.char1.name} and ${v.char2.name} act toward each other — what do you think?`)
+    );
+  });
 }
 
 function doAnswer(ans) {
-  ['btnY','btnN'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=true;});
-  const isEx=exPhase();
-  const v=isEx?EXAMPLE:VIGNETTES[S.vi];
-  const qi=isEx?S.eqi:S.qi;
-  const q=v.questions[qi];
+  ['btnY','btnN'].forEach(id => { const b = document.getElementById(id); if (b) b.disabled = true; });
+  const isEx = exPhase();
+  const v    = isEx ? EXAMPLE : VIGNETTES[S.vi];
+  const qi   = isEx ? S.eqi   : S.qi;
+  const q    = v.questions[qi];
   flashBtn(ans);
   popFB(ans);
+
   if (isEx) {
-    const exDiv=document.getElementById('exExp');
-    if(exDiv){exDiv.style.display='block';exDiv.textContent=q.explain||'';}
+    const exDiv = document.getElementById('exExp');
+    if (exDiv) { exDiv.style.display = 'block'; exDiv.textContent = q.explain || ''; }
     stopSpeak();
-    speak(q.explain||'',()=>{
-      setTimeout(()=>{
-        if(S.eqi<EXAMPLE.questions.length-1){S.eqi++;S.phase='ex-q';render();}
-        else{speak("Great job on the practice! Now let us start the real game!",()=>{S.phase='story';S.vi=0;S.qi=0;render();});}
-      },2000);
+    const opener = ['Hmm, interesting choice! Let me explain.', 'Nice thinking! Here is what I was thinking.', 'Good guess! Here is the reason.'][qi];
+    speak(`${opener} ${q.explain || ''}`, () => {
+      setTimeout(() => {
+        if (S.eqi < EXAMPLE.questions.length - 1) {
+          S.eqi++;
+          S.phase = 'ex-q';
+          render();
+        } else {
+          speak(`Great job on the practice! You are already thinking like a real detective! Now let us play the real game. Are you ready?`, () => {
+            setTimeout(() => { S.phase = 'story'; S.vi = 0; S.qi = 0; render(); }, 500);
+          });
+        }
+      }, 2200);
     });
   } else {
     S.answers.push({
-      vid:v.id, vM:v.model, qi, qM:q.qM, ans, keyed:q.keyed,
-      ok:ans===q.keyed, ts:new Date().toISOString()
+      vid: v.id, vM: v.model, qi, qM: q.qM, ans,
+      keyed: q.keyed, ok: ans === q.keyed, ts: new Date().toISOString()
     });
-    setTimeout(()=>{
-      if(S.qi<2){S.qi++;S.phase='q';}
-      else{S.stars++;S.phase='trans';}
+    setTimeout(() => {
+      if (S.qi < 2) { S.qi++;   S.phase = 'q';     }
+      else          { S.stars++; S.phase = 'trans'; }
       render();
-    },900);
+    }, 950);
   }
 }
 
 function flashBtn(ans) {
-  const b=document.getElementById(ans==='YES'?'btnY':'btnN');
-  if(!b)return;
-  b.style.transform='scale(1.14)';
-  b.style.boxShadow='0 0 0 6px rgba(255,255,255,.7)';
-  setTimeout(()=>{b.style.transform='';b.style.boxShadow='';},450);
+  const b = document.getElementById(ans === 'YES' ? 'btnY' : 'btnN');
+  if (!b) return;
+  b.style.transform  = 'scale(1.13)';
+  b.style.boxShadow  = '0 0 0 8px rgba(255,255,255,.72)';
+  setTimeout(() => { b.style.transform = ''; b.style.boxShadow = ''; }, 450);
 }
 
 function popFB(ans) {
-  const wrap=document.createElement('div');
-  wrap.className='fb-wrap';
-  wrap.innerHTML=`<div class="fb-emoji">${ans==='YES'?'👍':'👎'}</div>`;
+  const wrap = document.createElement('div');
+  wrap.className = 'fb-wrap';
+  wrap.innerHTML = `<div class="fb-emoji">${ans === 'YES' ? '👍' : '👎'}</div>`;
   document.body.appendChild(wrap);
-  setTimeout(()=>wrap.remove(),900);
+  setTimeout(() => wrap.remove(), 920);
 }
 
 function renderTrans() {
-  const ni=S.vi+1;
-  const last=ni>=VIGNETTES.length;
-  const np=last?null:VIGNETTES[ni];
-  app.innerHTML=`
+  const ni   = S.vi + 1;
+  const last = ni >= VIGNETTES.length;
+  const np   = last ? null : VIGNETTES[ni];
+  const kudo = KUDOS[Math.floor(Math.random() * KUDOS.length)];
+
+  app.innerHTML = `
   <div class="trans-screen">
-    <div class="trans-star">Star</div>
-    <div class="trans-msg">Great job! ${S.stars} ${S.stars===1?'star':'stars'} so far!</div>
-    <div class="trans-next">${last?'That was the last pair!':'Next: meet '+np.char1.name+' and '+np.char2.name+'!'}</div>
+    <div class="trans-star-wrap">${starSVG()}</div>
+    <div class="trans-msg">${kudo}</div>
+    <div style="font-size:26px;font-weight:bold;color:#F39C12;margin-top:2px">
+      ${S.stars} ${S.stars === 1 ? 'star' : 'stars'}!
+    </div>
+    <div class="trans-sub" style="margin-top:6px">
+      ${last
+        ? 'That was the very last pair — you are almost finished!'
+        : `Next up: meet <strong>${escHtml(np.char1.name)}</strong> and <strong>${escHtml(np.char2.name)}</strong>!`
+      }
+    </div>
   </div>`;
-  const msg=last?`Amazing! You finished all the pairs!`:`Great job! You earned a star! Next, let us meet ${np.char1.name} and ${np.char2.name}!`;
+
+  const msg = last
+    ? `${kudo} You have answered every single pair! You are almost done! What an amazing job!`
+    : `${kudo} You have earned a star! You have ${S.stars} ${S.stars === 1 ? 'star' : 'stars'} now! Next up, let us meet ${np.char1.name} and ${np.char2.name}!`;
+
   stopSpeak();
-  speak(msg,()=>{
-    setTimeout(()=>{
-      if(last){S.phase='end';}else{S.vi++;S.qi=0;S.phase='story';}
+  speak(msg, () => {
+    setTimeout(() => {
+      if (last) { S.phase = 'end'; }
+      else      { S.vi++; S.qi = 0; S.phase = 'story'; }
       render();
-    },700);
+    }, 700);
   });
 }
 
 function renderEnd() {
-  const nm=S.name||'Detective';
-  const tot=S.answers.length;
-  const cor=S.answers.filter(a=>a.ok).length;
-  app.innerHTML=`
+  const nm  = S.name || 'Detective';
+  const tot = S.answers.length;
+  const cor = S.answers.filter(a => a.ok).length;
+  app.innerHTML = `
   <div class="end-screen">
-    <div class="end-trophy">Trophy</div>
-    <div class="end-title">Amazing job, ${nm}!</div>
-    <div class="end-sub">You answered all ${VIGNETTES.length} pairs! ${S.stars} stars earned!</div>
-    <div style="font-size:15px;color:#bbb;margin-top:-4px">${cor} of ${tot} answers matched the scoring key.</div>
+    <div class="end-trophy-wrap">${trophySVG()}</div>
+    <div class="end-title">Amazing, ${escHtml(nm)}!</div>
+    <div class="end-sub">
+      You answered all ${VIGNETTES.length} pairs of friends!<br>
+      ${S.stars} star${S.stars === 1 ? '' : 's'} earned!
+    </div>
+    <div style="font-size:13px;color:#ccc">${cor} of ${tot} answers matched the scoring key</div>
     <div class="end-btns">
       <button class="btn btn-primary"   onclick="exportCSV()">Download Results</button>
       <button class="btn btn-secondary" onclick="resetGame()">Play Again</button>
     </div>
   </div>`;
   stopSpeak();
-  speak(`Wow, amazing job, ${nm}! You finished the whole game! You are a real Friend Detective! Great work!`);
+  speak(`${nm}, you have done something really amazing today! You answered questions about all fifteen pairs of friends! You thought so carefully about each one, and I am incredibly proud of you. You are a true Friend Detective. Give yourself a big pat on the back — you have really earned it!`);
 }
 
-function progHTML(pct,lbl) {
+function progHTML(pct, lbl) {
   return `<div class="prog-wrap"><div class="prog-fill" style="width:${pct}%"></div></div>
           <div class="prog-label">${lbl}</div>`;
 }
 
 // ── NAVIGATION ───────────────────────────────────────────────
-function exPhase()    { return S.phase==='ex-story'||S.phase==='ex-q'; }
-function startGame()  { const inp=document.getElementById('cname');S.name=(inp?inp.value:'')||'';S.phase='intro';render(); }
-function goExStory()  { S.phase='ex-story';S.eqi=0;render(); }
-function goQs(isEx)   { S.phase=isEx?'ex-q':'q';if(isEx)S.eqi=0;else S.qi=0;render(); }
-function skipPair()   { if(S.phase==='story'||S.phase==='q'){S.stars++;S.phase='trans';render();} }
-function skipEnd()    { stopSpeak();S.phase='end';render(); }
-function resetGame()  { stopSpeak();Object.assign(S,{phase:'welcome',name:'',vi:0,qi:0,eqi:0,answers:[],stars:0,adminOpen:false});render(); }
+function exPhase()  { return S.phase === 'ex-story' || S.phase === 'ex-q'; }
 
-// ── ADMIN ────────────────────────────────────────────────────
-document.getElementById('adminBtn').addEventListener('click',()=>{
-  S.adminOpen=!S.adminOpen;
-  document.getElementById('adminPanel').classList.toggle('open',S.adminOpen);
-  updateAdmin();
-});
-function updateAdmin() {
-  const el=document.getElementById('adminLog');
-  if(!el)return;
-  if(!S.answers.length){el.textContent='No answers yet.';return;}
-  el.textContent=S.answers.map(a=>`V${a.vid} Q${a.qi+1} [${a.vM}>${a.qM}]: ${a.ans} (key:${a.keyed}) ${a.ok?'ok':'x'}`).join('\n');
+function startGame() {
+  const inp = document.getElementById('cname');
+  S.name = (inp ? inp.value.trim() : '') || '';
+  S.phase = 'intro';
+  render();
+}
+function goExStory() { S.eqi = 0; S.phase = 'ex-story'; render(); }
+function goQs(isEx) {
+  if (isEx) { S.eqi = 0; S.phase = 'ex-q'; }
+  else      { S.qi  = 0; S.phase = 'q';    }
+  render();
+}
+function skipPair() {
+  if (S.phase === 'story' || S.phase === 'q') { S.stars++; S.phase = 'trans'; render(); }
+}
+function skipEnd()   { stopSpeak(); S.phase = 'end'; render(); }
+function resetGame() {
+  stopSpeak();
+  Object.assign(S, { phase:'welcome', name:'', vi:0, qi:0, eqi:0,
+                      answers:[], stars:0, adminOpen:false });
+  render();
 }
 
-// ── CSV EXPORT ───────────────────────────────────────────────
+// ── ADMIN PANEL ──────────────────────────────────────────────
+function setupAdmin() {
+  const panel = document.getElementById('adminPanel');
+  if (!panel) return;
+  panel.innerHTML = `
+    <h3>Researcher Panel</h3>
+
+    <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #eee">
+      <div class="admin-section-label">Voice settings</div>
+      <div style="font-size:11px;color:#bbb;margin-bottom:7px;line-height:1.6">
+        For the most natural-sounding voice, enter an ElevenLabs API key.
+        Get one free at <a href="https://elevenlabs.io" target="_blank"
+        style="color:#4776e6;text-decoration:none">elevenlabs.io</a>.<br>
+        Your key is saved only in this browser.
+        Without a key, the built-in device voice is used.
+      </div>
+      <input id="elKeyInput" type="password" class="admin-input"
+             placeholder="Paste ElevenLabs API key here..."/>
+      <select id="elVoiceSelect" class="admin-select">
+        <option value="MF3mGyEYCl7XYWbV9V6O">Elli — warm, young (recommended)</option>
+        <option value="jBpfuIE2acCO8z3wKNLl">Gigi — upbeat, enthusiastic</option>
+        <option value="21m00Tcm4TlvDq8ikWAM">Rachel — calm, clear</option>
+        <option value="ThT5KcBeYPX3keUQqHPh">Dorothy — warm, pleasant</option>
+        <option value="pNInz6obpgDQGcFmaJgB">Adam — friendly, clear</option>
+      </select>
+      <div class="admin-row">
+        <button class="admin-btn-sm" onclick="saveVoiceSettings()">Save</button>
+        <button class="admin-btn-sm admin-btn-blue" onclick="testVoice()">Test Voice</button>
+      </div>
+      <div id="voiceStatus" style="font-size:11px;color:#aaa;text-align:center;min-height:16px"></div>
+    </div>
+
+    <div class="admin-section-label">Responses</div>
+    <div class="admin-log" id="adminLog">No answers yet.</div>
+
+    <button class="admin-btn-sm admin-btn-gold" style="width:100%;margin-bottom:5px;padding:8px;font-size:12px;border-radius:8px"
+            onclick="exportCSV()">Download Results (CSV)</button>
+    <button class="admin-btn-sm" style="width:100%;margin-bottom:5px;padding:8px;font-size:12px;border-radius:8px"
+            onclick="skipPair()">Skip this pair</button>
+    <button class="admin-btn-sm" style="width:100%;padding:8px;font-size:12px;border-radius:8px"
+            onclick="skipEnd()">Skip to End</button>`;
+
+  // Restore saved values
+  const ki = document.getElementById('elKeyInput');
+  const vs = document.getElementById('elVoiceSelect');
+  if (ki) ki.value = S.elevenLabsKey;
+  if (vs) vs.value = S.elevenLabsVoice;
+
+  document.getElementById('adminBtn').addEventListener('click', () => {
+    S.adminOpen = !S.adminOpen;
+    panel.classList.toggle('open', S.adminOpen);
+    updateAdmin();
+  });
+
+  updateAdmin();
+}
+
+function saveVoiceSettings() {
+  const ki = document.getElementById('elKeyInput');
+  const vs = document.getElementById('elVoiceSelect');
+  const st = document.getElementById('voiceStatus');
+  S.elevenLabsKey   = ki ? ki.value.trim() : '';
+  S.elevenLabsVoice = vs ? vs.value : 'MF3mGyEYCl7XYWbV9V6O';
+  try {
+    localStorage.setItem('rad_elKey',   S.elevenLabsKey);
+    localStorage.setItem('rad_elVoice', S.elevenLabsVoice);
+  } catch(e) {}
+  if (st) {
+    st.textContent = S.elevenLabsKey ? 'Saved! ElevenLabs voice active.' : 'Saved. Using built-in voice.';
+    setTimeout(() => { st.textContent = ''; }, 2500);
+  }
+}
+
+function testVoice() {
+  saveVoiceSettings();
+  stopSpeak();
+  speak("Hello! I am the Friend Detective voice. Does this sound good to you?");
+}
+
+function updateAdmin() {
+  const el = document.getElementById('adminLog');
+  if (!el) return;
+  if (!S.answers.length) { el.textContent = 'No answers yet.'; return; }
+  el.textContent = S.answers.map(a =>
+    `V${a.vid} Q${a.qi+1} [${a.vM}>${a.qM}]: ${a.ans} (key:${a.keyed}) ${a.ok ? 'ok' : 'x'}`
+  ).join('\n');
+}
+
+// ── CSV EXPORT ────────────────────────────────────────────────
 function exportCSV() {
-  const rows=['ChildName,VignetteID,VigModel,QIndex,QModel,ChildAnswer,KeyedAnswer,Correct,Timestamp'];
-  S.answers.forEach(a=>rows.push(`${S.name},${a.vid},${a.vM},${a.qi+1},${a.qM},${a.ans},${a.keyed},${a.ok},${a.ts}`));
-  const blob=new Blob([rows.join('\n')],{type:'text/csv'});
-  const url=URL.createObjectURL(blob);
-  const link=document.createElement('a');
-  link.href=url;
-  link.download=`RAD15C_${S.name||'child'}_${new Date().toISOString().slice(0,10)}.csv`;
+  const rows = ['ChildName,VignetteID,VigModel,QIndex,QModel,ChildAnswer,KeyedAnswer,Correct,Timestamp'];
+  S.answers.forEach(a =>
+    rows.push(`${S.name},${a.vid},${a.vM},${a.qi+1},${a.qM},${a.ans},${a.keyed},${a.ok},${a.ts}`)
+  );
+  const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+  const url  = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href     = url;
+  link.download = `RAD15C_${S.name||'child'}_${new Date().toISOString().slice(0,10)}.csv`;
   link.click();
   URL.revokeObjectURL(url);
 }
 
-// ── INIT ─────────────────────────────────────────────────────
+// ── INIT ──────────────────────────────────────────────────────
 window.addEventListener('load', () => {
   try {
     initVoices();
+    setupAdmin();
     render();
   } catch(err) {
-    document.getElementById('app').innerHTML =
-      `<div class="error-box">
-        <h2 style="color:#e74c3c">Could not start the game</h2>
-        <p style="margin:10px 0">Error: <strong>${err.message}</strong></p>
-        <pre style="background:#f5f5f5;padding:12px;border-radius:8px;
-                    font-size:12px;text-align:left;overflow:auto">${err.stack||''}</pre>
-      </div>`;
+    document.getElementById('app').innerHTML = `<div class="error-box">
+      <h2 style="color:#e74c3c">Could not start the game</h2>
+      <p style="margin:10px 0"><strong>${err.message}</strong></p>
+      <pre style="background:#f5f5f5;padding:12px;border-radius:8px;font-size:12px;
+                  text-align:left;overflow:auto">${err.stack||''}</pre>
+    </div>`;
     console.error(err);
   }
 });
 
-window.addEventListener('keydown',e=>{
-  if(e.key==='Backspace'&&e.target.tagName!=='INPUT') e.preventDefault();
+window.addEventListener('keydown', e => {
+  if (e.key === 'Backspace' && e.target.tagName !== 'INPUT') e.preventDefault();
 });
 
 </script>

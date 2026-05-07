@@ -25,7 +25,6 @@ body {
   min-height: 580px;
 }
 
-/* ── Star Meter ───────────────────────────────────────── */
 .star-meter-wrap {
   display: flex; flex-direction: column;
   align-items: center; padding: 8px 16px 3px; gap: 2px;
@@ -51,11 +50,9 @@ body {
   100% { transform: scale(1)   rotate(0deg); }
 }
 .star-meter-lbl { font-size: 10px; color: #ccc; }
-
 .star-meter-large { flex-wrap: wrap; max-width: 220px; gap: 6px; }
 .star-meter-large .star-item { font-size: 34px; }
 
-/* ── Screen ───────────────────────────────────────────── */
 .screen {
   flex: 1; display: flex; flex-direction: column;
   align-items: center; padding: 11px 17px 17px;
@@ -66,7 +63,6 @@ body {
   to   { opacity:1; transform:translateY(0);   }
 }
 
-/* ── Welcome ──────────────────────────────────────────── */
 .wt {
   font-size: 36px; font-weight: bold; text-align: center; line-height: 1.2;
   background: linear-gradient(135deg,#f7971e,#f64f59);
@@ -88,7 +84,6 @@ body {
   border-color: #F7971E; box-shadow: 0 0 0 4px rgba(247,151,30,.13);
 }
 
-/* ── Buttons ──────────────────────────────────────────── */
 .btn {
   font-family: inherit; font-size: 17px; font-weight: bold;
   border: none; border-radius: 50px; padding: 11px 24px;
@@ -127,28 +122,11 @@ body {
   0%,100%{transform:rotate(0deg);} 22%{transform:rotate(-9deg);} 62%{transform:rotate(9deg);}
 }
 
-/* neutral press flash (replaces emoji pop) */
-.press-flash {
-  position: fixed; inset:0; pointer-events:none; z-index:999;
-  display:flex; align-items:center; justify-content:center;
-}
-.press-ring {
-  width:90px; height:90px; border-radius:50%;
-  border: 6px solid rgba(180,180,180,0.55);
-  animation: ringOut 0.65s ease forwards;
-}
-@keyframes ringOut {
-  0%  { transform:scale(0.3); opacity:0.9; }
-  100%{ transform:scale(4.2); opacity:0; }
-}
-
-/* ── Illustration ─────────────────────────────────────── */
 .illus {
   width:100%; border-radius:13px; overflow:hidden;
   background:#E8F4FF; box-shadow: inset 0 2px 8px rgba(0,0,0,.07);
 }
 
-/* ── Story ────────────────────────────────────────────── */
 .story-head { display:flex; justify-content:space-between; align-items:center; width:100%; }
 .pair-title  { font-size:18px; font-weight:bold; color:#333; }
 .audio-status { display:flex; align-items:center; gap:5px; font-size:12px; color:#ccc; }
@@ -166,7 +144,6 @@ body {
 .sent.hi { background:#FFF3B0; }
 .story-btns { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; width:100%; }
 
-/* ── Question ─────────────────────────────────────────── */
 .q-header {
   width:100%;
   background:linear-gradient(135deg,#4776e6,#8e54e9);
@@ -191,7 +168,6 @@ body {
 .ans-row   { display:flex; gap:15px; justify-content:center; width:100%; }
 .q-replay  { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; width:100%; }
 
-/* Example explanation */
 .ex-explain {
   display:none; width:100%;
   background:#E8F8E8; border:2px solid #A5D6A7; border-radius:12px;
@@ -199,7 +175,6 @@ body {
   text-align:center; line-height:1.6;
 }
 
-/* ── Transition ───────────────────────────────────────── */
 .trans-screen {
   flex:1; display:flex; flex-direction:column;
   align-items:center; justify-content:center;
@@ -208,7 +183,6 @@ body {
 .trans-msg { font-size:22px; font-weight:bold; color:#333; }
 .trans-sub { font-size:15px; color:#aaa; }
 
-/* ── End ──────────────────────────────────────────────── */
 .end-screen {
   flex:1; display:flex; flex-direction:column;
   align-items:center; justify-content:center;
@@ -222,7 +196,6 @@ body {
 .end-sub   { font-size:16px; color:#666; }
 .end-btns  { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:4px; }
 
-/* ── Admin ────────────────────────────────────────────── */
 .admin-btn {
   position:fixed; bottom:10px; right:10px;
   width:34px; height:34px; border-radius:50%;
@@ -264,6 +237,15 @@ body {
 }
 .error-box { padding:28px; font-family:Arial,sans-serif; max-width:600px; margin:auto; text-align:center; }
 
+.unlock-btn {
+  background: linear-gradient(135deg,#4776e6,#8e54e9);
+  color: white; border: none; border-radius: 50px;
+  font-family: inherit; font-size: 17px; font-weight: bold;
+  padding: 13px 28px; cursor: pointer;
+  box-shadow: 0 4px 18px rgba(71,118,230,.45);
+  animation: pulse 1.5s ease infinite;
+}
+
 @media (max-width:480px) {
   .wt { font-size:25px; }
   .btn-green,.btn-red { font-size:18px; max-width:138px; }
@@ -281,7 +263,7 @@ body {
   <div style="padding:44px;text-align:center;font-family:Arial,sans-serif;color:#aaa">
     <div style="font-size:54px;margin-bottom:14px">🔍</div>
     <h2>Loading Friend Detective...</h2>
-    <p style="margin-top:10px;font-size:14px">If this message does not go away, please check that JavaScript is enabled.</p>
+    <p style="margin-top:10px;font-size:14px">If this does not go away, please check that JavaScript is enabled.</p>
   </div>
 </div>
 
@@ -291,9 +273,6 @@ body {
 <script>
 'use strict';
 
-// ═══════════════════════════════════════════════════════
-//  CONSTANTS
-// ═══════════════════════════════════════════════════════
 const W = 600, H = 300, GY = H * 0.70;
 
 const KUDOS = [
@@ -307,9 +286,6 @@ const KUDOS = [
   "Super job! You are doing wonderfully!"
 ];
 
-// ═══════════════════════════════════════════════════════
-//  EXAMPLE  (girl–girl)
-// ═══════════════════════════════════════════════════════
 const EXAMPLE = {
   id: 'ex',
   char1: { name:'Ava',  hair:'#5C3D11', shirt:'#4ECDC4', pants:'#34495E', style:'long'     },
@@ -324,12 +300,12 @@ const EXAMPLE = {
     {
       text: 'Ava and Beth take turns using the tablet so they each get the same amount of time.',
       keyed: 'YES',
-      explain: 'Since Ava and Beth like things to be fair and equal, and they always trade nice things back and forth with each other, taking turns on the tablet sounds just like them! YES makes sense here.'
+      explain: 'Since Ava and Beth like things to be fair and equal, and they always trade nice things back and forth, taking turns on the tablet sounds just like them! YES makes sense here.'
     },
     {
       text: 'Ava decides what games they play, and Beth just goes along with it.',
       keyed: 'NO',
-      explain: 'Ava and Beth seem to treat each other as equals, so it does not sound like just one of them would always be in charge. NO makes more sense here.'
+      explain: 'Ava and Beth treat each other as equals, so it does not sound like just one of them would always be in charge. NO makes more sense here.'
     },
     {
       text: 'When their class collected coins for a toy drive, Ava and Beth each put in the same amount.',
@@ -339,12 +315,7 @@ const EXAMPLE = {
   ]
 };
 
-// ═══════════════════════════════════════════════════════
-//  VIGNETTES  (all same-gender pairs)
-// ═══════════════════════════════════════════════════════
 const VIGNETTES = [
-
-  // ── 1  CS  boy–boy ──────────────────────────────────
   {
     id:1, model:'CS',
     char1:{ name:'Tommy', hair:'#8B4513', shirt:'#4A90D9', pants:'#2C3E50', style:'short' },
@@ -361,8 +332,6 @@ const VIGNETTES = [
       { text:'Tommy and Ben flipped a coin to decide which game they would play.', qM:'EM', keyed:'NO' }
     ]
   },
-
-  // ── 2  MP  girl–girl ────────────────────────────────
   {
     id:2, model:'MP',
     char1:{ name:'Lucy', hair:'#C0392B', shirt:'#9B59B6', pants:'#6C3483', style:'long'     },
@@ -379,8 +348,6 @@ const VIGNETTES = [
       { text:'When having a snack, Lucy and Tara often share what they have, swapping bites or eating from the same bag.', qM:'CS', keyed:'NO' }
     ]
   },
-
-  // ── 3  EM  boy–boy ──────────────────────────────────
   {
     id:3, model:'EM',
     char1:{ name:'Kevin',  hair:'#E0A835', shirt:'#E67E22', pants:'#154360', style:'short' },
@@ -396,8 +363,6 @@ const VIGNETTES = [
       { text:'When the teacher gave out stickers, Kevin and Marcus each made sure they took the same number.', qM:'EM', keyed:'YES' }
     ]
   },
-
-  // ── 4  MP  girl–girl ────────────────────────────────
   {
     id:4, model:'MP',
     char1:{ name:'Emma',   hair:'#DAA520', shirt:'#E74C3C', pants:'#6C3483', style:'long'     },
@@ -413,8 +378,6 @@ const VIGNETTES = [
       { text:'Emma and Maggie ran a lemonade stand together. When they split the money at the end, Maggie got more because she had done more of the work.', qM:'MP', keyed:'YES' }
     ]
   },
-
-  // ── 5  CS  boy–boy ──────────────────────────────────
   {
     id:5, model:'CS',
     char1:{ name:'Sam',   hair:'#7B4F2A', shirt:'#1ABC9C', pants:'#2C3E50', style:'short' },
@@ -430,8 +393,6 @@ const VIGNETTES = [
       { text:'When Sam got hurt at the playground, Tyler felt almost like he was hurt too. Sometimes they even say "when we got hurt."', qM:'CS', keyed:'YES' }
     ]
   },
-
-  // ── 6  AR  girl–girl ────────────────────────────────
   {
     id:6, model:'AR',
     char1:{ name:'Olivia', hair:'#C0392B', shirt:'#8E44AD', pants:'#2C3E50', style:'long'     },
@@ -447,8 +408,6 @@ const VIGNETTES = [
       { text:'When working on a project together, Olivia and Angie watch each other to make sure neither one does more or less than the other.', qM:'EM', keyed:'NO' }
     ]
   },
-
-  // ── 7  EM  boy–boy ──────────────────────────────────
   {
     id:7, model:'EM',
     char1:{ name:'Billy', hair:'#1C1C1C', shirt:'#E74C3C', pants:'#2C3E50', style:'short' },
@@ -464,8 +423,6 @@ const VIGNETTES = [
       { text:'When Billy won the school award, Jake thought that all his hard work and practice had finally paid off.', qM:'MP', keyed:'NO' }
     ]
   },
-
-  // ── 8  CS  girl–girl ────────────────────────────────
   {
     id:8, model:'CS',
     char1:{ name:'Amy',    hair:'#DAA520', shirt:'#27AE60', pants:'#154360', style:'pigtails' },
@@ -481,8 +438,6 @@ const VIGNETTES = [
       { text:'When Amy got hurt at the playground, Sophie felt almost like she was hurt too. Sometimes they even say "when we got hurt."', qM:'CS', keyed:'YES' }
     ]
   },
-
-  // ── 9  EM  boy–boy ──────────────────────────────────
   {
     id:9, model:'EM',
     char1:{ name:'Jimmy',  hair:'#9B2335', shirt:'#2980B9', pants:'#2C3E50', style:'short' },
@@ -498,8 +453,6 @@ const VIGNETTES = [
       { text:'When Jimmy won a prize last month, Carlos was just as proud and happy as if he himself had won it.', qM:'CS', keyed:'NO' }
     ]
   },
-
-  // ── 10  AR  girl–girl ───────────────────────────────
   {
     id:10, model:'AR',
     char1:{ name:'Maya', hair:'#1C1C1C', shirt:'#E91E8C', pants:'#2C3E50', style:'long'     },
@@ -515,8 +468,6 @@ const VIGNETTES = [
       { text:'Maya tells Ally when she does not like something Ally shared, but Ally does not tell Maya when she does not like something Maya shared.', qM:'AR', keyed:'YES' }
     ]
   },
-
-  // ── 11  MP  boy–boy ─────────────────────────────────
   {
     id:11, model:'MP',
     char1:{ name:'Doug', hair:'#7B4F2A', shirt:'#27AE60', pants:'#2C3E50', style:'short' },
@@ -533,8 +484,6 @@ const VIGNETTES = [
       { text:'When Doug won a prize, Ryan was just as proud and happy as if he himself had won it.', qM:'CS', keyed:'NO' }
     ]
   },
-
-  // ── 12  AR  girl–girl ───────────────────────────────
   {
     id:12, model:'AR',
     char1:{ name:'Mary',  hair:'#9B2335', shirt:'#1ABC9C', pants:'#6C3483', style:'long'     },
@@ -550,8 +499,6 @@ const VIGNETTES = [
       { text:'When Mary and Grace made a painting together, Mary said her name had to go on it first.', qM:'AR', keyed:'YES' }
     ]
   },
-
-  // ── 13  EM  boy–boy ─────────────────────────────────
   {
     id:13, model:'EM',
     char1:{ name:'George', hair:'#7B4F2A', shirt:'#E67E22', pants:'#2C3E50', style:'short' },
@@ -567,8 +514,6 @@ const VIGNETTES = [
       { text:'Ethan is always thinking about how much time he should spend with George and whether spending time with George is really worth it.', qM:'MP', keyed:'NO' }
     ]
   },
-
-  // ── 14  CS  girl–girl ───────────────────────────────
   {
     id:14, model:'CS',
     char1:{ name:'Karen', hair:'#9B2335', shirt:'#2980B9', pants:'#6C3483', style:'long'     },
@@ -584,8 +529,6 @@ const VIGNETTES = [
       { text:'Lily is always thinking about how much time she should spend with Karen and whether spending time with Karen is really worth it.', qM:'MP', keyed:'NO' }
     ]
   },
-
-  // ── 15  AR  boy–boy ─────────────────────────────────
   {
     id:15, model:'AR',
     char1:{ name:'Barry', hair:'#1C1C1C', shirt:'#E74C3C', pants:'#2C3E50', style:'short' },
@@ -601,12 +544,9 @@ const VIGNETTES = [
       { text:'Barry and Will take turns using the computer to make sure they each get the same amount of time.', qM:'EM', keyed:'NO' }
     ]
   }
-
 ];
 
-// ═══════════════════════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════════════════════
+// ── STATE ──────────────────────────────────────────────
 const S = {
   phase: 'welcome', name: '', age: '',
   vi: 0, qi: 0, eqi: 0,
@@ -615,15 +555,34 @@ const S = {
   elevenLabsVoice: localStorage.getItem('rad_elVoice') || 'MF3mGyEYCl7XYWbV9V6O'
 };
 
-// ═══════════════════════════════════════════════════════
-//  SPEECH
-// ═══════════════════════════════════════════════════════
-let voices = [], currentAudio = null, seqGen = 0;
+// ── SPEECH ─────────────────────────────────────────────
+let voices = [], currentAudio = null, seqGen = 0, audioUnlocked = false;
 
 function initVoices() {
-  voices = speechSynthesis.getVoices();
-  if (!voices.length)
-    speechSynthesis.addEventListener('voiceschanged', () => { voices = speechSynthesis.getVoices(); });
+  function load() {
+    const v = speechSynthesis.getVoices();
+    if (v.length) voices = v;
+  }
+  load();
+  speechSynthesis.onvoiceschanged = load;
+}
+
+function unlockAudio(thenSpeak) {
+  if (audioUnlocked) {
+    if (thenSpeak) speak(thenSpeak);
+    return;
+  }
+  audioUnlocked = true;
+  if (window.speechSynthesis) {
+    const silent = new SpeechSynthesisUtterance(' ');
+    silent.volume = 0;
+    silent.onend = () => { if (thenSpeak) speak(thenSpeak); };
+    speechSynthesis.speak(silent);
+  } else {
+    if (thenSpeak) speak(thenSpeak);
+  }
+  const ub = document.getElementById('unlockBtn');
+  if (ub) ub.remove();
 }
 
 function bestVoice() {
@@ -657,7 +616,7 @@ function speakWebSpeech(text, done) {
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.voice  = bestVoice();
-  u.rate   = 1.06;   // ~1.25× the previous 0.85
+  u.rate   = 1.06;
   u.pitch  = 1.08;
   u.volume = 1;
   u.onend  = () => { setDot(false); done(); };
@@ -680,11 +639,7 @@ function speakElevenLabs(text, done) {
     body: JSON.stringify({
       text: text,
       model_id: 'eleven_turbo_v2',
-      voice_settings: {
-        stability: 0.42, similarity_boost: 0.75,
-        style: 0.38, use_speaker_boost: true,
-        speed: 1.25
-      }
+      voice_settings: { stability: 0.42, similarity_boost: 0.75, style: 0.38, use_speaker_boost: true, speed: 1.25 }
     })
   })
   .then(r => { if (!r.ok) throw new Error('ElevenLabs ' + r.status); return r.blob(); })
@@ -725,13 +680,9 @@ function setDot(on) {
   if (l) l.textContent = on ? 'Listening...' : 'Done';
 }
 
-// ═══════════════════════════════════════════════════════
-//  SVG HELPERS
-// ═══════════════════════════════════════════════════════
+// ── SVG HELPERS ────────────────────────────────────────
 function escHtml(s) {
-  return String(s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 const SKINS = ['#FDBCB4','#F0C090','#E0A878','#C87E50','#FDDBB4'];
@@ -748,23 +699,16 @@ function kidSVG(cx, groundY, cfg, animOffset) {
   const hR=28, bH=62, bW=50, lH=58, lW=19, aH=44, aW=12;
   const fY=groundY, lT=fY-lH, bT=lT-bH, hY=bT-hR-3;
   const p = [];
-
   p.push(`<ellipse cx="${cx}" cy="${fY}" rx="26" ry="6" fill="rgba(0,0,0,.08)"/>`);
   p.push(`<rect x="${cx-lW-2}" y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
   p.push(`<rect x="${cx+2}"    y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
   p.push(`<ellipse cx="${cx-lW*.5-1}" cy="${fY}" rx="13" ry="6" fill="#333"/>`);
   p.push(`<ellipse cx="${cx+lW*.5+1}" cy="${fY}" rx="13" ry="6" fill="#333"/>`);
-  // Left arm
   p.push(`<rect x="${cx-bW*.5-aW}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
   p.push(`<circle cx="${cx-bW*.5-aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>`);
-  // Right arm — waving on welcome, static otherwise
   if (animOffset === 'wave') {
     const pvX = (cx+bW*.5+aW*.5).toFixed(1), pvY = (bT+8).toFixed(1);
-    p.push(`<g>
-      <animateTransform attributeName="transform" type="rotate"
-        values="-35 ${pvX} ${pvY}; 40 ${pvX} ${pvY}; -35 ${pvX} ${pvY}"
-        dur="0.85s" repeatCount="indefinite"
-        calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+    p.push(`<g><animateTransform attributeName="transform" type="rotate" values="-35 ${pvX} ${pvY}; 40 ${pvX} ${pvY}; -35 ${pvX} ${pvY}" dur="0.85s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
       <rect x="${cx+bW*.5}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>
       <circle cx="${cx+bW*.5+aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>
     </g>`);
@@ -772,12 +716,9 @@ function kidSVG(cx, groundY, cfg, animOffset) {
     p.push(`<rect x="${cx+bW*.5}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
     p.push(`<circle cx="${cx+bW*.5+aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>`);
   }
-  // Body
   p.push(`<rect x="${cx-bW*.5}" y="${bT}" width="${bW}" height="${bH}" rx="10" fill="${shirt}"/>`);
   p.push(`<path d="M${cx-9},${bT} Q${cx},${bT+13} ${cx+9},${bT}" fill="white" opacity=".2"/>`);
-  // Head
   p.push(`<circle cx="${cx}" cy="${hY}" r="${hR}" fill="${sk}"/>`);
-  // Hair
   if (style==='short') {
     p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
   } else if (style==='long') {
@@ -791,93 +732,45 @@ function kidSVG(cx, groundY, cfg, animOffset) {
     p.push(`<line x1="${cx-hR+1}" y1="${hY-1}" x2="${cx-hR-5}" y2="${hY-3}" stroke="${hair}" stroke-width="5"/>`);
     p.push(`<line x1="${cx+hR-1}" y1="${hY-1}" x2="${cx+hR+5}" y2="${hY-3}" stroke="${hair}" stroke-width="5"/>`);
   }
-  // Face
   p.push(`<path d="M${cx-14},${hY-2} Q${cx-8},${hY-12} ${cx-2},${hY-2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
   p.push(`<path d="M${cx+2},${hY-2} Q${cx+8},${hY-12} ${cx+14},${hY-2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
   p.push(`<path d="M${cx-10},${hY+9} Q${cx},${hY+19} ${cx+10},${hY+9}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
   p.push(`<circle cx="${cx-17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
   p.push(`<circle cx="${cx+17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
   if (name) p.push(`<text x="${cx}" y="${fY+18}" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="14" font-weight="bold" fill="#444">${escHtml(name)}</text>`);
-
   const bobBegin = (animOffset === 'wave') ? '0s' : animOffset;
-  return `<g>
-    <animateTransform attributeName="transform" type="translate"
-      values="0,0; 0,-5; 0,0" dur="2.6s" begin="${bobBegin}"
-      repeatCount="indefinite" calcMode="spline"
-      keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>
-    ${p.join('')}
-  </g>`;
+  return `<g><animateTransform attributeName="transform" type="translate" values="0,0; 0,-5; 0,0" dur="2.6s" begin="${bobBegin}" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>${p.join('')}</g>`;
 }
 
 function bgSVG(scene) {
   const p = [];
   const OUTDOOR = ['outdoor','playground','lemonade','garden','treehouse'];
   if (OUTDOOR.includes(scene)) {
-    p.push(`<defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#7EC8E3"/><stop offset="100%" stop-color="#C9EBF8"/>
-    </linearGradient></defs>
-    <rect x="0" y="0" width="${W}" height="${GY}" fill="url(#sk)"/>`);
-    // Drifting clouds
-    p.push(`<g><animateTransform attributeName="transform" type="translate" values="0,0;22,0;0,0" dur="13s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
-      <ellipse cx="110" cy="50" rx="45" ry="23" fill="white" opacity=".88"/>
-      <ellipse cx="146" cy="41" rx="32" ry="19" fill="white" opacity=".88"/>
-    </g>`);
-    p.push(`<g><animateTransform attributeName="transform" type="translate" values="0,0;-16,0;0,0" dur="17s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
-      <ellipse cx="488" cy="63" rx="50" ry="25" fill="white" opacity=".88"/>
-      <ellipse cx="524" cy="53" rx="31" ry="17" fill="white" opacity=".88"/>
-    </g>`);
-    // Rotating sun
+    p.push(`<defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7EC8E3"/><stop offset="100%" stop-color="#C9EBF8"/></linearGradient></defs><rect x="0" y="0" width="${W}" height="${GY}" fill="url(#sk)"/>`);
+    p.push(`<g><animateTransform attributeName="transform" type="translate" values="0,0;22,0;0,0" dur="13s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/><ellipse cx="110" cy="50" rx="45" ry="23" fill="white" opacity=".88"/><ellipse cx="146" cy="41" rx="32" ry="19" fill="white" opacity=".88"/></g>`);
+    p.push(`<g><animateTransform attributeName="transform" type="translate" values="0,0;-16,0;0,0" dur="17s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/><ellipse cx="488" cy="63" rx="50" ry="25" fill="white" opacity=".88"/><ellipse cx="524" cy="53" rx="31" ry="17" fill="white" opacity=".88"/></g>`);
     p.push(`<circle cx="546" cy="44" r="30" fill="#FFD700"/>`);
-    const rays = Array.from({length:8},(_,a)=>{
-      const r=a*45*Math.PI/180;
-      return `<line x1="${(Math.cos(r)*36).toFixed(1)}" y1="${(Math.sin(r)*36).toFixed(1)}" x2="${(Math.cos(r)*52).toFixed(1)}" y2="${(Math.sin(r)*52).toFixed(1)}" stroke="#FFD700" stroke-width="4" stroke-linecap="round"/>`;
-    }).join('');
+    const rays = Array.from({length:8},(_,a)=>{const r=a*45*Math.PI/180;return `<line x1="${(Math.cos(r)*36).toFixed(1)}" y1="${(Math.sin(r)*36).toFixed(1)}" x2="${(Math.cos(r)*52).toFixed(1)}" y2="${(Math.sin(r)*52).toFixed(1)}" stroke="#FFD700" stroke-width="4" stroke-linecap="round"/>`;}).join('');
     p.push(`<g transform="translate(546,44)"><animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="22s" repeatCount="indefinite" additive="sum"/>${rays}</g>`);
-    // Ground & swaying grass
     p.push(`<rect x="0" y="${GY}" width="${W}" height="${H-GY}" fill="#7EC850"/>`);
     const tufts = Array.from({length:18},(_,i)=>{const gx=i*36;return `<path d="M${gx},${GY} Q${gx+9},${GY-13} ${gx+18},${GY}" fill="#5DAD3F"/>`;}).join('');
     p.push(`<g><animateTransform attributeName="transform" type="skewX" values="0;2.5;0;-2.5;0" dur="5.5s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"/>${tufts}</g>`);
   } else if (scene==='school'||scene==='cafeteria') {
-    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF9E8"/>
-    <rect x="0" y="${H-26}" width="${W}" height="26" fill="#E8D5A3"/>
-    <rect x="155" y="16" width="280" height="124" rx="5" fill="#4A7856"/>
-    <rect x="148" y="9" width="294" height="138" rx="8" fill="none" stroke="#8B4513" stroke-width="7"/>
-    <text x="295" y="79" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="17" fill="white" opacity=".55">Our Class</text>
-    <rect x="460" y="22" width="108" height="108" rx="5" fill="#AED6F1" stroke="#8B4513" stroke-width="5"/>
-    <line x1="514" y1="22" x2="514" y2="130" stroke="#8B4513" stroke-width="3"/>
-    <line x1="460" y1="76" x2="568" y2="76" stroke="#8B4513" stroke-width="3"/>`);
+    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF9E8"/><rect x="0" y="${H-26}" width="${W}" height="26" fill="#E8D5A3"/><rect x="155" y="16" width="280" height="124" rx="5" fill="#4A7856"/><rect x="148" y="9" width="294" height="138" rx="8" fill="none" stroke="#8B4513" stroke-width="7"/><text x="295" y="79" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="17" fill="white" opacity=".55">Our Class</text><rect x="460" y="22" width="108" height="108" rx="5" fill="#AED6F1" stroke="#8B4513" stroke-width="5"/><line x1="514" y1="22" x2="514" y2="130" stroke="#8B4513" stroke-width="3"/><line x1="460" y1="76" x2="568" y2="76" stroke="#8B4513" stroke-width="3"/>`);
   } else if (scene==='home') {
-    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF0E6"/>
-    <rect x="0" y="${H-26}" width="${W}" height="26" fill="#C4A882"/>
-    <rect x="26" y="${H-126}" width="200" height="100" rx="16" fill="#FF8C69"/>
-    <rect x="38" y="${H-126}" width="63" height="69" rx="10" fill="#FF7058"/>
-    <rect x="122" y="${H-126}" width="63" height="69" rx="10" fill="#FF7058"/>
-    <rect x="398" y="22" width="155" height="128" rx="6" fill="#AED6F1" stroke="#8B4513" stroke-width="6"/>
-    <line x1="476" y1="22" x2="476" y2="150" stroke="#8B4513" stroke-width="3"/>
-    <line x1="398" y1="86" x2="553" y2="86" stroke="#8B4513" stroke-width="3"/>`);
+    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF0E6"/><rect x="0" y="${H-26}" width="${W}" height="26" fill="#C4A882"/><rect x="26" y="${H-126}" width="200" height="100" rx="16" fill="#FF8C69"/><rect x="38" y="${H-126}" width="63" height="69" rx="10" fill="#FF7058"/><rect x="122" y="${H-126}" width="63" height="69" rx="10" fill="#FF7058"/><rect x="398" y="22" width="155" height="128" rx="6" fill="#AED6F1" stroke="#8B4513" stroke-width="6"/><line x1="476" y1="22" x2="476" y2="150" stroke="#8B4513" stroke-width="3"/><line x1="398" y1="86" x2="553" y2="86" stroke="#8B4513" stroke-width="3"/>`);
   } else if (scene==='birthday') {
-    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF0F5"/>
-    <rect x="0" y="${H-26}" width="${W}" height="26" fill="#FFB6C1"/>`);
+    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF0F5"/><rect x="0" y="${H-26}" width="${W}" height="26" fill="#FFB6C1"/>`);
     const bc=['#FF6B6B','#FFD700','#4ECDC4','#45B7D1','#FFA07A','#98D8C8','#FF69B4','#9B59B6'];
     for(let i=0;i<8;i++){const bx=i*78;p.push(`<polygon points="${bx},7 ${bx+28},7 ${bx+14},36" fill="${bc[i%bc.length]}"/>`);}
     [[70,70,'#FF6B6B','0'],[W-70,58,'#4ECDC4','0.7'],[300,46,'#FFD700','0.4']].forEach(([bx,by,col,del])=>{
-      p.push(`<g><animateTransform attributeName="transform" type="translate" values="0,0;0,-9;0,0" dur="3s" begin="${del}s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
-        <circle cx="${bx}" cy="${by}" r="30" fill="${col}" opacity=".82"/>
-        <line x1="${bx}" y1="${by+30}" x2="${bx}" y2="${by+88}" stroke="#ccc" stroke-width="1.5"/>
-      </g>`);
+      p.push(`<g><animateTransform attributeName="transform" type="translate" values="0,0;0,-9;0,0" dur="3s" begin="${del}s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/><circle cx="${bx}" cy="${by}" r="30" fill="${col}" opacity=".82"/><line x1="${bx}" y1="${by+30}" x2="${bx}" y2="${by+88}" stroke="#ccc" stroke-width="1.5"/></g>`);
     });
   } else if (scene==='icecream') {
-    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF5F0"/>
-    <rect x="0" y="${H-26}" width="${W}" height="26" fill="#F0D5A8"/>
-    <rect x="140" y="${H-175}" width="320" height="149" rx="12" fill="#FFE4C4" stroke="#E8C099" stroke-width="3"/>`);
+    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF5F0"/><rect x="0" y="${H-26}" width="${W}" height="26" fill="#F0D5A8"/><rect x="140" y="${H-175}" width="320" height="149" rx="12" fill="#FFE4C4" stroke="#E8C099" stroke-width="3"/>`);
     const ic=['#FF69B4','#90EE90','#87CEEB','#FFD700'];
-    for(let i=0;i<4;i++){
-      p.push(`<g><animateTransform attributeName="transform" type="translate" values="0,0;0,-4;0,0" dur="2.2s" begin="${i*0.55}s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
-        <circle cx="${190+i*78}" cy="${H-173}" r="27" fill="${ic[i]}"/>
-      </g>`);
-    }
-    p.push(`<rect x="${W/2-106}" y="10" width="212" height="56" rx="12" fill="#FF69B4"/>
-    <text x="${W/2}" y="46" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="19" fill="white">Ice Cream!</text>`);
+    for(let i=0;i<4;i++){p.push(`<g><animateTransform attributeName="transform" type="translate" values="0,0;0,-4;0,0" dur="2.2s" begin="${i*0.55}s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/><circle cx="${190+i*78}" cy="${H-173}" r="27" fill="${ic[i]}"/></g>`);}
+    p.push(`<rect x="${W/2-106}" y="10" width="212" height="56" rx="12" fill="#FF69B4"/><text x="${W/2}" y="46" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="19" fill="white">Ice Cream!</text>`);
   } else {
     p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#E8F4F8"/>`);
   }
@@ -887,207 +780,80 @@ function bgSVG(scene) {
 function propSVG(scene) {
   const p = [];
   if (scene==='outdoor') {
-    p.push(`<g><animateTransform attributeName="transform" type="rotate" values="0 69 ${GY};2 69 ${GY};0 69 ${GY};-2 69 ${GY};0 69 ${GY}" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"/>
-      <rect x="56" y="${GY-105}" width="26" height="110" rx="7" fill="#8B4513"/>
-      <circle cx="69" cy="${GY-120}" r="55" fill="#27AE60"/>
-      <circle cx="42" cy="${GY-102}" r="36" fill="#2ECC71"/>
-      <circle cx="98" cy="${GY-102}" r="36" fill="#2ECC71"/>
-      ${[[48,GY-138],[76,GY-152],[66,GY-122],[40,GY-115],[92,GY-135]].map(([ax,ay])=>`<circle cx="${ax}" cy="${ay}" r="7" fill="#E74C3C"/>`).join('')}
-    </g>`);
+    p.push(`<g><animateTransform attributeName="transform" type="rotate" values="0 69 ${GY};2 69 ${GY};0 69 ${GY};-2 69 ${GY};0 69 ${GY}" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"/><rect x="56" y="${GY-105}" width="26" height="110" rx="7" fill="#8B4513"/><circle cx="69" cy="${GY-120}" r="55" fill="#27AE60"/><circle cx="42" cy="${GY-102}" r="36" fill="#2ECC71"/><circle cx="98" cy="${GY-102}" r="36" fill="#2ECC71"/>${[[48,GY-138],[76,GY-152],[66,GY-122],[40,GY-115],[92,GY-135]].map(([ax,ay])=>`<circle cx="${ax}" cy="${ay}" r="7" fill="#E74C3C"/>`).join('')}</g>`);
   } else if (scene==='playground') {
-    p.push(`<line x1="206" y1="12" x2="206" y2="${GY-7}" stroke="#8B4513" stroke-width="5"/>
-    <line x1="394" y1="12" x2="394" y2="${GY-7}" stroke="#8B4513" stroke-width="5"/>
-    <line x1="204" y1="12" x2="396" y2="12" stroke="#8B4513" stroke-width="5"/>`);
-    p.push(`<g><animateTransform attributeName="transform" type="rotate" values="-20 300 12;20 300 12;-20 300 12" dur="2.2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
-      <line x1="265" y1="12" x2="261" y2="${GY-47}" stroke="#888" stroke-width="2"/>
-      <line x1="335" y1="12" x2="339" y2="${GY-47}" stroke="#888" stroke-width="2"/>
-      <rect x="256" y="${GY-50}" width="88" height="12" rx="6" fill="#8B4513"/>
-    </g>`);
-    p.push(`<rect x="${W-158}" y="50" width="26" height="158" rx="5" fill="#E74C3C"/>
-    <line x1="${W-145}" y1="208" x2="${W-62}" y2="${GY}" stroke="#E74C3C" stroke-width="16" stroke-linecap="round"/>`);
+    p.push(`<line x1="206" y1="12" x2="206" y2="${GY-7}" stroke="#8B4513" stroke-width="5"/><line x1="394" y1="12" x2="394" y2="${GY-7}" stroke="#8B4513" stroke-width="5"/><line x1="204" y1="12" x2="396" y2="12" stroke="#8B4513" stroke-width="5"/>`);
+    p.push(`<g><animateTransform attributeName="transform" type="rotate" values="-20 300 12;20 300 12;-20 300 12" dur="2.2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/><line x1="265" y1="12" x2="261" y2="${GY-47}" stroke="#888" stroke-width="2"/><line x1="335" y1="12" x2="339" y2="${GY-47}" stroke="#888" stroke-width="2"/><rect x="256" y="${GY-50}" width="88" height="12" rx="6" fill="#8B4513"/></g>`);
+    p.push(`<rect x="${W-158}" y="50" width="26" height="158" rx="5" fill="#E74C3C"/><line x1="${W-145}" y1="208" x2="${W-62}" y2="${GY}" stroke="#E74C3C" stroke-width="16" stroke-linecap="round"/>`);
   } else if (scene==='lemonade') {
     const sx=W/2-68;
-    p.push(`<rect x="${sx}" y="${GY-120}" width="136" height="122" rx="5" fill="#FFD700"/>
-    <rect x="${sx-11}" y="${GY-132}" width="158" height="18" rx="5" fill="#F39C12"/>
-    <text x="${W/2}" y="${GY-118}" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="13" fill="white" font-weight="bold">Lemonade!</text>`);
-    p.push(`<g><animateTransform attributeName="transform" type="translate" values="0,0;0,-3;0,0" dur="1.6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
-      <rect x="${W/2-16}" y="${GY-106}" width="32" height="44" rx="6" fill="#FFFACD" stroke="#F1C40F" stroke-width="2"/>
-      <path d="M${W/2+16},${GY-97} Q${W/2+29},${GY-87} ${W/2+16},${GY-77}" fill="none" stroke="#F1C40F" stroke-width="3"/>
-    </g>`);
+    p.push(`<rect x="${sx}" y="${GY-120}" width="136" height="122" rx="5" fill="#FFD700"/><rect x="${sx-11}" y="${GY-132}" width="158" height="18" rx="5" fill="#F39C12"/><text x="${W/2}" y="${GY-118}" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="13" fill="white" font-weight="bold">Lemonade!</text>`);
+    p.push(`<g><animateTransform attributeName="transform" type="translate" values="0,0;0,-3;0,0" dur="1.6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/><rect x="${W/2-16}" y="${GY-106}" width="32" height="44" rx="6" fill="#FFFACD" stroke="#F1C40F" stroke-width="2"/><path d="M${W/2+16},${GY-97} Q${W/2+29},${GY-87} ${W/2+16},${GY-77}" fill="none" stroke="#F1C40F" stroke-width="3"/></g>`);
   } else if (scene==='treehouse') {
     p.push(`<rect x="56" y="${GY-155}" width="52" height="159" rx="10" fill="#8B4513"/>`);
-    p.push(`<g><animateTransform attributeName="transform" type="rotate" values="0 82 ${GY};1.8 82 ${GY};0 82 ${GY};-1.8 82 ${GY};0 82 ${GY}" dur="7s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"/>
-      <circle cx="82" cy="${GY-175}" r="86" fill="#27AE60"/>
-      <circle cx="44" cy="${GY-144}" r="58" fill="#2ECC71"/>
-      <circle cx="122" cy="${GY-144}" r="58" fill="#2ECC71"/>
-    </g>`);
-    p.push(`<rect x="14" y="${GY-148}" width="164" height="14" rx="4" fill="#7D5A2A"/>
-    <rect x="18" y="${GY-228}" width="156" height="82" rx="5" fill="#DEB887"/>
-    <polygon points="14,${GY-228} 96,${GY-278} 178,${GY-228}" fill="#A0522D"/>
-    <rect x="83" y="${GY-190}" width="38" height="56" rx="19" fill="#8B4513"/>
-    <line x1="126" y1="${GY-148}" x2="126" y2="${GY+4}" stroke="#8B4513" stroke-width="4"/>
-    <line x1="112" y1="${GY-148}" x2="112" y2="${GY+4}" stroke="#8B4513" stroke-width="4"/>`);
+    p.push(`<g><animateTransform attributeName="transform" type="rotate" values="0 82 ${GY};1.8 82 ${GY};0 82 ${GY};-1.8 82 ${GY};0 82 ${GY}" dur="7s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"/><circle cx="82" cy="${GY-175}" r="86" fill="#27AE60"/><circle cx="44" cy="${GY-144}" r="58" fill="#2ECC71"/><circle cx="122" cy="${GY-144}" r="58" fill="#2ECC71"/></g>`);
+    p.push(`<rect x="14" y="${GY-148}" width="164" height="14" rx="4" fill="#7D5A2A"/><rect x="18" y="${GY-228}" width="156" height="82" rx="5" fill="#DEB887"/><polygon points="14,${GY-228} 96,${GY-278} 178,${GY-228}" fill="#A0522D"/><rect x="83" y="${GY-190}" width="38" height="56" rx="19" fill="#8B4513"/><line x1="126" y1="${GY-148}" x2="126" y2="${GY+4}" stroke="#8B4513" stroke-width="4"/><line x1="112" y1="${GY-148}" x2="112" y2="${GY+4}" stroke="#8B4513" stroke-width="4"/>`);
     for(let ry=GY-128;ry<GY;ry+=20) p.push(`<line x1="112" y1="${ry}" x2="126" y2="${ry}" stroke="#8B4513" stroke-width="3"/>`);
   } else if (scene==='garden') {
     p.push(`<rect x="190" y="${GY-9}" width="220" height="15" rx="7" fill="#8B4513" opacity=".42"/>`);
     const fc=['#FF69B4','#FFD700','#FF6B6B','#DA70D6','#FF8C00'];
-    for(let i=0;i<5;i++){
-      const fx=208+i*38, del=(i*0.4).toFixed(1);
-      p.push(`<g><animateTransform attributeName="transform" type="rotate" values="0 ${fx} ${GY-9};9 ${fx} ${GY-9};0 ${fx} ${GY-9};-9 ${fx} ${GY-9};0 ${fx} ${GY-9}" dur="3.2s" begin="${del}s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"/>
-        <line x1="${fx}" y1="${GY-9}" x2="${fx}" y2="${GY-50}" stroke="#228B22" stroke-width="3"/>
-        <circle cx="${fx}" cy="${GY-54}" r="12" fill="${fc[i]}"/>
-        <circle cx="${fx}" cy="${GY-54}" r="6" fill="#FFD700"/>
-      </g>`);
-    }
+    for(let i=0;i<5;i++){const fx=208+i*38,del=(i*0.4).toFixed(1);p.push(`<g><animateTransform attributeName="transform" type="rotate" values="0 ${fx} ${GY-9};9 ${fx} ${GY-9};0 ${fx} ${GY-9};-9 ${fx} ${GY-9};0 ${fx} ${GY-9}" dur="3.2s" begin="${del}s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"/><line x1="${fx}" y1="${GY-9}" x2="${fx}" y2="${GY-50}" stroke="#228B22" stroke-width="3"/><circle cx="${fx}" cy="${GY-54}" r="12" fill="${fc[i]}"/><circle cx="${fx}" cy="${GY-54}" r="6" fill="#FFD700"/></g>`);}
   } else if (scene==='school') {
-    const ty=H-80;
-    p.push(`<rect x="204" y="${ty}" width="192" height="11" rx="4" fill="#DEB887"/>
-    <rect x="218" y="${ty-38}" width="66" height="40" rx="5" fill="#F39C12"/>
-    <text x="251" y="${ty-14}" text-anchor="middle" font-family="Arial" font-size="12" fill="white">Crayons</text>`);
+    const ty=H-80;p.push(`<rect x="204" y="${ty}" width="192" height="11" rx="4" fill="#DEB887"/><rect x="218" y="${ty-38}" width="66" height="40" rx="5" fill="#F39C12"/><text x="251" y="${ty-14}" text-anchor="middle" font-family="Arial" font-size="12" fill="white">Crayons</text>`);
   } else if (scene==='cafeteria') {
-    const ty=GY-50;
-    p.push(`<rect x="100" y="${ty}" width="400" height="20" rx="5" fill="#DEB887" stroke="#C4A265" stroke-width="2"/>
-    <rect x="116" y="${ty-62}" width="118" height="64" rx="8" fill="#DCDCDC" stroke="#B8B8B8" stroke-width="2"/>
-    <rect x="366" y="${ty-62}" width="118" height="64" rx="8" fill="#DCDCDC" stroke="#B8B8B8" stroke-width="2"/>
-    <circle cx="168" cy="${ty-33}" r="20" fill="#FF8C69"/>
-    <circle cx="214" cy="${ty-33}" r="13" fill="#7EC850"/>
-    <circle cx="418" cy="${ty-33}" r="20" fill="#FF8C69"/>
-    <circle cx="464" cy="${ty-33}" r="13" fill="#7EC850"/>`);
+    const ty=GY-50;p.push(`<rect x="100" y="${ty}" width="400" height="20" rx="5" fill="#DEB887" stroke="#C4A265" stroke-width="2"/><rect x="116" y="${ty-62}" width="118" height="64" rx="8" fill="#DCDCDC" stroke="#B8B8B8" stroke-width="2"/><rect x="366" y="${ty-62}" width="118" height="64" rx="8" fill="#DCDCDC" stroke="#B8B8B8" stroke-width="2"/><circle cx="168" cy="${ty-33}" r="20" fill="#FF8C69"/><circle cx="214" cy="${ty-33}" r="13" fill="#7EC850"/><circle cx="418" cy="${ty-33}" r="20" fill="#FF8C69"/><circle cx="464" cy="${ty-33}" r="13" fill="#7EC850"/>`);
   } else if (scene==='home') {
-    const ty=GY-82;
-    p.push(`<rect x="236" y="${ty+48}" width="128" height="11" rx="4" fill="#DEB887"/>
-    <ellipse cx="300" cy="${ty+43}" rx="40" ry="15" fill="#FFB347"/>
-    <rect x="260" y="${ty+14}" width="80" height="32" rx="5" fill="#FFC870"/>`);
+    const ty=GY-82;p.push(`<rect x="236" y="${ty+48}" width="128" height="11" rx="4" fill="#DEB887"/><ellipse cx="300" cy="${ty+43}" rx="40" ry="15" fill="#FFB347"/><rect x="260" y="${ty+14}" width="80" height="32" rx="5" fill="#FFC870"/>`);
   } else if (scene==='icecream') {
-    const hy=GY-72;
-    p.push(`<path d="M143,${hy+20} L155,${hy+50} L167,${hy+20}" fill="#F4A460"/>
-    <circle cx="155" cy="${hy+15}" r="20" fill="#FF69B4"/>
-    <path d="M433,${hy+20} L445,${hy+50} L457,${hy+20}" fill="#F4A460"/>
-    <circle cx="445" cy="${hy+15}" r="20" fill="#90EE90"/>`);
+    const hy=GY-72;p.push(`<path d="M143,${hy+20} L155,${hy+50} L167,${hy+20}" fill="#F4A460"/><circle cx="155" cy="${hy+15}" r="20" fill="#FF69B4"/><path d="M433,${hy+20} L445,${hy+50} L457,${hy+20}" fill="#F4A460"/><circle cx="445" cy="${hy+15}" r="20" fill="#90EE90"/>`);
   } else if (scene==='birthday') {
-    const cx=W/2, cy2=GY-100;
-    p.push(`<rect x="${cx-52}" y="${cy2}" width="104" height="54" rx="8" fill="#FF69B4"/>
-    <rect x="${cx-52}" y="${cy2-24}" width="104" height="28" rx="6" fill="#FFD700"/>
-    <rect x="${cx-52}" y="${cy2-46}" width="104" height="26" rx="6" fill="#FF8C69"/>`);
+    const cx=W/2,cy2=GY-100;p.push(`<rect x="${cx-52}" y="${cy2}" width="104" height="54" rx="8" fill="#FF69B4"/><rect x="${cx-52}" y="${cy2-24}" width="104" height="28" rx="6" fill="#FFD700"/><rect x="${cx-52}" y="${cy2-46}" width="104" height="26" rx="6" fill="#FF8C69"/>`);
     const cc=['#E74C3C','#F39C12','#27AE60','#2980B9','#9B59B6'];
-    for(let i=0;i<5;i++){
-      const cx2=cx-38+i*19, fd=(0.18+i*0.06).toFixed(2);
-      p.push(`<rect x="${cx2-3}" y="${cy2-64}" width="7" height="20" rx="3" fill="${cc[i]}"/>
-      <ellipse cx="${cx2}" cy="${cy2-66}" rx="4" ry="7" fill="#FFD700">
-        <animate attributeName="rx" values="4;6;3;5;4" dur="${fd}s" repeatCount="indefinite"/>
-        <animate attributeName="opacity" values="1;0.7;1;0.85;1" dur="${fd}s" repeatCount="indefinite"/>
-      </ellipse>`);
-    }
+    for(let i=0;i<5;i++){const cx2=cx-38+i*19,fd=(0.18+i*0.06).toFixed(2);p.push(`<rect x="${cx2-3}" y="${cy2-64}" width="7" height="20" rx="3" fill="${cc[i]}"/><ellipse cx="${cx2}" cy="${cy2-66}" rx="4" ry="7" fill="#FFD700"><animate attributeName="rx" values="4;6;3;5;4" dur="${fd}s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0.7;1;0.85;1" dur="${fd}s" repeatCount="indefinite"/></ellipse>`);}
   }
   return p.join('');
 }
 
 function sceneSVG(v) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;display:block">
-    ${bgSVG(v.scene)}
-    ${propSVG(v.scene)}
-    ${kidSVG(155, GY, v.char1, '0s')}
-    ${kidSVG(445, GY, v.char2, '1.3s')}
-  </svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;display:block">${bgSVG(v.scene)}${propSVG(v.scene)}${kidSVG(155,GY,v.char1,'0s')}${kidSVG(445,GY,v.char2,'1.3s')}</svg>`;
 }
 
 function welcomeSVG() {
-  const gy = 165;
-  const rays6 = Array.from({length:6},(_,a)=>{
-    const r=a*60*Math.PI/180;
-    return `<line x1="${(Math.cos(r)*28).toFixed(1)}" y1="${(Math.sin(r)*28).toFixed(1)}" x2="${(Math.cos(r)*39).toFixed(1)}" y2="${(Math.sin(r)*39).toFixed(1)}" stroke="#FFD700" stroke-width="3" stroke-linecap="round"/>`;
-  }).join('');
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 205" style="width:100%;display:block">
-    <rect x="0" y="0" width="380" height="${gy}" fill="#87CEEB"/>
-    <rect x="0" y="${gy}" width="380" height="${205-gy}" fill="#7EC850"/>
-    <g><animateTransform attributeName="transform" type="translate" values="0,0;16,0;0,0" dur="11s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
-      <ellipse cx="80" cy="38" rx="38" ry="19" fill="white" opacity=".9"/>
-      <ellipse cx="108" cy="30" rx="27" ry="15" fill="white" opacity=".9"/>
-    </g>
-    <circle cx="344" cy="33" r="25" fill="#FFD700"/>
-    <g transform="translate(344,33)"><animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="20s" repeatCount="indefinite" additive="sum"/>${rays6}</g>
-    <circle cx="190" cy="87" r="36" fill="none" stroke="#F39C12" stroke-width="6" opacity=".78"/>
-    <circle cx="190" cy="87" r="28" fill="rgba(255,255,200,.32)"/>
-    <line x1="215" y1="111" x2="234" y2="135" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/>
-    <text x="190" y="97" text-anchor="middle" font-family="Arial Black,Arial" font-size="28" fill="#F39C12" font-weight="bold">?</text>
-    ${kidSVG(74,  gy, {hair:'#5C3D11',shirt:'#4ECDC4',pants:'#2C3E50',style:'short',   name:''}, 'wave')}
-    ${kidSVG(306, gy, {hair:'#D4790A',shirt:'#FF6B6B',pants:'#7D3C98',style:'pigtails',name:''}, '1.1s')}
-  </svg>`;
+  const gy=165;
+  const rays6=Array.from({length:6},(_,a)=>{const r=a*60*Math.PI/180;return `<line x1="${(Math.cos(r)*28).toFixed(1)}" y1="${(Math.sin(r)*28).toFixed(1)}" x2="${(Math.cos(r)*39).toFixed(1)}" y2="${(Math.sin(r)*39).toFixed(1)}" stroke="#FFD700" stroke-width="3" stroke-linecap="round"/>`;}).join('');
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 205" style="width:100%;display:block"><rect x="0" y="0" width="380" height="${gy}" fill="#87CEEB"/><rect x="0" y="${gy}" width="380" height="${205-gy}" fill="#7EC850"/><g><animateTransform attributeName="transform" type="translate" values="0,0;16,0;0,0" dur="11s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/><ellipse cx="80" cy="38" rx="38" ry="19" fill="white" opacity=".9"/><ellipse cx="108" cy="30" rx="27" ry="15" fill="white" opacity=".9"/></g><circle cx="344" cy="33" r="25" fill="#FFD700"/><g transform="translate(344,33)"><animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="20s" repeatCount="indefinite" additive="sum"/>${rays6}</g><circle cx="190" cy="87" r="36" fill="none" stroke="#F39C12" stroke-width="6" opacity=".78"/><circle cx="190" cy="87" r="28" fill="rgba(255,255,200,.32)"/><line x1="215" y1="111" x2="234" y2="135" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/><text x="190" y="97" text-anchor="middle" font-family="Arial Black,Arial" font-size="28" fill="#F39C12" font-weight="bold">?</text>${kidSVG(74,gy,{hair:'#5C3D11',shirt:'#4ECDC4',pants:'#2C3E50',style:'short',name:''},'wave')}${kidSVG(306,gy,{hair:'#D4790A',shirt:'#FF6B6B',pants:'#7D3C98',style:'pigtails',name:''},'1.1s')}</svg>`;
 }
 
-// Trophy SVG
 function trophySVG() {
-  return `<svg viewBox="0 0 160 175" width="115" height="126" style="display:block;margin:auto;overflow:visible">
-    <circle cx="80" cy="80" r="55" fill="rgba(255,215,0,0.14)">
-      <animate attributeName="r" values="50;66;50" dur="2.2s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0.14;0.04;0.14" dur="2.2s" repeatCount="indefinite"/>
-    </circle>
-    <g>
-      <animateTransform attributeName="transform" type="translate" values="0,0;0,-7;0,0" dur="2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/>
-      <path d="M28,18 L132,18 L117,88 Q80,114 43,88 Z" fill="#FFD700" stroke="#F39C12" stroke-width="3"/>
-      <path d="M28,18 Q4,18 4,50 Q4,82 28,82" fill="none" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/>
-      <path d="M132,18 Q156,18 156,50 Q156,82 132,82" fill="none" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/>
-      <rect x="67" y="108" width="26" height="30" rx="4" fill="#F39C12"/>
-      <rect x="43" y="136" width="74" height="19" rx="9" fill="#FFD700" stroke="#F39C12" stroke-width="2"/>
-      <polygon points="80,36 86,56 107,56 91,68 97,88 80,76 63,88 69,68 53,56 74,56" fill="white" opacity=".65"/>
-    </g>
-    ${[[142,18,'0'],[18,18,'0.5'],[156,58,'0.25'],[4,58,'0.75'],[80,168,'1.0']].map(([cx,cy,del])=>
-      `<circle cx="${cx}" cy="${cy}" r="4" fill="#FFD700" opacity="0">
-        <animate attributeName="opacity" values="0;1;0" dur="1.1s" begin="${del}s" repeatCount="indefinite"/>
-        <animate attributeName="r" values="2;6;2" dur="1.1s" begin="${del}s" repeatCount="indefinite"/>
-      </circle>`).join('')}
-  </svg>`;
+  return `<svg viewBox="0 0 160 175" width="115" height="126" style="display:block;margin:auto;overflow:visible"><circle cx="80" cy="80" r="55" fill="rgba(255,215,0,0.14)"><animate attributeName="r" values="50;66;50" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.14;0.04;0.14" dur="2.2s" repeatCount="indefinite"/></circle><g><animateTransform attributeName="transform" type="translate" values="0,0;0,-7;0,0" dur="2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/><path d="M28,18 L132,18 L117,88 Q80,114 43,88 Z" fill="#FFD700" stroke="#F39C12" stroke-width="3"/><path d="M28,18 Q4,18 4,50 Q4,82 28,82" fill="none" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/><path d="M132,18 Q156,18 156,50 Q156,82 132,82" fill="none" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/><rect x="67" y="108" width="26" height="30" rx="4" fill="#F39C12"/><rect x="43" y="136" width="74" height="19" rx="9" fill="#FFD700" stroke="#F39C12" stroke-width="2"/><polygon points="80,36 86,56 107,56 91,68 97,88 80,76 63,88 69,68 53,56 74,56" fill="white" opacity=".65"/></g>${[[142,18,'0'],[18,18,'0.5'],[156,58,'0.25'],[4,58,'0.75'],[80,168,'1.0']].map(([cx,cy,del])=>`<circle cx="${cx}" cy="${cy}" r="4" fill="#FFD700" opacity="0"><animate attributeName="opacity" values="0;1;0" dur="1.1s" begin="${del}s" repeatCount="indefinite"/><animate attributeName="r" values="2;6;2" dur="1.1s" begin="${del}s" repeatCount="indefinite"/></circle>`).join('')}</svg>`;
 }
 
-// YES / NO face SVGs
 function yesFaceSVG() {
-  return `<svg class="ans-face" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="27" cy="27" r="23" fill="white" opacity=".9"/>
-    <path d="M14,21 Q18,13 22,21" stroke="#333" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-    <path d="M32,21 Q36,13 40,21" stroke="#333" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-    <path d="M13,30 Q27,45 41,30" stroke="#333" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-    <circle cx="14" cy="29" r="5" fill="#FFB3B3" opacity=".5"/>
-    <circle cx="40" cy="29" r="5" fill="#FFB3B3" opacity=".5"/>
-  </svg>`;
+  return `<svg class="ans-face" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><circle cx="27" cy="27" r="23" fill="white" opacity=".9"/><path d="M14,21 Q18,13 22,21" stroke="#333" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M32,21 Q36,13 40,21" stroke="#333" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M13,30 Q27,45 41,30" stroke="#333" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="14" cy="29" r="5" fill="#FFB3B3" opacity=".5"/><circle cx="40" cy="29" r="5" fill="#FFB3B3" opacity=".5"/></svg>`;
 }
 function noFaceSVG() {
-  return `<svg class="ans-face" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="27" cy="27" r="23" fill="white" opacity=".9"/>
-    <circle cx="19" cy="22" r="3.5" fill="#333"/>
-    <circle cx="35" cy="22" r="3.5" fill="#333"/>
-    <path d="M17,35 Q27,28 37,35" stroke="#333" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-    <circle cx="39" cy="12" r="2.5" fill="#aaa"/>
-    <circle cx="44" cy="7"  r="1.8" fill="#aaa"/>
-    <circle cx="48" cy="3"  r="1.2" fill="#aaa"/>
-  </svg>`;
+  return `<svg class="ans-face" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><circle cx="27" cy="27" r="23" fill="white" opacity=".9"/><circle cx="19" cy="22" r="3.5" fill="#333"/><circle cx="35" cy="22" r="3.5" fill="#333"/><path d="M17,35 Q27,28 37,35" stroke="#333" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="39" cy="12" r="2.5" fill="#aaa"/><circle cx="44" cy="7" r="1.8" fill="#aaa"/><circle cx="48" cy="3" r="1.2" fill="#aaa"/></svg>`;
 }
 
-// ═══════════════════════════════════════════════════════
-//  STAR METER
-// ═══════════════════════════════════════════════════════
+// ── STAR METER ─────────────────────────────────────────
 function starHeaderHTML(earned, total) {
-  const items = Array.from({length: total}, (_, i) => {
+  const items = Array.from({length:total},(_,i)=>{
     const filled = i < earned;
-    return `<span class="star-item${filled ? ' filled' : ''}">\u2605</span>`;
+    return `<span class="star-item${filled?' filled':''}">\u2605</span>`;
   }).join('');
-  return `<div class="star-meter-wrap">
-    <div class="star-meter">${items}</div>
-    <div class="star-meter-lbl">Pair ${S.vi + 1} of ${total}</div>
-  </div>`;
+  return `<div class="star-meter-wrap"><div class="star-meter">${items}</div><div class="star-meter-lbl">Pair ${S.vi+1} of ${total}</div></div>`;
 }
 
 function starTransHTML(earned, total) {
-  const items = Array.from({length: total}, (_, i) => {
+  const items = Array.from({length:total},(_,i)=>{
     const filled = i < earned;
-    const isNew  = filled && i === earned - 1;
-    return `<span class="star-item${filled ? ' filled' : ''}${isNew ? ' newly-filled' : ''}">\u2605</span>`;
+    const isNew  = filled && i === earned-1;
+    return `<span class="star-item${filled?' filled':''}${isNew?' newly-filled':''}">\u2605</span>`;
   }).join('');
   return `<div class="star-meter star-meter-large">${items}</div>`;
 }
 
-// ═══════════════════════════════════════════════════════
-//  RENDER
-// ═══════════════════════════════════════════════════════
+// ── RENDER ─────────────────────────────────────────────
 const app = document.getElementById('app');
 
 function render() {
@@ -1104,23 +870,25 @@ function render() {
       case 'end':      renderEnd();                                   break;
     }
   } catch(err) {
-    app.innerHTML = `<div class="error-box">
-      <h2 style="color:#e74c3c">Something went wrong</h2>
-      <p style="margin:10px 0"><strong>${err.message}</strong></p>
-      <pre style="background:#f5f5f5;padding:12px;border-radius:8px;font-size:11px;text-align:left;overflow:auto">${err.stack||''}</pre>
-      <button class="btn btn-primary" style="margin-top:12px" onclick="resetGame()">Start Over</button>
-    </div>`;
+    app.innerHTML = `<div class="error-box"><h2 style="color:#e74c3c">Something went wrong</h2><p style="margin:10px 0"><strong>${err.message}</strong></p><pre style="background:#f5f5f5;padding:12px;border-radius:8px;font-size:11px;text-align:left;overflow:auto">${err.stack||''}</pre><button class="btn btn-primary" style="margin-top:12px" onclick="resetGame()">Start Over</button></div>`;
     console.error(err);
   }
 }
 
-// ── Welcome ───────────────────────────────────────────
+// ══════════════════════════════════════════════════════
+//  RENDER FUNCTIONS  (these are the fixed ones)
+// ══════════════════════════════════════════════════════
+
 function renderWelcome() {
   app.innerHTML = `
   <div class="screen" style="justify-content:center;text-align:center;padding-top:14px">
     <div class="wt">Friend Detective!</div>
     <div class="ws">Can you figure out how friends act toward each other?</div>
     <div class="illus" style="max-width:330px">${welcomeSVG()}</div>
+    <button id="unlockBtn" class="unlock-btn"
+      onclick="unlockAudio('Hello there, and welcome to Friend Detective! I am so excited you are here today! First, can you type your name in the box? And then pick your age from the little menu. When you are all ready, press the big yellow button and we will get started together!')">
+      🔊 Tap here to turn on sound!
+    </button>
     <div class="form-row">
       <div class="form-group">
         <label for="cname">What is your name?</label>
@@ -1145,16 +913,12 @@ function renderWelcome() {
             onclick="startGame()">Let's Play!</button>
   </div>`;
   stopSpeak();
-  setTimeout(() => {
-    speak("Hello there, and welcome to Friend Detective! I am so excited you are here today! First, can you type your name in the box? And then pick your age from the little menu. When you are all set, press the big yellow button and we will get started together!");
-    const inp  = document.getElementById('cname');
-    const sel  = document.getElementById('cage');
-    if (inp) inp.addEventListener('input', e => S.name = e.target.value);
-    if (sel) sel.addEventListener('change', e => S.age  = e.target.value);
-  }, 350);
+  const inp = document.getElementById('cname');
+  const sel = document.getElementById('cage');
+  if (inp) inp.addEventListener('input',  e => S.name = e.target.value);
+  if (sel) sel.addEventListener('change', e => S.age  = e.target.value);
 }
 
-// ── Intro ─────────────────────────────────────────────
 function renderIntro() {
   const nm = S.name ? `, ${S.name}` : '';
   app.innerHTML = `
@@ -1176,12 +940,9 @@ function renderIntro() {
             onclick="goExStory()">Show me how!</button>
   </div>`;
   stopSpeak();
-  setTimeout(() =>
-    speak(`Wonderful${nm}! Here is how our game works. I am going to tell you about two kids and how they act toward each other. Then I will ask — do you think those same two kids would act a certain way in another situation? For each question, just press YES or NO. And here is the really important part — there are absolutely no wrong answers. We just want to know what you think! Ready? Let us try a quick practice example to warm up!`),
-  350);
+  speak(`Wonderful${nm}! Here is how our game works. I am going to tell you about two kids and how they act toward each other. Then I will ask — do you think those same two kids would act a certain way in another situation? For each question, just press YES or NO. And here is the really important part — there are absolutely no wrong answers. We just want to know what you think! Ready? Let us try a quick practice example to warm up!`);
 }
 
-// ── Story ─────────────────────────────────────────────
 function renderStory(v, isEx) {
   app.innerHTML = `
   ${isEx ? '' : starHeaderHTML(S.stars, VIGNETTES.length)}
@@ -1205,26 +966,25 @@ function renderStory(v, isEx) {
     ${isEx ? `<div style="font-size:12px;color:#ccc;margin-top:1px">Just a practice example!</div>` : ''}
   </div>`;
   stopSpeak();
-  setTimeout(() => {
-    const opener = isEx
-      ? `Okay! For our practice, I want you to meet ${v.char1.name} and ${v.char2.name}. Listen carefully while I tell you how they act toward each other!`
-      : `Alright! Now let us meet ${v.char1.name} and ${v.char2.name}! Listen carefully while I tell you how they act toward each other!`;
-    speak(opener, () => {
-      speakSeq(v.parts,
-        i => {
-          document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
-          const el = document.getElementById(`snt${i}`);
-          if (el) el.classList.add('hi');
-        },
-        () => {
-          document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
-          const rb = document.getElementById('readyBtn');
-          if (rb) rb.style.display = 'inline-flex';
-          speak(`Great listening! Now I will ask you some questions about ${v.char1.name} and ${v.char2.name}. For each one, just think about what you heard and press YES or NO. Press the button whenever you are ready!`);
-        }
-      );
-    });
-  }, 400);
+  const opener = isEx
+    ? `Okay! For our practice, I want you to meet ${v.char1.name} and ${v.char2.name}. Listen carefully while I tell you how they act toward each other!`
+    : `Alright! Now let us meet ${v.char1.name} and ${v.char2.name}! Listen carefully while I tell you how they act toward each other!`;
+  speak(opener, () => {
+    speakSeq(
+      v.parts,
+      i => {
+        document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
+        const el = document.getElementById(`snt${i}`);
+        if (el) el.classList.add('hi');
+      },
+      () => {
+        document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
+        const rb = document.getElementById('readyBtn');
+        if (rb) rb.style.display = 'inline-flex';
+        speak(`Great listening! Now I will ask you some questions about ${v.char1.name} and ${v.char2.name}. For each one, just think about what you heard and press YES or NO. Press the button whenever you are ready!`);
+      }
+    );
+  });
 }
 
 function replayStory() {
@@ -1233,7 +993,8 @@ function replayStory() {
   const rb = document.getElementById('readyBtn');
   if (rb) rb.style.display = 'none';
   speak(`Sure! Let me tell you about ${v.char1.name} and ${v.char2.name} one more time. Listen carefully!`, () => {
-    speakSeq(v.parts,
+    speakSeq(
+      v.parts,
       i => {
         document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
         const el = document.getElementById(`snt${i}`);
@@ -1248,7 +1009,6 @@ function replayStory() {
   });
 }
 
-// ── Question ──────────────────────────────────────────
 function renderQuestion(v, qi, isEx) {
   const q = v.questions[qi];
   app.innerHTML = `
@@ -1283,9 +1043,7 @@ function renderQuestion(v, qi, isEx) {
     ${isEx ? `<div class="ex-explain" id="exExp"></div>` : ''}
   </div>`;
   stopSpeak();
-  setTimeout(() =>
-    speak(`Question ${qi+1} of 3. ${q.text}. Do you think ${v.char1.name} and ${v.char2.name} would act that way? Press YES or NO!`),
-  350);
+  speak(`Question ${qi+1} of 3. ${q.text}. Do you think ${v.char1.name} and ${v.char2.name} would act that way? Press YES or NO!`);
 }
 
 function replayQ() {
@@ -1305,16 +1063,13 @@ function replayStoryQ(isEx) {
   });
 }
 
-// ── Answer handler ────────────────────────────────────
 function doAnswer(ans) {
   ['btnY','btnN'].forEach(id => { const b = document.getElementById(id); if (b) b.disabled = true; });
   const isEx = exPhase();
   const v    = isEx ? EXAMPLE : VIGNETTES[S.vi];
   const qi   = isEx ? S.eqi   : S.qi;
   const q    = v.questions[qi];
-
-  flashBtn(ans);   // subtle scale — no thumbs feedback
-
+  flashBtn(ans);
   if (isEx) {
     const exDiv = document.getElementById('exExp');
     if (exDiv) { exDiv.style.display = 'block'; exDiv.textContent = q.explain || ''; }
@@ -1359,31 +1114,25 @@ function flashBtn(ans) {
   setTimeout(() => { b.style.transform = ''; b.style.boxShadow = ''; }, 320);
 }
 
-// ── Transition ────────────────────────────────────────
 function renderTrans() {
   const ni   = S.vi + 1;
   const last = ni >= VIGNETTES.length;
   const np   = last ? null : VIGNETTES[ni];
   const kudo = KUDOS[Math.floor(Math.random() * KUDOS.length)];
-
   app.innerHTML = `
   <div class="trans-screen">
     ${starTransHTML(S.stars, VIGNETTES.length)}
     <div class="trans-msg" style="margin-top:6px">${kudo}</div>
-    <div style="font-size:20px;font-weight:bold;color:#F39C12">
-      ${S.stars} star${S.stars===1?'':'s'} collected!
-    </div>
+    <div style="font-size:20px;font-weight:bold;color:#F39C12">${S.stars} star${S.stars===1?'':'s'} collected!</div>
     <div class="trans-sub">
       ${last
         ? 'That was the very last pair — you are almost done!'
         : `Next up: meet <strong>${escHtml(np.char1.name)}</strong> and <strong>${escHtml(np.char2.name)}</strong>!`}
     </div>
   </div>`;
-
   const msg = last
     ? `${kudo} You just finished all fifteen pairs! You are almost done now — what an amazing job!`
     : `${kudo} You collected a star! You have ${S.stars} star${S.stars===1?'':'s'} now! Next up, let us meet ${np.char1.name} and ${np.char2.name}!`;
-
   stopSpeak();
   speak(msg, () => {
     setTimeout(() => {
@@ -1394,7 +1143,6 @@ function renderTrans() {
   });
 }
 
-// ── End ───────────────────────────────────────────────
 function renderEnd() {
   const nm  = S.name || 'Detective';
   const tot = S.answers.length;
@@ -1404,9 +1152,7 @@ function renderEnd() {
     <div class="end-trophy-wrap">${trophySVG()}</div>
     <div class="end-title">Amazing, ${escHtml(nm)}!</div>
     ${starTransHTML(S.stars, VIGNETTES.length)}
-    <div class="end-sub" style="margin-top:4px">
-      You answered questions about all ${VIGNETTES.length} pairs of friends!
-    </div>
+    <div class="end-sub" style="margin-top:4px">You answered questions about all ${VIGNETTES.length} pairs of friends!</div>
     <div style="font-size:12px;color:#ccc">${cor} of ${tot} answers matched the scoring key</div>
     <div class="end-btns">
       <button class="btn btn-primary"   onclick="exportCSV()">Download Results</button>
@@ -1417,17 +1163,23 @@ function renderEnd() {
   speak(`${nm}, you have done something truly amazing today! You answered questions about all fifteen pairs of friends, and you thought so carefully about every single one. I am incredibly proud of you. You really are a true Friend Detective! Give yourself a big pat on the back — you have really, really earned it today!`);
 }
 
-// ═══════════════════════════════════════════════════════
-//  NAVIGATION
-// ═══════════════════════════════════════════════════════
-function exPhase()  { return S.phase === 'ex-story' || S.phase === 'ex-q'; }
+function progHTML(pct, lbl) {
+  return `<div class="prog-wrap"><div class="prog-fill" style="width:${pct}%"></div></div><div class="prog-label">${lbl}</div>`;
+}
+
+// ── NAVIGATION ─────────────────────────────────────────
+function exPhase() { return S.phase === 'ex-story' || S.phase === 'ex-q'; }
 
 function startGame() {
   const inp = document.getElementById('cname');
   const sel = document.getElementById('cage');
   S.name = (inp ? inp.value.trim() : '') || '';
   S.age  = (sel ? sel.value        : '') || '';
-  if (!S.name) { speak("Oops! Can you type your name first?"); return; }
+  if (!S.name) {
+    unlockAudio("Oops! Can you type your name first?");
+    return;
+  }
+  audioUnlocked = true;
   S.phase = 'intro';
   render();
 }
@@ -1443,14 +1195,11 @@ function skipPair() {
 function skipEnd()   { stopSpeak(); S.phase = 'end'; render(); }
 function resetGame() {
   stopSpeak();
-  Object.assign(S, { phase:'welcome', name:'', age:'', vi:0, qi:0, eqi:0,
-                      answers:[], stars:0, adminOpen:false });
+  Object.assign(S, { phase:'welcome', name:'', age:'', vi:0, qi:0, eqi:0, answers:[], stars:0, adminOpen:false });
   render();
 }
 
-// ═══════════════════════════════════════════════════════
-//  ADMIN PANEL
-// ═══════════════════════════════════════════════════════
+// ── ADMIN ──────────────────────────────────────────────
 function setupAdmin() {
   const panel = document.getElementById('adminPanel');
   if (!panel) return;
@@ -1461,7 +1210,7 @@ function setupAdmin() {
       <div style="font-size:10.5px;color:#bbb;margin-bottom:6px;line-height:1.55">
         For the most natural voice, enter a free
         <a href="https://elevenlabs.io" target="_blank" style="color:#4776e6">ElevenLabs</a>
-        API key. Without it, the device's built-in voice is used.
+        API key. Without it, the device built-in voice is used.
       </div>
       <input id="elKeyInput" type="password" class="admin-input" placeholder="ElevenLabs API key..."/>
       <select id="elVoiceSelect" class="admin-select">
@@ -1482,12 +1231,10 @@ function setupAdmin() {
     <button class="admin-btn-sm admin-btn-gold" style="width:100%;margin-bottom:4px;padding:8px;font-size:11px;border-radius:7px" onclick="exportCSV()">Download Results (CSV)</button>
     <button class="admin-btn-sm" style="width:100%;margin-bottom:4px;padding:7px;font-size:11px;border-radius:7px" onclick="skipPair()">Skip this pair</button>
     <button class="admin-btn-sm" style="width:100%;padding:7px;font-size:11px;border-radius:7px" onclick="skipEnd()">Skip to End</button>`;
-
   const ki = document.getElementById('elKeyInput');
   const vs = document.getElementById('elVoiceSelect');
   if (ki) ki.value = S.elevenLabsKey;
   if (vs) vs.value = S.elevenLabsVoice;
-
   document.getElementById('adminBtn').addEventListener('click', () => {
     S.adminOpen = !S.adminOpen;
     panel.classList.toggle('open', S.adminOpen);
@@ -1517,42 +1264,16 @@ function updateAdmin() {
   if (!el) return;
   if (!S.answers.length) { el.textContent = 'No answers yet.'; return; }
   el.textContent = S.answers.map(a =>
-    `V${a.vid}[${a.vM}] Q${a.qi+1}[${a.qM}] ${a.congruent?'CON':'INC'}: ${a.ans} key:${a.keyed} ${a.ok?'✓':'✗'}`
+    `V${a.vid}[${a.vM}] Q${a.qi+1}[${a.qM}] ${a.congruent?'CON':'INC'}: ${a.ans} key:${a.keyed} ${a.ok?'ok':'x'}`
   ).join('\n');
 }
 
-// ═══════════════════════════════════════════════════════
-//  CSV EXPORT
-// ═══════════════════════════════════════════════════════
+// ── CSV ────────────────────────────────────────────────
 function exportCSV() {
-  const headers = [
-    'ChildName',
-    'ChildAge',
-    'VignetteNumber',
-    'VignetteRelationalModel',
-    'QuestionNumber',
-    'QuestionRelationalModel',
-    'IsCongruent',
-    'ChildAnswer',
-    'KeyedAnswer',
-    'Correct',
-    'Timestamp'
-  ];
+  const headers = ['ChildName','ChildAge','VignetteNumber','VignetteRelationalModel','QuestionNumber','QuestionRelationalModel','IsCongruent','ChildAnswer','KeyedAnswer','Correct','Timestamp'];
   const rows = [headers.join(',')];
   S.answers.forEach(a => {
-    rows.push([
-      S.name,
-      S.age,
-      a.vid,
-      a.vM,
-      a.qi + 1,
-      a.qM,
-      a.congruent ? 'TRUE' : 'FALSE',
-      a.ans,
-      a.keyed,
-      a.ok    ? 'TRUE' : 'FALSE',
-      a.ts
-    ].join(','));
+    rows.push([S.name, S.age, a.vid, a.vM, a.qi+1, a.qM, a.congruent?'TRUE':'FALSE', a.ans, a.keyed, a.ok?'TRUE':'FALSE', a.ts].join(','));
   });
   const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
   const url  = URL.createObjectURL(blob);
@@ -1563,20 +1284,14 @@ function exportCSV() {
   URL.revokeObjectURL(url);
 }
 
-// ═══════════════════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════════════════
+// ── INIT ───────────────────────────────────────────────
 window.addEventListener('load', () => {
   try {
     initVoices();
     setupAdmin();
     render();
   } catch(err) {
-    document.getElementById('app').innerHTML = `<div class="error-box">
-      <h2 style="color:#e74c3c">Could not start the game</h2>
-      <p style="margin:10px 0"><strong>${err.message}</strong></p>
-      <pre style="background:#f5f5f5;padding:12px;border-radius:8px;font-size:11px;text-align:left;overflow:auto">${err.stack||''}</pre>
-    </div>`;
+    document.getElementById('app').innerHTML = `<div class="error-box"><h2 style="color:#e74c3c">Could not start the game</h2><p style="margin:10px 0"><strong>${err.message}</strong></p><pre style="background:#f5f5f5;padding:12px;border-radius:8px;font-size:11px;text-align:left;overflow:auto">${err.stack||''}</pre></div>`;
     console.error(err);
   }
 });

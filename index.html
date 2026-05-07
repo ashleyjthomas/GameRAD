@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Friend Detective 🔍</title>
+<title>Friend Detective</title>
 <style>
 
-/* ─── RESET & BASE ─────────────────────────────────────────── */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
@@ -32,7 +31,6 @@ body {
   min-height: 580px;
 }
 
-/* ─── PROGRESS BAR ──────────────────────────────────────────── */
 .prog-wrap {
   background: #F0EDE8;
   height: 13px;
@@ -53,7 +51,6 @@ body {
   margin: 3px 0 0;
 }
 
-/* ─── SCREEN CONTAINER ──────────────────────────────────────── */
 .screen {
   flex: 1;
   display: flex;
@@ -68,7 +65,6 @@ body {
   to   { opacity: 1; transform: translateY(0);   }
 }
 
-/* ─── WELCOME ───────────────────────────────────────────────── */
 .wt {
   font-size: 40px;
   font-weight: bold;
@@ -80,6 +76,7 @@ body {
   background-clip: text;
 }
 .ws { font-size: 19px; color: #888; text-align: center; }
+
 .name-wrap { text-align: center; }
 .name-wrap label { display: block; font-size: 17px; color: #666; margin-bottom: 6px; }
 .name-input {
@@ -99,7 +96,6 @@ body {
   box-shadow: 0 0 0 4px rgba(247,151,30,.15);
 }
 
-/* ─── BUTTONS ───────────────────────────────────────────────── */
 .btn {
   font-family: inherit;
   font-size: 18px;
@@ -118,9 +114,9 @@ body {
 .btn:active  { transform: scale(.95); }
 .btn:disabled { opacity: .45; cursor: not-allowed; }
 
-.btn-primary  { background: linear-gradient(135deg,#f7971e,#ffd200); color: white; }
-.btn-secondary{ background: #F0EDE8; color: #555; font-size: 15px; padding: 9px 20px; }
-.btn-audio    { background: linear-gradient(135deg,#4776e6,#8e54e9); color: white; font-size: 16px; padding: 10px 22px; }
+.btn-primary   { background: linear-gradient(135deg,#f7971e,#ffd200); color: white; }
+.btn-secondary { background: #F0EDE8; color: #555; font-size: 15px; padding: 9px 20px; }
+.btn-audio     { background: linear-gradient(135deg,#4776e6,#8e54e9); color: white; font-size: 16px; padding: 10px 22px; }
 
 .btn-green {
   background: linear-gradient(135deg,#56ab2f,#a8e063);
@@ -143,7 +139,6 @@ body {
   justify-content: center;
 }
 
-/* ─── ILLUSTRATION ──────────────────────────────────────────── */
 .illus {
   width: 100%;
   border-radius: 14px;
@@ -153,7 +148,6 @@ body {
 }
 .illus svg { display: block; width: 100%; height: auto; }
 
-/* ─── STORY SCREEN ──────────────────────────────────────────── */
 .story-head {
   display: flex;
   justify-content: space-between;
@@ -170,8 +164,7 @@ body {
   color: #bbb;
 }
 .audio-dot {
-  width: 9px;
-  height: 9px;
+  width: 9px; height: 9px;
   border-radius: 50%;
   background: #ddd;
   transition: background .3s;
@@ -207,7 +200,6 @@ body {
   width: 100%;
 }
 
-/* ─── QUESTION SCREEN ───────────────────────────────────────── */
 .q-header {
   width: 100%;
   background: linear-gradient(135deg,#4776e6,#8e54e9);
@@ -248,7 +240,6 @@ body {
   width: 100%;
 }
 
-/* ─── EXAMPLE EXPLANATION BOX ───────────────────────────────── */
 .ex-explain {
   display: none;
   width: 100%;
@@ -262,7 +253,6 @@ body {
   line-height: 1.6;
 }
 
-/* ─── FEEDBACK POP ──────────────────────────────────────────── */
 .fb-wrap {
   position: fixed;
   inset: 0;
@@ -284,7 +274,6 @@ body {
   100% { transform: scale(.6);  opacity: 0; }
 }
 
-/* ─── TRANSITION SCREEN ─────────────────────────────────────── */
 .trans-screen {
   flex: 1;
   display: flex;
@@ -295,7 +284,7 @@ body {
   padding: 40px;
   text-align: center;
 }
-.trans-star  { font-size: 96px; animation: starIn .7s ease; }
+.trans-star { font-size: 96px; animation: starIn .7s ease; }
 @keyframes starIn {
   0%   { transform: scale(0) rotate(-180deg); }
   70%  { transform: scale(1.25) rotate(10deg); }
@@ -304,7 +293,6 @@ body {
 .trans-msg  { font-size: 26px; font-weight: bold; color: #333; }
 .trans-next { font-size: 18px; color: #999; }
 
-/* ─── END SCREEN ────────────────────────────────────────────── */
 .end-screen {
   flex: 1;
   display: flex;
@@ -326,13 +314,10 @@ body {
 .end-sub   { font-size: 19px; color: #666; }
 .end-btns  { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 6px; }
 
-/* ─── ADMIN PANEL ───────────────────────────────────────────── */
 .admin-btn {
   position: fixed;
-  bottom: 10px;
-  right: 10px;
-  width: 34px;
-  height: 34px;
+  bottom: 10px; right: 10px;
+  width: 34px; height: 34px;
   border-radius: 50%;
   background: rgba(0,0,0,.13);
   border: none;
@@ -345,8 +330,7 @@ body {
 }
 .admin-panel {
   position: fixed;
-  bottom: 54px;
-  right: 10px;
+  bottom: 54px; right: 10px;
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 24px rgba(0,0,0,.2);
@@ -377,4 +361,932 @@ body {
   line-height: 1.5;
 }
 
-/* ─── INTRO INFO
+.info-box {
+  font-size: 17px;
+  color: #555;
+  line-height: 1.8;
+  max-width: 510px;
+  background: #F8F4FF;
+  padding: 16px 20px;
+  border-radius: 14px;
+  border: 3px solid #C9B8F0;
+}
+
+.error-box {
+  padding: 30px;
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .wt             { font-size: 30px; }
+  .btn-green,
+  .btn-red        { font-size: 20px; padding: 15px 0; }
+  .q-box          { font-size: 17px; }
+  .story-box      { font-size: 15px; }
+  .trans-msg      { font-size: 21px; }
+}
+
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div style="padding:50px;text-align:center;font-family:Arial,sans-serif;color:#888">
+    <div style="font-size:60px">🔍</div>
+    <h2>Loading Friend Detective...</h2>
+    <p style="margin-top:12px">If this message does not go away, please check that
+    JavaScript is enabled in your browser.</p>
+  </div>
+</div>
+
+<button class="admin-btn" id="adminBtn" title="Researcher Panel">⚙️</button>
+<div class="admin-panel" id="adminPanel">
+  <h3>🔬 Researcher Panel</h3>
+  <div class="admin-log" id="adminLog">No answers yet.</div>
+  <button class="btn btn-secondary" style="width:100%;margin-bottom:7px" onclick="exportCSV()">
+    📥 Download Results (CSV)
+  </button>
+  <button class="btn btn-secondary" style="width:100%;margin-bottom:7px" onclick="skipPair()">
+    ⏭ Skip this pair
+  </button>
+  <button class="btn btn-secondary" style="width:100%" onclick="skipEnd()">
+    ⏭ Skip to End
+  </button>
+</div>
+
+<script>
+'use strict';
+
+// ── canvas size ──
+const W = 600, H = 300, GY = H * 0.70;
+
+// ── EXAMPLE ──────────────────────────────────────────────────
+const EXAMPLE = {
+  id: 'ex',
+  char1: { name:'Alex', hair:'#5C3D11', shirt:'#4ECDC4', pants:'#34495E', style:'short'    },
+  char2: { name:'Beth', hair:'#D4790A', shirt:'#FF6B6B', pants:'#7D3C98', style:'pigtails' },
+  scene: 'outdoor',
+  parts: [
+    'Alex and Beth are good friends.',
+    'Last month, they baked cookies together. Beth split the cookies into two equal piles, and Alex picked the pile he wanted.',
+    'Last weekend, Alex brought Beth some apples from his backyard tree. So this weekend, Beth baked Alex some cookies to give back to him.'
+  ],
+  questions: [
+    {
+      text: 'Alex and Beth take turns using the tablet so they each get the same amount of time.',
+      keyed: 'YES',
+      explain: 'Since Alex and Beth like things to be fair and equal, taking turns on the tablet sounds just like them! YES makes sense here.'
+    },
+    {
+      text: 'Alex decides what games they play, and Beth just goes along with it.',
+      keyed: 'NO',
+      explain: 'They seem to treat each other as equals, so it does not sound like just Alex would always be in charge. NO makes more sense here.'
+    },
+    {
+      text: 'When their class collected coins for a toy drive, Alex and Beth each put in the same amount.',
+      keyed: 'YES',
+      explain: 'Putting in the same amount fits their style of being fair and equal to each other. YES!'
+    }
+  ]
+};
+
+// ── VIGNETTES ────────────────────────────────────────────────
+const VIGNETTES = [
+  {
+    id:1, model:'CS',
+    char1:{ name:'Tommy', hair:'#8B4513', shirt:'#4A90D9', pants:'#2C3E50', style:'short' },
+    char2:{ name:'Bella', hair:'#DAA520', shirt:'#FF69B4', pants:'#7D3C98', style:'long'  },
+    scene:'outdoor',
+    parts:[
+      'Tommy and Bella love their neighborhood.',
+      'It is where they grew up, where they play every day, and where they plan to stay for the rest of their lives.',
+      'Last weekend, when they were deciding where to eat their snack, they chose the spot under the old oak tree where they first became best friends.'
+    ],
+    questions:[
+      { text:'Bella bought Tommy a treat on his birthday only because he had bought her a treat on her birthday.', qM:'EM', keyed:'NO'  },
+      { text:'When they have snacks, Tommy and Bella often share what they have, swapping bites or eating from the same bag.', qM:'CS', keyed:'YES' },
+      { text:'Tommy and Bella flipped a coin to decide which game they would play.', qM:'EM', keyed:'NO' }
+    ]
+  },
+  {
+    id:2, model:'MP',
+    char1:{ name:'Andy', hair:'#1C1C1C', shirt:'#27AE60', pants:'#154360', style:'short' },
+    char2:{ name:'Tara', hair:'#C0392B', shirt:'#9B59B6', pants:'#2C3E50', style:'long'  },
+    scene:'school',
+    parts:[
+      'Andy and Tara needed to pick which art supply set to buy for their school project.',
+      'They looked at how much each set cost and how much they could do with it. They picked the one that gave them the most for their money.',
+      'Also, last month Andy borrowed Tara\'s new bike for a whole week. He gave her four of his best trading cards as payment.'
+    ],
+    questions:[
+      { text:'Andy and Tara give each other a big hug when they see each other after not seeing each other for a while.', qM:'CS', keyed:'NO' },
+      { text:'When they go out for ice cream, Tara always pays for both of them, and Andy often does not even bring his money.', qM:'AR', keyed:'NO' },
+      { text:'When having a snack, Andy and Tara often share what they have, swapping bites or eating from the same bag.', qM:'CS', keyed:'NO' }
+    ]
+  },
+  {
+    id:3, model:'EM',
+    char1:{ name:'Kevin', hair:'#E0A835', shirt:'#E67E22', pants:'#154360', style:'short' },
+    char2:{ name:'Lisa',  hair:'#7B3F00', shirt:'#1ABC9C', pants:'#6C3483', style:'long'  },
+    scene:'playground',
+    parts:[
+      'Kevin and Lisa share the big swing at their school. They take turns — Kevin uses it one day, and Lisa uses it the next day.',
+      'Kevin and Lisa each believe that having their own things is what makes them just as good as each other.'
+    ],
+    questions:[
+      { text:'Kevin and Lisa feel like they have always been together and always will be.', qM:'CS', keyed:'NO'  },
+      { text:'When Kevin has Lisa over for a snack, they both expect that Lisa will have Kevin over for a snack in return sometime soon.', qM:'EM', keyed:'YES' },
+      { text:'When the teacher gave out stickers, Kevin and Lisa each made sure they took the same number.', qM:'EM', keyed:'YES' }
+    ]
+  },
+  {
+    id:4, model:'MP',
+    char1:{ name:'Pete',   hair:'#9B2335', shirt:'#F1C40F', pants:'#2C3E50', style:'short'    },
+    char2:{ name:'Maggie', hair:'#1C1C1C', shirt:'#E74C3C', pants:'#154360', style:'pigtails' },
+    scene:'outdoor',
+    parts:[
+      'Pete borrowed Maggie\'s new bike for a whole week. He paid her back with three of his best stickers for letting him use it.',
+      'Pete also often thinks about how much time he should spend with Maggie and whether playing with Maggie is really the best use of his time.'
+    ],
+    questions:[
+      { text:'Maggie buys Pete a big present on his birthday every year, and Pete always makes sure Maggie knows how thankful he is.', qM:'AR', keyed:'NO'  },
+      { text:'Pete and Maggie work in the school garden together, planting whatever they like and just doing whatever needs to be done.', qM:'CS', keyed:'NO' },
+      { text:'Pete and Maggie ran a lemonade stand together. When they split the money at the end, Maggie got more because she had done more of the work.', qM:'MP', keyed:'YES' }
+    ]
+  },
+  {
+    id:5, model:'CS',
+    char1:{ name:'Sam',  hair:'#7B4F2A', shirt:'#1ABC9C', pants:'#2C3E50', style:'short' },
+    char2:{ name:'Nina', hair:'#DAA520', shirt:'#BB8FCE', pants:'#154360', style:'long'  },
+    scene:'home',
+    parts:[
+      'If Sam or Nina is hungry, they just help themselves freely to snacks at each other\'s house — no need to ask.',
+      'When they had to decide where to go for a field trip, they chose the nature trail because going there always makes them feel closer to each other.'
+    ],
+    questions:[
+      { text:'When Sam and Nina eat lunch together, they share their food, sometimes eating off the same plate.', qM:'CS', keyed:'YES' },
+      { text:'Nina is careful not to interrupt Sam when he is talking, but he interrupts her sometimes.', qM:'AR', keyed:'NO'  },
+      { text:'When Sam got hurt at the playground, Nina felt almost like she was hurt too. Sometimes they even say "when we got hurt."', qM:'CS', keyed:'YES' }
+    ]
+  },
+  {
+    id:6, model:'AR',
+    char1:{ name:'Bobby', hair:'#E8D5A3', shirt:'#2C3E50', pants:'#154360', style:'short' },
+    char2:{ name:'Angie', hair:'#7B4F2A', shirt:'#E59866', pants:'#6C3483', style:'long'  },
+    scene:'school',
+    parts:[
+      'At the start of every art class, Bobby gets to pick the best crayons and markers first. Angie gets to choose from whatever is left over.',
+      'Also, when Bobby and Angie share a snack, Bobby always brings the food. Angie often does not bring anything.'
+    ],
+    questions:[
+      { text:'Bobby and Angie share a scooter — whoever wants to ride it just takes it whenever they like.', qM:'CS', keyed:'NO'  },
+      { text:'Bobby makes the decisions and Angie follows them.', qM:'AR', keyed:'YES' },
+      { text:'When working on a project together, Bobby and Angie watch each other to make sure neither one does more or less than the other.', qM:'EM', keyed:'NO' }
+    ]
+  },
+  {
+    id:7, model:'EM',
+    char1:{ name:'Billy', hair:'#1C1C1C', shirt:'#E74C3C', pants:'#2C3E50', style:'short' },
+    char2:{ name:'Sara',  hair:'#7B4F2A', shirt:'#F1C40F', pants:'#154360', style:'long'  },
+    scene:'outdoor',
+    parts:[
+      'When working on a school project, Billy and Sara keep track of each other to make sure they each do the same amount of work.',
+      'Last weekend, Billy brought Sara some apples from his backyard tree. So this weekend, Sara baked Billy some cookies to give back to him.'
+    ],
+    questions:[
+      { text:'When Billy and Sara eat lunch together, they share their food, sometimes eating off the same plate.', qM:'CS', keyed:'NO'  },
+      { text:'Billy and Sara take turns using the computer to make sure they each get the same amount of time.', qM:'EM', keyed:'YES' },
+      { text:'When Billy won the school award, Sara thought that all his hard work and practice had finally paid off.', qM:'MP', keyed:'NO' }
+    ]
+  },
+  {
+    id:8, model:'CS',
+    char1:{ name:'Danny', hair:'#7B4F2A', shirt:'#9B59B6', pants:'#2C3E50', style:'short'    },
+    char2:{ name:'Amy',   hair:'#DAA520', shirt:'#27AE60', pants:'#154360', style:'pigtails' },
+    scene:'school',
+    parts:[
+      'When Danny and Amy made a school project together, they shared all their ideas openly and worked on every single part of it together.',
+      'Also, Danny and Amy like to buy each other small gifts whenever they see something the other person would love — just because they like making each other happy.'
+    ],
+    questions:[
+      { text:'When Danny and Amy eat lunch together, they share their food, sometimes eating off the same plate.', qM:'CS', keyed:'YES' },
+      { text:'Amy is careful not to interrupt Danny when he is talking, but he interrupts her sometimes.', qM:'AR', keyed:'NO'  },
+      { text:'When Danny got hurt at the playground, Amy felt almost like she was hurt too. Sometimes they even say "when we got hurt."', qM:'CS', keyed:'YES' }
+    ]
+  },
+  {
+    id:9, model:'EM',
+    char1:{ name:'Jimmy', hair:'#9B2335', shirt:'#2980B9', pants:'#2C3E50', style:'short' },
+    char2:{ name:'Cara',  hair:'#1C1C1C', shirt:'#E67E22', pants:'#6C3483', style:'long'  },
+    scene:'birthday',
+    parts:[
+      'Jimmy had Cara over to his birthday party last year, so Cara is planning to invite Jimmy to her birthday party this year.',
+      'Jimmy and Cara baked cookies together last week. Cara split the cookies into what she thought were two equal piles, and Jimmy got to pick which pile he wanted.'
+    ],
+    questions:[
+      { text:'Jimmy and Cara had a big decision to make. They each took turns saying what they wanted, went back and forth, and made a deal that said exactly what each of them would do.', qM:'MP', keyed:'NO' },
+      { text:'Yesterday Jimmy chose which game they would play. Cara went along with his choice without saying anything, even though she did not like the game.', qM:'AR', keyed:'NO' },
+      { text:'When Jimmy won a prize last month, Cara was just as proud and happy as if she herself had won it.', qM:'CS', keyed:'NO' }
+    ]
+  },
+  {
+    id:10, model:'AR',
+    char1:{ name:'Matt', hair:'#1C1C1C', shirt:'#95A5A6', pants:'#2C3E50', style:'short' },
+    char2:{ name:'Ally', hair:'#7B4F2A', shirt:'#E91E8C', pants:'#154360', style:'long'  },
+    scene:'treehouse',
+    parts:[
+      'The treehouse belongs to Matt. Ally can only use it when Matt says it is okay — she is just a guest there.',
+      'Also, every time they share snacks, Matt gets to pick the best ones first and takes as many as he wants, even though Ally has told him that it does not seem fair.'
+    ],
+    questions:[
+      { text:'Ally is careful not to interrupt Matt when he is talking, but he interrupts her sometimes.', qM:'AR', keyed:'YES' },
+      { text:'Matt makes the decisions and Ally follows them.', qM:'AR', keyed:'YES' },
+      { text:'Matt tells Ally when he does not like something she shared, but Ally does not tell Matt when she does not like something he shared.', qM:'AR', keyed:'YES' }
+    ]
+  },
+  {
+    id:11, model:'MP',
+    char1:{ name:'Doug', hair:'#7B4F2A', shirt:'#27AE60', pants:'#2C3E50', style:'short'    },
+    char2:{ name:'Sue',  hair:'#DAA520', shirt:'#E8722B', pants:'#6C3483', style:'pigtails' },
+    scene:'lemonade',
+    parts:[
+      'Doug and Sue needed to decide where to set up their lemonade stand.',
+      'Doug checked how many people walked past one spot, and Sue checked a different spot. They picked the location where they would make the most money.',
+      'Last week, Sue wanted to borrow Doug\'s wagon. Doug said she could use it as long as she gave him half of whatever she earned with it.'
+    ],
+    questions:[
+      { text:'Doug keeps track of how much time he spends with Sue compared to how much time he spends with his other friends.', qM:'MP', keyed:'YES' },
+      { text:'Yesterday Doug chose which game they would play. Sue went along with his choice without saying anything, even though she did not like it.', qM:'AR', keyed:'NO' },
+      { text:'When Doug won a prize, Sue was just as proud and happy as if she herself had won it.', qM:'CS', keyed:'NO' }
+    ]
+  },
+  {
+    id:12, model:'AR',
+    char1:{ name:'Will', hair:'#E8D5A3', shirt:'#154360', pants:'#2C3E50', style:'short' },
+    char2:{ name:'Mary', hair:'#9B2335', shirt:'#1ABC9C', pants:'#6C3483', style:'long'  },
+    scene:'cafeteria',
+    parts:[
+      'Every day at lunch, Will gets to pick the best items from the shared lunch tray first. Mary picks from whatever is left over.',
+      'Also, Will tells Mary when he does not like something she made or shared, but Mary does not tell Will when she does not like something he made or shared.'
+    ],
+    questions:[
+      { text:'Will buys Mary a big present on her birthday every year, and Mary always makes sure Will knows how thankful she is.', qM:'AR', keyed:'YES' },
+      { text:'Will and Mary work in the school garden together, planting whatever they like and just doing whatever needs to be done.', qM:'CS', keyed:'NO' },
+      { text:'When Will and Mary made a painting together, Will said his name had to go on it first.', qM:'AR', keyed:'YES' }
+    ]
+  },
+  {
+    id:13, model:'EM',
+    char1:{ name:'George', hair:'#7B4F2A', shirt:'#E67E22', pants:'#2C3E50', style:'short' },
+    char2:{ name:'Tina',   hair:'#1C1C1C', shirt:'#9B59B6', pants:'#154360', style:'long'  },
+    scene:'icecream',
+    parts:[
+      'George had Tina over for a sleepover last month, so Tina is planning to invite George over for a sleepover next month.',
+      'Also, George took Tina out for ice cream on her birthday because Tina had taken him out for ice cream on his birthday earlier in the year.'
+    ],
+    questions:[
+      { text:'When their class collected coins for a toy drive, George and Tina each put in the same amount.', qM:'EM', keyed:'YES' },
+      { text:'George tells Tina when he does not like something she shared, but Tina does not tell George when she does not like something he shared.', qM:'AR', keyed:'NO' },
+      { text:'Tina is always thinking about how much time she should spend with George and whether spending time with George is really worth it.', qM:'MP', keyed:'NO' }
+    ]
+  },
+  {
+    id:14, model:'CS',
+    char1:{ name:'Jake',  hair:'#9B2335', shirt:'#2980B9', pants:'#2C3E50', style:'short' },
+    char2:{ name:'Karen', hair:'#7B4F2A', shirt:'#F1C40F', pants:'#6C3483', style:'long'  },
+    scene:'garden',
+    parts:[
+      'Jake and Karen work on their school garden together, planting whatever they like and just doing whatever needs to be done.',
+      'Last year, Jake hurt his arm on the playground. Karen felt almost like her own arm was hurt. It seemed like they both felt the same pain — and sometimes they even say "when we hurt our arm."'
+    ],
+    questions:[
+      { text:'Karen bought Jake a treat on his birthday only because he had bought her a treat on her birthday.', qM:'EM', keyed:'NO' },
+      { text:'Jake tells Karen when he does not like something she shared, but Karen does not tell Jake when she does not like something he shared.', qM:'AR', keyed:'NO' },
+      { text:'Karen is always thinking about how much time she should spend with Jake and whether spending time with Jake is really worth it.', qM:'MP', keyed:'NO' }
+    ]
+  },
+  {
+    id:15, model:'AR',
+    char1:{ name:'Barry', hair:'#1C1C1C', shirt:'#E74C3C', pants:'#2C3E50', style:'short'    },
+    char2:{ name:'Jane',  hair:'#DAA520', shirt:'#27AE60', pants:'#154360', style:'pigtails' },
+    scene:'home',
+    parts:[
+      'Barry brings all of his birthday money and allowance to Jane. Whenever he needs to spend some, he has to ask Jane, and she gives him some.',
+      'Earlier this month, when Jane won a big prize at school, Barry looked up to her with great respect and admiration — he was in awe of what she had done.'
+    ],
+    questions:[
+      { text:'Barry is careful not to interrupt Jane when she is talking, but she interrupts him sometimes.', qM:'AR', keyed:'YES' },
+      { text:'Jane makes the decisions and Barry follows them.', qM:'AR', keyed:'YES' },
+      { text:'Barry and Jane take turns using the computer to make sure they each get the same amount of time.', qM:'EM', keyed:'NO' }
+    ]
+  }
+];
+
+// ── STATE ────────────────────────────────────────────────────
+const S = {
+  phase:'welcome', name:'', vi:0, qi:0, eqi:0,
+  answers:[], stars:0, adminOpen:false
+};
+
+// ── SPEECH ───────────────────────────────────────────────────
+let voices = [];
+function initVoices() {
+  voices = speechSynthesis.getVoices();
+  if (!voices.length)
+    speechSynthesis.addEventListener('voiceschanged', () => { voices = speechSynthesis.getVoices(); });
+}
+function bestVoice() {
+  const prefs = ['Samantha','Karen','Moira','Google US English',
+                 'Microsoft Zira - English (United States)','en-US'];
+  for (const p of prefs) {
+    const v = voices.find(v => v.name === p || v.lang === p);
+    if (v) return v;
+  }
+  return voices.find(v => v.lang && v.lang.startsWith('en')) || voices[0] || null;
+}
+
+let seqGen = 0;
+function speak(text, done) {
+  done = done || function(){};
+  if (!window.speechSynthesis) { done(); return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.voice  = bestVoice();
+  u.rate   = 0.88;
+  u.pitch  = 1.1;
+  u.volume = 1;
+  u.onend  = () => { setDot(false); done(); };
+  u.onerror= () => { setDot(false); done(); };
+  setDot(true);
+  speechSynthesis.speak(u);
+}
+function speakSeq(parts, highlightCb, done) {
+  const id = ++seqGen;
+  let i = 0;
+  function next() {
+    if (seqGen !== id) return;
+    if (i >= parts.length) { done(); return; }
+    if (highlightCb) highlightCb(i);
+    speak(parts[i], () => { i++; next(); });
+  }
+  next();
+}
+function stopSpeak() {
+  seqGen++;
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  setDot(false);
+}
+function setDot(on) {
+  const d = document.querySelector('.audio-dot');
+  if (d) d.classList.toggle('on', on);
+  const l = document.getElementById('audioLabel');
+  if (l) l.textContent = on ? 'Listening...' : 'Done';
+}
+
+// ── SVG HELPERS ──────────────────────────────────────────────
+const SKINS = ['#FDBCB4','#F0C090','#E0A878','#C87E50','#FDDBB4'];
+function skin(name) {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) & 0xFFFF;
+  return SKINS[h % SKINS.length];
+}
+
+function kidSVG(cx, groundY, cfg) {
+  const { hair, shirt, pants, style, name } = cfg;
+  const sk = skin(name || '');
+  const hR=28, bH=62, bW=50, lH=58, lW=19, aH=44, aW=12;
+  const fY=groundY, lT=fY-lH, bT=lT-bH, hY=bT-hR-3;
+  const p=[];
+  p.push(`<ellipse cx="${cx}" cy="${fY}" rx="26" ry="6" fill="rgba(0,0,0,.08)"/>`);
+  p.push(`<rect x="${cx-lW-2}" y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
+  p.push(`<rect x="${cx+2}"    y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
+  p.push(`<ellipse cx="${cx-lW*.5-1}" cy="${fY}" rx="13" ry="6" fill="#222"/>`);
+  p.push(`<ellipse cx="${cx+lW*.5+1}" cy="${fY}" rx="13" ry="6" fill="#222"/>`);
+  p.push(`<rect x="${cx-bW*.5-aW}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
+  p.push(`<rect x="${cx+bW*.5}"    y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
+  p.push(`<circle cx="${cx-bW*.5-aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>`);
+  p.push(`<circle cx="${cx+bW*.5+aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>`);
+  p.push(`<rect x="${cx-bW*.5}" y="${bT}" width="${bW}" height="${bH}" rx="10" fill="${shirt}"/>`);
+  p.push(`<path d="M${cx-9},${bT} Q${cx},${bT+13} ${cx+9},${bT}" fill="white" opacity=".2"/>`);
+  p.push(`<circle cx="${cx}" cy="${hY}" r="${hR}" fill="${sk}"/>`);
+  if (style==='short') {
+    p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
+  } else if (style==='long') {
+    p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
+    p.push(`<rect x="${cx-hR-1}" y="${hY-6}" width="13" height="40" rx="6" fill="${hair}"/>`);
+    p.push(`<rect x="${cx+hR-12}" y="${hY-6}" width="13" height="40" rx="6" fill="${hair}"/>`);
+  } else if (style==='pigtails') {
+    p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
+    p.push(`<circle cx="${cx-hR-5}" cy="${hY-3}" r="10" fill="${hair}"/>`);
+    p.push(`<circle cx="${cx+hR+5}" cy="${hY-3}" r="10" fill="${hair}"/>`);
+    p.push(`<line x1="${cx-hR+1}" y1="${hY-1}" x2="${cx-hR-5}" y2="${hY-3}" stroke="${hair}" stroke-width="5"/>`);
+    p.push(`<line x1="${cx+hR-1}" y1="${hY-1}" x2="${cx+hR+5}" y2="${hY-3}" stroke="${hair}" stroke-width="5"/>`);
+  }
+  p.push(`<path d="M${cx-14},${hY-2} Q${cx-8},${hY-12} ${cx-2},${hY-2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
+  p.push(`<path d="M${cx+2},${hY-2} Q${cx+8},${hY-12} ${cx+14},${hY-2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
+  p.push(`<path d="M${cx-10},${hY+9} Q${cx},${hY+19} ${cx+10},${hY+9}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
+  p.push(`<circle cx="${cx-17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
+  p.push(`<circle cx="${cx+17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
+  if (name) p.push(`<text x="${cx}" y="${fY+18}" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="14" font-weight="bold" fill="#333">${name}</text>`);
+  return p.join('');
+}
+
+function bgSVG(scene) {
+  const p=[];
+  const OUTDOOR=['outdoor','playground','lemonade','garden','treehouse'];
+  if (OUTDOOR.includes(scene)) {
+    p.push(`<defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7EC8E3"/><stop offset="100%" stop-color="#C9EBF8"/></linearGradient></defs>`);
+    p.push(`<rect x="0" y="0" width="${W}" height="${GY}" fill="url(#sk)"/>`);
+    p.push(`<ellipse cx="110" cy="50" rx="45" ry="23" fill="white" opacity=".88"/><ellipse cx="146" cy="41" rx="32" ry="19" fill="white" opacity=".88"/>`);
+    p.push(`<ellipse cx="488" cy="63" rx="50" ry="25" fill="white" opacity=".88"/><ellipse cx="524" cy="53" rx="31" ry="17" fill="white" opacity=".88"/>`);
+    p.push(`<circle cx="546" cy="44" r="30" fill="#FFD700"/>`);
+    for (let a=0;a<8;a++){
+      const r=a*45*Math.PI/180;
+      p.push(`<line x1="${(546+Math.cos(r)*36).toFixed(1)}" y1="${(44+Math.sin(r)*36).toFixed(1)}" x2="${(546+Math.cos(r)*50).toFixed(1)}" y2="${(44+Math.sin(r)*50).toFixed(1)}" stroke="#FFD700" stroke-width="3" stroke-linecap="round"/>`);
+    }
+    p.push(`<rect x="0" y="${GY}" width="${W}" height="${H-GY}" fill="#7EC850"/>`);
+    for(let i=0;i<18;i++){const gx=i*36;p.push(`<path d="M${gx},${GY} Q${gx+9},${GY-13} ${gx+18},${GY}" fill="#5DAD3F"/>`);}
+  } else if (scene==='school'||scene==='cafeteria') {
+    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF9E8"/>`);
+    p.push(`<rect x="0" y="${H-26}" width="${W}" height="26" fill="#E8D5A3"/>`);
+    p.push(`<rect x="155" y="16" width="280" height="124" rx="5" fill="#4A7856"/>`);
+    p.push(`<rect x="148" y="9" width="294" height="138" rx="8" fill="none" stroke="#8B4513" stroke-width="7"/>`);
+    p.push(`<text x="295" y="79" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="17" fill="white" opacity=".55">Our Class</text>`);
+    p.push(`<rect x="460" y="22" width="108" height="108" rx="5" fill="#AED6F1" stroke="#8B4513" stroke-width="5"/>`);
+    p.push(`<line x1="514" y1="22" x2="514" y2="130" stroke="#8B4513" stroke-width="3"/>`);
+    p.push(`<line x1="460" y1="76" x2="568" y2="76" stroke="#8B4513" stroke-width="3"/>`);
+  } else if (scene==='home') {
+    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF0E6"/>`);
+    p.push(`<rect x="0" y="${H-26}" width="${W}" height="26" fill="#C4A882"/>`);
+    p.push(`<rect x="26" y="${H-126}" width="200" height="100" rx="16" fill="#FF8C69"/>`);
+    p.push(`<rect x="38" y="${H-126}" width="63" height="69" rx="10" fill="#FF7058"/>`);
+    p.push(`<rect x="122" y="${H-126}" width="63" height="69" rx="10" fill="#FF7058"/>`);
+    p.push(`<rect x="398" y="22" width="155" height="128" rx="6" fill="#AED6F1" stroke="#8B4513" stroke-width="6"/>`);
+    p.push(`<line x1="476" y1="22" x2="476" y2="150" stroke="#8B4513" stroke-width="3"/>`);
+    p.push(`<line x1="398" y1="86" x2="553" y2="86" stroke="#8B4513" stroke-width="3"/>`);
+  } else if (scene==='birthday') {
+    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF0F5"/>`);
+    p.push(`<rect x="0" y="${H-26}" width="${W}" height="26" fill="#FFB6C1"/>`);
+    const bc=['#FF6B6B','#FFD700','#4ECDC4','#45B7D1','#FFA07A','#98D8C8','#FF69B4','#9B59B6'];
+    for(let i=0;i<8;i++){const bx=i*78;p.push(`<polygon points="${bx},7 ${bx+28},7 ${bx+14},36" fill="${bc[i%bc.length]}"/>`);}
+    p.push(`<circle cx="70" cy="70" r="30" fill="#FF6B6B" opacity=".82"/><line x1="70" y1="100" x2="70" y2="155" stroke="#bbb" stroke-width="1.5"/>`);
+    p.push(`<circle cx="${W-70}" cy="58" r="30" fill="#4ECDC4" opacity=".82"/><line x1="${W-70}" y1="88" x2="${W-70}" y2="152" stroke="#bbb" stroke-width="1.5"/>`);
+    p.push(`<circle cx="300" cy="46" r="26" fill="#FFD700" opacity=".82"/><line x1="300" y1="72" x2="300" y2="148" stroke="#bbb" stroke-width="1.5"/>`);
+  } else if (scene==='icecream') {
+    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF5F0"/>`);
+    p.push(`<rect x="0" y="${H-26}" width="${W}" height="26" fill="#F0D5A8"/>`);
+    p.push(`<rect x="140" y="${H-175}" width="320" height="149" rx="12" fill="#FFE4C4" stroke="#E8C099" stroke-width="3"/>`);
+    const ic=['#FF69B4','#90EE90','#87CEEB','#FFD700'];
+    for(let i=0;i<4;i++) p.push(`<circle cx="${190+i*78}" cy="${H-173}" r="27" fill="${ic[i]}"/>`);
+    p.push(`<rect x="${W/2-106}" y="10" width="212" height="56" rx="12" fill="#FF69B4"/>`);
+    p.push(`<text x="${W/2}" y="46" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="19" fill="white">Ice Cream!</text>`);
+  } else {
+    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#E8F4F8"/>`);
+  }
+  return p.join('');
+}
+
+function propSVG(scene) {
+  const p=[];
+  if (scene==='outdoor') {
+    p.push(`<rect x="56" y="${GY-105}" width="26" height="110" rx="7" fill="#8B4513"/>`);
+    p.push(`<circle cx="69" cy="${GY-120}" r="55" fill="#27AE60"/>`);
+    p.push(`<circle cx="42" cy="${GY-102}" r="36" fill="#2ECC71"/>`);
+    p.push(`<circle cx="98" cy="${GY-102}" r="36" fill="#2ECC71"/>`);
+    [[48,GY-138],[76,GY-152],[66,GY-122],[40,GY-115],[92,GY-135]].forEach(([ax,ay])=>
+      p.push(`<circle cx="${ax}" cy="${ay}" r="7" fill="#E74C3C"/>`)
+    );
+  } else if (scene==='playground') {
+    p.push(`<line x1="206" y1="12" x2="206" y2="${GY-7}" stroke="#8B4513" stroke-width="5"/>`);
+    p.push(`<line x1="394" y1="12" x2="394" y2="${GY-7}" stroke="#8B4513" stroke-width="5"/>`);
+    p.push(`<line x1="204" y1="12" x2="396" y2="12" stroke="#8B4513" stroke-width="5"/>`);
+    p.push(`<line x1="265" y1="12" x2="261" y2="${GY-47}" stroke="#888" stroke-width="2"/>`);
+    p.push(`<line x1="335" y1="12" x2="339" y2="${GY-47}" stroke="#888" stroke-width="2"/>`);
+    p.push(`<rect x="256" y="${GY-50}" width="88" height="12" rx="6" fill="#8B4513"/>`);
+    p.push(`<rect x="${W-158}" y="50" width="26" height="158" rx="5" fill="#E74C3C"/>`);
+    p.push(`<line x1="${W-145}" y1="208" x2="${W-62}" y2="${GY}" stroke="#E74C3C" stroke-width="16" stroke-linecap="round"/>`);
+  } else if (scene==='lemonade') {
+    const sx=W/2-68;
+    p.push(`<rect x="${sx}" y="${GY-120}" width="136" height="122" rx="5" fill="#FFD700"/>`);
+    p.push(`<rect x="${sx-11}" y="${GY-132}" width="158" height="18" rx="5" fill="#F39C12"/>`);
+    p.push(`<text x="${W/2}" y="${GY-118}" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="13" fill="white" font-weight="bold">Lemonade!</text>`);
+    p.push(`<rect x="${W/2-16}" y="${GY-106}" width="32" height="44" rx="6" fill="#FFFACD" stroke="#F1C40F" stroke-width="2"/>`);
+  } else if (scene==='treehouse') {
+    p.push(`<rect x="56" y="${GY-155}" width="52" height="159" rx="10" fill="#8B4513"/>`);
+    p.push(`<circle cx="82" cy="${GY-175}" r="86" fill="#27AE60"/>`);
+    p.push(`<circle cx="44" cy="${GY-144}" r="58" fill="#2ECC71"/>`);
+    p.push(`<circle cx="122" cy="${GY-144}" r="58" fill="#2ECC71"/>`);
+    p.push(`<rect x="14" y="${GY-148}" width="164" height="14" rx="4" fill="#7D5A2A"/>`);
+    p.push(`<rect x="18" y="${GY-228}" width="156" height="82" rx="5" fill="#DEB887"/>`);
+    p.push(`<polygon points="14,${GY-228} 96,${GY-278} 178,${GY-228}" fill="#A0522D"/>`);
+    p.push(`<rect x="83" y="${GY-190}" width="38" height="56" rx="19" fill="#8B4513"/>`);
+    p.push(`<line x1="126" y1="${GY-148}" x2="126" y2="${GY+4}" stroke="#8B4513" stroke-width="4"/>`);
+    p.push(`<line x1="112" y1="${GY-148}" x2="112" y2="${GY+4}" stroke="#8B4513" stroke-width="4"/>`);
+    for(let ry=GY-128;ry<GY;ry+=20)
+      p.push(`<line x1="112" y1="${ry}" x2="126" y2="${ry}" stroke="#8B4513" stroke-width="3"/>`);
+  } else if (scene==='garden') {
+    p.push(`<rect x="190" y="${GY-9}" width="220" height="15" rx="7" fill="#8B4513" opacity=".42"/>`);
+    const fc=['#FF69B4','#FFD700','#FF6B6B','#DA70D6','#FF8C00'];
+    for(let i=0;i<5;i++){
+      const fx=208+i*38;
+      p.push(`<line x1="${fx}" y1="${GY-9}" x2="${fx}" y2="${GY-50}" stroke="#228B22" stroke-width="3"/>`);
+      p.push(`<circle cx="${fx}" cy="${GY-54}" r="12" fill="${fc[i]}"/>`);
+      p.push(`<circle cx="${fx}" cy="${GY-54}" r="6" fill="#FFD700"/>`);
+    }
+  } else if (scene==='school') {
+    const ty=H-80;
+    p.push(`<rect x="204" y="${ty}" width="192" height="11" rx="4" fill="#DEB887"/>`);
+    p.push(`<rect x="218" y="${ty-38}" width="66" height="40" rx="5" fill="#F39C12"/>`);
+    p.push(`<text x="251" y="${ty-14}" text-anchor="middle" font-family="Arial" font-size="12" fill="white">Crayons</text>`);
+  } else if (scene==='cafeteria') {
+    const ty=GY-50;
+    p.push(`<rect x="100" y="${ty}" width="400" height="20" rx="5" fill="#DEB887" stroke="#C4A265" stroke-width="2"/>`);
+    p.push(`<rect x="116" y="${ty-62}" width="118" height="64" rx="8" fill="#DCDCDC" stroke="#B8B8B8" stroke-width="2"/>`);
+    p.push(`<rect x="366" y="${ty-62}" width="118" height="64" rx="8" fill="#DCDCDC" stroke="#B8B8B8" stroke-width="2"/>`);
+    p.push(`<circle cx="168" cy="${ty-33}" r="20" fill="#FF8C69"/>`);
+    p.push(`<circle cx="214" cy="${ty-33}" r="13" fill="#7EC850"/>`);
+    p.push(`<circle cx="418" cy="${ty-33}" r="20" fill="#FF8C69"/>`);
+    p.push(`<circle cx="464" cy="${ty-33}" r="13" fill="#7EC850"/>`);
+  } else if (scene==='home') {
+    const ty=GY-82;
+    p.push(`<rect x="236" y="${ty+48}" width="128" height="11" rx="4" fill="#DEB887"/>`);
+    p.push(`<ellipse cx="300" cy="${ty+43}" rx="40" ry="15" fill="#FFB347"/>`);
+    p.push(`<rect x="260" y="${ty+14}" width="80" height="32" rx="5" fill="#FFC870"/>`);
+  } else if (scene==='icecream') {
+    const hy=GY-72;
+    p.push(`<path d="M143,${hy+20} L155,${hy+50} L167,${hy+20}" fill="#F4A460"/>`);
+    p.push(`<circle cx="155" cy="${hy+15}" r="20" fill="#FF69B4"/>`);
+    p.push(`<path d="M433,${hy+20} L445,${hy+50} L457,${hy+20}" fill="#F4A460"/>`);
+    p.push(`<circle cx="445" cy="${hy+15}" r="20" fill="#90EE90"/>`);
+  } else if (scene==='birthday') {
+    const cx=W/2, cy=GY-100;
+    p.push(`<rect x="${cx-52}" y="${cy}" width="104" height="54" rx="8" fill="#FF69B4"/>`);
+    p.push(`<rect x="${cx-52}" y="${cy-24}" width="104" height="28" rx="6" fill="#FFD700"/>`);
+    p.push(`<rect x="${cx-52}" y="${cy-46}" width="104" height="26" rx="6" fill="#FF8C69"/>`);
+    const cc=['#E74C3C','#F39C12','#27AE60','#2980B9','#9B59B6'];
+    for(let i=0;i<5;i++){
+      const cx2=cx-38+i*19;
+      p.push(`<rect x="${cx2-3}" y="${cy-64}" width="7" height="20" rx="3" fill="${cc[i]}"/>`);
+      p.push(`<ellipse cx="${cx2}" cy="${cy-65}" rx="4" ry="6" fill="#FFD700" opacity=".88"/>`);
+    }
+  }
+  return p.join('');
+}
+
+function sceneSVG(v) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;display:block">
+    ${bgSVG(v.scene)}${propSVG(v.scene)}
+    ${kidSVG(155,GY,v.char1)}${kidSVG(445,GY,v.char2)}
+  </svg>`;
+}
+
+function welcomeSVG() {
+  const gy=165;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 205" style="width:100%;display:block">
+    <rect x="0" y="0" width="380" height="${gy}" fill="#87CEEB"/>
+    <rect x="0" y="${gy}" width="380" height="${205-gy}" fill="#7EC850"/>
+    <ellipse cx="80" cy="38" rx="38" ry="19" fill="white" opacity=".9"/>
+    <ellipse cx="108" cy="30" rx="27" ry="15" fill="white" opacity=".9"/>
+    <ellipse cx="300" cy="44" rx="40" ry="21" fill="white" opacity=".9"/>
+    <circle cx="344" cy="33" r="25" fill="#FFD700"/>
+    <circle cx="190" cy="87" r="36" fill="none" stroke="#F39C12" stroke-width="6" opacity=".78"/>
+    <circle cx="190" cy="87" r="28" fill="rgba(255,255,200,.3)"/>
+    <line x1="215" y1="111" x2="234" y2="135" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/>
+    <text x="190" y="97" text-anchor="middle" font-size="26">?</text>
+    ${kidSVG(74,gy,{hair:'#5C3D11',shirt:'#4ECDC4',pants:'#2C3E50',style:'short',name:''})}
+    ${kidSVG(306,gy,{hair:'#D4790A',shirt:'#FF6B6B',pants:'#7D3C98',style:'pigtails',name:''})}
+  </svg>`;
+}
+
+// ── RENDER ───────────────────────────────────────────────────
+const app = document.getElementById('app');
+
+function render() {
+  updateAdmin();
+  try {
+    switch(S.phase) {
+      case 'welcome':  renderWelcome();                              break;
+      case 'intro':    renderIntro();                                break;
+      case 'ex-story': renderStory(EXAMPLE,true);                   break;
+      case 'ex-q':     renderQuestion(EXAMPLE,S.eqi,true);          break;
+      case 'story':    renderStory(VIGNETTES[S.vi],false);          break;
+      case 'q':        renderQuestion(VIGNETTES[S.vi],S.qi,false);  break;
+      case 'trans':    renderTrans();                                break;
+      case 'end':      renderEnd();                                  break;
+    }
+  } catch(err) {
+    app.innerHTML = `<div class="error-box">
+      <h2 style="color:#e74c3c">Something went wrong</h2>
+      <p style="margin:10px 0">Error: <strong>${err.message}</strong></p>
+      <pre style="background:#f5f5f5;padding:12px;border-radius:8px;font-size:12px;
+                  text-align:left;overflow:auto">${err.stack||'no stack'}</pre>
+      <button class="btn btn-primary" style="margin-top:14px" onclick="resetGame()">
+        Start Over
+      </button>
+    </div>`;
+    console.error(err);
+  }
+}
+
+function renderWelcome() {
+  app.innerHTML = `
+  <div class="screen" style="justify-content:center;text-align:center;padding-top:22px">
+    <div class="wt">Friend Detective!</div>
+    <div class="ws">Can you guess how friends act?</div>
+    <div class="illus" style="max-width:340px">${welcomeSVG()}</div>
+    <div class="name-wrap">
+      <label for="cname">What is your name?</label>
+      <input id="cname" class="name-input" type="text"
+             placeholder="Type your name!" maxlength="22" value="${S.name}"/>
+    </div>
+    <button class="btn btn-primary" style="font-size:22px;padding:15px 40px;margin-top:4px"
+            onclick="startGame()">
+      Lets Play!
+    </button>
+  </div>`;
+  stopSpeak();
+  setTimeout(()=>{
+    speak("Hi there! Welcome to Friend Detective! Can you tell me your name? When you are ready, press Lets Play!");
+    const inp=document.getElementById('cname');
+    if(inp) inp.addEventListener('input',e=>S.name=e.target.value);
+  },350);
+}
+
+function renderIntro() {
+  app.innerHTML = `
+  <div class="screen" style="justify-content:center;text-align:center;gap:13px">
+    <div style="font-size:52px">Detective</div>
+    <div style="font-size:26px;font-weight:bold;color:#333">How to play</div>
+    <div class="info-box">
+      I will tell you about <strong>two kids</strong> and how they are friends.<br><br>
+      Then I will ask you to <strong>guess</strong> how they might act in other situations.<br><br>
+      For each question, press <strong style="color:#56ab2f">YES</strong>
+      or <strong style="color:#eb3349">NO</strong>.<br><br>
+      <strong>There are no wrong answers! Just make your best guess!</strong>
+    </div>
+    <div style="font-size:17px;color:#888">Let us try an example first!</div>
+    <button class="btn btn-primary" style="font-size:20px;padding:14px 34px"
+            onclick="goExStory()">Show me!</button>
+  </div>`;
+  stopSpeak();
+  setTimeout(()=>speak("Here is how to play! I will tell you about two kids and how they are friends. Then I will ask you to guess how they might act in other situations. For each question, just press YES or NO. There are no wrong answers! Just make your best guess! Let us try an example first!"),350);
+}
+
+function renderStory(v, isEx) {
+  const pct = isEx ? 0 : S.vi/VIGNETTES.length*100;
+  const lbl = isEx ? 'Example' : `Pair ${S.vi+1} of ${VIGNETTES.length}`;
+  app.innerHTML = `
+  ${isEx?'':progHTML(pct,lbl)}
+  <div class="screen" style="padding-top:${isEx?14:8}px">
+    <div class="story-head">
+      <div class="pair-title">Meet ${v.char1.name} and ${v.char2.name}!</div>
+      <div class="audio-status">
+        <div class="audio-dot"></div>
+        <span id="audioLabel">Listening...</span>
+      </div>
+    </div>
+    <div class="illus">${sceneSVG(v)}</div>
+    <div class="story-box" id="storyBox">
+      ${v.parts.map((s,i)=>`<span class="sent" id="snt${i}">${s} </span>`).join('')}
+    </div>
+    <div class="story-btns">
+      <button class="btn btn-audio" onclick="replayStory()">Hear the story again</button>
+      <button class="btn btn-primary" id="readyBtn" style="display:none"
+              onclick="goQs(${isEx})">I am ready!</button>
+    </div>
+    ${isEx?`<div style="font-size:13px;color:#ccc">This is just a practice example!</div>`:''}
+  </div>`;
+  stopSpeak();
+  setTimeout(()=>{
+    speak(`Let me tell you about ${v.char1.name} and ${v.char2.name}!`, ()=>{
+      speakSeq(v.parts,
+        i=>{
+          document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
+          const el=document.getElementById(`snt${i}`);
+          if(el) el.classList.add('hi');
+        },
+        ()=>{
+          document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
+          const rb=document.getElementById('readyBtn');
+          if(rb) rb.style.display='inline-flex';
+          speak(`Now let us answer some questions about ${v.char1.name} and ${v.char2.name}!`);
+        }
+      );
+    });
+  },400);
+}
+
+function replayStory() {
+  const v=exPhase()?EXAMPLE:VIGNETTES[S.vi];
+  stopSpeak();
+  const rb=document.getElementById('readyBtn');
+  if(rb) rb.style.display='none';
+  speakSeq(v.parts,
+    i=>{
+      document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
+      const el=document.getElementById(`snt${i}`);
+      if(el) el.classList.add('hi');
+    },
+    ()=>{
+      document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
+      const rb2=document.getElementById('readyBtn');
+      if(rb2) rb2.style.display='inline-flex';
+    }
+  );
+}
+
+function renderQuestion(v, qi, isEx) {
+  const q=v.questions[qi];
+  const pct=isEx?0:S.vi/VIGNETTES.length*100;
+  const lbl=isEx?'Example':`Pair ${S.vi+1} of ${VIGNETTES.length}`;
+  app.innerHTML = `
+  ${isEx?'':progHTML(pct,lbl)}
+  <div class="screen" style="padding-top:${isEx?14:8}px;gap:10px">
+    <div class="q-header">
+      Question ${qi+1} of 3 - ${v.char1.name} and ${v.char2.name}
+    </div>
+    <div class="audio-status">
+      <div class="audio-dot"></div>
+      <span id="audioLabel">Listen...</span>
+    </div>
+    <div class="illus" style="max-height:160px;overflow:hidden">${sceneSVG(v)}</div>
+    <div class="q-box" id="qBox">"${q.text}"</div>
+    <div class="ans-row">
+      <button class="btn btn-green" id="btnY" onclick="doAnswer('YES')">YES</button>
+      <button class="btn btn-red"   id="btnN" onclick="doAnswer('NO')">NO</button>
+    </div>
+    <div class="q-replay">
+      <button class="btn btn-audio"     onclick="replayQ()">Hear question again</button>
+      <button class="btn btn-secondary" onclick="replayStoryQ(${isEx})">Hear their story again</button>
+    </div>
+    ${isEx?`<div class="ex-explain" id="exExp"></div>`:''}
+  </div>`;
+  stopSpeak();
+  setTimeout(()=>speak(`Question ${qi+1}. ${q.text}`),350);
+}
+
+function replayQ() {
+  const v=exPhase()?EXAMPLE:VIGNETTES[S.vi];
+  const qi=exPhase()?S.eqi:S.qi;
+  stopSpeak();
+  speak(v.questions[qi].text);
+}
+function replayStoryQ(isEx) {
+  const v=isEx?EXAMPLE:VIGNETTES[S.vi];
+  stopSpeak();
+  speakSeq(v.parts,null,()=>speak(`Now, thinking about ${v.char1.name} and ${v.char2.name}, what do you think?`));
+}
+
+function doAnswer(ans) {
+  ['btnY','btnN'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=true;});
+  const isEx=exPhase();
+  const v=isEx?EXAMPLE:VIGNETTES[S.vi];
+  const qi=isEx?S.eqi:S.qi;
+  const q=v.questions[qi];
+  flashBtn(ans);
+  popFB(ans);
+  if (isEx) {
+    const exDiv=document.getElementById('exExp');
+    if(exDiv){exDiv.style.display='block';exDiv.textContent=q.explain||'';}
+    stopSpeak();
+    speak(q.explain||'',()=>{
+      setTimeout(()=>{
+        if(S.eqi<EXAMPLE.questions.length-1){S.eqi++;S.phase='ex-q';render();}
+        else{speak("Great job on the practice! Now let us start the real game!",()=>{S.phase='story';S.vi=0;S.qi=0;render();});}
+      },2000);
+    });
+  } else {
+    S.answers.push({
+      vid:v.id, vM:v.model, qi, qM:q.qM, ans, keyed:q.keyed,
+      ok:ans===q.keyed, ts:new Date().toISOString()
+    });
+    setTimeout(()=>{
+      if(S.qi<2){S.qi++;S.phase='q';}
+      else{S.stars++;S.phase='trans';}
+      render();
+    },900);
+  }
+}
+
+function flashBtn(ans) {
+  const b=document.getElementById(ans==='YES'?'btnY':'btnN');
+  if(!b)return;
+  b.style.transform='scale(1.14)';
+  b.style.boxShadow='0 0 0 6px rgba(255,255,255,.7)';
+  setTimeout(()=>{b.style.transform='';b.style.boxShadow='';},450);
+}
+
+function popFB(ans) {
+  const wrap=document.createElement('div');
+  wrap.className='fb-wrap';
+  wrap.innerHTML=`<div class="fb-emoji">${ans==='YES'?'👍':'👎'}</div>`;
+  document.body.appendChild(wrap);
+  setTimeout(()=>wrap.remove(),900);
+}
+
+function renderTrans() {
+  const ni=S.vi+1;
+  const last=ni>=VIGNETTES.length;
+  const np=last?null:VIGNETTES[ni];
+  app.innerHTML=`
+  <div class="trans-screen">
+    <div class="trans-star">Star</div>
+    <div class="trans-msg">Great job! ${S.stars} ${S.stars===1?'star':'stars'} so far!</div>
+    <div class="trans-next">${last?'That was the last pair!':'Next: meet '+np.char1.name+' and '+np.char2.name+'!'}</div>
+  </div>`;
+  const msg=last?`Amazing! You finished all the pairs!`:`Great job! You earned a star! Next, let us meet ${np.char1.name} and ${np.char2.name}!`;
+  stopSpeak();
+  speak(msg,()=>{
+    setTimeout(()=>{
+      if(last){S.phase='end';}else{S.vi++;S.qi=0;S.phase='story';}
+      render();
+    },700);
+  });
+}
+
+function renderEnd() {
+  const nm=S.name||'Detective';
+  const tot=S.answers.length;
+  const cor=S.answers.filter(a=>a.ok).length;
+  app.innerHTML=`
+  <div class="end-screen">
+    <div class="end-trophy">Trophy</div>
+    <div class="end-title">Amazing job, ${nm}!</div>
+    <div class="end-sub">You answered all ${VIGNETTES.length} pairs! ${S.stars} stars earned!</div>
+    <div style="font-size:15px;color:#bbb;margin-top:-4px">${cor} of ${tot} answers matched the scoring key.</div>
+    <div class="end-btns">
+      <button class="btn btn-primary"   onclick="exportCSV()">Download Results</button>
+      <button class="btn btn-secondary" onclick="resetGame()">Play Again</button>
+    </div>
+  </div>`;
+  stopSpeak();
+  speak(`Wow, amazing job, ${nm}! You finished the whole game! You are a real Friend Detective! Great work!`);
+}
+
+function progHTML(pct,lbl) {
+  return `<div class="prog-wrap"><div class="prog-fill" style="width:${pct}%"></div></div>
+          <div class="prog-label">${lbl}</div>`;
+}
+
+// ── NAVIGATION ───────────────────────────────────────────────
+function exPhase()    { return S.phase==='ex-story'||S.phase==='ex-q'; }
+function startGame()  { const inp=document.getElementById('cname');S.name=(inp?inp.value:'')||'';S.phase='intro';render(); }
+function goExStory()  { S.phase='ex-story';S.eqi=0;render(); }
+function goQs(isEx)   { S.phase=isEx?'ex-q':'q';if(isEx)S.eqi=0;else S.qi=0;render(); }
+function skipPair()   { if(S.phase==='story'||S.phase==='q'){S.stars++;S.phase='trans';render();} }
+function skipEnd()    { stopSpeak();S.phase='end';render(); }
+function resetGame()  { stopSpeak();Object.assign(S,{phase:'welcome',name:'',vi:0,qi:0,eqi:0,answers:[],stars:0,adminOpen:false});render(); }
+
+// ── ADMIN ────────────────────────────────────────────────────
+document.getElementById('adminBtn').addEventListener('click',()=>{
+  S.adminOpen=!S.adminOpen;
+  document.getElementById('adminPanel').classList.toggle('open',S.adminOpen);
+  updateAdmin();
+});
+function updateAdmin() {
+  const el=document.getElementById('adminLog');
+  if(!el)return;
+  if(!S.answers.length){el.textContent='No answers yet.';return;}
+  el.textContent=S.answers.map(a=>`V${a.vid} Q${a.qi+1} [${a.vM}>${a.qM}]: ${a.ans} (key:${a.keyed}) ${a.ok?'ok':'x'}`).join('\n');
+}
+
+// ── CSV EXPORT ───────────────────────────────────────────────
+function exportCSV() {
+  const rows=['ChildName,VignetteID,VigModel,QIndex,QModel,ChildAnswer,KeyedAnswer,Correct,Timestamp'];
+  S.answers.forEach(a=>rows.push(`${S.name},${a.vid},${a.vM},${a.qi+1},${a.qM},${a.ans},${a.keyed},${a.ok},${a.ts}`));
+  const blob=new Blob([rows.join('\n')],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement('a');
+  link.href=url;
+  link.download=`RAD15C_${S.name||'child'}_${new Date().toISOString().slice(0,10)}.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  try {
+    initVoices();
+    render();
+  } catch(err) {
+    document.getElementById('app').innerHTML =
+      `<div class="error-box">
+        <h2 style="color:#e74c3c">Could not start the game</h2>
+        <p style="margin:10px 0">Error: <strong>${err.message}</strong></p>
+        <pre style="background:#f5f5f5;padding:12px;border-radius:8px;
+                    font-size:12px;text-align:left;overflow:auto">${err.stack||''}</pre>
+      </div>`;
+    console.error(err);
+  }
+});
+
+window.addEventListener('keydown',e=>{
+  if(e.key==='Backspace'&&e.target.tagName!=='INPUT') e.preventDefault();
+});
+
+</script>
+</body>
+</html>

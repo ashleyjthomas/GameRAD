@@ -112,8 +112,7 @@ body {
   border:none; border-radius:20px; padding:12px 10px;
   cursor:pointer; transition:transform .1s, box-shadow .1s;
   display:flex; align-items:center; justify-content:center;
-  flex-direction:column; gap:5px;
-  flex:1; max-width:170px;
+  flex-direction:column; gap:5px; flex:1; max-width:170px;
   box-shadow:0 6px 18px rgba(0,0,0,.18);
   -webkit-tap-highlight-color:transparent;
 }
@@ -122,8 +121,7 @@ body {
   border:none; border-radius:20px; padding:12px 10px;
   cursor:pointer; transition:transform .1s, box-shadow .1s;
   display:flex; align-items:center; justify-content:center;
-  flex-direction:column; gap:5px;
-  flex:1; max-width:170px;
+  flex-direction:column; gap:5px; flex:1; max-width:170px;
   box-shadow:0 4px 12px rgba(0,0,0,.12);
   -webkit-tap-highlight-color:transparent;
 }
@@ -155,8 +153,7 @@ body {
 .sent.hi { background:#FFF3B0; }
 .story-btns { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; width:100%; }
 .q-header {
-  width:100%;
-  background:linear-gradient(135deg,#4776e6,#8e54e9);
+  width:100%; background:linear-gradient(135deg,#4776e6,#8e54e9);
   border-radius:11px; padding:8px 14px; color:white;
   font-size:14px; display:flex; align-items:center; gap:6px;
 }
@@ -291,27 +288,27 @@ const KUDOS = [
 
 const EXAMPLE = {
   id: 'ex',
-  char1: { name:'Ava',  hair:'#5C3D11', shirt:'#4ECDC4', pants:'#34495E', style:'long'     },
-  char2: { name:'Beth', hair:'#D4790A', shirt:'#FF6B6B', pants:'#7D3C98', style:'pigtails' },
+  char1: { name:'Friend 1', hair:'#5C3D11', shirt:'#4ECDC4', pants:'#34495E', style:'short' },
+  char2: { name:'Friend 2', hair:'#D4790A', shirt:'#FF6B6B', pants:'#7D3C98', style:'short' },
   scene: 'outdoor',
   parts: [
-    'Ava and Beth are good friends.',
-    'Last month, they baked cookies together. Beth split the cookies into two equal piles, and Ava picked the pile they wanted.',
-    'Last weekend, Ava brought Beth some apples from their backyard tree. So this weekend, Beth baked Ava some cookies to give back to them.'
+    'These two friends are good friends.',
+    'Last month, they baked cookies together. One friend split the cookies into two equal piles, and the other picked the pile they wanted.',
+    'Last weekend, one friend brought the other some apples from their backyard tree. So this weekend, the other friend baked some cookies to give back.'
   ],
   questions: [
     {
-      text: 'Ava and Beth take turns using the tablet so they each get the same amount of time.',
+      text: 'These two friends take turns using the tablet so they each get the same amount of time.',
       keyed: 'YES', qIllust: 'computer',
-      explain: 'Since Ava and Beth like things to be fair and equal, and they always trade nice things back and forth, taking turns on the tablet sounds just like them! YES makes sense here.'
+      explain: 'Since these friends like things to be fair and equal, and they always trade nice things back and forth, taking turns on the tablet sounds just like them! YES makes sense here.'
     },
     {
-      text: 'Ava decides what games they play, and Beth just goes along with it.',
+      text: 'One friend decides what games they play, and the other just goes along with it.',
       keyed: 'NO', qIllust: 'boss',
-      explain: 'Ava and Beth treat each other as equals, so it does not sound like just one of them would always be in charge. NO makes more sense here.'
+      explain: 'These friends treat each other as equals, so it does not sound like just one of them would always be in charge. NO makes more sense here.'
     },
     {
-      text: 'When their class collected coins for a toy drive, Ava and Beth each put in the same amount.',
+      text: 'When their class collected coins for a toy drive, these two friends each put in the same amount.',
       keyed: 'YES', qIllust: 'coins',
       explain: 'Putting in the same amount fits their style perfectly — they like things to be fair and equal between them. YES!'
     }
@@ -621,25 +618,34 @@ function skin(name) {
   return SKINS[h % SKINS.length];
 }
 
-// ── KID SVG — supports img property ───────────────────
-function kidSVG(cx, groundY, cfg, animOffset) {
+// ── KID SVG ────────────────────────────────────────────
+// flip=true  → mirror horizontally (char on left faces right)
+// flip=false → normal             (char on right faces left)
+// No name labels rendered
+function kidSVG(cx, groundY, cfg, animOffset, flip) {
   animOffset = animOffset || '0s';
-  const { hair, shirt, pants, style, name, img } = cfg;
+  flip = flip || false;
+  const { hair, shirt, pants, style, img } = cfg;
   const bobBegin = (animOffset === 'wave') ? '0s' : animOffset;
 
   // ── IMAGE VERSION ──────────────────────────────────
   if (img && animOffset !== 'wave') {
     const imgUrl = IMG_BASE + img;
-    const imgW = 88, imgH = 182;
+    const imgW = 88, imgH = 182, imgYOffset = 20;
     const p = [];
     p.push(`<ellipse cx="${cx}" cy="${groundY}" rx="26" ry="6" fill="rgba(0,0,0,.10)"/>`);
-    p.push(`<image href="${imgUrl}" x="${cx - imgW/2}" y="${groundY - imgH}" width="${imgW}" height="${imgH}" preserveAspectRatio="xMidYMax meet"/>`);
-    if (name) p.push(`<text x="${cx}" y="${groundY+18}" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="14" font-weight="bold" fill="#444">${escHtml(name)}</text>`);
+    const imgEl = `<image href="${imgUrl}" x="${cx - imgW/2}" y="${groundY - imgH + imgYOffset}" width="${imgW}" height="${imgH}" preserveAspectRatio="xMidYMax meet"/>`;
+    if (flip) {
+      p.push(`<g transform="translate(${cx * 2}, 0) scale(-1, 1)">${imgEl}</g>`);
+    } else {
+      p.push(imgEl);
+    }
+    // No name label
     return `<g><animateTransform attributeName="transform" type="translate" values="0,0; 0,-5; 0,0" dur="2.6s" begin="${bobBegin}" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>${p.join('')}</g>`;
   }
 
-  // ── SVG FALLBACK (used for example characters + welcome screen) ──
-  const sk = skin(name || '');
+  // ── SVG FALLBACK ───────────────────────────────────
+  const sk = skin(cfg.name || '');
   const hR=28, bH=62, bW=50, lH=58, lW=19, aH=44, aW=12;
   const fY=groundY, lT=fY-lH, bT=lT-bH, hY=bT-hR-3;
   const p = [];
@@ -681,7 +687,7 @@ function kidSVG(cx, groundY, cfg, animOffset) {
   p.push(`<path d="M${cx-10},${hY+9} Q${cx},${hY+19} ${cx+10},${hY+9}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
   p.push(`<circle cx="${cx-17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
   p.push(`<circle cx="${cx+17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
-  if (name) p.push(`<text x="${cx}" y="${fY+18}" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="14" font-weight="bold" fill="#444">${escHtml(name)}</text>`);
+  // No name label
   return `<g><animateTransform attributeName="transform" type="translate" values="0,0; 0,-5; 0,0" dur="2.6s" begin="${bobBegin}" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>${p.join('')}</g>`;
 }
 
@@ -782,8 +788,8 @@ function qIllustSVG(type) {
       inn += `<circle cx="82" cy="34" r="18" fill="#FDBCB4"/>`;
       inn += `<polygon points="68,22 76,10 84,18 92,8 100,20 68,20" fill="#FFD700"/>`;
       inn += `<rect x="64" y="52" width="36" height="30" rx="8" fill="#E74C3C"/>`;
-      inn += `<line x1="118" y1="54" x2="158" y2="54" stroke="#888" stroke-width="3.5" marker-end="url(#arB)"/>`;
       inn += `<defs><marker id="arB" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 Z" fill="#888"/></marker></defs>`;
+      inn += `<line x1="118" y1="54" x2="158" y2="54" stroke="#888" stroke-width="3.5" marker-end="url(#arB)"/>`;
       inn += `<circle cx="198" cy="34" r="18" fill="#F0C090"/>`;
       inn += `<rect x="180" y="52" width="36" height="30" rx="8" fill="#3498DB"/>`;
       inn += `<text x="140" y="108" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">one is in charge!</text>`;
@@ -947,14 +953,45 @@ function propSVG(scene) {
   return p.join('');
 }
 
+// char1 (left) flipped to face right, char2 (right) normal — facing each other
 function sceneSVG(v) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;display:block">${bgSVG(v.scene)}${propSVG(v.scene)}${kidSVG(155,GY,v.char1,'0s')}${kidSVG(445,GY,v.char2,'1.3s')}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;display:block">${bgSVG(v.scene)}${propSVG(v.scene)}${kidSVG(155,GY,v.char1,'0s',true)}${kidSVG(445,GY,v.char2,'1.3s',false)}</svg>`;
 }
 
-function welcomeSVG() {
-  const gy=165;
-  const rays6=Array.from({length:6},(_,a)=>{const r=a*60*Math.PI/180;return `<line x1="${(Math.cos(r)*28).toFixed(1)}" y1="${(Math.sin(r)*28).toFixed(1)}" x2="${(Math.cos(r)*39).toFixed(1)}" y2="${(Math.sin(r)*39).toFixed(1)}" stroke="#FFD700" stroke-width="3" stroke-linecap="round"/>`;}).join('');
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 205" style="width:100%;display:block"><rect x="0" y="0" width="380" height="${gy}" fill="#87CEEB"/><rect x="0" y="${gy}" width="380" height="${205-gy}" fill="#7EC850"/><g><animateTransform attributeName="transform" type="translate" values="0,0;16,0;0,0" dur="11s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/><ellipse cx="80" cy="38" rx="38" ry="19" fill="white" opacity=".9"/><ellipse cx="108" cy="30" rx="27" ry="15" fill="white" opacity=".9"/></g><circle cx="344" cy="33" r="25" fill="#FFD700"/><g transform="translate(344,33)"><animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="20s" repeatCount="indefinite" additive="sum"/>${rays6}</g><circle cx="190" cy="87" r="36" fill="none" stroke="#F39C12" stroke-width="6" opacity=".78"/><circle cx="190" cy="87" r="28" fill="rgba(255,255,200,.32)"/><line x1="215" y1="111" x2="234" y2="135" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/><text x="190" y="97" text-anchor="middle" font-family="Arial Black,Arial" font-size="28" fill="#F39C12" font-weight="bold">?</text>${kidSVG(74,gy,{hair:'#5C3D11',shirt:'#4ECDC4',pants:'#2C3E50',style:'short',name:''},'wave')}${kidSVG(306,gy,{hair:'#D4790A',shirt:'#FF6B6B',pants:'#7D3C98',style:'pigtails',name:''},'1.1s')}</svg>`;
+// ── WELCOME SVG — uses real character images, no name labels ──
+function welcomeSVG(c1, c2) {
+  const gy = 165;
+  const rays6 = Array.from({length:6},(_,a)=>{
+    const r=a*60*Math.PI/180;
+    return `<line x1="${(Math.cos(r)*28).toFixed(1)}" y1="${(Math.sin(r)*28).toFixed(1)}" x2="${(Math.cos(r)*39).toFixed(1)}" y2="${(Math.sin(r)*39).toFixed(1)}" stroke="#FFD700" stroke-width="3" stroke-linecap="round"/>`;
+  }).join('');
+
+  const kid1 = c1
+    ? kidSVG(74,  gy, c1, '0s',   true)
+    : kidSVG(74,  gy, {hair:'#5C3D11',shirt:'#4ECDC4',pants:'#2C3E50',style:'short',  name:''}, 'wave');
+  const kid2 = c2
+    ? kidSVG(306, gy, c2, '1.1s', false)
+    : kidSVG(306, gy, {hair:'#D4790A',shirt:'#FF6B6B',pants:'#7D3C98',style:'pigtails',name:''}, '1.1s');
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 205" style="width:100%;display:block">
+    <rect x="0" y="0" width="380" height="${gy}" fill="#87CEEB"/>
+    <rect x="0" y="${gy}" width="380" height="${205-gy}" fill="#7EC850"/>
+    <g><animateTransform attributeName="transform" type="translate" values="0,0;16,0;0,0" dur="11s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+      <ellipse cx="80" cy="38" rx="38" ry="19" fill="white" opacity=".9"/>
+      <ellipse cx="108" cy="30" rx="27" ry="15" fill="white" opacity=".9"/>
+    </g>
+    <circle cx="344" cy="33" r="25" fill="#FFD700"/>
+    <g transform="translate(344,33)">
+      <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="20s" repeatCount="indefinite" additive="sum"/>
+      ${rays6}
+    </g>
+    <circle cx="190" cy="87" r="36" fill="none" stroke="#F39C12" stroke-width="6" opacity=".78"/>
+    <circle cx="190" cy="87" r="28" fill="rgba(255,255,200,.32)"/>
+    <line x1="215" y1="111" x2="234" y2="135" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/>
+    <text x="190" y="97" text-anchor="middle" font-family="Arial Black,Arial" font-size="28" fill="#F39C12" font-weight="bold">?</text>
+    ${kid1}
+    ${kid2}
+  </svg>`;
 }
 
 function trophySVG() {
@@ -1012,12 +1049,21 @@ function render() {
   }
 }
 
+// ── RENDER WELCOME — picks two random chars for the illustration ──
 function renderWelcome() {
+  const pool = [];
+  VIGNETTES.forEach(v => { pool.push(v.char1); pool.push(v.char2); });
+  const wi1 = Math.floor(Math.random() * pool.length);
+  let wi2;
+  do { wi2 = Math.floor(Math.random() * pool.length); } while (wi2 === wi1);
+  const wc1 = pool[wi1];
+  const wc2 = pool[wi2];
+
   app.innerHTML = `
   <div class="screen" style="justify-content:center;text-align:center;padding-top:14px">
     <div class="wt">Friend Detective!</div>
     <div class="ws">Can you figure out how friends act toward each other?</div>
-    <div class="illus" style="max-width:330px">${welcomeSVG()}</div>
+    <div class="illus" style="max-width:330px">${welcomeSVG(wc1, wc2)}</div>
     <button id="unlockBtn" class="unlock-btn"
       onclick="unlockAudio('Hello there, and welcome to Friend Detective! I am so excited you are here today! First, can you type your name in the box. And then pick your age from the little menu. When you are all ready, press the big orange button that says Let us play — and we will get started together!')">
       🔊 Tap here to turn on sound!
@@ -1362,11 +1408,22 @@ function startGame() {
   S.age  = (sel ? sel.value        : '') || '';
   if (!S.name) { unlockAudio("Oops! Can you type your name first?"); return; }
   audioUnlocked = true;
+
   // ── Fisher-Yates shuffle ──
   for (let i = VIGNETTES.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [VIGNETTES[i], VIGNETTES[j]] = [VIGNETTES[j], VIGNETTES[i]];
   }
+
+  // ── Pick two random characters for the practice example ──
+  const pool = [];
+  VIGNETTES.forEach(v => { pool.push(v.char1); pool.push(v.char2); });
+  const i1 = Math.floor(Math.random() * pool.length);
+  let i2;
+  do { i2 = Math.floor(Math.random() * pool.length); } while (i2 === i1);
+  EXAMPLE.char1 = Object.assign({}, pool[i1]);
+  EXAMPLE.char2 = Object.assign({}, pool[i2]);
+
   S.phase = 'intro';
   render();
 }

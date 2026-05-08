@@ -315,6 +315,7 @@ const EXAMPLE = {
   ]
 };
 
+// ── VIGNETTES — CS, EM, AR only. No MP questions. ──────
 const VIGNETTES = [
   {
     id:1, model:'CS',
@@ -389,7 +390,8 @@ const VIGNETTES = [
     questions:[
       { text:'When Dakota and Drew eat lunch together, they share their food, sometimes eating off the same plate.', qM:'CS', keyed:'NO',  qIllust:'share_food' },
       { text:'Dakota and Drew take turns using the computer to make sure they each get the same amount of time.', qM:'EM', keyed:'YES', qIllust:'computer'   },
-      { text:'When Dakota won the school award, Drew thought that all their hard work and practice had finally paid off.', qM:'MP', keyed:'NO', qIllust:'trophy' }
+      // ── WAS MP, NOW AR-NO ──
+      { text:'When Dakota and Drew disagree about something, one of them just goes along with whatever the other one decides without saying anything.', qM:'AR', keyed:'NO', qIllust:'boss' }
     ]
   },
   {
@@ -417,7 +419,8 @@ const VIGNETTES = [
       'Harper and Hayden baked cookies together last week. Hayden split the cookies into two equal piles, and Harper got to pick which pile they wanted.'
     ],
     questions:[
-      { text:'Harper and Hayden had a big decision to make. They each took turns saying what they wanted, went back and forth, and made a deal that said exactly what each of them would do.', qM:'MP', keyed:'NO', qIllust:'contract' },
+      // ── WAS MP-NO, NOW EM-YES ──
+      { text:'When Harper and Hayden work on a project together, they keep track to make sure they each do exactly the same amount of work.', qM:'EM', keyed:'YES', qIllust:'balance' },
       { text:'Yesterday Harper chose which game they would play. Hayden went along with their choice without saying anything, even though they did not like the game.', qM:'AR', keyed:'NO', qIllust:'boss'     },
       { text:'When Harper won a prize last month, Hayden was just as proud and happy as if they themselves had won it.', qM:'CS', keyed:'NO', qIllust:'trophy' }
     ]
@@ -465,7 +468,8 @@ const VIGNETTES = [
     questions:[
       { text:'When their class collected coins for a toy drive, Logan and Morgan each put in the same amount.', qM:'EM', keyed:'YES', qIllust:'coins'    },
       { text:'Logan tells Morgan when they do not like something Morgan shared, but Morgan does not tell Logan when they do not like something Logan shared.', qM:'AR', keyed:'NO', qIllust:'feedback' },
-      { text:'Morgan is always thinking about how much time they should spend with Logan and whether spending time with Logan is really worth it.', qM:'MP', keyed:'NO', qIllust:'clock' }
+      // ── WAS MP-NO, NOW CS-NO ──
+      { text:'When Logan and Morgan are working on something together, they share all their ideas openly and do not keep track of who contributed what.', qM:'CS', keyed:'NO', qIllust:'share_food' }
     ]
   },
   {
@@ -480,7 +484,8 @@ const VIGNETTES = [
     questions:[
       { text:'Quinn bought Parker a treat on their birthday only because Parker had bought them a treat on their birthday.', qM:'EM', keyed:'NO', qIllust:'birthday' },
       { text:'Parker tells Quinn when they do not like something Quinn shared, but Quinn does not tell Parker when they do not like something Parker shared.', qM:'AR', keyed:'NO', qIllust:'feedback' },
-      { text:'Quinn is always thinking about how much time they should spend with Parker and whether spending time with Parker is really worth it.', qM:'MP', keyed:'NO', qIllust:'clock' }
+      // ── WAS MP-NO, NOW CS-YES ──
+      { text:'Parker and Quinn share their snacks freely — if one of them is hungry, they just help themselves to the other\'s food without needing to ask.', qM:'CS', keyed:'YES', qIllust:'share_food' }
     ]
   },
   {
@@ -619,16 +624,12 @@ function skin(name) {
 }
 
 // ── KID SVG ────────────────────────────────────────────
-// flip=true  → mirror horizontally (char on left faces right)
-// flip=false → normal             (char on right faces left)
-// No name labels rendered
 function kidSVG(cx, groundY, cfg, animOffset, flip) {
   animOffset = animOffset || '0s';
   flip = flip || false;
   const { hair, shirt, pants, style, img } = cfg;
   const bobBegin = (animOffset === 'wave') ? '0s' : animOffset;
 
-  // ── IMAGE VERSION ──────────────────────────────────
   if (img && animOffset !== 'wave') {
     const imgUrl = IMG_BASE + img;
     const imgW = 88, imgH = 182, imgYOffset = 20;
@@ -640,11 +641,9 @@ function kidSVG(cx, groundY, cfg, animOffset, flip) {
     } else {
       p.push(imgEl);
     }
-    // No name label
     return `<g><animateTransform attributeName="transform" type="translate" values="0,0; 0,-5; 0,0" dur="2.6s" begin="${bobBegin}" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>${p.join('')}</g>`;
   }
 
-  // ── SVG FALLBACK ───────────────────────────────────
   const sk = skin(cfg.name || '');
   const hR=28, bH=62, bW=50, lH=58, lW=19, aH=44, aW=12;
   const fY=groundY, lT=fY-lH, bT=lT-bH, hY=bT-hR-3;
@@ -687,7 +686,6 @@ function kidSVG(cx, groundY, cfg, animOffset, flip) {
   p.push(`<path d="M${cx-10},${hY+9} Q${cx},${hY+19} ${cx+10},${hY+9}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
   p.push(`<circle cx="${cx-17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
   p.push(`<circle cx="${cx+17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
-  // No name label
   return `<g><animateTransform attributeName="transform" type="translate" values="0,0; 0,-5; 0,0" dur="2.6s" begin="${bobBegin}" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>${p.join('')}</g>`;
 }
 
@@ -828,12 +826,6 @@ function qIllustSVG(type) {
       inn += `<text x="140" y="108" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">award!</text>`;
       break;
     }
-    case 'contract': {
-      inn += `<rect x="88" y="10" width="104" height="84" rx="5" fill="white" stroke="#ccc" stroke-width="2"/>`;
-      for(let ly=28;ly<80;ly+=12) inn+=`<line x1="100" y1="${ly}" x2="180" y2="${ly}" stroke="#ddd" stroke-width="2"/>`;
-      inn += `<text x="140" y="106" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">made a deal!</text>`;
-      break;
-    }
     case 'feedback': {
       inn += `<rect x="14" y="16" width="128" height="54" rx="12" fill="#4ECDC4"/>`;
       inn += `<polygon points="32,70 52,70 40,86" fill="#4ECDC4"/>`;
@@ -842,16 +834,6 @@ function qIllustSVG(type) {
       inn += `<circle cx="214" cy="38" r="24" fill="#F0C090"/>`;
       inn += `<line x1="204" y1="50" x2="224" y2="50" stroke="#888" stroke-width="3" stroke-linecap="round"/>`;
       inn += `<text x="140" y="102" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">only one speaks up!</text>`;
-      break;
-    }
-    case 'clock': {
-      inn += `<circle cx="140" cy="50" r="42" fill="white" stroke="#888" stroke-width="3"/>`;
-      inn += `<circle cx="140" cy="50" r="4" fill="#333"/>`;
-      inn += `<line x1="140" y1="50" x2="140" y2="22" stroke="#333" stroke-width="3" stroke-linecap="round"/>`;
-      inn += `<line x1="140" y1="50" x2="162" y2="58" stroke="#E74C3C" stroke-width="2.5" stroke-linecap="round"/>`;
-      inn += `<circle cx="42" cy="44" r="18" fill="#FFD700" opacity="0.8"/>`;
-      inn += `<text x="42" y="51" text-anchor="middle" font-family="Arial Black" font-size="16" fill="#F39C12">?</text>`;
-      inn += `<text x="140" y="104" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">worth my time?</text>`;
       break;
     }
     case 'coins': {
@@ -953,26 +935,22 @@ function propSVG(scene) {
   return p.join('');
 }
 
-// char1 (left) flipped to face right, char2 (right) normal — facing each other
 function sceneSVG(v) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;display:block">${bgSVG(v.scene)}${propSVG(v.scene)}${kidSVG(155,GY,v.char1,'0s',true)}${kidSVG(445,GY,v.char2,'1.3s',false)}</svg>`;
 }
 
-// ── WELCOME SVG — uses real character images, no name labels ──
 function welcomeSVG(c1, c2) {
   const gy = 165;
   const rays6 = Array.from({length:6},(_,a)=>{
     const r=a*60*Math.PI/180;
     return `<line x1="${(Math.cos(r)*28).toFixed(1)}" y1="${(Math.sin(r)*28).toFixed(1)}" x2="${(Math.cos(r)*39).toFixed(1)}" y2="${(Math.sin(r)*39).toFixed(1)}" stroke="#FFD700" stroke-width="3" stroke-linecap="round"/>`;
   }).join('');
-
   const kid1 = c1
     ? kidSVG(74,  gy, c1, '0s',   true)
     : kidSVG(74,  gy, {hair:'#5C3D11',shirt:'#4ECDC4',pants:'#2C3E50',style:'short',  name:''}, 'wave');
   const kid2 = c2
     ? kidSVG(306, gy, c2, '1.1s', false)
     : kidSVG(306, gy, {hair:'#D4790A',shirt:'#FF6B6B',pants:'#7D3C98',style:'pigtails',name:''}, '1.1s');
-
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 205" style="width:100%;display:block">
     <rect x="0" y="0" width="380" height="${gy}" fill="#87CEEB"/>
     <rect x="0" y="${gy}" width="380" height="${205-gy}" fill="#7EC850"/>
@@ -1049,7 +1027,6 @@ function render() {
   }
 }
 
-// ── RENDER WELCOME — picks two random chars for the illustration ──
 function renderWelcome() {
   const pool = [];
   VIGNETTES.forEach(v => { pool.push(v.char1); pool.push(v.char2); });
@@ -1415,7 +1392,7 @@ function startGame() {
     [VIGNETTES[i], VIGNETTES[j]] = [VIGNETTES[j], VIGNETTES[i]];
   }
 
-  // ── Pick two random characters for the practice example ──
+  // ── Random characters for practice example ──
   const pool = [];
   VIGNETTES.forEach(v => { pool.push(v.char1); pool.push(v.char2); });
   const i1 = Math.floor(Math.random() * pool.length);

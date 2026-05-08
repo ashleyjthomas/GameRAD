@@ -112,7 +112,8 @@ body {
   border:none; border-radius:20px; padding:12px 10px;
   cursor:pointer; transition:transform .1s, box-shadow .1s;
   display:flex; align-items:center; justify-content:center;
-  flex-direction:column; gap:5px; flex:1; max-width:170px;
+  flex-direction:column; gap:5px;
+  flex:1; max-width:170px;
   box-shadow:0 6px 18px rgba(0,0,0,.18);
   -webkit-tap-highlight-color:transparent;
 }
@@ -121,7 +122,8 @@ body {
   border:none; border-radius:20px; padding:12px 10px;
   cursor:pointer; transition:transform .1s, box-shadow .1s;
   display:flex; align-items:center; justify-content:center;
-  flex-direction:column; gap:5px; flex:1; max-width:170px;
+  flex-direction:column; gap:5px;
+  flex:1; max-width:170px;
   box-shadow:0 4px 12px rgba(0,0,0,.12);
   -webkit-tap-highlight-color:transparent;
 }
@@ -153,7 +155,8 @@ body {
 .sent.hi { background:#FFF3B0; }
 .story-btns { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; width:100%; }
 .q-header {
-  width:100%; background:linear-gradient(135deg,#4776e6,#8e54e9);
+  width:100%;
+  background:linear-gradient(135deg,#4776e6,#8e54e9);
   border-radius:11px; padding:8px 14px; color:white;
   font-size:14px; display:flex; align-items:center; gap:6px;
 }
@@ -286,30 +289,29 @@ const KUDOS = [
   "Super job! You are doing wonderfully!"
 ];
 
-// Example chars are set randomly at startGame() time
 const EXAMPLE = {
   id: 'ex',
-  char1: { name:'Friend 1', hair:'#5C3D11', shirt:'#4ECDC4', pants:'#34495E', style:'short' },
-  char2: { name:'Friend 2', hair:'#D4790A', shirt:'#FF6B6B', pants:'#7D3C98', style:'short' },
+  char1: { name:'Ava',  hair:'#5C3D11', shirt:'#4ECDC4', pants:'#34495E', style:'long'     },
+  char2: { name:'Beth', hair:'#D4790A', shirt:'#FF6B6B', pants:'#7D3C98', style:'pigtails' },
   scene: 'outdoor',
   parts: [
-    'These two friends are good friends.',
-    'Last month, they baked cookies together. One friend split the cookies into two equal piles, and the other picked the pile they wanted.',
-    'Last weekend, one friend brought the other some apples from their backyard tree. So this weekend, the other friend baked some cookies to give back.'
+    'Ava and Beth are good friends.',
+    'Last month, they baked cookies together. Beth split the cookies into two equal piles, and Ava picked the pile they wanted.',
+    'Last weekend, Ava brought Beth some apples from their backyard tree. So this weekend, Beth baked Ava some cookies to give back to them.'
   ],
   questions: [
     {
-      text: 'These two friends take turns using the tablet so they each get the same amount of time.',
+      text: 'Ava and Beth take turns using the tablet so they each get the same amount of time.',
       keyed: 'YES', qIllust: 'computer',
-      explain: 'Since these friends like things to be fair and equal, and they always trade nice things back and forth, taking turns on the tablet sounds just like them! YES makes sense here.'
+      explain: 'Since Ava and Beth like things to be fair and equal, and they always trade nice things back and forth, taking turns on the tablet sounds just like them! YES makes sense here.'
     },
     {
-      text: 'One friend decides what games they play, and the other just goes along with it.',
+      text: 'Ava decides what games they play, and Beth just goes along with it.',
       keyed: 'NO', qIllust: 'boss',
-      explain: 'These friends treat each other as equals, so it does not sound like just one of them would always be in charge. NO makes more sense here.'
+      explain: 'Ava and Beth treat each other as equals, so it does not sound like just one of them would always be in charge. NO makes more sense here.'
     },
     {
-      text: 'When their class collected coins for a toy drive, these two friends each put in the same amount.',
+      text: 'When their class collected coins for a toy drive, Ava and Beth each put in the same amount.',
       keyed: 'YES', qIllust: 'coins',
       explain: 'Putting in the same amount fits their style perfectly — they like things to be fair and equal between them. YES!'
     }
@@ -619,37 +621,24 @@ function skin(name) {
   return SKINS[h % SKINS.length];
 }
 
-// ── KID SVG ────────────────────────────────────────────
-// flip=true  → mirror horizontally (char on left, faces right)
-// flip=false → normal             (char on right, faces left naturally)
-function kidSVG(cx, groundY, cfg, animOffset, flip) {
+// ── KID SVG — supports img property ───────────────────
+function kidSVG(cx, groundY, cfg, animOffset) {
   animOffset = animOffset || '0s';
-  flip = flip || false;
   const { hair, shirt, pants, style, name, img } = cfg;
   const bobBegin = (animOffset === 'wave') ? '0s' : animOffset;
 
   // ── IMAGE VERSION ──────────────────────────────────
   if (img && animOffset !== 'wave') {
     const imgUrl = IMG_BASE + img;
-    const imgW = 88, imgH = 182, imgYOffset = 20;
+    const imgW = 88, imgH = 182;
     const p = [];
-    // Shadow on ground
     p.push(`<ellipse cx="${cx}" cy="${groundY}" rx="26" ry="6" fill="rgba(0,0,0,.10)"/>`);
-    // Image element — y pushed down by imgYOffset to sit on ground
-    const imgEl = `<image href="${imgUrl}" x="${cx - imgW/2}" y="${groundY - imgH + imgYOffset}" width="${imgW}" height="${imgH}" preserveAspectRatio="xMidYMax meet"/>`;
-    if (flip) {
-      // Mirror around the character's centre cx:
-      // translate(2*cx, 0) then scale(-1,1) flips about x=cx
-      p.push(`<g transform="translate(${cx * 2}, 0) scale(-1, 1)">${imgEl}</g>`);
-    } else {
-      p.push(imgEl);
-    }
-    // Name label is NOT inside the flip transform so text stays readable
+    p.push(`<image href="${imgUrl}" x="${cx - imgW/2}" y="${groundY - imgH}" width="${imgW}" height="${imgH}" preserveAspectRatio="xMidYMax meet"/>`);
     if (name) p.push(`<text x="${cx}" y="${groundY+18}" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="14" font-weight="bold" fill="#444">${escHtml(name)}</text>`);
     return `<g><animateTransform attributeName="transform" type="translate" values="0,0; 0,-5; 0,0" dur="2.6s" begin="${bobBegin}" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>${p.join('')}</g>`;
   }
 
-  // ── SVG FALLBACK (example characters + welcome screen) ──
+  // ── SVG FALLBACK (used for example characters + welcome screen) ──
   const sk = skin(name || '');
   const hR=28, bH=62, bW=50, lH=58, lW=19, aH=44, aW=12;
   const fY=groundY, lT=fY-lH, bT=lT-bH, hY=bT-hR-3;
@@ -793,8 +782,8 @@ function qIllustSVG(type) {
       inn += `<circle cx="82" cy="34" r="18" fill="#FDBCB4"/>`;
       inn += `<polygon points="68,22 76,10 84,18 92,8 100,20 68,20" fill="#FFD700"/>`;
       inn += `<rect x="64" y="52" width="36" height="30" rx="8" fill="#E74C3C"/>`;
-      inn += `<defs><marker id="arB" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 Z" fill="#888"/></marker></defs>`;
       inn += `<line x1="118" y1="54" x2="158" y2="54" stroke="#888" stroke-width="3.5" marker-end="url(#arB)"/>`;
+      inn += `<defs><marker id="arB" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 Z" fill="#888"/></marker></defs>`;
       inn += `<circle cx="198" cy="34" r="18" fill="#F0C090"/>`;
       inn += `<rect x="180" y="52" width="36" height="30" rx="8" fill="#3498DB"/>`;
       inn += `<text x="140" y="108" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">one is in charge!</text>`;
@@ -958,9 +947,8 @@ function propSVG(scene) {
   return p.join('');
 }
 
-// ── char1 (left) flipped to face right, char2 (right) normal ──
 function sceneSVG(v) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;display:block">${bgSVG(v.scene)}${propSVG(v.scene)}${kidSVG(155,GY,v.char1,'0s',true)}${kidSVG(445,GY,v.char2,'1.3s',false)}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;display:block">${bgSVG(v.scene)}${propSVG(v.scene)}${kidSVG(155,GY,v.char1,'0s')}${kidSVG(445,GY,v.char2,'1.3s')}</svg>`;
 }
 
 function welcomeSVG() {
@@ -1374,22 +1362,11 @@ function startGame() {
   S.age  = (sel ? sel.value        : '') || '';
   if (!S.name) { unlockAudio("Oops! Can you type your name first?"); return; }
   audioUnlocked = true;
-
   // ── Fisher-Yates shuffle ──
   for (let i = VIGNETTES.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [VIGNETTES[i], VIGNETTES[j]] = [VIGNETTES[j], VIGNETTES[i]];
   }
-
-  // ── Pick two random characters from the vignette pool for the example ──
-  const pool = [];
-  VIGNETTES.forEach(v => { pool.push(v.char1); pool.push(v.char2); });
-  const i1 = Math.floor(Math.random() * pool.length);
-  let i2;
-  do { i2 = Math.floor(Math.random() * pool.length); } while (i2 === i1);
-  EXAMPLE.char1 = Object.assign({}, pool[i1]);
-  EXAMPLE.char2 = Object.assign({}, pool[i2]);
-
   S.phase = 'intro';
   render();
 }

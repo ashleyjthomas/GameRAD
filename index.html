@@ -249,10 +249,6 @@ body {
   box-shadow: 0 4px 18px rgba(71,118,230,.45);
   animation: pulse 1.5s ease infinite;
 }
-.btn-legend {
-  display:inline-flex; align-items:center; gap:8px;
-  padding:8px 16px; border-radius:50px; font-size:16px; font-weight:bold;
-}
 @media (max-width:480px) {
   .wt { font-size:25px; }
   .btn-green,.btn-red { font-size:22px; max-width:138px; }
@@ -321,6 +317,7 @@ const EXAMPLE = {
   ]
 };
 
+// ── VIGNETTES — MP removed, CS / EM / AR only ──────────
 const VIGNETTES = [
   {
     id:1, model:'CS',
@@ -333,25 +330,9 @@ const VIGNETTES = [
       'Last weekend, when they were deciding where to eat their snack, they chose the spot under the old oak tree — the very spot where they first became best friends.'
     ],
     questions:[
-      { text:'Ben bought Tommy a treat on his birthday only because Tommy had bought him a treat on his birthday.', qM:'EM', keyed:'NO',  qIllust:'birthday'    },
-      { text:'When they have snacks, Tommy and Ben often share what they have, swapping bites or eating from the same bag.', qM:'CS', keyed:'YES', qIllust:'share_food'  },
+      { text:'Ben bought Tommy a treat on his birthday only because Tommy had bought him a treat on his birthday.', qM:'EM', keyed:'NO',  qIllust:'birthday'   },
+      { text:'When they have snacks, Tommy and Ben often share what they have, swapping bites or eating from the same bag.', qM:'CS', keyed:'YES', qIllust:'share_food' },
       { text:'Tommy and Ben flipped a coin to decide which game they would play.', qM:'EM', keyed:'NO', qIllust:'coin' }
-    ]
-  },
-  {
-    id:2, model:'MP',
-    char1:{ name:'Lucy', hair:'#C0392B', shirt:'#9B59B6', pants:'#6C3483', style:'long'     },
-    char2:{ name:'Tara', hair:'#7B4F2A', shirt:'#F39C12', pants:'#2C3E50', style:'pigtails' },
-    scene:'school',
-    parts:[
-      'Lucy and Tara needed to pick which art supplies to buy for their school project.',
-      'They looked at how much each set cost and how much they could do with it. They picked the one that gave them the most for their money.',
-      "Also, last month Lucy borrowed Tara's new bike for a whole week. She gave Tara four of her best trading cards as payment for letting her use them."
-    ],
-    questions:[
-      { text:'Lucy and Tara give each other a big hug when they see each other after not seeing each other for a while.', qM:'CS', keyed:'NO', qIllust:'hug'        },
-      { text:'When they go out for ice cream, Tara always pays for both of them, and Lucy often does not even bring her money.', qM:'AR', keyed:'NO', qIllust:'ice_cream'  },
-      { text:'When having a snack, Lucy and Tara often share what they have, swapping bites or eating from the same bag.', qM:'CS', keyed:'NO', qIllust:'share_food' }
     ]
   },
   {
@@ -364,24 +345,9 @@ const VIGNETTES = [
       'Kevin and Marcus each have their own backpacks with their own supplies for school — they both feel that having the exact same things makes them equal.'
     ],
     questions:[
-      { text:'Kevin and Marcus feel like they have always been together and always will be.', qM:'CS', keyed:'NO',  qIllust:'forever'    },
+      { text:'Kevin and Marcus feel like they have always been together and always will be.', qM:'CS', keyed:'NO',  qIllust:'forever'   },
       { text:'When Kevin has Marcus over for a snack, they both expect that Marcus will have Kevin over for a snack in return sometime soon.', qM:'EM', keyed:'YES', qIllust:'birthday'  },
       { text:'When the teacher gave out stickers, Kevin and Marcus each made sure they took the same number.', qM:'EM', keyed:'YES', qIllust:'stickers' }
-    ]
-  },
-  {
-    id:4, model:'MP',
-    char1:{ name:'Emma',   hair:'#DAA520', shirt:'#E74C3C', pants:'#6C3483', style:'long'     },
-    char2:{ name:'Maggie', hair:'#1C1C1C', shirt:'#F1C40F', pants:'#154360', style:'pigtails' },
-    scene:'outdoor',
-    parts:[
-      'Emma borrowed five dollars from Maggie to buy a book. They agreed that Emma would pay Maggie back the five dollars plus fifty extra cents for letting her borrow the money.',
-      'Emma also often thinks about how much time she should spend with Maggie and whether playing with Maggie is really the best use of her time.'
-    ],
-    questions:[
-      { text:'Maggie buys Emma a big present on her birthday every year, and Emma always makes sure Maggie knows how thankful she is.', qM:'AR', keyed:'NO',  qIllust:'birthday'       },
-      { text:'Emma and Maggie work in the school garden together, planting whatever they like and just doing whatever needs to be done.', qM:'CS', keyed:'NO',  qIllust:'garden'         },
-      { text:'Emma and Maggie ran a lemonade stand together. When they split the money at the end, Maggie got more because she had done more of the work.', qM:'MP', keyed:'YES', qIllust:'lemonade_money' }
     ]
   },
   {
@@ -473,22 +439,6 @@ const VIGNETTES = [
       { text:'Ally is careful not to interrupt Maya when she is talking, but Maya interrupts her sometimes.', qM:'AR', keyed:'YES', qIllust:'interrupt' },
       { text:'Maya makes the decisions and Ally follows them.', qM:'AR', keyed:'YES', qIllust:'boss'      },
       { text:'Maya tells Ally when she does not like something, but Ally does not tell Maya when she does not like something.', qM:'AR', keyed:'YES', qIllust:'feedback' }
-    ]
-  },
-  {
-    id:11, model:'MP',
-    char1:{ name:'Doug', hair:'#7B4F2A', shirt:'#27AE60', pants:'#2C3E50', style:'short' },
-    char2:{ name:'Ryan', hair:'#E0A835', shirt:'#E67E22', pants:'#154360', style:'short' },
-    scene:'lemonade',
-    parts:[
-      'Doug and Ryan needed to decide where to set up their lemonade stand.',
-      'Doug checked how many people walked past one spot, and Ryan checked a different spot. They picked the location where they would make the most money.',
-      "Last week, Ryan wanted to borrow Doug's wagon to give people rides. Doug said Ryan could use it as long as Ryan gave him half of whatever he earned with it."
-    ],
-    questions:[
-      { text:'Doug keeps track of how much time he spends with Ryan compared to how much time he spends with his other friends.', qM:'MP', keyed:'YES', qIllust:'clock'  },
-      { text:'Yesterday Doug chose which game they would play. Ryan went along with his choice without saying anything, even though he did not like it.', qM:'AR', keyed:'NO', qIllust:'boss'   },
-      { text:'When Doug won a prize, Ryan was just as proud and happy as if he himself had won it.', qM:'CS', keyed:'NO', qIllust:'trophy' }
     ]
   },
   {
@@ -733,101 +683,63 @@ function qIllustSVG(type) {
   };
   const bg = bgs[type] || '#F8F9FA';
   let inn = `<rect x="0" y="0" width="${W2}" height="${H2}" fill="${bg}"/>`;
-
   switch(type) {
-
     case 'share_food': {
-      // Shared plate in centre
       inn += `<ellipse cx="140" cy="72" rx="48" ry="14" fill="#DEB887"/>`;
       inn += `<circle cx="140" cy="58" r="28" fill="white" stroke="#DEB887" stroke-width="2"/>`;
       inn += `<circle cx="130" cy="54" r="7" fill="#E74C3C"/>`;
       inn += `<circle cx="148" cy="60" r="6" fill="#FFD700"/>`;
       inn += `<circle cx="138" cy="66" r="5" fill="#27AE60"/>`;
       inn += `<circle cx="152" cy="52" r="5" fill="#FF8C69"/>`;
-      // Forks
       inn += `<line x1="84" y1="44" x2="110" y2="62" stroke="#aaa" stroke-width="3" stroke-linecap="round"/>`;
       inn += `<line x1="170" y1="62" x2="196" y2="44" stroke="#aaa" stroke-width="3" stroke-linecap="round"/>`;
       inn += `<text x="140" y="98" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">sharing food together!</text>`;
       break;
     }
-
     case 'birthday': {
       inn += `<rect x="90" y="70" width="100" height="28" rx="6" fill="#FF69B4"/>`;
       inn += `<rect x="94" y="54" width="92" height="20" rx="5" fill="#FFD700"/>`;
       inn += `<rect x="98" y="41" width="84" height="16" rx="4" fill="#FF8C69"/>`;
-      for(let i=0;i<3;i++){
-        const cx=115+i*25;
-        inn += `<rect x="${cx-3}" y="24" width="6" height="18" rx="2" fill="#9B59B6"/>`;
-        inn += `<ellipse cx="${cx}" cy="22" rx="4.5" ry="7" fill="#FFD700" opacity="0.9"/>`;
-        inn += `<ellipse cx="${cx}" cy="20" rx="2" ry="3" fill="#FF8C00" opacity="0.85"/>`;
-      }
+      for(let i=0;i<3;i++){const cx=115+i*25;inn+=`<rect x="${cx-3}" y="24" width="6" height="18" rx="2" fill="#9B59B6"/><ellipse cx="${cx}" cy="22" rx="4.5" ry="7" fill="#FFD700" opacity="0.9"/><ellipse cx="${cx}" cy="20" rx="2" ry="3" fill="#FF8C00" opacity="0.85"/>`;}
       inn += `<text x="140" y="108" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">birthday treat!</text>`;
       break;
     }
-
     case 'coin': {
       inn += `<circle cx="140" cy="46" r="32" fill="#FFD700" stroke="#F39C12" stroke-width="3"/>`;
       inn += `<circle cx="140" cy="46" r="25" fill="#FFD700" stroke="#F39C12" stroke-width="1"/>`;
       inn += `<line x1="140" y1="30" x2="140" y2="62" stroke="#F39C12" stroke-width="2.5"/>`;
       inn += `<path d="M132,34 Q124,34 124,42 Q124,50 140,50 Q156,50 156,58 Q156,66 140,66 Q128,66 124,58" stroke="#F39C12" stroke-width="2.5" fill="none"/>`;
-      inn += `<path d="M108,80 Q140,64 172,80" stroke="#aaa" stroke-width="2" fill="none" stroke-dasharray="5,3"/>`;
       inn += `<text x="140" y="100" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">flip a coin!</text>`;
       break;
     }
-
     case 'hug': {
       inn += `<circle cx="98" cy="36" r="18" fill="#FDBCB4"/>`;
       inn += `<rect x="80" y="54" width="36" height="36" rx="10" fill="#4ECDC4"/>`;
       inn += `<circle cx="182" cy="36" r="18" fill="#F0C090"/>`;
       inn += `<rect x="164" y="54" width="36" height="36" rx="10" fill="#FF6B6B"/>`;
-      // Hugging arms
       inn += `<path d="M116,62 Q140,46 164,62" stroke="#4ECDC4" stroke-width="9" fill="none" stroke-linecap="round"/>`;
       inn += `<path d="M116,72 Q140,84 164,72" stroke="#FF6B6B" stroke-width="9" fill="none" stroke-linecap="round"/>`;
-      // Hearts
       inn += `<circle cx="140" cy="26" r="7" fill="#FF69B4" opacity="0.7"/>`;
-      inn += `<circle cx="126" cy="18" r="5" fill="#FF69B4" opacity="0.5"/>`;
-      inn += `<circle cx="154" cy="18" r="5" fill="#FF69B4" opacity="0.5"/>`;
       inn += `<text x="140" y="102" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">a big hug!</text>`;
       break;
     }
-
     case 'ice_cream': {
-      // Cone
       inn += `<path d="M126,86 L140,58 L154,86 Z" fill="#F4A460"/>`;
       inn += `<circle cx="140" cy="52" r="18" fill="#FF69B4"/>`;
       inn += `<circle cx="130" cy="47" r="10" fill="#90EE90"/>`;
       inn += `<circle cx="150" cy="47" r="10" fill="#87CEEB"/>`;
-      // Money left (coin stack)
-      for(let i=0;i<3;i++) inn += `<ellipse cx="55" cy="${70-i*10}" rx="20" ry="7" fill="#FFD700" stroke="#F39C12" stroke-width="1.5"/>`;
-      inn += `<text x="55" y="88" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="9" fill="#888">pays!</text>`;
-      // No-money right
-      inn += `<circle cx="222" cy="60" r="20" fill="#eee" stroke="#ccc" stroke-width="2"/>`;
-      inn += `<line x1="210" y1="48" x2="234" y2="72" stroke="#ccc" stroke-width="3" stroke-linecap="round"/>`;
-      inn += `<line x1="210" y1="72" x2="234" y2="48" stroke="#ccc" stroke-width="3" stroke-linecap="round"/>`;
-      inn += `<text x="222" y="88" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="9" fill="#888">no money!</text>`;
-      inn += `<text x="140" y="104" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">one pays for both!</text>`;
+      inn += `<text x="140" y="104" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">ice cream!</text>`;
       break;
     }
-
     case 'forever': {
-      // Heart shape from two circles + triangle
       inn += `<circle cx="116" cy="46" r="24" fill="#FF69B4" opacity="0.65"/>`;
       inn += `<circle cx="164" cy="46" r="24" fill="#FF69B4" opacity="0.65"/>`;
       inn += `<polygon points="92,58 188,58 140,90" fill="#FF69B4" opacity="0.65"/>`;
-      // Sparkles
-      for(const [sx,sy,sr,sc] of [[60,28,6,'#FFD700'],[220,28,6,'#9B59B6'],[140,16,5,'#FF6B6B'],[78,72,4,'#FFD700'],[202,72,4,'#9B59B6']]) {
-        inn += `<circle cx="${sx}" cy="${sy}" r="${sr}" fill="${sc}" opacity="0.55"/>`;
-      }
       inn += `<text x="140" y="106" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">always together!</text>`;
       break;
     }
-
     case 'stickers': {
-      const sp = (cx, cy, r) => [...Array(10)].map((_,i) => {
-        const a = (i*36-90)*Math.PI/180;
-        const ri = i%2===0 ? r : r*0.45;
-        return `${(cx+Math.cos(a)*ri).toFixed(1)},${(cy+Math.sin(a)*ri).toFixed(1)}`;
-      }).join(' ');
+      const sp = (cx,cy,r) => [...Array(10)].map((_,i)=>{const a=(i*36-90)*Math.PI/180,ri=i%2===0?r:r*0.45;return `${(cx+Math.cos(a)*ri).toFixed(1)},${(cy+Math.sin(a)*ri).toFixed(1)}`;}).join(' ');
       inn += `<polygon points="${sp(75,32,18)}" fill="#FFD700" stroke="#F39C12" stroke-width="1.5"/>`;
       inn += `<polygon points="${sp(52,60,14)}" fill="#FF69B4" stroke="#E91E8C" stroke-width="1.5"/>`;
       inn += `<polygon points="${sp(98,60,14)}" fill="#4ECDC4" stroke="#26B5A8" stroke-width="1.5"/>`;
@@ -839,47 +751,19 @@ function qIllustSVG(type) {
       inn += `<text x="140" y="96" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">same number!</text>`;
       break;
     }
-
     case 'garden': {
       inn += `<rect x="38" y="78" width="204" height="12" rx="6" fill="#8B4513" opacity="0.45"/>`;
-      const fc = ['#FF69B4','#FFD700','#FF6B6B','#DA70D6','#FF8C00'];
-      for(let i=0;i<5;i++){
-        const fx = 60+i*42;
-        inn += `<line x1="${fx}" y1="78" x2="${fx}" y2="50" stroke="#228B22" stroke-width="3"/>`;
-        for(let p2=0;p2<5;p2++){
-          const a2 = p2*72*Math.PI/180;
-          inn += `<circle cx="${(fx+Math.cos(a2)*11).toFixed(1)}" cy="${(46+Math.sin(a2)*11).toFixed(1)}" r="7" fill="${fc[i]}" opacity="0.85"/>`;
-        }
-        inn += `<circle cx="${fx}" cy="46" r="6" fill="#FFD700"/>`;
-      }
+      const fc=['#FF69B4','#FFD700','#FF6B6B','#DA70D6','#FF8C00'];
+      for(let i=0;i<5;i++){const fx=60+i*42;inn+=`<line x1="${fx}" y1="78" x2="${fx}" y2="50" stroke="#228B22" stroke-width="3"/>`;for(let p2=0;p2<5;p2++){const a2=p2*72*Math.PI/180;inn+=`<circle cx="${(fx+Math.cos(a2)*11).toFixed(1)}" cy="${(46+Math.sin(a2)*11).toFixed(1)}" r="7" fill="${fc[i]}" opacity="0.85"/>`;}inn+=`<circle cx="${fx}" cy="46" r="6" fill="#FFD700"/>`;}
       inn += `<text x="140" y="104" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#666">working in the garden!</text>`;
       break;
     }
-
-    case 'lemonade_money': {
-      // Lemon shape
-      inn += `<ellipse cx="140" cy="52" rx="26" ry="30" fill="#FFD700"/>`;
-      inn += `<ellipse cx="140" cy="38" rx="26" ry="12" fill="#FFE566"/>`;
-      inn += `<line x1="140" y1="25" x2="140" y2="82" stroke="#F39C12" stroke-width="1.5"/>`;
-      inn += `<line x1="114" y1="52" x2="166" y2="52" stroke="#F39C12" stroke-width="1.5"/>`;
-      // Big pile left
-      for(let i=0;i<4;i++) inn += `<ellipse cx="52" cy="${80-i*9}" rx="24" ry="8" fill="#FFD700" stroke="#F39C12" stroke-width="1.5"/>`;
-      inn += `<text x="52" y="98" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="9" fill="#888">more!</text>`;
-      // Small pile right
-      for(let i=0;i<2;i++) inn += `<ellipse cx="228" cy="${80-i*9}" rx="16" ry="6" fill="#FFD700" stroke="#F39C12" stroke-width="1.5"/>`;
-      inn += `<text x="228" y="98" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="9" fill="#888">less!</text>`;
-      inn += `<text x="140" y="108" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">split by work done!</text>`;
-      break;
-    }
-
     case 'interrupt': {
-      // First bubble (being interrupted)
       inn += `<rect x="12" y="18" width="118" height="50" rx="12" fill="#4ECDC4"/>`;
       inn += `<polygon points="32,68 50,68 38,84" fill="#4ECDC4"/>`;
       inn += `<circle cx="52" cy="43" r="5" fill="white"/>`;
       inn += `<circle cx="68" cy="43" r="5" fill="white"/>`;
       inn += `<circle cx="84" cy="43" r="5" fill="white"/>`;
-      // Interrupting bubble (overlapping)
       inn += `<rect x="116" y="10" width="148" height="54" rx="12" fill="#FF6B6B" opacity="0.93"/>`;
       inn += `<polygon points="136,64 154,64 142,80" fill="#FF6B6B" opacity="0.93"/>`;
       inn += `<text x="165" y="32" text-anchor="middle" font-family="Arial Black" font-size="18" fill="white">!</text>`;
@@ -889,30 +773,19 @@ function qIllustSVG(type) {
       inn += `<text x="140" y="100" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">one interrupts!</text>`;
       break;
     }
-
     case 'hurt': {
-      // Left figure hurting
       inn += `<circle cx="75" cy="32" r="18" fill="#FDBCB4"/>`;
       inn += `<rect x="57" y="50" width="36" height="34" rx="8" fill="#4776e6"/>`;
-      // Hurt zigzag
       inn += `<path d="M93,60 L108,52 L100,64 L118,56" stroke="#E74C3C" stroke-width="3" fill="none" stroke-linecap="round"/>`;
-      // Pain dots
-      inn += `<circle cx="66" cy="29" r="3.5" fill="#FF6B6B"/>`;
-      inn += `<circle cx="84" cy="25" r="3" fill="#FF6B6B"/>`;
-      inn += `<circle cx="62" cy="40" r="2.5" fill="#FF6B6B"/>`;
-      // Arrow / empathy waves
       inn += `<path d="M128,52 Q148,44 162,52" stroke="#FF8C69" stroke-width="2.5" fill="none" stroke-dasharray="5,3"/>`;
       inn += `<path d="M128,62 Q148,54 162,62" stroke="#FF8C69" stroke-width="2" fill="none" stroke-dasharray="5,3"/>`;
-      // Right figure feeling it
       inn += `<circle cx="200" cy="32" r="18" fill="#F0C090"/>`;
       inn += `<rect x="182" y="50" width="36" height="34" rx="8" fill="#9B59B6"/>`;
-      // Empathy tears
       inn += `<circle cx="193" cy="36" r="4" fill="#87CEEB" opacity="0.75"/>`;
       inn += `<circle cx="207" cy="39" r="3" fill="#87CEEB" opacity="0.75"/>`;
       inn += `<text x="140" y="97" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">feeling it together!</text>`;
       break;
     }
-
     case 'scooter': {
       inn += `<circle cx="88" cy="78" r="18" fill="none" stroke="#555" stroke-width="4"/>`;
       inn += `<circle cx="88" cy="78" r="10" fill="#888"/>`;
@@ -921,32 +794,21 @@ function qIllustSVG(type) {
       inn += `<rect x="83" y="56" width="114" height="10" rx="5" fill="#E74C3C"/>`;
       inn += `<line x1="140" y1="56" x2="130" y2="28" stroke="#8B4513" stroke-width="6" stroke-linecap="round"/>`;
       inn += `<line x1="110" y1="28" x2="150" y2="28" stroke="#8B4513" stroke-width="6" stroke-linecap="round"/>`;
-      // Arrows showing free use
-      inn += `<defs><marker id="arF" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 Z" fill="#27AE60"/></marker></defs>`;
-      inn += `<line x1="38" y1="45" x2="58" y2="45" stroke="#27AE60" stroke-width="3" marker-end="url(#arF)"/>`;
-      inn += `<line x1="242" y1="45" x2="222" y2="45" stroke="#27AE60" stroke-width="3" marker-end="url(#arF)"/>`;
       inn += `<text x="140" y="106" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">whoever wants it!</text>`;
       break;
     }
-
     case 'boss': {
-      // Left figure with crown
       inn += `<circle cx="82" cy="34" r="18" fill="#FDBCB4"/>`;
       inn += `<polygon points="68,22 76,10 84,18 92,8 100,20 68,20" fill="#FFD700"/>`;
       inn += `<rect x="68" y="19" width="32" height="6" rx="2" fill="#FFD700"/>`;
       inn += `<rect x="64" y="52" width="36" height="30" rx="8" fill="#E74C3C"/>`;
-      // Arrow
-      inn += `<defs><marker id="arB" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 Z" fill="#888"/></marker></defs>`;
       inn += `<line x1="118" y1="54" x2="160" y2="54" stroke="#888" stroke-width="3.5" marker-end="url(#arB)"/>`;
-      // Right figure following
+      inn += `<defs><marker id="arB" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 Z" fill="#888"/></marker></defs>`;
       inn += `<circle cx="198" cy="34" r="18" fill="#F0C090"/>`;
       inn += `<rect x="180" y="52" width="36" height="30" rx="8" fill="#3498DB"/>`;
-      inn += `<text x="82" y="96" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="9" fill="#888">decides!</text>`;
-      inn += `<text x="198" y="96" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="9" fill="#888">follows!</text>`;
       inn += `<text x="140" y="108" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">one is in charge!</text>`;
       break;
     }
-
     case 'balance': {
       inn += `<line x1="140" y1="16" x2="140" y2="58" stroke="#8B4513" stroke-width="5" stroke-linecap="round"/>`;
       inn += `<ellipse cx="140" cy="61" rx="10" ry="5" fill="#8B4513"/>`;
@@ -958,100 +820,69 @@ function qIllustSVG(type) {
       inn += `<text x="140" y="100" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">watching equal work!</text>`;
       break;
     }
-
     case 'computer': {
       inn += `<rect x="82" y="14" width="116" height="74" rx="8" fill="#2C3E50"/>`;
       inn += `<rect x="89" y="21" width="102" height="58" rx="4" fill="#AED6F1"/>`;
       inn += `<rect x="116" y="88" width="48" height="9" rx="3" fill="#2C3E50"/>`;
       inn += `<rect x="100" y="96" width="80" height="5" rx="2" fill="#34495E"/>`;
-      // Clock on screen
       inn += `<circle cx="140" cy="50" r="24" fill="white" stroke="#2C3E50" stroke-width="2"/>`;
-      for(let i=0;i<12;i++){
-        const a = (i*30-90)*Math.PI/180;
-        inn += `<line x1="${(140+Math.cos(a)*18).toFixed(1)}" y1="${(50+Math.sin(a)*18).toFixed(1)}" x2="${(140+Math.cos(a)*22).toFixed(1)}" y2="${(50+Math.sin(a)*22).toFixed(1)}" stroke="#888" stroke-width="${i%3===0?2.5:1.5}"/>`;
-      }
+      for(let i=0;i<12;i++){const a=(i*30-90)*Math.PI/180;inn+=`<line x1="${(140+Math.cos(a)*18).toFixed(1)}" y1="${(50+Math.sin(a)*18).toFixed(1)}" x2="${(140+Math.cos(a)*22).toFixed(1)}" y2="${(50+Math.sin(a)*22).toFixed(1)}" stroke="#888" stroke-width="${i%3===0?2.5:1.5}"/>`;}
       inn += `<line x1="140" y1="50" x2="140" y2="33" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>`;
       inn += `<line x1="140" y1="50" x2="154" y2="57" stroke="#E74C3C" stroke-width="2" stroke-linecap="round"/>`;
-      // Two users flanking
       inn += `<circle cx="42" cy="42" r="14" fill="#FDBCB4"/>`;
       inn += `<rect x="28" y="56" width="28" height="22" rx="6" fill="#4ECDC4"/>`;
       inn += `<circle cx="238" cy="42" r="14" fill="#F0C090"/>`;
       inn += `<rect x="224" y="56" width="28" height="22" rx="6" fill="#FF6B6B"/>`;
-      inn += `<line x1="56" y1="50" x2="74" y2="50" stroke="#888" stroke-width="2" stroke-dasharray="3,2"/>`;
-      inn += `<line x1="206" y1="50" x2="224" y2="50" stroke="#888" stroke-width="2" stroke-dasharray="3,2"/>`;
       inn += `<text x="140" y="108" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">taking turns!</text>`;
       break;
     }
-
     case 'trophy': {
       inn += `<path d="M96,20 L184,20 L168,72 Q140,90 112,72 Z" fill="#FFD700" stroke="#F39C12" stroke-width="2.5"/>`;
       inn += `<path d="M96,20 Q70,20 70,46 Q70,72 96,72" fill="none" stroke="#F39C12" stroke-width="5" stroke-linecap="round"/>`;
       inn += `<path d="M184,20 Q210,20 210,46 Q210,72 184,72" fill="none" stroke="#F39C12" stroke-width="5" stroke-linecap="round"/>`;
       inn += `<rect x="128" y="88" width="24" height="14" rx="3" fill="#F39C12"/>`;
       inn += `<rect x="110" y="100" width="60" height="10" rx="5" fill="#FFD700" stroke="#F39C12" stroke-width="1.5"/>`;
-      const spT = [...Array(10)].map((_,i)=>{const a=(i*36-90)*Math.PI/180,r=i%2===0?20:9;return `${(140+(Math.cos(a)*r)).toFixed(1)},${(46+(Math.sin(a)*r)).toFixed(1)}`;}).join(' ');
-      inn += `<polygon points="${spT}" fill="white" opacity="0.6"/>`;
       inn += `<text x="140" y="108" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">award!</text>`;
       break;
     }
-
     case 'contract': {
       inn += `<rect x="88" y="10" width="104" height="84" rx="5" fill="white" stroke="#ccc" stroke-width="2"/>`;
-      for(let ly=28;ly<80;ly+=12) inn += `<line x1="100" y1="${ly}" x2="180" y2="${ly}" stroke="#ddd" stroke-width="2"/>`;
+      for(let ly=28;ly<80;ly+=12) inn+=`<line x1="100" y1="${ly}" x2="180" y2="${ly}" stroke="#ddd" stroke-width="2"/>`;
       inn += `<path d="M98,82 Q108,76 118,82 Q128,88 138,82" stroke="#4776e6" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
       inn += `<path d="M148,82 Q158,76 168,82 Q178,88 188,82" stroke="#E74C3C" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
-      // Handshake on the left
-      inn += `<path d="M28,52 Q48,38 68,52" stroke="#27AE60" stroke-width="5" fill="none" stroke-linecap="round"/>`;
-      inn += `<path d="M28,52 Q48,66 68,52" stroke="#27AE60" stroke-width="5" fill="none" stroke-linecap="round"/>`;
       inn += `<text x="140" y="106" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">made a deal!</text>`;
       break;
     }
-
     case 'feedback': {
-      // Active speech bubble
       inn += `<rect x="14" y="16" width="128" height="54" rx="12" fill="#4ECDC4"/>`;
       inn += `<polygon points="32,70 52,70 40,86" fill="#4ECDC4"/>`;
       inn += `<text x="78" y="38" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="white">I don't</text>`;
       inn += `<text x="78" y="54" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="white">like it!</text>`;
-      // Silent figure
       inn += `<circle cx="214" cy="38" r="24" fill="#F0C090"/>`;
       inn += `<circle cx="205" cy="34" r="3.5" fill="#333"/>`;
       inn += `<circle cx="223" cy="34" r="3.5" fill="#333"/>`;
-      // Flat mouth (sealed)
       inn += `<line x1="204" y1="50" x2="224" y2="50" stroke="#888" stroke-width="3" stroke-linecap="round"/>`;
-      inn += `<circle cx="214" cy="72" r="12" fill="#eee" stroke="#ccc" stroke-width="1.5"/>`;
-      inn += `<line x1="208" y1="66" x2="220" y2="78" stroke="#bbb" stroke-width="2.5" stroke-linecap="round"/>`;
       inn += `<text x="140" y="102" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">only one speaks up!</text>`;
       break;
     }
-
     case 'clock': {
       inn += `<circle cx="140" cy="50" r="42" fill="white" stroke="#888" stroke-width="3"/>`;
-      for(let i=0;i<12;i++){
-        const a=(i*30-90)*Math.PI/180;
-        inn += `<line x1="${(140+Math.cos(a)*33).toFixed(1)}" y1="${(50+Math.sin(a)*33).toFixed(1)}" x2="${(140+Math.cos(a)*40).toFixed(1)}" y2="${(50+Math.sin(a)*40).toFixed(1)}" stroke="#888" stroke-width="${i%3===0?2.5:1.5}"/>`;
-      }
+      for(let i=0;i<12;i++){const a=(i*30-90)*Math.PI/180;inn+=`<line x1="${(140+Math.cos(a)*33).toFixed(1)}" y1="${(50+Math.sin(a)*33).toFixed(1)}" x2="${(140+Math.cos(a)*40).toFixed(1)}" y2="${(50+Math.sin(a)*40).toFixed(1)}" stroke="#888" stroke-width="${i%3===0?2.5:1.5}"/>`;}
       inn += `<circle cx="140" cy="50" r="4" fill="#333"/>`;
       inn += `<line x1="140" y1="50" x2="140" y2="22" stroke="#333" stroke-width="3" stroke-linecap="round"/>`;
       inn += `<line x1="140" y1="50" x2="162" y2="58" stroke="#E74C3C" stroke-width="2.5" stroke-linecap="round"/>`;
-      // Question bubble
       inn += `<circle cx="42" cy="44" r="18" fill="#FFD700" opacity="0.8"/>`;
       inn += `<text x="42" y="51" text-anchor="middle" font-family="Arial Black" font-size="16" fill="#F39C12">?</text>`;
       inn += `<text x="140" y="104" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">worth my time?</text>`;
       break;
     }
-
     case 'coins': {
-      for(let i=0;i<4;i++){
-        inn += `<ellipse cx="78" cy="${80-i*11}" rx="30" ry="10" fill="#FFD700" stroke="#F39C12" stroke-width="1.5"/>`;
-        inn += `<ellipse cx="202" cy="${80-i*11}" rx="30" ry="10" fill="#FFD700" stroke="#F39C12" stroke-width="1.5"/>`;
-      }
+      for(let i=0;i<4;i++){inn+=`<ellipse cx="78" cy="${80-i*11}" rx="30" ry="10" fill="#FFD700" stroke="#F39C12" stroke-width="1.5"/>`;inn+=`<ellipse cx="202" cy="${80-i*11}" rx="30" ry="10" fill="#FFD700" stroke="#F39C12" stroke-width="1.5"/>`;}
       inn += `<rect x="128" y="46" width="24" height="5" rx="2" fill="#27AE60"/>`;
       inn += `<rect x="128" y="57" width="24" height="5" rx="2" fill="#27AE60"/>`;
       inn += `<text x="140" y="100" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">same amount!</text>`;
       break;
     }
-
     case 'painting': {
       inn += `<rect x="72" y="10" width="136" height="82" rx="5" fill="#FFF9E8" stroke="#8B4513" stroke-width="7"/>`;
       inn += `<rect x="80" y="18" width="120" height="66" rx="3" fill="#F0F8FF"/>`;
@@ -1063,13 +894,11 @@ function qIllustSVG(type) {
       inn += `<text x="140" y="106" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">my name goes first!</text>`;
       break;
     }
-
     default: {
       inn += `<circle cx="140" cy="54" r="34" fill="#FFE082"/>`;
       inn += `<text x="140" y="64" text-anchor="middle" font-family="Arial Black" font-size="32" fill="#F39C12">?</text>`;
     }
   }
-
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W2} ${H2}" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block">${inn}</svg>`;
 }
 
@@ -1131,7 +960,6 @@ function propSVG(scene) {
     const fc=['#FF69B4','#FFD700','#FF6B6B','#DA70D6','#FF8C00'];
     for(let i=0;i<5;i++){const fx=208+i*38,del=(i*0.4).toFixed(1);p.push(`<g><animateTransform attributeName="transform" type="rotate" values="0 ${fx} ${GY-9};9 ${fx} ${GY-9};0 ${fx} ${GY-9};-9 ${fx} ${GY-9};0 ${fx} ${GY-9}" dur="3.2s" begin="${del}s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"/><line x1="${fx}" y1="${GY-9}" x2="${fx}" y2="${GY-50}" stroke="#228B22" stroke-width="3"/><circle cx="${fx}" cy="${GY-54}" r="12" fill="${fc[i]}"/><circle cx="${fx}" cy="${GY-54}" r="6" fill="#FFD700"/></g>`);}
   } else if (scene==='school') {
-    // ── Crayons text REMOVED ──
     const ty=H-80;
     p.push(`<rect x="204" y="${ty}" width="192" height="11" rx="4" fill="#DEB887"/><rect x="218" y="${ty-38}" width="66" height="40" rx="5" fill="#F39C12"/>`);
   } else if (scene==='cafeteria') {
@@ -1179,12 +1007,12 @@ function maybeNoFaceSVG() {
 
 // ── STAR METER ─────────────────────────────────────────
 function starHeaderHTML(earned, total) {
-  const items = Array.from({length:total},(_,i) => `<span class="star-item${i<earned?' filled':''}">\u2605</span>`).join('');
+  const items = Array.from({length:total},(_,i)=>`<span class="star-item${i<earned?' filled':''}">\u2605</span>`).join('');
   return `<div class="star-meter-wrap"><div class="star-meter">${items}</div><div class="star-meter-lbl">Pair ${S.vi+1} of ${total}</div></div>`;
 }
 function starTransHTML(earned, total) {
-  const items = Array.from({length:total},(_,i) => {
-    const filled=i<earned; const isNew=filled&&i===earned-1;
+  const items = Array.from({length:total},(_,i)=>{
+    const filled=i<earned, isNew=filled&&i===earned-1;
     return `<span class="star-item${filled?' filled':''}${isNew?' newly-filled':''}">\u2605</span>`;
   }).join('');
   return `<div class="star-meter star-meter-large">${items}</div>`;
@@ -1220,7 +1048,7 @@ function renderWelcome() {
     <div class="ws">Can you figure out how friends act toward each other?</div>
     <div class="illus" style="max-width:330px">${welcomeSVG()}</div>
     <button id="unlockBtn" class="unlock-btn"
-      onclick="unlockAudio('Hello there, and welcome to Friend Detective! I am so excited you are here today! First, can you type your name in the box? And then pick your age from the little menu. When you are all ready, press the big yellow button and we will get started together!')">
+      onclick="unlockAudio('Hello there, and welcome to Friend Detective! I am so excited you are here today! First, can you type your name in the box. And then pick your age from the little menu. When you are all ready, press the big orange button that says Let us play — and we will get started together!')">
       🔊 Tap here to turn on sound!
     </button>
     <div class="form-row">
@@ -1271,13 +1099,15 @@ function renderIntro() {
           ✗ = NO
         </div>
       </div><br>
+      Whenever you are ready to keep going,<br>
+      <strong>press the big orange button!</strong><br><br>
       <strong>There are no wrong answers — just your best guess!</strong>
     </div>
     <div style="font-size:14px;color:#bbb">Let us try a practice example together first!</div>
     <button class="btn btn-primary" style="font-size:18px;padding:12px 28px" onclick="goExStory()">Show me how!</button>
   </div>`;
   stopSpeak();
-  speak(`Wonderful${nm}! Here is how our game works. I am going to tell you about two kids and how they act toward each other. Then I will ask — do you think those same two kids would act a certain way in another situation? For each question, press the GREEN checkmark button if you think YES, or the RED X button if you think NO. And here is the really important part — there are absolutely no wrong answers. We just want to know what you think! Ready? Let us try a quick practice example to warm up!`);
+  speak(`Wonderful${nm}! Here is how our game works. I am going to tell you about two kids and how they act toward each other. Then I will ask — do you think those same two kids would act a certain way in another situation? For each question, press the GREEN checkmark button if you think YES, or the RED X button if you think NO. And whenever you are ready to keep going, just press the big orange button — you will see it on the screen! There are absolutely no wrong answers. We just want to know what you think! Press the orange button to try a practice example and warm up!`);
 }
 
 function renderStory(v, isEx) {
@@ -1316,7 +1146,7 @@ function renderStory(v, isEx) {
         document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
         const rb = document.getElementById('readyBtn');
         if (rb) rb.style.display = 'inline-flex';
-        speak(`Great listening! Now I will ask you some questions about ${v.char1.name} and ${v.char2.name}. For each one, just think about what you heard and press the green checkmark for YES or the red X for NO. Press the button whenever you are ready!`);
+        speak(`Great listening! Now I will ask you some questions about ${v.char1.name} and ${v.char2.name}. For each one, press the green checkmark for YES or the red X for NO. When you are ready for the questions, press the big orange button!`);
       }
     );
   });
@@ -1364,10 +1194,10 @@ function renderQuestion(v, qi, isEx) {
     <div class="q-illust">${qIllustSVG(q.qIllust)}</div>
     <div class="q-box">"${escHtml(q.text)}"</div>
     <div class="ans-row">
-      <button class="btn btn-green" id="btnY" onclick="doAnswer('YES')" style="font-size:32px;letter-spacing:-1px">
+      <button class="btn btn-green" id="btnY" onclick="doAnswer('YES')" style="font-size:32px">
         ${yesFaceSVG(46)} ✓
       </button>
-      <button class="btn btn-red" id="btnN" onclick="doAnswer('NO')" style="font-size:32px;letter-spacing:-1px">
+      <button class="btn btn-red" id="btnN" onclick="doAnswer('NO')" style="font-size:32px">
         ${noFaceSVG(46)} ✗
       </button>
     </div>
@@ -1386,14 +1216,12 @@ function renderLikert() {
   const qi = S.qi;
   const q  = v.questions[qi];
   const isYes = S.pendingAns === 'YES';
-
   const strongStyle = isYes
     ? 'background:linear-gradient(135deg,#1e8449,#27AE60);color:white;box-shadow:0 6px 18px rgba(30,132,73,.4);'
     : 'background:linear-gradient(135deg,#922b21,#C0392B);color:white;box-shadow:0 6px 18px rgba(146,43,33,.4);';
   const mildStyle = isYes
     ? 'background:linear-gradient(135deg,#a8e063,#d0f5a0);color:#1a5e2a;box-shadow:0 4px 12px rgba(168,224,99,.35);'
     : 'background:linear-gradient(135deg,#f45c43,#ffbdad);color:#7B241C;box-shadow:0 4px 12px rgba(244,92,67,.3);';
-
   app.innerHTML = `
   ${starHeaderHTML(S.stars, VIGNETTES.length)}
   <div class="screen" style="padding-top:4px;gap:8px">
@@ -1420,7 +1248,7 @@ function renderLikert() {
     </div>
   </div>`;
   stopSpeak();
-  speak(`You said ${isYes ? 'yes' : 'no'}! Now — how sure are you? Press Definitely ${isYes?'Yes':'No'} if you are really, really sure. Press Maybe ${isYes?'Yes':'No'} if you think so but are not totally sure!`);
+  speak(`You said ${isYes ? 'yes' : 'no'}! Now — how sure are you? Press Definitely ${isYes?'Yes':'No'} if you are really really sure. Press Maybe ${isYes?'Yes':'No'} if you think so but are not totally sure!`);
 }
 
 function replayQ() {
@@ -1447,7 +1275,6 @@ function doAnswer(ans) {
   const qi   = isEx ? S.eqi   : S.qi;
   const q    = v.questions[qi];
   flashBtn(ans);
-
   if (isEx) {
     const exDiv = document.getElementById('exExp');
     if (exDiv) { exDiv.style.display = 'block'; exDiv.textContent = q.explain || ''; }
@@ -1458,14 +1285,13 @@ function doAnswer(ans) {
         if (S.eqi < EXAMPLE.questions.length - 1) {
           S.eqi++; S.phase = 'ex-q'; render();
         } else {
-          speak('Great job on the practice! You are already thinking like a real detective! Now let us start the real game. Are you ready?', () => {
+          speak('Great job on the practice! You are already thinking like a real detective! Now let us start the real game. Press the orange button whenever you are ready!', () => {
             setTimeout(() => { S.phase = 'story'; S.vi = 0; S.qi = 0; render(); }, 500);
           });
         }
       }, 2200);
     });
   } else {
-    // Go to Likert scale screen
     S.pendingAns = ans;
     setTimeout(() => { S.phase = 'q-likert'; render(); }, 480);
   }
@@ -1474,31 +1300,22 @@ function doAnswer(ans) {
 function doLikertAnswer(certainty) {
   ['btnDef','btnMay'].forEach(id => { const b = document.getElementById(id); if (b) b.disabled = true; });
   const btn = document.getElementById(certainty === 'DEFINITELY' ? 'btnDef' : 'btnMay');
-  if (btn) {
-    btn.style.transform = 'scale(1.1)';
-    setTimeout(() => { if (btn) btn.style.transform = ''; }, 300);
-  }
-
+  if (btn) { btn.style.transform = 'scale(1.1)'; setTimeout(() => { if (btn) btn.style.transform = ''; }, 300); }
   const v       = VIGNETTES[S.vi];
   const q       = v.questions[S.qi];
   const initAns = S.pendingAns;
   const fullAns = certainty === 'DEFINITELY'
     ? (initAns === 'YES' ? 'DEFINITELY_YES' : 'DEFINITELY_NO')
     : (initAns === 'YES' ? 'MAYBE_YES'      : 'MAYBE_NO');
-
   S.answers.push({
     vid: v.id, vM: v.model, qi: S.qi, qM: q.qM,
-    ans: fullAns,
-    initialAns: initAns,
-    keyed: q.keyed,
-    ok: initAns === q.keyed,
+    ans: fullAns, initialAns: initAns,
+    keyed: q.keyed, ok: initAns === q.keyed,
     congruent: v.model === q.qM,
     ts: new Date().toISOString()
   });
-
   S.pendingAns = null;
   stopSpeak();
-
   setTimeout(() => {
     if (S.qi < 2) { S.qi++; S.phase = 'q'; }
     else          { S.stars++; S.phase = 'trans'; }
@@ -1532,7 +1349,7 @@ function renderTrans() {
     </div>
   </div>`;
   const msg = last
-    ? `${kudo} You just finished all fifteen pairs! You are almost done now — what an amazing job!`
+    ? `${kudo} You just finished all twelve pairs! You are almost done now — what an amazing job!`
     : `${kudo} You collected a star! You have ${S.stars} star${S.stars===1?'':'s'} now! Next up, let us meet ${np.char1.name} and ${np.char2.name}!`;
   stopSpeak();
   speak(msg, () => {
@@ -1561,7 +1378,7 @@ function renderEnd() {
     </div>
   </div>`;
   stopSpeak();
-  speak(`${nm}, you have done something truly amazing today! You answered questions about all fifteen pairs of friends, and you thought so carefully about every single one. I am incredibly proud of you. You really are a true Friend Detective! Give yourself a big pat on the back — you have really, really earned it today!`);
+  speak(`${nm}, you have done something truly amazing today! You answered questions about all twelve pairs of friends, and you thought so carefully about every single one. I am incredibly proud of you. You really are a true Friend Detective! Give yourself a big pat on the back — you have really really earned it today!`);
 }
 
 // ── NAVIGATION ─────────────────────────────────────────
@@ -1574,9 +1391,17 @@ function startGame() {
   S.age  = (sel ? sel.value        : '') || '';
   if (!S.name) { unlockAudio("Oops! Can you type your name first?"); return; }
   audioUnlocked = true;
+
+  // ── Fisher-Yates shuffle ──
+  for (let i = VIGNETTES.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [VIGNETTES[i], VIGNETTES[j]] = [VIGNETTES[j], VIGNETTES[i]];
+  }
+
   S.phase = 'intro';
   render();
 }
+
 function goExStory() { S.eqi = 0; S.phase = 'ex-story'; render(); }
 function goQs(isEx) {
   if (isEx) { S.eqi = 0; S.phase = 'ex-q'; }
@@ -1585,8 +1410,7 @@ function goQs(isEx) {
 }
 function skipPair() {
   if (S.phase === 'story' || S.phase === 'q' || S.phase === 'q-likert') {
-    S.pendingAns = null;
-    S.stars++; S.phase = 'trans'; render();
+    S.pendingAns = null; S.stars++; S.phase = 'trans'; render();
   }
 }
 function skipEnd()   { stopSpeak(); S.phase = 'end'; render(); }
@@ -1681,7 +1505,7 @@ function exportCSV() {
   const url  = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `RAD15C_${S.name||'child'}_age${S.age||'unknown'}_${new Date().toISOString().slice(0,10)}.csv`;
+  link.download = `RAD12C_${S.name||'child'}_age${S.age||'unknown'}_${new Date().toISOString().slice(0,10)}.csv`;
   link.click();
   URL.revokeObjectURL(url);
 }

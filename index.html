@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Friend Detective</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Fredoka', 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+  background: linear-gradient(160deg, #a8edea, #fed6e3);
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 8px;
+}
+#app {
+  width: 100%; max-width: 760px;
+  background: #FFFEF7; border-radius: 22px;
+  box-shadow: 0 8px 40px rgba(0,0,0,.18);
+  overflow: hidden; position: relative;
+  display: flex; flex-direction: column;
+  min-height: 580px;
+}
+.star-meter-wrap {
+  display: flex; flex-direction: column;
+  align-items: center; padding: 8px 16px 3px; gap: 2px;
+}
+.star-meter {
+  display: flex; gap: 2px;
+  justify-content: center; flex-wrap: nowrap; align-items: center;
+}
+.star-item {
+  font-size: 17px; color: #E0E0E0; line-height: 1;
+  display: inline-block; transition: color 0.3s;
+}
+.star-item.filled { color: #FFD700; text-shadow: 0 0 5px rgba(255,180,0,.65); }
+.star-item.newly-filled { animation: starPop 0.8s cubic-bezier(0.17,0.67,0.37,1.5) forwards; }
+@keyframes starPop {
+  0%   { transform: scale(0.1) rotate(-190deg); }
+  65%  { transform: scale(1.5) rotate(8deg); }
+  100% { transform: scale(1)   rotate(0deg); }
+}
+.star-meter-lbl { font-size: 10px; color: #ccc; }
+.star-meter-large { flex-wrap: wrap; max-width: 220px; gap: 6px; }
+.star-meter-large .star-item { font-size: 34px; }
+.meter-bar-wrap {
+  width: 220px; height: 20px; background: #E8E8E8;
+  border-radius: 10px; overflow: hidden; position: relative;
+  margin: 8px auto 0;
+}
+.meter-bar {
+  height: 100%; border-radius: 10px;
+  transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+}
+.meter-pct {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: #555; font-weight: 600;
+}
+.level-badge {
+  text-align: center; animation: bounceIn .85s cubic-bezier(.17,.67,.37,1.3);
+}
+.screen {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; padding: 11px 17px 17px;
+  animation: fadeIn .35s ease; gap: 9px;
+}
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0);   }
+}
+.wt {
+  font-size: 36px; font-weight: 600; text-align: center; line-height: 1.2;
+  background: linear-gradient(135deg,#f7971e,#f64f59);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.ws { font-size: 16px; color: #888; text-align: center; }
+.form-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; width: 100%; }
+.form-group { text-align: center; }
+.form-group label { display: block; font-size: 14px; color: #666; margin-bottom: 5px; }
+.name-input, .age-select {
+  font-family: inherit; font-size: 18px; padding: 9px 14px;
+  border: 3px solid #FFD200; border-radius: 50px;
+  outline: none; text-align: center; color: #333; background: #FFFEF7;
+}
+.name-input { width: 180px; }
+.age-select { width: 140px; cursor: pointer; }
+.name-input:focus, .age-select:focus {
+  border-color: #F7971E; box-shadow: 0 0 0 4px rgba(247,151,30,.13);
+}
+.btn {
+  font-family: inherit; font-size: 17px; font-weight: 600;
+  border: none; border-radius: 50px; padding: 11px 24px;
+  cursor: pointer; transition: transform .1s, box-shadow .1s;
+  display: inline-flex; align-items: center; gap: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.14);
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active  { transform: scale(.95); }
+.btn:disabled { opacity:.44; cursor:not-allowed; }
+.btn-primary   { background: linear-gradient(135deg,#f7971e,#ffd200); color:white; }
+.btn-secondary { background:#F0EDE8; color:#555; font-size:14px; padding:8px 17px; }
+.btn-audio     { background: linear-gradient(135deg,#4776e6,#8e54e9); color:white; font-size:14px; padding:8px 16px; }
+.btn-story-replay { background: linear-gradient(135deg,#2196F3,#21CBF3); color:white; font-size:14px; padding:8px 16px; border:none; border-radius:50px; cursor:pointer; font-family:inherit; font-weight:600; box-shadow:0 3px 10px rgba(0,0,0,.12); -webkit-tap-highlight-color:transparent; }
+.btn-story-replay:active { transform:scale(.95); }
+.btn-green {
+  background: linear-gradient(135deg,#56ab2f,#a8e063); color:white;
+  font-size:22px; padding:14px 18px;
+  box-shadow: 0 6px 20px rgba(86,171,47,.38);
+  flex:1; max-width:165px;
+  justify-content:center; flex-direction:column; gap:5px; border-radius:20px;
+}
+.btn-red {
+  background: linear-gradient(135deg,#eb3349,#f45c43); color:white;
+  font-size:22px; padding:14px 18px;
+  box-shadow: 0 6px 20px rgba(235,51,73,.38);
+  flex:1; max-width:165px;
+  justify-content:center; flex-direction:column; gap:5px; border-radius:20px;
+}
+.ans-thumb { display:block; margin:0 auto; }
+.btn-green .ans-thumb { animation: faceBounce 1.1s ease-in-out infinite; }
+.btn-red   .ans-thumb { animation: faceWiggle 1.7s ease-in-out infinite; }
+@keyframes faceBounce {
+  0%,100%{transform:translateY(0) scale(1);} 45%{transform:translateY(-7px) scale(1.09);}
+}
+@keyframes faceWiggle {
+  0%,100%{transform:rotate(0deg);} 22%{transform:rotate(-9deg);} 62%{transform:rotate(9deg);}
+}
+.btn-likert-strong {
+  font-family:inherit; font-size:15px; font-weight:600;
+  border:none; border-radius:20px; padding:12px 10px;
+  cursor:pointer; transition:transform .1s, box-shadow .1s;
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column; gap:5px; flex:1; max-width:170px;
+  box-shadow:0 6px 18px rgba(0,0,0,.18);
+  -webkit-tap-highlight-color:transparent;
+}
+.btn-likert-mild {
+  font-family:inherit; font-size:14px; font-weight:600;
+  border:none; border-radius:20px; padding:10px 8px;
+  cursor:pointer; transition:transform .1s, box-shadow .1s;
+  display:flex; align-items:center; justify-content:center;
+  flex-direction:column; gap:4px; flex:1; max-width:145px;
+  box-shadow:0 4px 12px rgba(0,0,0,.12);
+  -webkit-tap-highlight-color:transparent;
+}
+.btn-likert-strong:active, .btn-likert-mild:active { transform:scale(.95); }
+.btn-likert-strong:disabled, .btn-likert-mild:disabled { opacity:.44; cursor:not-allowed; }
+.illus {
+  width:100%; border-radius:13px; overflow:hidden;
+  background:#E8F4FF; box-shadow: inset 0 2px 8px rgba(0,0,0,.07);
+}
+.q-illust {
+  width:100%; max-width:360px; align-self:center;
+  border-radius:12px; overflow:hidden;
+  border:2px solid #F0EDE8; background:#FAFAFA;
+}
+.story-head { display:flex; justify-content:space-between; align-items:center; width:100%; }
+.pair-title  { font-size:18px; font-weight:600; color:#333; }
+.story-box {
+  width:100%; background:white; border-radius:12px;
+  padding:11px 15px; font-size:16px; line-height:1.72;
+  color:#333; border:2px solid #F0EDE8;
+}
+.sent { display:inline; border-radius:4px; padding:1px 2px; transition:background .3s; }
+.sent.hi { background:#FFF3B0; }
+.story-btns { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; width:100%; }
+.q-header {
+  width:100%; background:linear-gradient(135deg,#4776e6,#8e54e9);
+  border-radius:11px; padding:8px 14px; color:white;
+  font-size:14px; display:flex; align-items:center; gap:6px;
+}
+.q-box {
+  width:100%; background:#F8F4FF; border-radius:13px;
+  padding:12px 16px; font-size:16px; line-height:1.6;
+  color:#333; border:3px solid #C9B8F0;
+  text-align:center; min-height:66px;
+  display:flex; align-items:center; justify-content:center;
+}
+.ans-row   { display:flex; gap:15px; justify-content:center; width:100%; }
+.replay-section { display:flex; flex-direction:column; align-items:center; gap:5px; width:100%; }
+.replay-label { font-size:11px; color:#bbb; text-align:center; }
+.replay-btns { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+.ex-explain {
+  display:none; width:100%;
+  background:#E8F8E8; border:2px solid #A5D6A7; border-radius:12px;
+  padding:11px 15px; font-size:15px; color:#2E7D32;
+  text-align:center; line-height:1.6;
+}
+.thumb-guide {
+  display:flex; gap:18px; justify-content:center; align-items:center;
+  background:rgba(71,118,230,.05); border-radius:10px; padding:7px 14px;
+  border:1.5px solid rgba(71,118,230,.15); font-size:13px; color:#666;
+}
+.trans-screen {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:10px; padding:22px; text-align:center;
+}
+.trans-msg { font-size:22px; font-weight:600; color:#333; }
+.trans-sub { font-size:15px; color:#aaa; }
+.end-screen {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:24px; text-align:center; gap:10px;
+}
+.end-trophy-wrap { animation: bounceIn .85s cubic-bezier(.17,.67,.37,1.3); }
+@keyframes bounceIn {
+  0%{transform:scale(0);} 65%{transform:scale(1.18);} 82%{transform:scale(.94);} 100%{transform:scale(1);}
+}
+.end-title { font-size:29px; font-weight:600; color:#f7971e; }
+.end-sub   { font-size:16px; color:#666; }
+.end-btns  { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:4px; }
+.admin-btn {
+  position:fixed; bottom:10px; right:10px;
+  width:34px; height:34px; border-radius:50%;
+  background:rgba(0,0,0,.13); border:none; cursor:pointer;
+  font-size:15px; display:flex; align-items:center; justify-content:center; z-index:500;
+}
+.admin-panel {
+  position:fixed; bottom:54px; right:10px;
+  background:white; border-radius:12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,.2);
+  padding:14px; width:295px; z-index:500;
+  font-size:13px; display:none;
+}
+.admin-panel.open { display:block; }
+.admin-panel h3 { font-size:14px; margin-bottom:8px; color:#333; border-bottom:1px solid #eee; padding-bottom:5px; }
+.admin-section-label { font-weight:600; font-size:11px; color:#888; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
+.admin-log {
+  max-height:120px; overflow-y:auto; font-size:10px;
+  font-family:monospace; background:#f8f8f8;
+  border-radius:6px; padding:6px; margin-bottom:7px; white-space:pre; line-height:1.5;
+}
+.admin-input, .admin-select {
+  width:100%; padding:5px 7px; font-size:11px;
+  border:1px solid #ddd; border-radius:6px;
+  margin-bottom:5px; outline:none; background:white;
+}
+.admin-row { display:flex; gap:5px; margin-bottom:5px; }
+.admin-btn-sm {
+  flex:1; padding:6px 4px; font-size:11px; font-family:inherit;
+  border-radius:6px; cursor:pointer; border:1px solid #ddd; background:#F0EDE8; color:#555;
+}
+.admin-btn-blue { background:#4776e6; color:white; border-color:#4776e6; }
+.admin-btn-gold { background:linear-gradient(135deg,#f7971e,#ffd200); color:white; border:none; font-weight:600; }
+.info-box {
+  font-size:15px; color:#555; line-height:1.82;
+  max-width:500px; background:#F8F4FF;
+  padding:14px 18px; border-radius:14px; border:3px solid #C9B8F0;
+}
+.error-box { padding:28px; font-family:Arial,sans-serif; max-width:600px; margin:auto; text-align:center; }
+.unlock-btn {
+  background: linear-gradient(135deg,#4776e6,#8e54e9);
+  color: white; border: none; border-radius: 50px;
+  font-family: inherit; font-size: 17px; font-weight: 600;
+  padding: 13px 28px; cursor: pointer;
+  box-shadow: 0 4px 18px rgba(71,118,230,.45);
+  animation: pulse 1.5s ease infinite;
+}
+@keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.04);} }
+@media (max-width:480px) {
+  .wt { font-size:25px; }
+  .btn-green,.btn-red { font-size:18px; max-width:138px; }
+  .q-box { font-size:14px; }
+  .story-box { font-size:14px; }
+  .trans-msg { font-size:18px; }
+  .star-meter-large .star-item { font-size:26px; }
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div style="padding:44px;text-align:center;font-family:Arial,sans-serif;color:#aaa">
+    <div style="font-size:54px;margin-bottom:14px">🔍</div>
+    <h2>Loading Friend Detective...</h2>
+    <p style="margin-top:10px;font-size:14px">If this does not go away, please check that JavaScript is enabled.</p>
+  </div>
+</div>
+
+<button class="admin-btn" id="adminBtn" title="Researcher Panel">⚙️</button>
+<div class="admin-panel" id="adminPanel"></div>
+
+<script>
+'use strict';
+
+const W = 600, H = 300, GY = H * 0.70;
+const IMG_BASE = 'https://raw.githubusercontent.com/ashleyjthomas/GameRAD/main/';
+
+// ── KUDOS ──────────────────────────────────────────────
+const KUDOS = [
+  "Brilliant work on that one!",
+  "Excellent thinking — you are really good at this!",
+  "Wonderful job! I love how carefully you are thinking!",
+  "Amazing detective work! Keep it up!",
+  "You are so good at this! Wow!",
+  "Fantastic! You are a true Friend Detective!",
+  "That was great! I am really impressed!",
+  "Super job! You are doing wonderfully!"
+];
+
+// ── DETECTIVE LEVELS ───────────────────────────────────
+const DETECTIVE_LEVELS = [
+  { min:  0, label: 'Rookie Detective',   emoji: '🔍', color: '#7EDBFF', color2: '#4A90D9' },
+  { min:  3, label: 'Detective Cadet',    emoji: '🕵️', color: '#6BCB77', color2: '#27AE60' },
+  { min:  6, label: 'Senior Detective',   emoji: '⭐', color: '#FFD166', color2: '#F39C12' },
+  { min:  9, label: 'Super Detective',    emoji: '💫', color: '#FF8FAB', color2: '#E91E8C' },
+  { min: 12, label: 'Master Detective!',  emoji: '🏆', color: '#FFD700', color2: '#F39C12' }
+];
+
+function getCurrentLevel(stars) {
+  let lv = DETECTIVE_LEVELS[0];
+  for (const l of DETECTIVE_LEVELS) { if (stars >= l.min) lv = l; }
+  return lv;
+}
+
+// ── EXAMPLE (alien-themed EM practice) ────────────────
+const EXAMPLE = {
+  id: 'ex',
+  char1: { name: 'Alien 1', hair: '#9B5DE5', shirt: '#4ECDC4', pants: '#1A3040', style: 'short' },
+  char2: { name: 'Alien 2', hair: '#FFD84D', shirt: '#FF6EC7', pants: '#2E1E60', style: 'short' },
+  scene: 'trading_post',
+  parts: [
+    'These two alien friends are good friends on Planet Ral.',
+    'Last moon-cycle, they collected star-fruits together. One friend split the fruits into two equal piles, and the other picked the pile they wanted.',
+    'Last week, one friend gave the other some glow-berries as a gift. So the other friend made sure to bring back some glow-berries of the same size in return.'
+  ],
+  questions: [
+    {
+      text: 'These two alien friends take turns using the star-viewer so they each get the same amount of time.',
+      keyed: 'YES', qIllust: 'computer',
+      explain: 'Since these alien friends like things to be fair and equal — they split fruits evenly and always give back what they receive — taking turns on the star-viewer sounds just like them! YES makes sense here.'
+    },
+    {
+      text: 'One alien friend decides what games they play, and the other just goes along with it.',
+      keyed: 'NO', qIllust: 'boss',
+      explain: 'These alien friends treat each other as equals, so it does not sound like just one of them would always be in charge. NO makes more sense here.'
+    },
+    {
+      text: 'When their class collected moon-rocks for a gift pile, these two alien friends each put in the same number of rocks.',
+      keyed: 'YES', qIllust: 'coins',
+      explain: 'Putting in the same amount fits their style perfectly — they always like things to be fair and equal between them. YES!'
+    }
+  ]
+};
+
+// ── VIGNETTES (12 alien pairs) ─────────────────────────
+const VIGNETTES = [
+  // ── 1  Zumi + Blix  ·  CS  ·  alien_home ─────────────
+  {
+    id: 1, model: 'CS',
+    char1: { name: 'Zumi', img: 'Asset%2027.png', hair: '#9B5DE5', shirt: '#4ECDC4', pants: '#1A3040', style: 'short' },
+    char2: { name: 'Blix', img: 'Asset%2028.png', hair: '#FFD84D', shirt: '#FF6EC7', pants: '#2E1E60', style: 'short' },
+    scene: 'alien_home',
+    parts: [
+      'Zumi and Blix share the same glow-pod. They have one big glowing food bowl and they never count who ate more.',
+      'If Zumi finds a moon-berry on the way home, they just eat it without asking. If Blix uses Zumi\'s glow-stone, that is perfectly fine too. Nothing really belongs to just one of them.',
+      'When Blix got hurt on the rock-field last week, Zumi felt the pain in their own body. They always say "when we got hurt" because it felt exactly the same to both of them.'
+    ],
+    questions: [
+      { text: 'Blix kept count of how many times they borrowed Zumi\'s things, so they could make sure to let Zumi borrow the same amount back.', qM: 'EM', keyed: 'NO',  qIllust: 'balance'    },
+      { text: 'When Zumi and Blix share moon-berries, they eat from the same big bowl without counting who has more.',                           qM: 'CS', keyed: 'YES', qIllust: 'share_food' },
+      { text: 'When Blix won a prize at the star-fair, Zumi felt just as happy and proud as if they themselves had won it.',                      qM: 'CS', keyed: 'YES', qIllust: 'trophy'     }
+    ]
+  },
+
+  // ── 2  Orro + Fenn  ·  EM  ·  trading_post ───────────
+  {
+    id: 2, model: 'EM',
+    char1: { name: 'Orro', img: 'Asset%2029.png', hair: '#4ECDC4', shirt: '#FF8FAB', pants: '#1A3040', style: 'short' },
+    char2: { name: 'Fenn', img: 'Asset%2030.png', hair: '#FF6EC7', shirt: '#4D96FF', pants: '#2C3E50', style: 'long'  },
+    scene: 'trading_post',
+    parts: [
+      'Orro and Fenn each carry a balance crystal. On their planet, when one friend gives something, the other must give something back of the same size before the next sun-rise.',
+      'Last week, Orro brought Fenn a star-fruit. So Fenn made sure to bring Orro a star-fruit the very next day.',
+      'When they share the glow-ball, they use a sand-timer so that each one plays for exactly the same amount of time.'
+    ],
+    questions: [
+      { text: 'Orro and Fenn eat from the same food bowl and never think about who ate more.',                                     qM: 'CS', keyed: 'NO',  qIllust: 'share_food' },
+      { text: 'When their class put together a moon-rock gift pile, Orro and Fenn each added the exact same number of rocks.',      qM: 'EM', keyed: 'YES', qIllust: 'coins'      },
+      { text: 'Orro and Fenn take turns using the star-viewer to make sure they each get the same amount of time.',                 qM: 'EM', keyed: 'YES', qIllust: 'computer'   }
+    ]
+  },
+
+  // ── 3  Kiva + Doop  ·  CS  ·  alien_meadow ───────────
+  {
+    id: 3, model: 'CS',
+    char1: { name: 'Kiva', img: 'Asset%2031.png', hair: '#E0A835', shirt: '#6BCB77', pants: '#154360', style: 'long'  },
+    char2: { name: 'Doop', img: 'Asset%2032.png', hair: '#9B5DE5', shirt: '#E74C3C', pants: '#2C3E50', style: 'short' },
+    scene: 'alien_meadow',
+    parts: [
+      'Kiva and Doop walk through the star-meadow every evening. The glowing vines seem to grow around both of them at the same time.',
+      'Whatever Kiva finds — a glow-stone, a star-fruit, a sparkle-feather — they share it with Doop straight away, just because it does not feel right to find things without Doop.',
+      'When others ask about the meadow, Kiva and Doop always say "our meadow." They have never once thought of anything there as just one of theirs alone.'
+    ],
+    questions: [
+      { text: 'Kiva and Doop carefully count how many star-fruits each of them picks to make sure the numbers are always exactly equal.', qM: 'EM', keyed: 'NO',  qIllust: 'balance'    },
+      { text: 'When Kiva found a sparkling glow-stone, they brought it straight to Doop to share without being asked.',                  qM: 'CS', keyed: 'YES', qIllust: 'share_food' },
+      { text: 'When Doop won the meadow-race, Kiva was just as proud and happy as if they themselves had won.',                          qM: 'CS', keyed: 'YES', qIllust: 'trophy'     }
+    ]
+  },
+
+  // ── 4  Wex + Plara  ·  AR  ·  throne_room ────────────
+  {
+    id: 4, model: 'AR',
+    char1: { name: 'Wex',   img: 'Asset%2033.png', hair: '#FFD84D', shirt: '#9B5DE5', pants: '#1A0E30', style: 'short'    },
+    char2: { name: 'Plara', img: 'Asset%2034.png', hair: '#4ECDC4', shirt: '#FF8FAB', pants: '#2C3E50', style: 'pigtails' },
+    scene: 'throne_room',
+    parts: [
+      'Wex has the elder glow-mark on their arm — a shining symbol that means they are the leader of the pair.',
+      'When Wex and Plara need to choose which cave to explore or which game to play, Wex decides and Plara agrees without question.',
+      'At every meal, Wex picks their food first and takes as much as they want. Plara waits quietly until Wex is completely finished.'
+    ],
+    questions: [
+      { text: 'Wex and Plara take turns choosing where they go so they each get the same number of choices.',          qM: 'EM', keyed: 'NO',  qIllust: 'balance'    },
+      { text: 'Wex makes the decisions and Plara follows them.',                                                        qM: 'AR', keyed: 'YES', qIllust: 'boss'        },
+      { text: 'Wex and Plara share a single food bowl and never think about who ate more.',                             qM: 'CS', keyed: 'NO',  qIllust: 'share_food' }
+    ]
+  },
+
+  // ── 5  Nuu + Glim  ·  EM  ·  trading_post ────────────
+  {
+    id: 5, model: 'EM',
+    char1: { name: 'Nuu',  img: 'Asset%2035.png', hair: '#FF6EC7', shirt: '#2980B9', pants: '#1A3040', style: 'pigtails' },
+    char2: { name: 'Glim', img: 'Asset%2036.png', hair: '#6BCB77', shirt: '#E67E22', pants: '#2C3E50', style: 'short'    },
+    scene: 'trading_post',
+    parts: [
+      'Nuu and Glim swap snacks at the trading post every single day. Whatever Nuu brings, Glim makes sure to bring something of the same size back before they head home.',
+      'Last moon-cycle, Glim helped Nuu carry heavy glow-rocks for an afternoon. So the very next day, Nuu helped Glim carry supplies for exactly the same amount of time.',
+      'When they work on projects together, they talk about it if one of them did more, and always find a way to balance things out.'
+    ],
+    questions: [
+      { text: 'When Nuu got hurt at the trading post, Glim felt the pain in their own body as if they had been hurt too.',               qM: 'CS', keyed: 'NO',  qIllust: 'hurt'    },
+      { text: 'When their class collected moon-crystals for a gift, Nuu and Glim each put in the same number.',                           qM: 'EM', keyed: 'YES', qIllust: 'coins'   },
+      { text: 'When Nuu and Glim disagree, Glim just goes along with whatever Nuu decides without saying anything.',                      qM: 'AR', keyed: 'NO',  qIllust: 'boss'    }
+    ]
+  },
+
+  // ── 6  Tazo + Vebb  ·  AR  ·  crystal_cave ───────────
+  {
+    id: 6, model: 'AR',
+    char1: { name: 'Tazo', img: 'Asset%2037.png', hair: '#9B5DE5', shirt: '#E91E8C', pants: '#1A0E30', style: 'long'  },
+    char2: { name: 'Vebb', img: 'Asset%2038.png', hair: '#FFD84D', shirt: '#3498DB', pants: '#154360', style: 'short' },
+    scene: 'crystal_cave',
+    parts: [
+      'Tazo is the eldest in their cave-group. On this planet, that means Tazo speaks first, eats first, and chooses first — always.',
+      'When they find a new glowing crystal in the cave, Tazo inspects it first and decides whether to keep it or leave it.',
+      'When visitors come to the cave, they greet Tazo first and ask Tazo\'s permission before they say anything to Vebb.'
+    ],
+    questions: [
+      { text: 'Tazo and Vebb share all their crystals freely — if one of them wants to use something, they just take it without asking.',    qM: 'CS', keyed: 'NO',  qIllust: 'share_food' },
+      { text: 'Tazo tells Vebb when they do not like something Vebb did, but Vebb does not tell Tazo when they do not like something Tazo did.', qM: 'AR', keyed: 'YES', qIllust: 'feedback'   },
+      { text: 'When the cave-group made a painting together, Tazo said their name had to go at the top first.',                              qM: 'AR', keyed: 'YES', qIllust: 'painting'   }
+    ]
+  },
+
+  // ── 7  Mip + Creel  ·  CS  ·  alien_home ─────────────
+  {
+    id: 7, model: 'CS',
+    char1: { name: 'Mip',   img: 'Asset%2039.png', hair: '#4ECDC4', shirt: '#FF6B6B', pants: '#1A3040', style: 'short' },
+    char2: { name: 'Creel', img: 'Asset%2040.png', hair: '#E0A835', shirt: '#27AE60', pants: '#2C3E50', style: 'long'  },
+    scene: 'alien_home',
+    parts: [
+      'Mip and Creel have shared the same floating pod for as long as either of them can remember.',
+      'When Creel is hungry, they help themselves to Mip\'s food without asking — and when Mip wants to use Creel\'s glow-brush, they just pick it up. There is no mine and yours between them.',
+      'When they arrived at a new planet last season, another alien asked whose pod it was. Mip and Creel both answered at the exact same moment: "It is ours."'
+    ],
+    questions: [
+      { text: 'Mip kept a tally to count all the times Creel had borrowed things, so they could borrow the same number of things back.',  qM: 'EM', keyed: 'NO',  qIllust: 'balance'    },
+      { text: 'Mip and Creel eat from the same big food bowl without ever thinking about who ate more.',                                   qM: 'CS', keyed: 'YES', qIllust: 'share_food' },
+      { text: 'When Mip got a compliment from their teacher, Creel felt just as proud as if they themselves had been complimented.',       qM: 'CS', keyed: 'YES', qIllust: 'trophy'     }
+    ]
+  },
+
+  // ── 8  Yobi + Snak  ·  EM  ·  alien_meadow ──────────
+  {
+    id: 8, model: 'EM',
+    char1: { name: 'Yobi', img: 'Asset%2041.png', hair: '#FF6EC7', shirt: '#9B59B6', pants: '#154360', style: 'pigtails' },
+    char2: { name: 'Snak', img: 'Asset%2042.png', hair: '#9B5DE5', shirt: '#E74C3C', pants: '#2C3E50', style: 'short'    },
+    scene: 'alien_meadow',
+    parts: [
+      'Yobi and Snak always swap star-fruits at the start of each new day. If Yobi brings a red one, Snak makes sure to bring a red one back.',
+      'When they played the glow-ring game last week, they used a sand-timer to make sure neither one played for longer than the other.',
+      'After Snak missed a day of helping carry supplies, they carried a double load the next day to make things even again.'
+    ],
+    questions: [
+      { text: 'When Yobi got hurt in the meadow, Snak felt the pain in their own body as if they had been hurt too.',                     qM: 'CS', keyed: 'NO',  qIllust: 'hurt'    },
+      { text: 'When Yobi and Snak share glow-fruits, they make sure each of them has the same amount before anyone eats.',                 qM: 'EM', keyed: 'YES', qIllust: 'balance' },
+      { text: 'Yesterday Yobi chose which path to walk. Snak went along without saying anything even though they did not like that path.', qM: 'AR', keyed: 'NO',  qIllust: 'boss'    }
+    ]
+  },
+
+  // ── 9  Fuzz + Orlo  ·  CS  ·  crystal_cave ───────────
+  {
+    id: 9, model: 'CS',
+    char1: { name: 'Fuzz', img: 'Asset%2043.png', hair: '#FFD84D', shirt: '#1ABC9C', pants: '#1A3040', style: 'short' },
+    char2: { name: 'Orlo', img: 'Asset%2044.png', hair: '#4ECDC4', shirt: '#F39C12', pants: '#2C3E50', style: 'short' },
+    scene: 'crystal_cave',
+    parts: [
+      'Fuzz and Orlo discovered the crystal cave together on the same afternoon. From that first moment, they have always called it "our cave."',
+      'Everything in the cave — the glowing crystals, the cozy moss-nests, the sparkle-pools — belongs to both of them. There is no mine and yours between Fuzz and Orlo.',
+      'When Orlo felt sad one afternoon, Fuzz felt it too, right in their own chest. It was as if their feelings were connected by an invisible glowing thread.'
+    ],
+    questions: [
+      { text: 'Fuzz and Orlo keep a tally on the cave wall to track who has used more crystals so they can balance it out later.',  qM: 'EM', keyed: 'NO',  qIllust: 'balance'    },
+      { text: 'When Fuzz found a beautiful glow-stone, they did not think of it as theirs — they brought it straight to share with Orlo.', qM: 'CS', keyed: 'YES', qIllust: 'share_food' },
+      { text: 'Orlo always follows Fuzz\'s lead in the cave because Fuzz is the one who decides where they go.',                    qM: 'AR', keyed: 'NO',  qIllust: 'boss'        }
+    ]
+  },
+
+  // ── 10  Beem + Jovi  ·  AR  ·  throne_room ───────────
+  {
+    id: 10, model: 'AR',
+    char1: { name: 'Beem', img: 'Asset%2045.png', hair: '#E91E8C', shirt: '#9B5DE5', pants: '#1A0E30', style: 'long'  },
+    char2: { name: 'Jovi', img: 'Asset%2046.png', hair: '#FFD84D', shirt: '#4ECDC4', pants: '#154360', style: 'short' },
+    scene: 'throne_room',
+    parts: [
+      'Beem has a special crystal badge that everyone can see. The badge means Beem speaks for both of them in every situation.',
+      'Jovi thinks Beem is the most impressive alien they have ever met. Whenever Beem decides something, Jovi feels lucky to go along.',
+      'When they received a gift last moon-cycle, Beem opened it and chose the best part to keep. Jovi received what was left over.'
+    ],
+    questions: [
+      { text: 'Beem and Jovi take turns deciding what to do each day so they each get the same number of choices.',                     qM: 'EM', keyed: 'NO',  qIllust: 'balance'   },
+      { text: 'Jovi is careful not to interrupt Beem when they are talking, but Beem interrupts Jovi sometimes.',                       qM: 'AR', keyed: 'YES', qIllust: 'interrupt' },
+      { text: 'When Beem and Jovi received a moon-prize, Beem chose the best part first and Jovi took what was left over.',             qM: 'AR', keyed: 'YES', qIllust: 'boss'      }
+    ]
+  },
+
+  // ── 11  Plix + Zara  ·  EM  ·  trading_post ──────────
+  {
+    id: 11, model: 'EM',
+    char1: { name: 'Plix', img: 'Asset%2047.png', hair: '#4ECDC4', shirt: '#FF8FAB', pants: '#1A3040', style: 'short'    },
+    char2: { name: 'Zara', img: 'Asset%2048.png', hair: '#9B5DE5', shirt: '#E67E22', pants: '#2C3E50', style: 'pigtails' },
+    scene: 'trading_post',
+    parts: [
+      'Plix and Zara have a clear rule: if one of them does something nice, the other must do something just as nice back before the next sun-rise.',
+      'Last week, Plix spent an afternoon helping Zara clean their pod. So Zara spent an afternoon helping Plix clean their pod the following day.',
+      'When they received star-stickers at school, they counted carefully to make sure they each took the exact same number.'
+    ],
+    questions: [
+      { text: 'Plix and Zara share one big crystal-bowl and never once think about who ate more or less.',                          qM: 'CS', keyed: 'NO',  qIllust: 'share_food' },
+      { text: 'When Plix gave Zara a gift for their pod-day, Zara made sure to give Plix a gift of the same size for Plix\'s pod-day.', qM: 'EM', keyed: 'YES', qIllust: 'birthday'   },
+      { text: 'Plix always decides which activities they do together, and Zara just agrees without saying anything.',               qM: 'AR', keyed: 'NO',  qIllust: 'boss'       }
+    ]
+  },
+
+  // ── 12  Hoob + Nev  ·  AR  ·  crystal_cave ───────────
+  {
+    id: 12, model: 'AR',
+    char1: { name: 'Hoob', img: 'Asset%2049.png', hair: '#FFD84D', shirt: '#9B5DE5', pants: '#1A0E30', style: 'short' },
+    char2: { name: 'Nev',  img: 'Asset%2050.png', hair: '#4ECDC4', shirt: '#FF6EC7', pants: '#154360', style: 'long'  },
+    scene: 'crystal_cave',
+    parts: [
+      'Hoob has a golden glow-mark on their forehead. On this planet, the glow-mark means you are the decider.',
+      'Nev does not have a glow-mark yet. When they need to choose which crystal tunnel to explore, Hoob decides and Nev follows.',
+      'Hoob drinks from the crystal pool first every morning. Nev waits until Hoob is completely finished before they can drink.'
+    ],
+    questions: [
+      { text: 'Hoob and Nev take equal turns deciding which crystal tunnel to explore.',                                               qM: 'EM', keyed: 'NO',  qIllust: 'balance'   },
+      { text: 'Nev is careful not to interrupt Hoob when they are talking, but Hoob interrupts Nev sometimes.',                        qM: 'AR', keyed: 'YES', qIllust: 'interrupt' },
+      { text: 'When Hoob found a beautiful glowing crystal, Nev felt just as proud and happy as if they themselves had found it.',     qM: 'CS', keyed: 'NO',  qIllust: 'trophy'    }
+    ]
+  }
+];
+
+// ── STATE ──────────────────────────────────────────────
+const S = {
+  phase: 'welcome', name: '', age: '',
+  vi: 0, qi: 0, eqi: 0,
+  pendingAns: null,
+  answers: [], stars: 0, adminOpen: false,
+  elevenLabsKey:   localStorage.getItem('rad_elKey')   || '',
+  elevenLabsVoice: localStorage.getItem('rad_elVoice') || 'MF3mGyEYCl7XYWbV9V6O'
+};
+
+// ── SPEECH ─────────────────────────────────────────────
+let voices = [], currentAudio = null, seqGen = 0, audioUnlocked = false;
+
+function initVoices() {
+  function load() { const v = speechSynthesis.getVoices(); if (v.length) voices = v; }
+  load();
+  speechSynthesis.onvoiceschanged = load;
+}
+
+function unlockAudio(thenSpeak) {
+  if (audioUnlocked) { if (thenSpeak) speak(thenSpeak); return; }
+  audioUnlocked = true;
+  if (window.speechSynthesis) {
+    const silent = new SpeechSynthesisUtterance(' ');
+    silent.volume = 0;
+    silent.onend = () => { if (thenSpeak) speak(thenSpeak); };
+    speechSynthesis.speak(silent);
+  } else { if (thenSpeak) speak(thenSpeak); }
+  const ub = document.getElementById('unlockBtn');
+  if (ub) ub.remove();
+}
+
+function bestVoice() {
+  const prefs = ['Google UK English Female','Samantha','Karen','Moira','Google US English','Microsoft Zira Desktop - English (United States)','Microsoft Zira - English (United States)'];
+  for (const p of prefs) { const v = voices.find(v => v.name === p || v.name.includes(p)); if (v) return v; }
+  return voices.find(v => v.lang && v.lang.startsWith('en') && v.localService) ||
+         voices.find(v => v.lang && v.lang.startsWith('en')) || voices[0] || null;
+}
+
+function speak(text, done) {
+  done = done || function(){};
+  if (!text || !text.trim()) { done(); return; }
+  if (S.elevenLabsKey && S.elevenLabsKey.trim()) { speakElevenLabs(text, done); }
+  else { speakWebSpeech(text, done); }
+}
+
+function speakWebSpeech(text, done) {
+  done = done || function(){};
+  if (!window.speechSynthesis) { done(); return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.voice = bestVoice(); u.rate = 1.06; u.pitch = 1.08; u.volume = 1;
+  u.onend = () => { done(); };
+  u.onerror = () => { done(); };
+  speechSynthesis.speak(u);
+}
+
+function speakElevenLabs(text, done) {
+  done = done || function(){};
+  const voiceId = S.elevenLabsVoice || 'MF3mGyEYCl7XYWbV9V6O';
+  fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    method: 'POST',
+    headers: { 'Accept':'audio/mpeg','Content-Type':'application/json','xi-api-key':S.elevenLabsKey },
+    body: JSON.stringify({ text, model_id:'eleven_turbo_v2', voice_settings:{ stability:0.42, similarity_boost:0.75, style:0.38, use_speaker_boost:true, speed:1.25 } })
+  })
+  .then(r => { if (!r.ok) throw new Error('ElevenLabs ' + r.status); return r.blob(); })
+  .then(blob => {
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    currentAudio = audio;
+    audio.onended = () => { URL.revokeObjectURL(url); currentAudio = null; done(); };
+    audio.onerror = () => { URL.revokeObjectURL(url); currentAudio = null; speakWebSpeech(text, done); };
+    audio.play().catch(() => { speakWebSpeech(text, done); });
+  })
+  .catch(err => { console.warn('ElevenLabs error:', err.message); speakWebSpeech(text, done); });
+}
+
+function speakSeq(parts, highlightCb, done) {
+  const id = ++seqGen;
+  let i = 0;
+  function next() {
+    if (seqGen !== id) return;
+    if (i >= parts.length) { done(); return; }
+    if (highlightCb) highlightCb(i);
+    speak(parts[i], () => { i++; next(); });
+  }
+  next();
+}
+
+function stopSpeak() {
+  seqGen++;
+  if (currentAudio) { currentAudio.pause(); currentAudio.src = ''; currentAudio = null; }
+  if (window.speechSynthesis) speechSynthesis.cancel();
+}
+
+function setDot(on) {}
+
+// ── SVG HELPERS ────────────────────────────────────────
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+const SKINS = ['#FDBCB4','#F0C090','#E0A878','#C87E50','#FDDBB4'];
+function skin(name) {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h*31 + name.charCodeAt(i)) & 0xFFFF;
+  return SKINS[h % SKINS.length];
+}
+
+// ── THUMB SVGs ─────────────────────────────────────────
+function thumbsUpSVG(size) {
+  size = size || 50;
+  return `<svg class="ans-thumb" width="${size}" height="${size}" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto">
+    <circle cx="27" cy="27" r="23" fill="rgba(255,255,255,0.9)"/>
+    <rect x="10" y="26" width="20" height="18" rx="6" fill="#27AE60"/>
+    <rect x="26" y="8"  width="13" height="26" rx="6.5" fill="#27AE60"/>
+    <line x1="14" y1="27" x2="14" y2="43" stroke="rgba(0,80,0,0.18)" stroke-width="2"/>
+    <line x1="20" y1="27" x2="20" y2="43" stroke="rgba(0,80,0,0.18)" stroke-width="2"/>
+    <ellipse cx="31" cy="13" rx="3.5" ry="6" fill="rgba(255,255,255,0.32)"/>
+  </svg>`;
+}
+
+function thumbsDownSVG(size) {
+  size = size || 50;
+  return `<svg class="ans-thumb" width="${size}" height="${size}" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto">
+    <circle cx="27" cy="27" r="23" fill="rgba(255,255,255,0.9)"/>
+    <rect x="10" y="10" width="20" height="18" rx="6" fill="#E74C3C"/>
+    <rect x="26" y="20" width="13" height="26" rx="6.5" fill="#E74C3C"/>
+    <line x1="14" y1="11" x2="14" y2="27" stroke="rgba(80,0,0,0.18)" stroke-width="2"/>
+    <line x1="20" y1="11" x2="20" y2="27" stroke="rgba(80,0,0,0.18)" stroke-width="2"/>
+    <ellipse cx="31" cy="40" rx="3.5" ry="6" fill="rgba(255,255,255,0.32)"/>
+  </svg>`;
+}
+
+// ── KID SVG ────────────────────────────────────────────
+function kidSVG(cx, groundY, cfg, animOffset, flip, imgH, imgYOffset) {
+  imgH        = imgH        || 182;
+  imgYOffset  = imgYOffset  || 35;
+  animOffset  = animOffset  || '0s';
+  flip        = flip        || false;
+  const { hair, shirt, pants, style, img } = cfg;
+  const bobBegin = (animOffset === 'wave') ? '0s' : animOffset;
+
+  if (img && animOffset !== 'wave') {
+    const imgUrl = IMG_BASE + img;
+    const imgW = Math.round(imgH * 88 / 182);
+    const p = [];
+    p.push(`<ellipse cx="${cx}" cy="${groundY}" rx="26" ry="6" fill="rgba(0,0,0,.10)"/>`);
+    const imgEl = `<image href="${imgUrl}" x="${cx - imgW/2}" y="${groundY - imgH + imgYOffset}" width="${imgW}" height="${imgH}" preserveAspectRatio="xMidYMax meet"/>`;
+    if (flip) {
+      p.push(`<g transform="translate(${cx * 2}, 0) scale(-1, 1)">${imgEl}</g>`);
+    } else {
+      p.push(imgEl);
+    }
+    return `<g><animateTransform attributeName="transform" type="translate" values="0,0; 0,-5; 0,0" dur="2.6s" begin="${bobBegin}" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>${p.join('')}</g>`;
+  }
+
+  const sk = skin(cfg.name || '');
+  const hR=28, bH=62, bW=50, lH=58, lW=19, aH=44, aW=12;
+  const fY=groundY, lT=fY-lH, bT=lT-bH, hY=bT-hR-3;
+  const p = [];
+  p.push(`<ellipse cx="${cx}" cy="${fY}" rx="26" ry="6" fill="rgba(0,0,0,.08)"/>`);
+  p.push(`<rect x="${cx-lW-2}" y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
+  p.push(`<rect x="${cx+2}"    y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
+  p.push(`<ellipse cx="${cx-lW*.5-1}" cy="${fY}" rx="13" ry="6" fill="#333"/>`);
+  p.push(`<ellipse cx="${cx+lW*.5+1}" cy="${fY}" rx="13" ry="6" fill="#333"/>`);
+  p.push(`<rect x="${cx-bW*.5-aW}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
+  p.push(`<circle cx="${cx-bW*.5-aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>`);
+  if (animOffset === 'wave') {
+    const pvX = (cx+bW*.5+aW*.5).toFixed(1), pvY = (bT+8).toFixed(1);
+    p.push(`<g><animateTransform attributeName="transform" type="rotate" values="-35 ${pvX} ${pvY}; 40 ${pvX} ${pvY}; -35 ${pvX} ${pvY}" dur="0.85s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+      <rect x="${cx+bW*.5}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>
+      <circle cx="${cx+bW*.5+aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>
+    </g>`);
+  } else {
+    p.push(`<rect x="${cx+bW*.5}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
+    p.push(`<circle cx="${cx+bW*.5+aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>`);
+  }
+  p.push(`<rect x="${cx-bW*.5}" y="${bT}" width="${bW}" height="${bH}" rx="10" fill="${shirt}"/>`);
+  p.push(`<path d="M${cx-9},${bT} Q${cx},${bT+13} ${cx+9},${bT}" fill="white" opacity=".2"/>`);
+  p.push(`<circle cx="${cx}" cy="${hY}" r="${hR}" fill="${sk}"/>`);
+  if (style==='short') {
+    p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
+  } else if (style==='long') {
+    p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
+    p.push(`<rect x="${cx-hR-1}" y="${hY-6}" width="13" height="40" rx="6" fill="${hair}"/>`);
+    p.push(`<rect x="${cx+hR-12}" y="${hY-6}" width="13" height="40" rx="6" fill="${hair}"/>`);
+  } else if (style==='pigtails') {
+    p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
+    p.push(`<circle cx="${cx-hR-5}" cy="${hY-3}" r="10" fill="${hair}"/>`);
+    p.push(`<circle cx="${cx+hR+5}" cy="${hY-3}" r="10" fill="${hair}"/>`);
+    p.push(`<line x1="${cx-hR+1}" y1="${hY-1}" x2="${cx-hR-5}" y2="${hY-3}" stroke="${hair}" stroke-width="5"/>`);
+    p.push(`<line x1="${cx+hR-1}" y1="${hY-1}" x2="${cx+hR+5}" y2="${hY-3}" stroke="${hair}" stroke-width="5"/>`);
+  }
+  p.push(`<path d="M${cx-14},${hY-2} Q${cx-8},${hY-12} ${cx-2},${hY-2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
+  p.push(`<path d="M${cx+2},${hY-2} Q${cx+8},${hY-12} ${cx+14},${hY-2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
+  p.push(`<path d="M${cx-10},${hY+9} Q${cx},${hY+19} ${cx+10},${hY+9}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
+  p.push(`<circle cx="${cx-17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
+  p.push(`<circle cx="${cx+17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
+  return `<g><animateTransform attributeName="transform" type="translate" values="0,0; 0,-5; 0,0" dur="2.6s" begin="${bobBegin}" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>${p.join('')}</g>`;
+}
+
+// ── SCENE BACKGROUNDS ──────────────────────────────────
+const SCENE_BACKGROUNDS = {
+
+  // ── ALIEN SCENES ──────────────────────────────────────
+
+  alien_home: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#0D0B1E"/>
+  <path d="M0 300 L0 115 Q0 18 300 14 Q600 18 600 115 L600 300 Z" fill="#1A1540"/>
+  <path d="M45 300 L45 130 Q45 56 300 52 Q555 56 555 130 L555 300 Z" fill="#1E1848"/>
+  <circle cx="300" cy="46" r="12" fill="#4ECDC4" opacity=".85"><animate attributeName="opacity" values=".6;1;.6" dur="2.5s" repeatCount="indefinite"/></circle>
+  <ellipse cx="300" cy="54" rx="55" ry="18" fill="#4ECDC4" opacity=".09"><animate attributeName="rx" values="50;66;50" dur="2.5s" repeatCount="indefinite"/></ellipse>
+  <circle cx="160" cy="68" r="6" fill="#9B5DE5" opacity=".7"><animate attributeName="opacity" values=".5;.9;.5" dur="3.1s" repeatCount="indefinite"/></circle>
+  <circle cx="440" cy="68" r="6" fill="#FF6EC7" opacity=".7"><animate attributeName="opacity" values=".7;1;.7" dur="2.7s" repeatCount="indefinite"/></circle>
+  <rect x="0" y="210" width="600" height="90" fill="#100C28"/>
+  <path d="M0 210 H600" stroke="#4ECDC4" stroke-width="2.5" opacity=".65"/>
+  <ellipse cx="300" cy="212" rx="260" ry="9" fill="#4ECDC4" opacity=".06"/>
+  <line x1="72" y1="210" x2="72" y2="138" stroke="#4ECDC4" stroke-width="4" stroke-linecap="round"/>
+  <line x1="72" y1="168" x2="52" y2="148" stroke="#4ECDC4" stroke-width="3" stroke-linecap="round"/>
+  <line x1="72" y1="160" x2="95" y2="144" stroke="#4ECDC4" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="72" cy="130" r="16" fill="#4ECDC4" opacity=".75"><animate attributeName="opacity" values=".55;.88;.55" dur="2.2s" repeatCount="indefinite"/></circle>
+  <circle cx="52" cy="142" r="10" fill="#7EDBFF" opacity=".6"><animate attributeName="opacity" values=".45;.82;.45" dur="2.7s" repeatCount="indefinite"/></circle>
+  <circle cx="95" cy="140" r="10" fill="#9B5DE5" opacity=".6"><animate attributeName="opacity" values=".6;.92;.6" dur="1.9s" repeatCount="indefinite"/></circle>
+  <line x1="528" y1="210" x2="528" y2="138" stroke="#FF6EC7" stroke-width="4" stroke-linecap="round"/>
+  <line x1="528" y1="168" x2="508" y2="148" stroke="#FF6EC7" stroke-width="3" stroke-linecap="round"/>
+  <line x1="528" y1="160" x2="551" y2="144" stroke="#FF6EC7" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="528" cy="130" r="16" fill="#FF6EC7" opacity=".75"><animate attributeName="opacity" values=".6;.88;.6" dur="2.3s" repeatCount="indefinite"/></circle>
+  <circle cx="508" cy="142" r="10" fill="#FFD84D" opacity=".6"><animate attributeName="opacity" values=".5;.82;.5" dur="2.0s" repeatCount="indefinite"/></circle>
+  <circle cx="551" cy="140" r="10" fill="#4ECDC4" opacity=".6"><animate attributeName="opacity" values=".6;.88;.6" dur="2.9s" repeatCount="indefinite"/></circle>
+  <ellipse cx="300" cy="220" rx="36" ry="9" fill="#4ECDC4" opacity=".18"/>
+  <path d="M268 212 Q300 226 332 212 Q330 202 300 200 Q270 202 268 212 Z" fill="#100C28" stroke="#4ECDC4" stroke-width="2.5"/>
+  <circle cx="287" cy="207" r="4.5" fill="#FFD84D"><animate attributeName="opacity" values=".8;1;.8" dur="1.5s" repeatCount="indefinite"/></circle>
+  <circle cx="300" cy="205" r="4.5" fill="#FF6EC7"><animate attributeName="opacity" values="1;.7;1" dur="1.8s" repeatCount="indefinite"/></circle>
+  <circle cx="313" cy="207" r="4.5" fill="#7EDBFF"><animate attributeName="opacity" values=".9;1;.9" dur="1.3s" repeatCount="indefinite"/></circle>
+  <path d="M48 196 H118 V178 H145" stroke="#4ECDC4" stroke-width="1.5" fill="none" opacity=".3" stroke-linecap="round"/>
+  <path d="M552 196 H482 V178 H455" stroke="#9B5DE5" stroke-width="1.5" fill="none" opacity=".3" stroke-linecap="round"/>
+  <rect x="254" y="70" width="92" height="58" rx="8" fill="#1E1848" stroke="#7B5EA7" stroke-width="2"/>
+  <circle cx="300" cy="97" r="14" fill="none" stroke="#4ECDC4" stroke-width="2.5" opacity=".7"/>
+  <path d="M292 97 Q300 85 308 97 Q300 109 292 97 Z" fill="#9B5DE5" opacity=".7"/>
+  <circle cx="200" cy="128" r="2" fill="#4ECDC4"><animate attributeName="cy" values="128;105;128" dur="4.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".4;0;.4" dur="4.5s" repeatCount="indefinite"/></circle>
+  <circle cx="400" cy="118" r="2" fill="#FF6EC7"><animate attributeName="cy" values="118;95;118" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".4;0;.4" dur="5s" repeatCount="indefinite"/></circle>
+  <circle cx="148" cy="152" r="1.5" fill="#FFD84D"><animate attributeName="cy" values="152;132;152" dur="3.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="3.8s" repeatCount="indefinite"/></circle>
+</svg>`,
+
+  alien_meadow: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#0D1B3E"/>
+  <circle cx="45" cy="22" r="1.5" fill="white" opacity=".8"/><circle cx="118" cy="14" r="1" fill="white" opacity=".6"/>
+  <circle cx="198" cy="28" r="1.5" fill="white" opacity=".7"/><circle cx="310" cy="18" r="1" fill="white" opacity=".9"/>
+  <circle cx="425" cy="32" r="1.5" fill="white" opacity=".6"/><circle cx="505" cy="16" r="1" fill="white" opacity=".8"/>
+  <circle cx="568" cy="38" r="1.5" fill="white" opacity=".7"/><circle cx="78" cy="58" r="1" fill="white" opacity=".5"/>
+  <circle cx="255" cy="42" r="1" fill="white" opacity=".7"/><circle cx="462" cy="54" r="1" fill="white" opacity=".6"/>
+  <circle cx="388" cy="12" r="1" fill="white" opacity=".55"/><circle cx="540" cy="55" r="1" fill="white" opacity=".65"/>
+  <circle cx="88" cy="56" r="38" fill="#E8D5A3"/>
+  <circle cx="78" cy="46" r="6" fill="#D4C090" opacity=".5"/>
+  <circle cx="99" cy="62" r="4" fill="#D4C090" opacity=".4"/>
+  <circle cx="516" cy="44" r="22" fill="#4ECDC4" opacity=".72"/>
+  <circle cx="510" cy="38" r="4.5" fill="#2ABFBD" opacity=".38"/>
+  <path d="M0 208 C90 193 195 213 300 200 C405 187 510 212 600 200 L600 300 L0 300 Z" fill="#1A3D2A"/>
+  <path d="M0 224 C85 210 168 228 255 215 C355 200 455 226 600 210 L600 300 L0 300 Z" fill="#12302A"/>
+  <path d="M0 208 H600" stroke="#4ECDC4" stroke-width="2" opacity=".38"/>
+  <line x1="88" y1="208" x2="88" y2="128" stroke="#4A2D6E" stroke-width="8" stroke-linecap="round"/>
+  <path d="M88 148 C68 132 52 112 40 92" stroke="#4A2D6E" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M88 158 C110 140 128 120 145 98" stroke="#4A2D6E" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <circle cx="55" cy="88" r="28" fill="#6B2D8E"/>
+  <circle cx="88" cy="100" r="38" fill="#8B3DB8"/>
+  <circle cx="122" cy="92" r="26" fill="#6B1D7E"/>
+  <circle cx="88" cy="80" r="22" fill="#9B5DE5"/>
+  <circle cx="70" cy="92" r="5" fill="#FF6EC7" opacity=".9"><animate attributeName="opacity" values=".7;1;.7" dur="1.8s" repeatCount="indefinite"/></circle>
+  <circle cx="98" cy="105" r="5" fill="#FFD84D" opacity=".9"><animate attributeName="opacity" values=".8;1;.8" dur="2.2s" repeatCount="indefinite"/></circle>
+  <circle cx="108" cy="88" r="4" fill="#7EDBFF" opacity=".9"><animate attributeName="opacity" values=".9;1;.9" dur="1.6s" repeatCount="indefinite"/></circle>
+  <line x1="510" y1="208" x2="510" y2="148" stroke="#2A4A6E" stroke-width="7" stroke-linecap="round"/>
+  <path d="M510 162 C488 147 472 130 456 110" stroke="#2A4A6E" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M510 167 C532 150 548 132 562 112" stroke="#2A4A6E" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <circle cx="458" cy="106" r="24" fill="#1E5E8E"/>
+  <circle cx="510" cy="120" r="34" fill="#2E6E9E"/>
+  <circle cx="560" cy="108" r="22" fill="#3E8EBE"/>
+  <circle cx="510" cy="100" r="18" fill="#4ECDC4" opacity=".75"/>
+  <circle cx="494" cy="114" r="4" fill="#FF6EC7" opacity=".9"><animate attributeName="opacity" values=".7;1;.7" dur="2.1s" repeatCount="indefinite"/></circle>
+  <circle cx="524" cy="110" r="4" fill="#FFD84D" opacity=".9"><animate attributeName="opacity" values=".8;1;.8" dur="1.9s" repeatCount="indefinite"/></circle>
+  <path d="M185 208 Q242 175 300 188 Q358 201 415 208" stroke="#4ECDC4" stroke-width="3" fill="none" opacity=".55" stroke-dasharray="9 5"/>
+  <path d="M200 204 Q258 167 300 178 Q342 189 400 204" stroke="#9B5DE5" stroke-width="2" fill="none" opacity=".45" stroke-dasharray="7 6"/>
+  <circle cx="242" cy="180" r="6" fill="#FFD84D"><animate attributeName="opacity" values=".7;1;.7" dur="2s" repeatCount="indefinite"/></circle>
+  <circle cx="300" cy="176" r="6" fill="#FF6EC7"><animate attributeName="opacity" values=".8;1;.8" dur="2.3s" repeatCount="indefinite"/></circle>
+  <circle cx="358" cy="182" r="6" fill="#7EDBFF"><animate attributeName="opacity" values=".75;1;.75" dur="1.8s" repeatCount="indefinite"/></circle>
+  <circle cx="148" cy="212" r="6" fill="#9B5DE5" opacity=".8"/>
+  <circle cx="338" cy="214" r="5" fill="#FF6EC7" opacity=".8"/>
+  <circle cx="460" cy="213" r="6" fill="#7EDBFF" opacity=".8"/>
+  <circle cx="555" cy="214" r="5" fill="#FFD84D" opacity=".7"/>
+  <circle cx="158" cy="158" r="2" fill="#FFD84D"><animate attributeName="cy" values="158;138;158" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="3s" repeatCount="indefinite"/></circle>
+  <circle cx="352" cy="148" r="2" fill="#4ECDC4"><animate attributeName="cy" values="148;128;148" dur="4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".7;0;.7" dur="4s" repeatCount="indefinite"/></circle>
+  <circle cx="442" cy="162" r="2" fill="#FF6EC7"><animate attributeName="cy" values="162;142;162" dur="3.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="3.5s" repeatCount="indefinite"/></circle>
+</svg>`,
+
+  trading_post: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#FFF0D0"/>
+  <circle cx="300" cy="34" r="28" fill="#FFD84D"/>
+  <g stroke="#FFBE00" stroke-width="3" stroke-linecap="round" opacity=".55">
+    <line x1="300" y1="0" x2="300" y2="9"/><line x1="323" y1="6" x2="317" y2="15"/>
+    <line x1="277" y1="6" x2="283" y2="15"/><line x1="338" y1="18" x2="330" y2="26"/>
+    <line x1="262" y1="18" x2="270" y2="26"/><line x1="343" y1="34" x2="332" y2="34"/>
+    <line x1="257" y1="34" x2="268" y2="34"/>
+  </g>
+  <rect x="0" y="210" width="600" height="90" fill="#D4A574"/>
+  <path d="M0 210 H600" stroke="#B8865A" stroke-width="3" opacity=".6"/>
+  <ellipse cx="300" cy="215" rx="210" ry="8" fill="#C49060" opacity=".3"/>
+  <rect x="28" y="118" width="158" height="92" rx="8" fill="#FF8FAB"/>
+  <rect x="35" y="125" width="144" height="78" rx="6" fill="#FFAFC4"/>
+  <path d="M20 118 L28 86 L186 86 L194 118 Z" fill="#E63980"/>
+  <path d="M20 118 Q47 103 74 118 Q101 103 128 118 Q155 103 182 118 Q188 103 194 118" stroke="#FF6EC7" stroke-width="3" fill="none"/>
+  <circle cx="72" cy="165" r="11" fill="#7EDBFF" stroke="#4ECDC4" stroke-width="2"/><circle cx="72" cy="165" r="6" fill="#4ECDC4"/>
+  <circle cx="107" cy="162" r="11" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/><circle cx="107" cy="162" r="6" fill="#F4C300"/>
+  <circle cx="142" cy="165" r="11" fill="#9B5DE5" stroke="#7B3DB5" stroke-width="2"/><circle cx="142" cy="165" r="6" fill="#8B3DB5"/>
+  <rect x="414" y="118" width="158" height="92" rx="8" fill="#88E0EF"/>
+  <rect x="421" y="125" width="144" height="78" rx="6" fill="#AAE8F5"/>
+  <path d="M406 118 L414 86 L572 86 L580 118 Z" fill="#4ECDC4"/>
+  <path d="M406 118 Q433 103 460 118 Q487 103 514 118 Q541 103 568 118 Q574 103 580 118" stroke="#7EDBFF" stroke-width="3" fill="none"/>
+  <polygon points="458,176 463,161 468,176" fill="#FF6EC7" stroke="#E84E9E" stroke-width="2"/>
+  <polygon points="490,176 495,161 500,176" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/>
+  <polygon points="522,176 527,161 532,176" fill="#6BCB77" stroke="#3E9F4E" stroke-width="2"/>
+  <line x1="300" y1="130" x2="300" y2="208" stroke="#C89B00" stroke-width="5" stroke-linecap="round"/>
+  <rect x="279" y="208" width="42" height="7" rx="3.5" fill="#C89B00"/>
+  <line x1="240" y1="145" x2="360" y2="145" stroke="#C89B00" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="300" cy="145" r="6" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/>
+  <line x1="240" y1="145" x2="230" y2="170" stroke="#C89B00" stroke-width="2"/>
+  <line x1="240" y1="145" x2="252" y2="170" stroke="#C89B00" stroke-width="2"/>
+  <path d="M228 170 Q241 177 254 170" stroke="#C89B00" stroke-width="2" fill="#FFD84D" opacity=".6"/>
+  <line x1="360" y1="145" x2="350" y2="170" stroke="#C89B00" stroke-width="2"/>
+  <line x1="360" y1="145" x2="372" y2="170" stroke="#C89B00" stroke-width="2"/>
+  <path d="M348 170 Q361 177 374 170" stroke="#C89B00" stroke-width="2" fill="#FFD84D" opacity=".6"/>
+  <circle cx="241" cy="167" r="4" fill="#FF6EC7"/><circle cx="250" cy="165" r="4" fill="#7EDBFF"/>
+  <circle cx="361" cy="167" r="4" fill="#FFD84D"/><circle cx="370" cy="165" r="4" fill="#9B5DE5"/>
+  <circle cx="300" cy="128" r="14" fill="#FFD84D" opacity=".88"><animate attributeName="opacity" values=".7;1;.7" dur="2s" repeatCount="indefinite"/></circle>
+  <circle cx="300" cy="128" r="22" fill="#FFD84D" opacity=".14"><animate attributeName="r" values="18;27;18" dur="2s" repeatCount="indefinite"/></circle>
+  <path d="M40 67 C120 54 180 74 300 61 C420 74 480 54 560 67" fill="none" stroke="#E63980" stroke-width="2.5" opacity=".55"/>
+  <path d="M60 71 L72 87 L84 71 Z" fill="#FFD84D" opacity=".8"/>
+  <path d="M122 67 L134 83 L146 67 Z" fill="#7EDBFF" opacity=".8"/>
+  <path d="M182 67 L194 83 L206 67 Z" fill="#9B5DE5" opacity=".8"/>
+  <path d="M394 67 L406 83 L418 67 Z" fill="#FFD84D" opacity=".8"/>
+  <path d="M456 67 L468 83 L480 67 Z" fill="#6BCB77" opacity=".8"/>
+  <path d="M518 67 L530 83 L542 67 Z" fill="#FF6EC7" opacity=".8"/>
+</svg>`,
+
+  throne_room: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#1A0E30"/>
+  <path d="M0 300 L0 80 Q0 30 60 30 L540 30 Q600 30 600 80 L600 300 Z" fill="#22194A" opacity=".7"/>
+  <rect x="0" y="196" width="268" height="14" rx="2" fill="#3A2868"/>
+  <rect x="0" y="184" width="248" height="12" rx="2" fill="#4A3878"/>
+  <rect x="0" y="172" width="236" height="12" rx="2" fill="#5A4888"/>
+  <path d="M0 172 H236" stroke="#9B5DE5" stroke-width="2.5" opacity=".7"/>
+  <ellipse cx="118" cy="173" rx="98" ry="7" fill="#9B5DE5" opacity=".1"/>
+  <path d="M236 172 L268 196 L268 210 L236 184 Z" fill="#3A2868"/>
+  <rect x="132" y="118" width="40" height="54" rx="4" fill="#6B4E97" stroke="#9B5DE5" stroke-width="2"/>
+  <path d="M148 172 L130 118 L172 118 Z" fill="#7B5EA7" stroke="#9B5DE5" stroke-width="2"/>
+  <circle cx="152" cy="112" r="11" fill="#FFD84D" opacity=".95"><animate attributeName="opacity" values=".78;1;.78" dur="1.5s" repeatCount="indefinite"/></circle>
+  <circle cx="152" cy="112" r="19" fill="#FFD84D" opacity=".13"><animate attributeName="r" values="15;22;15" dur="1.5s" repeatCount="indefinite"/></circle>
+  <rect x="128" y="148" width="10" height="24" rx="3" fill="#7B5EA7"/>
+  <rect x="166" y="148" width="10" height="24" rx="3" fill="#7B5EA7"/>
+  <rect x="0" y="210" width="600" height="90" fill="#1E1540"/>
+  <path d="M0 210 H600" stroke="#9B5DE5" stroke-width="2" opacity=".4"/>
+  <path d="M270 210 L278 132 L288 210 Z" fill="#4ECDC4" opacity=".42"/>
+  <path d="M278 132 L284 148 L286 162 L280 178 L276 172 L278 150 Z" fill="#7EDBFF" opacity=".55"/>
+  <path d="M18 75 Q30 62 42 75 Q50 92 30 106 Q10 92 18 75 Z" fill="#FFD84D" opacity=".72"><animate attributeName="opacity" values=".52;.92;.52" dur="2s" repeatCount="indefinite"/></path>
+  <rect x="358" y="78" width="16" height="132" rx="4" fill="#2A2050" stroke="#7B5EA7" stroke-width="1.5"/>
+  <ellipse cx="366" cy="78" rx="10" ry="6" fill="#3A3060"/>
+  <circle cx="366" cy="72" r="5" fill="#9B5DE5" opacity=".65"><animate attributeName="opacity" values=".45;.85;.45" dur="2.6s" repeatCount="indefinite"/></circle>
+  <rect x="500" y="88" width="16" height="122" rx="4" fill="#2A2050" stroke="#7B5EA7" stroke-width="1.5"/>
+  <ellipse cx="508" cy="88" rx="10" ry="6" fill="#3A3060"/>
+  <circle cx="508" cy="82" r="5" fill="#9B5DE5" opacity=".65"><animate attributeName="opacity" values=".6;1;.6" dur="3s" repeatCount="indefinite"/></circle>
+  <rect x="103" y="53" width="98" height="66" rx="4" fill="#2A1848" stroke="#9B5DE5" stroke-width="2"/>
+  <circle cx="152" cy="83" r="18" fill="none" stroke="#FFD84D" stroke-width="2" opacity=".8"/>
+  <path d="M144 83 L152 66 L160 83 L152 96 Z" fill="#FFD84D" opacity=".6"/>
+  <circle cx="320" cy="145" r="2" fill="#9B5DE5"><animate attributeName="cy" values="145;120;145" dur="4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="4s" repeatCount="indefinite"/></circle>
+  <circle cx="450" cy="162" r="1.5" fill="#4ECDC4"><animate attributeName="cy" values="162;137;162" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="5s" repeatCount="indefinite"/></circle>
+  <circle cx="415" cy="140" r="2" fill="#FF6EC7"><animate attributeName="cy" values="140;115;140" dur="3.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".55;0;.55" dur="3.8s" repeatCount="indefinite"/></circle>
+</svg>`,
+
+  crystal_cave: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#0A0A18"/>
+  <path d="M0 0 L0 62 Q42 92 52 62 Q62 96 82 60 Q102 93 122 56 Q142 91 162 59 Q178 89 198 56 Q218 87 238 59 Q254 86 274 56 Q292 85 312 56 Q330 83 350 53 Q370 83 390 56 Q407 86 427 59 Q447 89 467 56 Q484 89 504 63 Q524 93 544 63 Q560 91 577 66 Q591 93 600 61 L600 0 Z" fill="#1A1530"/>
+  <path d="M52 90 L52 108" stroke="#9B5DE5" stroke-width="2.2" opacity=".5" stroke-linecap="round"/>
+  <path d="M122 91 L122 110" stroke="#4ECDC4" stroke-width="2" opacity=".45" stroke-linecap="round"/>
+  <path d="M312 88 L312 107" stroke="#7EDBFF" stroke-width="2" opacity=".5" stroke-linecap="round"/>
+  <path d="M492 91 L492 109" stroke="#9B5DE5" stroke-width="2" opacity=".45" stroke-linecap="round"/>
+  <rect x="0" y="210" width="600" height="90" fill="#0D0D20"/>
+  <path d="M0 210 C60 205 120 215 180 210 C250 205 340 215 420 210 C490 205 550 215 600 210" stroke="#4ECDC4" stroke-width="2" fill="none" opacity=".35"/>
+  <g transform="translate(50,148)">
+    <path d="M0 62 L-9 20 L0 0 L9 20 Z" fill="#9B5DE5" opacity=".88"/>
+    <path d="M0 62 L-4 0 L4 0 Z" fill="#C09AFF" opacity=".45"/>
+    <path d="M15 60 L7 22 L17 4 L23 24 Z" fill="#7B4DC5" opacity=".88"/>
+    <path d="M-19 62 L-23 26 L-13 8 L-7 28 Z" fill="#A87AE0" opacity=".82"/>
+    <ellipse cx="2" cy="64" rx="18" ry="5" fill="#9B5DE5" opacity=".18"/>
+    <circle cx="0" cy="0" r="4" fill="#C09AFF" opacity=".82"><animate attributeName="opacity" values=".6;1;.6" dur="2.3s" repeatCount="indefinite"/></circle>
+    <circle cx="17" cy="4" r="3" fill="#7EDBFF" opacity=".82"><animate attributeName="opacity" values=".7;1;.7" dur="1.9s" repeatCount="indefinite"/></circle>
+  </g>
+  <g transform="translate(510,146)">
+    <path d="M0 64 L-9 22 L0 0 L9 22 Z" fill="#4ECDC4" opacity=".88"/>
+    <path d="M0 64 L-5 0 L5 0 Z" fill="#9BFFE8" opacity=".45"/>
+    <path d="M16 62 L8 24 L18 6 L24 26 Z" fill="#3ABFBC" opacity=".88"/>
+    <path d="M-20 64 L-24 28 L-14 10 L-8 30 Z" fill="#5ED8C8" opacity=".82"/>
+    <ellipse cx="2" cy="66" rx="20" ry="6" fill="#4ECDC4" opacity=".16"/>
+    <circle cx="0" cy="0" r="4" fill="#9BFFE8" opacity=".82"><animate attributeName="opacity" values=".6;1;.6" dur="2.1s" repeatCount="indefinite"/></circle>
+    <circle cx="18" cy="6" r="3" fill="#FFD84D" opacity=".82"><animate attributeName="opacity" values=".7;1;.7" dur="2.5s" repeatCount="indefinite"/></circle>
+  </g>
+  <path d="M278 210 L270 163 L278 145 L286 163 Z" fill="#FF6EC7" opacity=".55"/>
+  <path d="M300 210 L293 168 L301 152 L308 170 Z" fill="#9B5DE5" opacity=".52"/>
+  <path d="M322 210 L314 166 L324 150 L332 168 Z" fill="#4ECDC4" opacity=".55"/>
+  <ellipse cx="300" cy="210" rx="32" ry="5" fill="#FF6EC7" opacity=".1"/>
+  <ellipse cx="300" cy="219" rx="54" ry="12" fill="#4ECDC4" opacity=".13"/>
+  <ellipse cx="300" cy="219" rx="44" ry="9" fill="#7EDBFF" opacity=".1"><animate attributeName="rx" values="41;50;41" dur="3s" repeatCount="indefinite"/></ellipse>
+  <ellipse cx="50" cy="202" rx="42" ry="24" fill="#9B5DE5" opacity=".08"/>
+  <ellipse cx="550" cy="202" rx="42" ry="24" fill="#4ECDC4" opacity=".08"/>
+  <circle cx="180" cy="135" r="1.5" fill="#9B5DE5"><animate attributeName="cy" values="135;115;135" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="5s" repeatCount="indefinite"/></circle>
+  <circle cx="380" cy="125" r="1.5" fill="#4ECDC4"><animate attributeName="cy" values="125;105;125" dur="4.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="4.5s" repeatCount="indefinite"/></circle>
+  <circle cx="420" cy="140" r="1" fill="#FFD84D"><animate attributeName="cy" values="140;120;140" dur="3.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".7;0;.7" dur="3.8s" repeatCount="indefinite"/></circle>
+  <circle cx="240" cy="130" r="1.5" fill="#FF6EC7"><animate attributeName="cy" values="130;108;130" dur="4.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="4.2s" repeatCount="indefinite"/></circle>
+</svg>`,
+
+  // ── LEGACY SCENES (kept for fallback) ─────────────────
+
+  outdoor: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#7EDBFF"/>
+  <circle cx="520" cy="48" r="32" fill="#FFD84D"/>
+  <g opacity=".45"><circle cx="520" cy="48" r="42" fill="#FFE98A"><animate attributeName="r" values="38;44;38" dur="4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".35;.6;.35" dur="4s" repeatCount="indefinite"/></circle></g>
+  <g fill="#FFFFFF" opacity=".95"><g><animateTransform attributeName="transform" type="translate" values="-20 0;20 0;-20 0" dur="14s" repeatCount="indefinite"/><ellipse cx="95" cy="45" rx="32" ry="14"/><ellipse cx="122" cy="42" rx="25" ry="17"/><ellipse cx="148" cy="49" rx="34" ry="13"/></g><g><animateTransform attributeName="transform" type="translate" values="18 0;-18 0;18 0" dur="17s" repeatCount="indefinite"/><ellipse cx="335" cy="68" rx="30" ry="13"/><ellipse cx="365" cy="63" rx="26" ry="17"/><ellipse cx="392" cy="70" rx="36" ry="13"/></g></g>
+  <path d="M0 202 C75 188 135 207 210 195 C310 178 380 202 470 190 C535 181 575 193 600 187 L600 300 L0 300 Z" fill="#55C95A"/>
+  <path d="M0 220 C90 205 175 225 260 210 C360 193 470 222 600 205 L600 300 L0 300 Z" fill="#43B84D"/>
+  <path d="M0 212 H600" stroke="#2FA843" stroke-width="4" opacity=".55"/>
+  <g><ellipse cx="92" cy="222" rx="70" ry="15" fill="#2C8E3D" opacity=".25"/><path d="M76 79 C67 118 70 159 61 213 L120 213 C108 160 111 115 101 79 Z" fill="#8B542E"/><g fill="#2F9E44"><circle cx="76" cy="59" r="40"/><circle cx="114" cy="55" r="45"/><circle cx="47" cy="88" r="39"/><circle cx="95" cy="91" r="50"/><circle cx="144" cy="89" r="42"/><circle cx="121" cy="121" r="35"/><circle cx="58" cy="123" r="32"/></g></g>
+  <g opacity="0.88"><rect x="395" y="146" width="82" height="60" fill="#F4E4C8" stroke="#C4A882" stroke-width="2"/><polygon points="388,146 436,112 484,146" fill="#C0392B"/><rect x="422" y="178" width="20" height="30" rx="2" fill="#8B4513"/><rect x="400" y="156" width="18" height="16" rx="2" fill="#9BE7FF" stroke="#999" stroke-width="1"/><rect x="452" y="156" width="18" height="16" rx="2" fill="#9BE7FF" stroke="#999" stroke-width="1"/></g>
+  <g><animateTransform attributeName="transform" type="translate" values="-30 0;640 0;-30 0" dur="24s" repeatCount="indefinite" calcMode="linear"/><path d="M0 68 Q5 62 10 68 Q15 62 20 68" stroke="#556" stroke-width="2.2" fill="none" stroke-linecap="round"/></g>
+</svg>`,
+
+  playground: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#78D8FF"/><circle cx="520" cy="48" r="30" fill="#FFD84D"/>
+  <g fill="#FFFFFF" opacity=".95"><g><animateTransform attributeName="transform" type="translate" values="-18 0;18 0;-18 0" dur="15s" repeatCount="indefinite"/><ellipse cx="95" cy="45" rx="34" ry="14"/><ellipse cx="125" cy="40" rx="26" ry="18"/><ellipse cx="155" cy="48" rx="36" ry="13"/></g></g>
+  <path d="M0 204 C80 190 150 208 235 197 C320 186 395 204 485 193 C540 187 575 194 600 190 L600 300 L0 300 Z" fill="#5CCD5F"/><path d="M0 220 C100 207 190 225 285 211 C390 196 485 221 600 208 L600 300 L0 300 Z" fill="#45B94E"/>
+  <g stroke-linecap="round"><path d="M214 198 L258 82 L342 82 L386 198" fill="none" stroke="#4D6FEA" stroke-width="8"/><g><animateTransform attributeName="transform" type="rotate" values="-5 300 92;5 300 92;-5 300 92" dur="2.4s" repeatCount="indefinite"/><rect x="263" y="152" width="74" height="10" rx="5" fill="#FF9F1C" stroke="#D97800" stroke-width="2"/></g></g>
+  <g><path d="M463 108 C503 122 529 150 548 187" fill="none" stroke="#FF6B6B" stroke-width="12" stroke-linecap="round"/><path d="M455 109 H517 V123 H455 Z" fill="#8E61FF"/><path d="M517 123 V187 H535 V123 Z" fill="#6E45E8"/><path d="M442 187 H562" stroke="#3E9F4E" stroke-width="7" stroke-linecap="round"/></g>
+</svg>`,
+
+  home: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#FFE7B8"/><rect x="0" y="210" width="600" height="90" fill="#D79A62"/><rect x="38" y="38" width="524" height="172" rx="18" fill="#FFF4D8"/><rect x="58" y="58" width="484" height="132" rx="14" fill="#FFEFD0"/>
+  <g><rect x="74" y="74" width="86" height="74" rx="8" fill="#8EDBFF"/><path d="M117 74 V148 M74 111 H160" stroke="#FFFFFF" stroke-width="5"/></g>
+  <g><rect x="430" y="72" width="86" height="78" rx="8" fill="#8EDBFF"/><path d="M473 72 V150 M430 111 H516" stroke="#FFFFFF" stroke-width="5"/></g>
+  <g><rect x="218" y="70" width="164" height="76" rx="12" fill="#A8754B"/><rect x="226" y="78" width="148" height="60" rx="8" fill="#9BE7FF"/></g>
+  <g><rect x="178" y="151" width="244" height="54" rx="24" fill="#FF7A90"/><rect x="152" y="170" width="58" height="52" rx="18" fill="#FF5C7A"/><rect x="390" y="170" width="58" height="52" rx="18" fill="#FF5C7A"/></g>
+</svg>`,
+
+  school: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#FFF3C4"/><rect x="0" y="210" width="600" height="90" fill="#D8A56D"/>
+  <g><rect x="160" y="42" width="280" height="116" rx="12" fill="#8B5E3C"/><rect x="170" y="50" width="260" height="100" rx="10" fill="#43A047"/><rect x="180" y="150" width="240" height="8" rx="4" fill="#C48A57"/></g>
+  <g><rect x="60" y="60" width="90" height="80" rx="8" fill="#8EDBFF"/><path d="M105 60 V140 M60 100 H150" stroke="#FFFFFF" stroke-width="5"/></g>
+  <g opacity=".95"><rect x="60" y="180" width="110" height="25" rx="6" fill="#F4A261"/><rect x="430" y="180" width="110" height="25" rx="6" fill="#F4A261"/></g>
+</svg>`,
+
+  cafeteria: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#E6F4FF"/><rect x="0" y="210" width="600" height="90" fill="#C7D3DD"/>
+  <g><rect x="70" y="120" width="460" height="60" rx="14" fill="#FF8FA3"/><rect x="70" y="165" width="460" height="20" fill="#FF758F"/></g>
+  <g><circle cx="130" cy="105" r="20" fill="#FFD166"/><circle cx="200" cy="105" r="14" fill="#E63946"/><rect x="310" y="95" width="40" height="20" rx="5" fill="#F4A261"/><circle cx="460" cy="105" r="16" fill="#C0895B"/></g>
+  <g opacity=".95"><rect x="40" y="195" width="110" height="18" rx="8" fill="#6BCB77"/><rect x="450" y="195" width="110" height="18" rx="8" fill="#6BCB77"/></g>
+</svg>`,
+
+  birthday: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#FFE3F1"/><rect x="0" y="210" width="600" height="90" fill="#C7B8FF"/>
+  <g><path d="M40 38 C120 72 190 20 270 52 C350 84 430 22 560 46" fill="none" stroke="#FF6B6B" stroke-width="5"/><path d="M60 48 L82 78 L104 48 Z" fill="#FFD84D"/><path d="M270 56 L292 86 L314 56 Z" fill="#FF6EC7"/></g>
+  <g><rect x="235" y="170" width="130" height="18" rx="9" fill="#A8754B"/><rect x="250" y="145" width="100" height="34" rx="8" fill="#FF8FAB"/><rect x="265" y="121" width="70" height="30" rx="8" fill="#FFD166"/></g>
+</svg>`,
+
+  icecream: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#BDEBFF"/><rect x="0" y="210" width="600" height="90" fill="#9BE070"/>
+  <rect x="95" y="92" width="410" height="118" rx="18" fill="#FFF4C7"/><path d="M75 100 L300 38 L525 100 Z" fill="#FF8FAB"/>
+  <g><circle cx="300" cy="58" r="30" fill="#FFFFFF"/><circle cx="300" cy="44" r="14" fill="#FF8FAB"/><circle cx="288" cy="52" r="12" fill="#FFD166"/><circle cx="312" cy="52" r="12" fill="#8EDBFF"/></g>
+</svg>`,
+
+  treehouse: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#8EDBFF"/><circle cx="520" cy="48" r="30" fill="#FFD84D"/><rect x="0" y="210" width="600" height="90" fill="#55C95A"/>
+  <g><path d="M270 78 C260 125 265 168 250 220 H350 C335 165 340 120 330 78 Z" fill="#8B542E"/><g fill="#2F9E44"><circle cx="260" cy="55" r="45"/><circle cx="340" cy="55" r="45"/><circle cx="300" cy="85" r="60"/></g></g>
+  <g><rect x="240" y="90" width="120" height="80" rx="10" fill="#B87935"/><path d="M230 94 L300 50 L370 94 Z" fill="#A75B2B"/><rect x="288" y="120" width="24" height="50" rx="6" fill="#6B3F25"/></g>
+</svg>`,
+
+  garden: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#8EDBFF"/><circle cx="520" cy="48" r="30" fill="#FFD84D"/><rect x="0" y="210" width="600" height="90" fill="#65C95F"/>
+  <path d="M0 210 C80 196 170 218 260 204 C360 188 470 220 600 202 L600 300 L0 300 Z" fill="#4DB84E"/>
+  <g><path d="M180 170 H420 L390 230 H210 Z" fill="#8B542E"/></g>
+  <g><g><animateTransform attributeName="transform" type="rotate" values="-3 300 168;3 300 168;-3 300 168" dur="2.8s" repeatCount="indefinite"/><path d="M300 168 V216" stroke="#2E7D32" stroke-width="5" stroke-linecap="round"/><circle cx="300" cy="160" r="8" fill="#FFD84D"/><circle cx="288" cy="160" r="8" fill="#6BCB77"/><circle cx="312" cy="160" r="8" fill="#6BCB77"/></g></g>
+</svg>`
+};
+
+// ── QUESTION ILLUSTRATIONS ─────────────────────────────
+const QUESTION_ILLUSTRATIONS = {
+  share_food: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#FFF1C9"/><circle cx="140" cy="56" r="40" fill="#FFFFFF"/><circle cx="140" cy="56" r="31" fill="#E8F7FF"/><g fill="none" stroke="#F4A261" stroke-width="4" stroke-linecap="round"><path d="M116 57 q10 -18 28 -8 q18 10 3 22 q-13 10 -27 0 q-13 -10 1 -22"/><path d="M125 49 q19 -12 33 3 q12 13 -5 24 q-17 10 -33 -3"/></g><circle cx="132" cy="58" r="5" fill="#D94B38"/><circle cx="151" cy="64" r="5" fill="#D94B38"/><g fill="#C8D6E5" stroke="#6E7F8D" stroke-width="1.3" stroke-linejoin="round"><g transform="rotate(-18 72 73)"><rect x="68" y="26" width="8" height="49" rx="4"/><rect x="64" y="71" width="16" height="10" rx="3"/></g><g transform="rotate(18 208 73)"><rect x="204" y="26" width="8" height="49" rx="4"/><rect x="200" y="71" width="16" height="10" rx="3"/></g></g></svg>`,
+  birthday: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#FFE3F1"/><ellipse cx="140" cy="84" rx="72" ry="10" fill="#C8A27A" opacity=".3"/><rect x="80" y="60" width="120" height="24" rx="8" fill="#FF8FAB"/><path d="M80 60 H200 V68 q-10 8 -20 0 q-10 -8 -20 0 q-10 8 -20 0 q-10 -8 -20 0 q-10 8 -20 0 q-10 -8 -20 0 Z" fill="#FFFFFF"/><rect x="100" y="40" width="80" height="24" rx="8" fill="#FFD166"/><rect x="115" y="26" width="6" height="14" rx="3" fill="#4D96FF"/><rect x="137" y="26" width="6" height="14" rx="3" fill="#6BCB77"/><rect x="159" y="26" width="6" height="14" rx="3" fill="#FF6B6B"/><path d="M118 22 q3 -7 6 0 q-3 4 -6 0" fill="#FFD84D"><animate attributeName="opacity" values=".5;1;.5" dur=".8s" repeatCount="indefinite"/></path><path d="M140 22 q3 -7 6 0 q-3 4 -6 0" fill="#FFD84D"><animate attributeName="opacity" values="1;.5;1" dur=".9s" repeatCount="indefinite"/></path><path d="M162 22 q3 -7 6 0 q-3 4 -6 0" fill="#FFD84D"><animate attributeName="opacity" values=".6;1;.6" dur=".7s" repeatCount="indefinite"/></path></svg>`,
+  hurt: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#EAF4FF"/><g transform="rotate(-15 90 54)"><rect x="60" y="44" width="60" height="20" rx="8" fill="#FFD9A0" stroke="#D9A066" stroke-width="2"/><rect x="82" y="46" width="16" height="16" rx="4" fill="#F4C27A"/><g fill="#D9A066" opacity=".7"><circle cx="86" cy="50" r="1.2"/><circle cx="92" cy="50" r="1.2"/><circle cx="86" cy="56" r="1.2"/><circle cx="92" cy="56" r="1.2"/></g></g><g transform="rotate(15 190 54)"><rect x="160" y="44" width="60" height="20" rx="8" fill="#FFD9A0" stroke="#D9A066" stroke-width="2"/><rect x="182" y="46" width="16" height="16" rx="4" fill="#F4C27A"/></g></svg>`,
+  balance: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#F0F7FF"/><rect x="70" y="72" width="140" height="12" rx="6" fill="#8EDBFF"/><rect x="82" y="84" width="10" height="18" rx="3" fill="#4D96FF"/><rect x="188" y="84" width="10" height="18" rx="3" fill="#4D96FF"/><g fill="#FFD166" stroke="#C89B00" stroke-width="2"><rect x="94" y="52" width="30" height="8" rx="2"/><rect x="94" y="61" width="30" height="8" rx="2"/><rect x="94" y="43" width="30" height="8" rx="2"/><rect x="156" y="52" width="30" height="8" rx="2"/><rect x="156" y="61" width="30" height="8" rx="2"/><rect x="156" y="43" width="30" height="8" rx="2"/></g><g stroke="#333" stroke-width="4" stroke-linecap="round" fill="#333"><circle cx="55" cy="48" r="10"/><line x1="55" y1="58" x2="55" y2="78"/><line x1="55" y1="66" x2="75" y2="58"/><circle cx="225" cy="48" r="10"/><line x1="225" y1="58" x2="225" y2="78"/><line x1="225" y1="66" x2="205" y2="58"/></g></svg>`,
+  boss: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#F0F7FF"/><g stroke="#333" stroke-width="5" stroke-linecap="round" fill="#333"><circle cx="95" cy="38" r="12"/><line x1="95" y1="50" x2="95" y2="72"/><line x1="95" y1="72" x2="82" y2="90"/><line x1="95" y1="72" x2="108" y2="90"/><line x1="95" y1="58" x2="82" y2="62"/><line x1="95" y1="58" x2="108" y2="62"/></g><path d="M82 18 L88 8 L92 16 L96 8 L100 16 L104 8 L110 18 L110 22 L82 22 Z" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/><g stroke="#777" stroke-width="5" stroke-linecap="round" fill="#777"><circle cx="190" cy="38" r="12"/><line x1="190" y1="50" x2="190" y2="72"/><line x1="190" y1="72" x2="178" y2="90"/><line x1="190" y1="72" x2="202" y2="90"/><line x1="190" y1="58" x2="178" y2="72"/><line x1="190" y1="58" x2="202" y2="72"/></g></svg>`,
+  interrupt: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#EAF4FF"/><path d="M52 28 H142 q14 0 14 14 V60 q0 14 -14 14 H95 l-22 16 6 -16 H52 q-14 0 -14 -14 V42 q0 -14 14 -14 Z" fill="#FFFFFF" stroke="#4D96FF" stroke-width="4"/><circle cx="78" cy="52" r="5" fill="#4D96FF"/><circle cx="98" cy="52" r="5" fill="#4D96FF"/><circle cx="118" cy="52" r="5" fill="#4D96FF"/><g transform="rotate(-8 178 50)"><path d="M138 22 H226 q14 0 14 14 V58 q0 14 -14 14 H196 l-8 18 -12 -18 H138 q-14 0 -14 -14 V36 q0 -14 14 -14 Z" fill="#FFE066" stroke="#FF6B6B" stroke-width="5"/><path d="M181 34 V53" stroke="#E63946" stroke-width="6" stroke-linecap="round"/><circle cx="181" cy="62" r="4" fill="#E63946"/><path d="M204 34 V53" stroke="#E63946" stroke-width="6" stroke-linecap="round"/><circle cx="204" cy="62" r="4" fill="#E63946"/></g><g stroke="#E63946" stroke-width="4" stroke-linecap="round"><line x1="132" y1="22" x2="121" y2="12"/><line x1="145" y1="20" x2="145" y2="8"/><line x1="158" y1="23" x2="169" y2="13"/></g></svg>`,
+  trophy: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#FFF4C7"/><ellipse cx="140" cy="88" rx="40" ry="8" fill="#C8A27A" opacity=".25"/><path d="M110 30 H170 Q165 60 140 65 Q115 60 110 30 Z" fill="#FFD84D" stroke="#C89B00" stroke-width="3"/><rect x="110" y="26" width="60" height="8" rx="4" fill="#FFC300"/><path d="M110 35 Q90 45 105 60" fill="none" stroke="#C89B00" stroke-width="4" stroke-linecap="round"/><path d="M170 35 Q190 45 175 60" fill="none" stroke="#C89B00" stroke-width="4" stroke-linecap="round"/><rect x="134" y="65" width="12" height="10" fill="#FFC300"/><rect x="120" y="75" width="40" height="10" rx="3" fill="#333"/><polygon points="140,40 144,50 155,50 146,56 149,66 140,60 131,66 134,56 125,50 136,50" fill="#FFFFFF"/></svg>`,
+  coins: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#FFF4C7"/><g><ellipse cx="100" cy="72" rx="24" ry="8" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/><ellipse cx="100" cy="64" rx="24" ry="8" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/><ellipse cx="100" cy="56" rx="24" ry="8" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/></g><g><ellipse cx="180" cy="72" rx="24" ry="8" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/><ellipse cx="180" cy="64" rx="24" ry="8" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/><ellipse cx="180" cy="56" rx="24" ry="8" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/></g></svg>`,
+  computer: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#EAF4FF"/><rect x="90" y="28" width="100" height="50" rx="8" fill="#333"/><rect x="95" y="33" width="90" height="40" rx="4" fill="#8EDBFF"/><circle cx="140" cy="53" r="12" fill="#FFFFFF" stroke="#333" stroke-width="2"/><line x1="140" y1="53" x2="140" y2="46" stroke="#333" stroke-width="2" stroke-linecap="round"/><line x1="140" y1="53" x2="147" y2="53" stroke="#333" stroke-width="2" stroke-linecap="round"/><rect x="80" y="78" width="120" height="8" rx="4" fill="#555"/><g stroke="#333" stroke-width="4" stroke-linecap="round" fill="none"><circle cx="55" cy="50" r="8" fill="#333"/><line x1="55" y1="58" x2="55" y2="74"/><line x1="55" y1="62" x2="75" y2="58"/><line x1="55" y1="62" x2="35" y2="58"/><line x1="55" y1="74" x2="45" y2="88"/><line x1="55" y1="74" x2="65" y2="88"/><circle cx="225" cy="50" r="8" fill="#333"/><line x1="225" y1="58" x2="225" y2="74"/><line x1="225" y1="62" x2="205" y2="58"/><line x1="225" y1="62" x2="245" y2="58"/><line x1="225" y1="74" x2="215" y2="88"/><line x1="225" y1="74" x2="235" y2="88"/></g></svg>`,
+  feedback: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#FFF0F3"/><g stroke="#333" stroke-width="4" stroke-linecap="round" fill="none"><circle cx="70" cy="45" r="12" fill="#333"/><line x1="70" y1="57" x2="70" y2="78"/><line x1="70" y1="65" x2="85" y2="75"/><line x1="70" y1="65" x2="55" y2="75"/><line x1="70" y1="78" x2="60" y2="92"/><line x1="70" y1="78" x2="80" y2="92"/></g><path d="M95 20 H165 q10 0 10 10 V50 q0 10 -10 10 H125 l-12 12 3 -12 H95 q-10 0 -10 -10 V30 q0 -10 10 -10 Z" fill="#FFFFFF" stroke="#FF6B6B" stroke-width="4"/><path d="M105 35 q10 -10 20 0 q10 10 20 0 q10 -10 20 0" stroke="#E63946" stroke-width="4" fill="none" stroke-linecap="round"/><g stroke="#333" stroke-width="4" stroke-linecap="round" fill="none"><circle cx="210" cy="45" r="12" fill="#333"/><line x1="210" y1="57" x2="210" y2="78"/><line x1="210" y1="60" x2="198" y2="72"/><line x1="210" y1="60" x2="222" y2="72"/><line x1="210" y1="78" x2="200" y2="92"/><line x1="210" y1="78" x2="220" y2="92"/></g></svg>`,
+  painting: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#F0F7FF"/><rect x="80" y="20" width="120" height="60" rx="6" fill="#8B5E3C"/><rect x="88" y="28" width="104" height="44" rx="4" fill="#FFFFFF"/><circle cx="120" cy="46" r="8" fill="#FFD84D"/><path d="M88 60 Q120 40 152 60 Q180 45 192 60 V72 H88 Z" fill="#6BCB77"/><g stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"><path d="M162 66 q6 -4 10 0 q4 4 8 0"/></g><rect x="110" y="82" width="60" height="10" rx="3" fill="#C89B00"/></svg>`,
+  stickers: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#FFF4C7"/><g stroke-width="2"><polygon points="116,16 121,27 133,28 124,36 127,48 116,42 105,48 108,36 99,28 111,27" fill="#FFD84D" stroke="#E0A800"/><circle cx="143" cy="30" r="13" fill="#FF8FAB" stroke="#D94B75"/><rect x="178" y="19" width="25" height="25" rx="6" fill="#8EDBFF" stroke="#4D96FF"/></g><circle cx="82" cy="72" r="27" fill="#FFFFFF"/><circle cx="82" cy="72" r="20" fill="#E8F7FF"/><circle cx="198" cy="72" r="27" fill="#FFFFFF"/><circle cx="198" cy="72" r="20" fill="#E8F7FF"/><g stroke-width="2"><polygon points="82,53 86,62 96,63 89,69 91,79 82,74 73,79 75,69 68,63 78,62" fill="#FFD84D" stroke="#E0A800"/><circle cx="68" cy="78" r="8" fill="#FF8FAB" stroke="#D94B75"/><polygon points="198,53 202,62 212,63 205,69 207,79 198,74 189,79 191,69 184,63 194,62" fill="#FFD84D" stroke="#E0A800"/><circle cx="184" cy="78" r="8" fill="#FF8FAB" stroke="#D94B75"/></g></svg>`,
+  forever: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#FFE3F1"/><path d="M120 38 C120 26 104 22 96 32 C88 22 72 26 72 38 C72 56 96 72 96 72 C96 72 120 56 120 38 Z" fill="#FF6B6B"/><path d="M168 38 C168 26 152 22 144 32 C136 22 120 26 120 38 C120 56 144 72 144 72 C144 72 168 56 168 38 Z" fill="#FF8FAB"/></svg>`,
+  coin: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#FFF4C7"/><g transform="translate(70,30) scale(0.7)" fill="none" stroke="#333" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><rect x="0" y="40" width="20" height="45"/><path d="M20 45 H55 C65 35 70 20 72 10 C73 5 82 6 86 14 C90 23 85 35 80 45 H120 C128 45 132 50 132 55 C132 60 128 65 120 65 H108 C115 65 120 70 120 75 C120 80 115 85 108 85 H98 C104 85 108 90 108 95 C108 100 103 105 96 105 H75 L20 95 Z"/></g><circle cx="165" cy="24" r="12" fill="#FFD84D" stroke="#C89B00" stroke-width="3"/><circle cx="165" cy="24" r="9" fill="none" stroke="#C89B00" stroke-width="2"/></svg>`,
+  scooter: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#EAF4FF"/><g fill="none" stroke="#333" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><line x1="92" y1="72" x2="178" y2="72"/><line x1="166" y1="72" x2="190" y2="34"/><line x1="178" y1="34" x2="204" y2="34"/><line x1="190" y1="34" x2="190" y2="72"/></g><g fill="#FFFFFF" stroke="#333" stroke-width="4"><circle cx="96" cy="80" r="10"/><circle cx="176" cy="80" r="10"/></g><rect x="92" y="66" width="86" height="10" rx="5" fill="#6BCB77"/></svg>`,
+  garden: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#E6F7E8"/><rect x="0" y="72" width="280" height="36" fill="#B8E994"/><g stroke="#2E7D32" stroke-width="3" stroke-linecap="round"><g><animateTransform attributeName="transform" type="rotate" values="-3 50 72;3 50 72;-3 50 72" dur="2.5s" repeatCount="indefinite"/><line x1="50" y1="72" x2="50" y2="90"/><circle cx="50" cy="66" r="5" fill="#FFD84D"/><circle cx="44" cy="66" r="5" fill="#FF6EC7"/><circle cx="56" cy="66" r="5" fill="#FF6EC7"/></g><g><animateTransform attributeName="transform" type="rotate" values="3 140 72;-3 140 72;3 140 72" dur="2.6s" repeatCount="indefinite"/><line x1="140" y1="72" x2="140" y2="90"/><circle cx="140" cy="66" r="5" fill="#FFD84D"/><circle cx="134" cy="66" r="5" fill="#4D96FF"/><circle cx="146" cy="66" r="5" fill="#4D96FF"/></g><g><animateTransform attributeName="transform" type="rotate" values="-2 230 72;2 230 72;-2 230 72" dur="2.7s" repeatCount="indefinite"/><line x1="230" y1="72" x2="230" y2="90"/><circle cx="230" cy="66" r="5" fill="#FFD84D"/><circle cx="224" cy="66" r="5" fill="#FFD166"/><circle cx="236" cy="66" r="5" fill="#FFD166"/></g></g></svg>`
+};
+
+// ── CHAR POSITIONS ─────────────────────────────────────
+const CHAR_POS = {
+  // alien scenes
+  alien_home:   { x: [170, 430], gy: 216, h: 182, yo: 35 },
+  alien_meadow: { x: [162, 438], gy: 213, h: 182, yo: 35 },
+  trading_post: { x: [148, 452], gy: 213, h: 165, yo: 30 },
+  throne_room:  { x: [172, 432], gy: [185, 216], h: 165, yo: 28 },
+  crystal_cave: { x: [155, 445], gy: 213, h: 182, yo: 35 },
+  // legacy scenes
+  outdoor:    { x: [185, 432], gy: 216, h: 182, yo: 35 },
+  playground: { x: [128, 418], gy: 216, h: 182, yo: 35 },
+  home:       { x: [112, 458], gy: 216, h: 165, yo: 30 },
+  school:     { x: [88,  502], gy: 220, h: 155, yo: 28 },
+  cafeteria:  { x: [102, 478], gy: 216, h: 165, yo: 30 },
+  birthday:   { x: [88,  492], gy: 216, h: 182, yo: 35 },
+  icecream:   { x: [58,  512], gy: 216, h: 182, yo: 35 },
+  treehouse:  { x: [108, 458], gy: 216, h: 182, yo: 35 },
+  garden:     { x: [88,  492], gy: 216, h: 182, yo: 35 }
+};
+
+// ── SVG COMPOSITION ────────────────────────────────────
+function svgInner(str) {
+  return str.replace(/<svg[^>]*>/i, '').replace(/<\/svg>\s*$/i, '');
+}
+function bgSVG(scene) {
+  return svgInner(SCENE_BACKGROUNDS[scene] || SCENE_BACKGROUNDS.outdoor);
+}
+
+// ── SCENE SVG (supports array gy for throne_room) ──────
+function sceneSVG(v) {
+  const pos = CHAR_POS[v.scene] || { x:[155,445], gy:GY, h:182, yo:35 };
+  const [c1x, c2x] = pos.x;
+  const gys = Array.isArray(pos.gy) ? pos.gy : [pos.gy, pos.gy];
+  const { h, yo } = pos;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;display:block">
+    ${bgSVG(v.scene)}
+    ${kidSVG(c1x, gys[0], v.char1, '0s',   true,  h, yo)}
+    ${kidSVG(c2x, gys[1], v.char2, '1.3s', false, h, yo)}
+  </svg>`;
+}
+
+function qIllustSVG(type) {
+  return QUESTION_ILLUSTRATIONS[type] || QUESTION_ILLUSTRATIONS.share_food;
+}
+
+// ── STAR / LEVEL METER ─────────────────────────────────
+function starHeaderHTML(earned, total) {
+  const lv = getCurrentLevel(earned);
+  const items = Array.from({length:total},(_,i)=>`<span class="star-item${i<earned?' filled':''}">\u2605</span>`).join('');
+  return `<div class="star-meter-wrap">
+    <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:2px">
+      <span style="font-size:14px">${lv.emoji}</span>
+      <span style="font-size:10px;font-weight:600;color:${lv.color2}">${lv.label}</span>
+    </div>
+    <div class="star-meter">${items}</div>
+    <div class="star-meter-lbl">Pair ${S.vi+1} of ${total}</div>
+  </div>`;
+}
+
+function starTransHTML(earned, total) {
+  const pct  = Math.round((earned / total) * 100);
+  const lv   = getCurrentLevel(earned);
+  const prev = getCurrentLevel(Math.max(0, earned - 1));
+  const levelUp = earned > 0 && lv.label !== prev.label;
+  const items = Array.from({length:total},(_,i)=>{
+    const filled=i<earned, isNew=filled&&i===earned-1;
+    return `<span class="star-item${filled?' filled':''}${isNew?' newly-filled':''}">\u2605</span>`;
+  }).join('');
+  return `
+    <div style="text-align:center;margin-bottom:6px">
+      ${levelUp
+        ? `<div class="level-badge"><div style="font-size:44px">${lv.emoji}</div><div style="font-size:18px;font-weight:600;color:${lv.color2};margin-top:2px">⬆ Level Up! ${lv.label}</div></div>`
+        : `<div style="font-size:30px">${lv.emoji}</div><div style="font-size:13px;font-weight:600;color:${lv.color2}">${lv.label}</div>`
+      }
+    </div>
+    <div class="star-meter star-meter-large">${items}</div>
+    <div class="meter-bar-wrap">
+      <div class="meter-bar" style="width:${pct}%;background:linear-gradient(90deg,${lv.color},${lv.color2})"></div>
+      <span class="meter-pct">${earned} / ${total}</span>
+    </div>`;
+}
+
+// ── WELCOME SVG ────────────────────────────────────────
+function welcomeSVG(c1, c2) {
+  const gy = 165;
+  const rays6 = Array.from({length:6},(_,a)=>{
+    const r=a*60*Math.PI/180;
+    return `<line x1="${(Math.cos(r)*28).toFixed(1)}" y1="${(Math.sin(r)*28).toFixed(1)}" x2="${(Math.cos(r)*39).toFixed(1)}" y2="${(Math.sin(r)*39).toFixed(1)}" stroke="#FFD700" stroke-width="3" stroke-linecap="round"/>`;
+  }).join('');
+  const kid1 = c1
+    ? kidSVG(74,  gy, c1, '0s',   true)
+    : kidSVG(74,  gy, {hair:'#9B5DE5',shirt:'#4ECDC4',pants:'#1A3040',style:'short',  name:''}, 'wave');
+  const kid2 = c2
+    ? kidSVG(306, gy, c2, '1.1s', false)
+    : kidSVG(306, gy, {hair:'#FFD84D', shirt:'#FF6EC7',pants:'#2E1E60',style:'short',name:''}, '1.1s');
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 205" style="width:100%;display:block">
+    <rect x="0" y="0" width="380" height="${gy}" fill="#0D1B3E"/>
+    <circle cx="20" cy="18" r="1.2" fill="white" opacity=".7"/>
+    <circle cx="60" cy="12" r="1" fill="white" opacity=".8"/>
+    <circle cx="140" cy="22" r="1.2" fill="white" opacity=".6"/>
+    <circle cx="220" cy="8" r="1" fill="white" opacity=".9"/>
+    <circle cx="300" cy="18" r="1.2" fill="white" opacity=".7"/>
+    <circle cx="355" cy="28" r="1" fill="white" opacity=".8"/>
+    <rect x="0" y="${gy}" width="380" height="${205-gy}" fill="#1A3D2A"/>
+    <g><animateTransform attributeName="transform" type="translate" values="0,0;16,0;0,0" dur="11s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
+      <ellipse cx="280" cy="32" rx="28" ry="13" fill="#2A4A6E" opacity=".7"/>
+      <ellipse cx="305" cy="26" rx="22" ry="12" fill="#2A4A6E" opacity=".7"/>
+    </g>
+    <circle cx="344" cy="33" r="22" fill="#E8D5A3"/>
+    <circle cx="344" cy="33" r="8" fill="#D4C090" opacity=".4"/>
+    <circle cx="344" cy="22" r="14" fill="#4ECDC4" opacity=".72"/>
+    <g transform="translate(190,80)">
+      <circle cx="0" cy="0" r="36" fill="none" stroke="#9B5DE5" stroke-width="6" opacity=".78"/>
+      <circle cx="0" cy="0" r="28" fill="rgba(155,93,229,.12)"/>
+      <line x1="25" y1="25" x2="44" y2="44" stroke="#9B5DE5" stroke-width="7" stroke-linecap="round"/>
+      <text x="0" y="12" text-anchor="middle" font-family="Arial Black,Arial" font-size="28" fill="#9B5DE5" font-weight="bold">?</text>
+    </g>
+    <g transform="translate(190,80)">
+      <animateTransform attributeName="transform" type="rotate" from="0 190 80" to="360 190 80" dur="22s" repeatCount="indefinite" additive="sum"/>
+      ${rays6.replace(/stroke="#FFD700"/g,'stroke="#9B5DE5"')}
+    </g>
+    ${kid1}
+    ${kid2}
+  </svg>`;
+}
+
+function trophySVG() {
+  return `<svg viewBox="0 0 160 175" width="115" height="126" style="display:block;margin:auto;overflow:visible"><circle cx="80" cy="80" r="55" fill="rgba(255,215,0,0.14)"><animate attributeName="r" values="50;66;50" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.14;0.04;0.14" dur="2.2s" repeatCount="indefinite"/></circle><g><animateTransform attributeName="transform" type="translate" values="0,0;0,-7;0,0" dur="2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/><path d="M28,18 L132,18 L117,88 Q80,114 43,88 Z" fill="#FFD700" stroke="#F39C12" stroke-width="3"/><path d="M28,18 Q4,18 4,50 Q4,82 28,82" fill="none" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/><path d="M132,18 Q156,18 156,50 Q156,82 132,82" fill="none" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/><rect x="67" y="108" width="26" height="30" rx="4" fill="#F39C12"/><rect x="43" y="136" width="74" height="19" rx="9" fill="#FFD700" stroke="#F39C12" stroke-width="2"/><polygon points="80,36 86,56 107,56 91,68 97,88 80,76 63,88 69,68 53,56 74,56" fill="white" opacity=".65"/></g></svg>`;
+}
+
+// ── RENDER ─────────────────────────────────────────────
+const app = document.getElementById('app');
+
+function render() {
+  updateAdmin();
+  try {
+    switch (S.phase) {
+      case 'welcome':   renderWelcome();                               break;
+      case 'intro':     renderIntro();                                 break;
+      case 'ex-story':  renderStory(EXAMPLE, true);                   break;
+      case 'ex-q':      renderQuestion(EXAMPLE, S.eqi, true);         break;
+      case 'ex-done':   renderExDone();                                break;
+      case 'story':     renderStory(VIGNETTES[S.vi], false);          break;
+      case 'q':         renderQuestion(VIGNETTES[S.vi], S.qi, false); break;
+      case 'q-likert':  renderLikert();                                break;
+      case 'trans':     renderTrans();                                 break;
+      case 'end':       renderEnd();                                   break;
+    }
+  } catch(err) {
+    app.innerHTML = `<div class="error-box"><h2 style="color:#e74c3c">Something went wrong</h2><p style="margin:10px 0"><strong>${err.message}</strong></p><pre style="background:#f5f5f5;padding:12px;border-radius:8px;font-size:11px;text-align:left;overflow:auto">${err.stack||''}</pre><button class="btn btn-primary" style="margin-top:12px" onclick="resetGame()">Start Over</button></div>`;
+    console.error(err);
+  }
+}
+
+function renderWelcome() {
+  const pool = [];
+  VIGNETTES.forEach(v => { pool.push(v.char1); pool.push(v.char2); });
+  const wi1 = Math.floor(Math.random() * pool.length);
+  let wi2;
+  do { wi2 = Math.floor(Math.random() * pool.length); } while (wi2 === wi1);
+
+  app.innerHTML = `
+  <div class="screen" style="justify-content:center;text-align:center;padding-top:14px">
+    <div class="wt">Friend Detective!</div>
+    <div class="ws">Can you figure out how these alien friends act toward each other?</div>
+    <div class="illus" style="max-width:330px">${welcomeSVG(pool[wi1], pool[wi2])}</div>
+    <button id="unlockBtn" class="unlock-btn"
+      onclick="unlockAudio('Hello there, and welcome to Friend Detective! I am so excited you are here today! First, can you type your name in the box. And then pick your age from the little menu. When you are all ready, press the big orange button that says Let us play!')">
+      🔊 Tap here to turn on sound!
+    </button>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="cname">What is your name?</label>
+        <input id="cname" class="name-input" type="text" placeholder="Your name!" maxlength="22" value="${escHtml(S.name)}"/>
+      </div>
+      <div class="form-group">
+        <label for="cage">How old are you?</label>
+        <select id="cage" class="age-select">
+          <option value="">Pick your age!</option>
+          <option value="4"  ${S.age==='4'  ?'selected':''}>I am 4</option>
+          <option value="5"  ${S.age==='5'  ?'selected':''}>I am 5</option>
+          <option value="6"  ${S.age==='6'  ?'selected':''}>I am 6</option>
+          <option value="7"  ${S.age==='7'  ?'selected':''}>I am 7</option>
+          <option value="8"  ${S.age==='8'  ?'selected':''}>I am 8</option>
+          <option value="9"  ${S.age==='9'  ?'selected':''}>I am 9</option>
+          <option value="10" ${S.age==='10' ?'selected':''}>I am 10</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primary" style="font-size:19px;padding:13px 34px;margin-top:4px" onclick="startGame()">Let's Play!</button>
+  </div>`;
+  stopSpeak();
+  const inp = document.getElementById('cname');
+  const sel = document.getElementById('cage');
+  if (inp) inp.addEventListener('input',  e => S.name = e.target.value);
+  if (sel) sel.addEventListener('change', e => S.age  = e.target.value);
+}
+
+function renderIntro() {
+  const nm = S.name ? `, ${S.name}` : '';
+  app.innerHTML = `
+  <div class="screen" style="justify-content:center;text-align:center;gap:10px">
+    <div style="font-size:44px">🕵️</div>
+    <div style="font-size:22px;font-weight:600;color:#333">Here is how to play!</div>
+    <div class="info-box" style="font-size:14px;line-height:1.75">
+      I will tell you about <strong>two alien friends</strong> and how they act toward each other.<br><br>
+      <em>These aliens might do things differently from the way you do things — but that is okay!</em><br><br>
+      Then I will ask — <strong>would those same two aliens act that way in another situation?</strong><br><br>
+      <strong>Press the big 👍 thumb UP for YES</strong><br>
+      <strong>Press the big 👎 thumb DOWN for NO</strong><br><br>
+      <div style="display:flex;gap:12px;justify-content:center;align-items:flex-end;margin:6px 0 10px">
+        <div style="text-align:center">
+          <div style="font-size:11px;color:#27AE60;font-weight:600;margin-bottom:4px">Really sure YES</div>
+          ${thumbsUpSVG(52)}
+        </div>
+        <div style="text-align:center;opacity:.65">
+          <div style="font-size:11px;color:#27AE60;font-weight:600;margin-bottom:4px">A little sure YES</div>
+          ${thumbsUpSVG(36)}
+        </div>
+        <div style="width:10px"></div>
+        <div style="text-align:center;opacity:.65">
+          <div style="font-size:11px;color:#E74C3C;font-weight:600;margin-bottom:4px">A little sure NO</div>
+          ${thumbsDownSVG(36)}
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:11px;color:#E74C3C;font-weight:600;margin-bottom:4px">Really sure NO</div>
+          ${thumbsDownSVG(52)}
+        </div>
+      </div>
+      After you pick YES or NO, I will ask <strong>how sure you are!</strong><br><br>
+      <strong>There are no wrong answers — just your best guess!</strong>
+    </div>
+    <div style="font-size:13px;color:#bbb">Let us try a practice example together first!</div>
+    <button class="btn btn-primary" style="font-size:18px;padding:12px 28px" onclick="goExStory()">Show me how! 🚀</button>
+  </div>`;
+  stopSpeak();
+  speak(`Wonderful${nm}! Here is how our game works. I am going to tell you about two alien friends and how they act toward each other. These aliens might do things a little differently from the way you do things — but that is totally okay! Then I will ask — do you think those same two aliens would act a certain way in another situation? Press the big THUMBS UP if you think YES, or the big THUMBS DOWN if you think NO. After you answer, I will ask how sure you are — a big thumb means really sure, and a small thumb means pretty sure. There are absolutely no wrong answers — we just want to know what you think! Press the big orange button to try a practice example!`);
+}
+
+function renderStory(v, isEx) {
+  app.innerHTML = `
+  ${isEx ? '' : starHeaderHTML(S.stars, VIGNETTES.length)}
+  <div class="screen" style="padding-top:${isEx ? 12 : 6}px">
+    <div class="story-head">
+      <div class="pair-title">Meet ${escHtml(v.char1.name)} and ${escHtml(v.char2.name)}!</div>
+    </div>
+    <div class="illus">${sceneSVG(v)}</div>
+    <div class="story-box" id="storyBox">
+      ${v.parts.map((s,i) => `<span class="sent" id="snt${i}">${escHtml(s)} </span>`).join('')}
+    </div>
+    <div class="story-btns">
+      <button class="btn btn-audio" onclick="replayStory()">🔊 Hear the story again</button>
+      <button class="btn btn-primary" id="readyBtn" style="display:none" onclick="goQs(${isEx})">I am ready for questions!</button>
+    </div>
+    ${isEx ? `<div style="font-size:12px;color:#ccc;margin-top:1px">Just a practice example!</div>` : ''}
+  </div>`;
+  stopSpeak();
+  const opener = isEx
+    ? `Okay! For our practice, I want you to meet ${v.char1.name} and ${v.char2.name}.`
+    : `Alright! Now let us meet ${v.char1.name} and ${v.char2.name}!`;
+  speak(opener, () => {
+    speakSeq(v.parts,
+      i => {
+        document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
+        const el = document.getElementById(`snt${i}`);
+        if (el) el.classList.add('hi');
+      },
+      () => {
+        document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
+        const rb = document.getElementById('readyBtn');
+        if (rb) rb.style.display = 'inline-flex';
+        speak(`Now I will ask you some questions about ${v.char1.name} and ${v.char2.name}. Use the big thumbs up for YES or big thumbs down for NO. When you are ready, press the big orange button!`);
+      }
+    );
+  });
+}
+
+function replayStory() {
+  const v = exPhase() ? EXAMPLE : VIGNETTES[S.vi];
+  stopSpeak();
+  const rb = document.getElementById('readyBtn');
+  if (rb) rb.style.display = 'none';
+  speak(`Sure! Let me tell you about ${v.char1.name} and ${v.char2.name} one more time.`, () => {
+    speakSeq(v.parts,
+      i => {
+        document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
+        const el = document.getElementById(`snt${i}`);
+        if (el) el.classList.add('hi');
+      },
+      () => {
+        document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
+        const rb2 = document.getElementById('readyBtn');
+        if (rb2) rb2.style.display = 'inline-flex';
+      }
+    );
+  });
+}
+
+function renderQuestion(v, qi, isEx) {
+  const q = v.questions[qi];
+  app.innerHTML = `
+  ${isEx ? '' : starHeaderHTML(S.stars, VIGNETTES.length)}
+  <div class="screen" style="padding-top:${isEx ? 10 : 4}px;gap:7px">
+    <div class="q-header">
+      Question ${qi+1} of 3 &nbsp;&middot;&nbsp;
+      <strong>${escHtml(v.char1.name)}</strong> &amp; <strong>${escHtml(v.char2.name)}</strong>
+    </div>
+    <div class="q-illust">${qIllustSVG(q.qIllust)}</div>
+    <div class="q-box">"${escHtml(q.text)}"</div>
+    <div class="thumb-guide">
+      ${thumbsUpSVG(28)} <span style="color:#27AE60;font-weight:600">= YES!</span>
+      &nbsp;&nbsp;&nbsp;
+      ${thumbsDownSVG(28)} <span style="color:#E74C3C;font-weight:600">= NO!</span>
+    </div>
+    <div class="ans-row">
+      <button class="btn btn-green" id="btnY" onclick="doAnswer('YES')">
+        ${thumbsUpSVG(48)} YES
+      </button>
+      <button class="btn btn-red" id="btnN" onclick="doAnswer('NO')">
+        ${thumbsDownSVG(48)} NO
+      </button>
+    </div>
+    <div class="replay-section">
+      <div class="replay-label">Need a reminder?</div>
+      <div class="replay-btns">
+        <button class="btn btn-audio" onclick="replayQ()">🔊 Hear the question again</button>
+        <button class="btn-story-replay" onclick="replayStoryQ(${isEx})">📖 Hear their story again</button>
+      </div>
+    </div>
+    ${isEx ? `<div class="ex-explain" id="exExp"></div>` : ''}
+  </div>`;
+  stopSpeak();
+  speak(`Question ${qi+1} of 3. ${q.text}. Do you think ${v.char1.name} and ${v.char2.name} would act that way? Press the big thumbs up for YES or the big thumbs down for NO!`);
+}
+
+function renderLikert() {
+  const v  = VIGNETTES[S.vi];
+  const qi = S.qi;
+  const q  = v.questions[qi];
+  const isYes = S.pendingAns === 'YES';
+  const strongStyle = isYes
+    ? 'background:linear-gradient(135deg,#1e8449,#27AE60);color:white;box-shadow:0 6px 18px rgba(30,132,73,.4);'
+    : 'background:linear-gradient(135deg,#922b21,#C0392B);color:white;box-shadow:0 6px 18px rgba(146,43,33,.4);';
+  const mildStyle = isYes
+    ? 'background:linear-gradient(135deg,#a8e063,#d0f5a0);color:#1a5e2a;box-shadow:0 4px 12px rgba(168,224,99,.35);'
+    : 'background:linear-gradient(135deg,#f45c43,#ffbdad);color:#7B241C;box-shadow:0 4px 12px rgba(244,92,67,.3);';
+  app.innerHTML = `
+  ${starHeaderHTML(S.stars, VIGNETTES.length)}
+  <div class="screen" style="padding-top:4px;gap:9px">
+    <div class="q-header">
+      Question ${qi+1} of 3 &nbsp;&middot;&nbsp;
+      <strong>${escHtml(v.char1.name)}</strong> &amp; <strong>${escHtml(v.char2.name)}</strong>
+    </div>
+    <div style="text-align:center;font-size:17px;font-weight:600;color:#333">
+      You said
+      <span style="background:${isYes?'linear-gradient(135deg,#56ab2f,#a8e063)':'linear-gradient(135deg,#eb3349,#f45c43)'};color:white;padding:3px 14px;border-radius:20px;font-size:22px;display:inline-block;vertical-align:middle;margin:0 4px">${isYes?'YES 👍':'NO 👎'}</span>
+    </div>
+    <div style="text-align:center;font-size:15px;color:#555;font-weight:500">How sure are you?</div>
+    <div class="q-illust">${qIllustSVG(q.qIllust)}</div>
+    <div class="ans-row" style="gap:16px;align-items:flex-end">
+      <button class="btn-likert-strong" id="btnDef" style="${strongStyle}" onclick="doLikertAnswer('DEFINITELY')">
+        ${isYes ? thumbsUpSVG(54) : thumbsDownSVG(54)}
+        <span style="margin-top:4px;font-size:15px;font-weight:600">Really sure!<br>${isYes?'👍 YES':'👎 NO'}</span>
+      </button>
+      <button class="btn-likert-mild" id="btnMay" style="${mildStyle}" onclick="doLikertAnswer('MAYBE')">
+        ${isYes ? thumbsUpSVG(36) : thumbsDownSVG(36)}
+        <span style="margin-top:3px;font-size:13px">A little sure<br>${isYes?'👍 YES':'👎 NO'}</span>
+      </button>
+    </div>
+  </div>`;
+  stopSpeak();
+  speak(`You said ${isYes ? 'yes' : 'no'}! Now — how sure are you? Press the BIG thumb if you are really really sure. Press the smaller thumb if you think so but are not totally sure!`);
+}
+
+function renderExDone() {
+  app.innerHTML = `
+  <div class="screen" style="justify-content:center;text-align:center;gap:14px">
+    <div style="font-size:56px;animation:bounceIn .85s cubic-bezier(.17,.67,.37,1.3)">🌟</div>
+    <div style="font-size:24px;font-weight:600;color:#333">Great practice!</div>
+    <div style="font-size:16px;color:#777;max-width:320px;line-height:1.65">
+      You are already thinking like a real detective!<br>
+      Now let us try the real game with some new alien friends!
+    </div>
+    <button class="btn btn-primary" style="font-size:20px;padding:14px 36px;margin-top:4px" onclick="startRealGame()">
+      Start the Real Game! 🚀
+    </button>
+  </div>`;
+  stopSpeak();
+  speak("Great job on the practice! You are already thinking like a real detective! Now let us start the real game and meet some brand new alien friends. Press the big orange button when you are ready!");
+}
+
+function replayQ() {
+  const v  = exPhase() ? EXAMPLE : VIGNETTES[S.vi];
+  const qi = exPhase() ? S.eqi   : S.qi;
+  stopSpeak();
+  speak(`Here is the question again. ${v.questions[qi].text}. Do you think ${v.char1.name} and ${v.char2.name} would act that way?`);
+}
+
+function replayStoryQ(isEx) {
+  const v = isEx ? EXAMPLE : VIGNETTES[S.vi];
+  stopSpeak();
+  speak(`Sure! Let me remind you about ${v.char1.name} and ${v.char2.name}.`, () => {
+    speakSeq(v.parts, null, () =>
+      speak(`Okay! Now, what do you think — would ${v.char1.name} and ${v.char2.name} act that way?`)
+    );
+  });
+}
+
+function doAnswer(ans) {
+  ['btnY','btnN'].forEach(id => { const b = document.getElementById(id); if (b) b.disabled = true; });
+  const isEx = exPhase();
+  const v    = isEx ? EXAMPLE : VIGNETTES[S.vi];
+  const qi   = isEx ? S.eqi   : S.qi;
+  const q    = v.questions[qi];
+  flashBtn(ans);
+  if (isEx) {
+    const exDiv = document.getElementById('exExp');
+    if (exDiv) { exDiv.style.display = 'block'; exDiv.textContent = q.explain || ''; }
+    stopSpeak();
+    const openers = ['Hmm, interesting thinking! Let me explain.','Nice guess! Here is what I was thinking.','Good job trying! Here is the reason.'];
+    speak(`${openers[qi % openers.length]} ${q.explain || ''}`, () => {
+      setTimeout(() => {
+        if (S.eqi < EXAMPLE.questions.length - 1) {
+          S.eqi++; S.phase = 'ex-q'; render();
+        } else {
+          S.phase = 'ex-done'; render();
+        }
+      }, 2200);
+    });
+  } else {
+    S.pendingAns = ans;
+    setTimeout(() => { S.phase = 'q-likert'; render(); }, 480);
+  }
+}
+
+function doLikertAnswer(certainty) {
+  ['btnDef','btnMay'].forEach(id => { const b = document.getElementById(id); if (b) b.disabled = true; });
+  const btn = document.getElementById(certainty === 'DEFINITELY' ? 'btnDef' : 'btnMay');
+  if (btn) { btn.style.transform = 'scale(1.1)'; setTimeout(() => { if (btn) btn.style.transform = ''; }, 300); }
+  const v       = VIGNETTES[S.vi];
+  const q       = v.questions[S.qi];
+  const initAns = S.pendingAns;
+  const fullAns = certainty === 'DEFINITELY'
+    ? (initAns === 'YES' ? 'DEFINITELY_YES' : 'DEFINITELY_NO')
+    : (initAns === 'YES' ? 'MAYBE_YES'      : 'MAYBE_NO');
+  S.answers.push({
+    vid: v.id, vM: v.model, qi: S.qi, qM: q.qM,
+    ans: fullAns, initialAns: initAns,
+    keyed: q.keyed, ok: initAns === q.keyed,
+    congruent: v.model === q.qM,
+    ts: new Date().toISOString()
+  });
+  S.pendingAns = null;
+  stopSpeak();
+  setTimeout(() => {
+    if (S.qi < 2) { S.qi++; S.phase = 'q'; }
+    else          { S.stars++; S.phase = 'trans'; }
+    render();
+  }, 650);
+}
+
+function flashBtn(ans) {
+  const b = document.getElementById(ans === 'YES' ? 'btnY' : 'btnN');
+  if (!b) return;
+  b.style.transition = 'transform 0.15s, box-shadow 0.15s';
+  b.style.transform  = 'scale(1.14)';
+  b.style.boxShadow  = '0 0 0 8px rgba(255,255,255,0.68)';
+  setTimeout(() => { b.style.transform = ''; b.style.boxShadow = ''; }, 320);
+}
+
+function renderTrans() {
+  const ni   = S.vi + 1;
+  const last = ni >= VIGNETTES.length;
+  const np   = last ? null : VIGNETTES[ni];
+  const kudo = KUDOS[Math.floor(Math.random() * KUDOS.length)];
+  app.innerHTML = `
+  <div class="trans-screen">
+    ${starTransHTML(S.stars, VIGNETTES.length)}
+    <div class="trans-msg" style="margin-top:8px">${kudo}</div>
+    <div style="font-size:19px;font-weight:600;color:#F39C12">${S.stars} star${S.stars===1?'':'s'} collected!</div>
+    <div class="trans-sub">
+      ${last
+        ? 'That was the very last pair — you are almost done!'
+        : `Next up: meet <strong>${escHtml(np.char1.name)}</strong> and <strong>${escHtml(np.char2.name)}</strong>!`}
+    </div>
+  </div>`;
+  const lv  = getCurrentLevel(S.stars);
+  const prev = getCurrentLevel(S.stars - 1);
+  const lvUp = S.stars > 0 && lv.label !== prev.label;
+  const msg = last
+    ? `${kudo} You just finished all twelve pairs! You are almost done now — what an amazing job!`
+    : lvUp
+      ? `${kudo} You leveled up to ${lv.label}! You have ${S.stars} star${S.stars===1?'':'s'} now! Next up, let us meet ${np.char1.name} and ${np.char2.name}!`
+      : `${kudo} You collected a star! You have ${S.stars} star${S.stars===1?'':'s'} now! Next up, let us meet ${np.char1.name} and ${np.char2.name}!`;
+  stopSpeak();
+  speak(msg, () => {
+    setTimeout(() => {
+      if (last) { S.phase = 'end'; }
+      else      { S.vi++; S.qi = 0; S.phase = 'story'; }
+      render();
+    }, 750);
+  });
+}
+
+function renderEnd() {
+  const nm  = S.name || 'Detective';
+  const tot = S.answers.length;
+  const cor = S.answers.filter(a => a.ok).length;
+  app.innerHTML = `
+  <div class="end-screen">
+    <div class="end-trophy-wrap">${trophySVG()}</div>
+    <div class="end-title">Amazing, ${escHtml(nm)}!</div>
+    ${starTransHTML(S.stars, VIGNETTES.length)}
+    <div class="end-sub" style="margin-top:4px">You answered questions about all ${VIGNETTES.length} pairs of alien friends!</div>
+    <div style="font-size:12px;color:#ccc">${cor} of ${tot} answers matched the scoring key</div>
+    <div class="end-btns">
+      <button class="btn btn-primary"   onclick="exportCSV()">Download Results</button>
+      <button class="btn btn-secondary" onclick="resetGame()">Play Again</button>
+    </div>
+  </div>`;
+  stopSpeak();
+  speak(`${nm}, you have done something truly amazing today! You answered questions about all twelve pairs of alien friends, and you thought so carefully about every single one. I am incredibly proud of you. You really are a true Friend Detective! Give yourself a big pat on the back — you have really really earned it today!`);
+}
+
+// ── NAVIGATION ─────────────────────────────────────────
+function exPhase() { return S.phase === 'ex-story' || S.phase === 'ex-q'; }
+
+function startGame() {
+  const inp = document.getElementById('cname');
+  const sel = document.getElementById('cage');
+  S.name = (inp ? inp.value.trim() : '') || '';
+  S.age  = (sel ? sel.value        : '') || '';
+  if (!S.name) { unlockAudio("Oops! Can you type your name first?"); return; }
+  audioUnlocked = true;
+
+  for (let i = VIGNETTES.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [VIGNETTES[i], VIGNETTES[j]] = [VIGNETTES[j], VIGNETTES[i]];
+  }
+
+  const pool = [];
+  VIGNETTES.forEach(v => { pool.push(v.char1); pool.push(v.char2); });
+  const i1 = Math.floor(Math.random() * pool.length);
+  let i2;
+  do { i2 = Math.floor(Math.random() * pool.length); } while (i2 === i1);
+  EXAMPLE.char1 = Object.assign({}, pool[i1]);
+  EXAMPLE.char2 = Object.assign({}, pool[i2]);
+
+  S.phase = 'intro';
+  render();
+}
+
+function goExStory() { S.eqi = 0; S.phase = 'ex-story'; render(); }
+function goQs(isEx) {
+  if (isEx) { S.eqi = 0; S.phase = 'ex-q'; }
+  else      { S.qi  = 0; S.phase = 'q';    }
+  render();
+}
+function startRealGame() { stopSpeak(); S.phase = 'story'; S.vi = 0; S.qi = 0; render(); }
+function skipPair() {
+  if (S.phase === 'story' || S.phase === 'q' || S.phase === 'q-likert') {
+    S.pendingAns = null; S.stars++; S.phase = 'trans'; render();
+  }
+}
+function skipEnd()   { stopSpeak(); S.phase = 'end'; render(); }
+function resetGame() {
+  stopSpeak();
+  Object.assign(S, { phase:'welcome', name:'', age:'', vi:0, qi:0, eqi:0, pendingAns:null, answers:[], stars:0, adminOpen:false });
+  render();
+}
+
+// ── ADMIN ──────────────────────────────────────────────
+function setupAdmin() {
+  const panel = document.getElementById('adminPanel');
+  if (!panel) return;
+  panel.innerHTML = `
+    <h3>Researcher Panel</h3>
+    <div style="margin-bottom:9px;padding-bottom:9px;border-bottom:1px solid #eee">
+      <div class="admin-section-label">Voice</div>
+      <div style="font-size:10.5px;color:#bbb;margin-bottom:6px;line-height:1.55">
+        For the most natural voice, enter a free
+        <a href="https://elevenlabs.io" target="_blank" style="color:#4776e6">ElevenLabs</a>
+        API key. Without it, the device built-in voice is used.
+      </div>
+      <input id="elKeyInput" type="password" class="admin-input" placeholder="ElevenLabs API key..."/>
+      <select id="elVoiceSelect" class="admin-select">
+        <option value="MF3mGyEYCl7XYWbV9V6O">Elli — warm, young (recommended)</option>
+        <option value="jBpfuIE2acCO8z3wKNLl">Gigi — upbeat, enthusiastic</option>
+        <option value="21m00Tcm4TlvDq8ikWAM">Rachel — calm, clear</option>
+        <option value="ThT5KcBeYPX3keUQqHPh">Dorothy — warm, pleasant</option>
+        <option value="pNInz6obpgDQGcFmaJgB">Adam — friendly, clear</option>
+      </select>
+      <div class="admin-row">
+        <button class="admin-btn-sm" onclick="saveVoiceSettings()">Save</button>
+        <button class="admin-btn-sm admin-btn-blue" onclick="testVoice()">Test Voice</button>
+      </div>
+      <div id="voiceStatus" style="font-size:10.5px;color:#aaa;text-align:center;min-height:14px"></div>
+    </div>
+    <div class="admin-section-label">Responses</div>
+    <div class="admin-log" id="adminLog">No answers yet.</div>
+    <button class="admin-btn-sm admin-btn-gold" style="width:100%;margin-bottom:4px;padding:8px;font-size:11px;border-radius:7px" onclick="exportCSV()">Download Results (CSV)</button>
+    <button class="admin-btn-sm" style="width:100%;margin-bottom:4px;padding:7px;font-size:11px;border-radius:7px" onclick="skipPair()">Skip this pair</button>
+    <button class="admin-btn-sm" style="width:100%;padding:7px;font-size:11px;border-radius:7px" onclick="skipEnd()">Skip to End</button>`;
+  const ki = document.getElementById('elKeyInput');
+  const vs = document.getElementById('elVoiceSelect');
+  if (ki) ki.value = S.elevenLabsKey;
+  if (vs) vs.value = S.elevenLabsVoice;
+  document.getElementById('adminBtn').addEventListener('click', () => {
+    S.adminOpen = !S.adminOpen;
+    panel.classList.toggle('open', S.adminOpen);
+    updateAdmin();
+  });
+  updateAdmin();
+}
+
+function saveVoiceSettings() {
+  const ki = document.getElementById('elKeyInput');
+  const vs = document.getElementById('elVoiceSelect');
+  const st = document.getElementById('voiceStatus');
+  S.elevenLabsKey   = ki ? ki.value.trim() : '';
+  S.elevenLabsVoice = vs ? vs.value : 'MF3mGyEYCl7XYWbV9V6O';
+  try { localStorage.setItem('rad_elKey', S.elevenLabsKey); localStorage.setItem('rad_elVoice', S.elevenLabsVoice); } catch(e) {}
+  if (st) { st.textContent = S.elevenLabsKey ? 'Saved! ElevenLabs active.' : 'Saved. Using built-in voice.'; setTimeout(()=>{ st.textContent=''; },2500); }
+}
+
+function testVoice() {
+  saveVoiceSettings(); stopSpeak();
+  speak("Hello! I am the Friend Detective voice. Does this sound good to you?");
+}
+
+function updateAdmin() {
+  const el = document.getElementById('adminLog');
+  if (!el) return;
+  if (!S.answers.length) { el.textContent = 'No answers yet.'; return; }
+  el.textContent = S.answers.map(a =>
+    `V${a.vid}[${a.vM}] Q${a.qi+1}[${a.qM}] ${a.congruent?'CON':'INC'}: ${a.ans} key:${a.keyed} ${a.ok?'ok':'x'}`
+  ).join('\n');
+}
+
+// ── CSV EXPORT ─────────────────────────────────────────
+function exportCSV() {
+  const headers = ['ChildName','ChildAge','VignetteNumber','VignetteRelationalModel','QuestionNumber','QuestionRelationalModel','IsCongruent','LikertAnswer','InitialYesNo','KeyedAnswer','Correct','Timestamp'];
+  const rows = [headers.join(',')];
+  S.answers.forEach(a => {
+    rows.push([
+      S.name, S.age, a.vid, a.vM, a.qi+1, a.qM,
+      a.congruent?'TRUE':'FALSE',
+      a.ans,
+      a.initialAns || (a.ans.includes('YES')?'YES':'NO'),
+      a.keyed, a.ok?'TRUE':'FALSE', a.ts
+    ].join(','));
+  });
+  const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+  const url  = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `RAD12C_${S.name||'child'}_age${S.age||'unknown'}_${new Date().toISOString().slice(0,10)}.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── INIT ───────────────────────────────────────────────
+window.addEventListener('load', () => {
+  try { initVoices(); setupAdmin(); render(); }
+  catch(err) {
+    document.getElementById('app').innerHTML = `<div class="error-box"><h2 style="color:#e74c3c">Could not start the game</h2><p style="margin:10px 0"><strong>${err.message}</strong></p><pre style="background:#f5f5f5;padding:12px;border-radius:8px;font-size:11px;text-align:left;overflow:auto">${err.stack||''}</pre></div>`;
+    console.error(err);
+  }
+});
+
+window.addEventListener('keydown', e => {
+  if (e.key === 'Backspace' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'SELECT') e.preventDefault();
+});
+</script>
+</body>
+</html>

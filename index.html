@@ -2,1529 +2,1066 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Friend Detective</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help a Friend!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Arial Rounded MT Bold', Arial, sans-serif;
-  background: linear-gradient(160deg, #a8edea, #fed6e3);
-  min-height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  padding: 8px;
-}
-#app {
-  width: 100%; max-width: 760px;
-  background: #FFFEF7; border-radius: 22px;
-  box-shadow: 0 8px 40px rgba(0,0,0,.18);
-  overflow: hidden; position: relative;
-  display: flex; flex-direction: column;
-  min-height: 580px;
-}
-.star-meter-wrap {
-  display: flex; flex-direction: column;
-  align-items: center; padding: 8px 16px 3px; gap: 2px;
-}
-.star-meter {
-  display: flex; gap: 2px;
-  justify-content: center; flex-wrap: nowrap; align-items: center;
-}
-.star-item {
-  font-size: 17px; color: #E0E0E0; line-height: 1;
-  display: inline-block; transition: color 0.3s;
-}
-.star-item.filled { color: #FFD700; text-shadow: 0 0 5px rgba(255,180,0,.65); }
-.star-item.newly-filled { animation: starPop 0.8s cubic-bezier(0.17,0.67,0.37,1.5) forwards; }
-@keyframes starPop {
-  0%   { transform: scale(0.1) rotate(-190deg); }
-  65%  { transform: scale(1.5) rotate(8deg); }
-  100% { transform: scale(1)   rotate(0deg); }
-}
-.star-meter-lbl { font-size: 10px; color: #ccc; }
-.star-meter-large { flex-wrap: wrap; max-width: 220px; gap: 6px; }
-.star-meter-large .star-item { font-size: 34px; }
-.screen {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; padding: 11px 17px 17px;
-  animation: fadeIn .35s ease; gap: 9px;
-}
-@keyframes fadeIn {
-  from { opacity:0; transform:translateY(8px); }
-  to   { opacity:1; transform:translateY(0);   }
-}
-.wt {
-  font-size: 36px; font-weight: bold; text-align: center; line-height: 1.2;
-  background: linear-gradient(135deg,#f7971e,#f64f59);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.ws { font-size: 16px; color: #888; text-align: center; }
-.form-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; width: 100%; }
-.form-group { text-align: center; }
-.form-group label { display: block; font-size: 14px; color: #666; margin-bottom: 5px; }
-.name-input, .age-select {
-  font-family: inherit; font-size: 18px; padding: 9px 14px;
-  border: 3px solid #FFD200; border-radius: 50px;
-  outline: none; text-align: center; color: #333; background: #FFFEF7;
-}
-.name-input { width: 180px; }
-.age-select { width: 140px; cursor: pointer; }
-.name-input:focus, .age-select:focus {
-  border-color: #F7971E; box-shadow: 0 0 0 4px rgba(247,151,30,.13);
-}
-.btn {
-  font-family: inherit; font-size: 17px; font-weight: bold;
-  border: none; border-radius: 50px; padding: 11px 24px;
-  cursor: pointer; transition: transform .1s, box-shadow .1s;
-  display: inline-flex; align-items: center; gap: 6px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.14);
-  -webkit-tap-highlight-color: transparent;
-}
-.btn:active  { transform: scale(.95); }
-.btn:disabled { opacity:.44; cursor:not-allowed; }
-.btn-primary   { background: linear-gradient(135deg,#f7971e,#ffd200); color:white; }
-.btn-secondary { background:#F0EDE8; color:#555; font-size:14px; padding:8px 17px; }
-.btn-audio     { background: linear-gradient(135deg,#4776e6,#8e54e9); color:white; font-size:15px; padding:9px 19px; }
-.btn-green {
-  background: linear-gradient(135deg,#56ab2f,#a8e063); color:white;
-  font-size:28px; padding:14px 18px;
-  box-shadow: 0 6px 20px rgba(86,171,47,.38);
-  flex:1; max-width:165px;
-  justify-content:center; flex-direction:column; gap:5px; border-radius:20px;
-}
-.btn-red {
-  background: linear-gradient(135deg,#eb3349,#f45c43); color:white;
-  font-size:28px; padding:14px 18px;
-  box-shadow: 0 6px 20px rgba(235,51,73,.38);
-  flex:1; max-width:165px;
-  justify-content:center; flex-direction:column; gap:5px; border-radius:20px;
-}
-.ans-face { display:block; width:50px; height:50px; margin:0 auto; }
-.btn-green .ans-face { animation: faceBounce 1.1s ease-in-out infinite; }
-.btn-red   .ans-face { animation: faceWiggle 1.7s ease-in-out infinite; }
-@keyframes faceBounce {
-  0%,100%{transform:translateY(0) scale(1);} 45%{transform:translateY(-7px) scale(1.09);}
-}
-@keyframes faceWiggle {
-  0%,100%{transform:rotate(0deg);} 22%{transform:rotate(-9deg);} 62%{transform:rotate(9deg);}
-}
-.btn-likert-strong {
-  font-family:inherit; font-size:15px; font-weight:bold;
-  border:none; border-radius:20px; padding:12px 10px;
-  cursor:pointer; transition:transform .1s, box-shadow .1s;
-  display:flex; align-items:center; justify-content:center;
-  flex-direction:column; gap:5px; flex:1; max-width:170px;
-  box-shadow:0 6px 18px rgba(0,0,0,.18);
-  -webkit-tap-highlight-color:transparent;
-}
-.btn-likert-mild {
-  font-family:inherit; font-size:15px; font-weight:bold;
-  border:none; border-radius:20px; padding:12px 10px;
-  cursor:pointer; transition:transform .1s, box-shadow .1s;
-  display:flex; align-items:center; justify-content:center;
-  flex-direction:column; gap:5px; flex:1; max-width:170px;
-  box-shadow:0 4px 12px rgba(0,0,0,.12);
-  -webkit-tap-highlight-color:transparent;
-}
-.btn-likert-strong:active, .btn-likert-mild:active { transform:scale(.95); }
-.btn-likert-strong:disabled, .btn-likert-mild:disabled { opacity:.44; cursor:not-allowed; }
-.illus {
-  width:100%; border-radius:13px; overflow:hidden;
-  background:#E8F4FF; box-shadow: inset 0 2px 8px rgba(0,0,0,.07);
-}
-.q-illust {
-  width:100%; max-width:360px; align-self:center;
-  border-radius:12px; overflow:hidden;
-  border:2px solid #F0EDE8; background:#FAFAFA;
-}
-.story-head { display:flex; justify-content:space-between; align-items:center; width:100%; }
-.pair-title  { font-size:18px; font-weight:bold; color:#333; }
-.audio-status { display:flex; align-items:center; gap:5px; font-size:12px; color:#ccc; }
-.audio-dot {
-  width:9px; height:9px; border-radius:50%; background:#ddd; transition:background .3s; flex-shrink:0;
-}
-.audio-dot.on { background:#4CAF50; animation:pulse 1s ease infinite; }
-@keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.4);} }
-.story-box {
-  width:100%; background:white; border-radius:12px;
-  padding:11px 15px; font-size:16px; line-height:1.72;
-  color:#333; border:2px solid #F0EDE8;
-}
-.sent { display:inline; border-radius:4px; padding:1px 2px; transition:background .3s; }
-.sent.hi { background:#FFF3B0; }
-.story-btns { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; width:100%; }
-.q-header {
-  width:100%; background:linear-gradient(135deg,#4776e6,#8e54e9);
-  border-radius:11px; padding:8px 14px; color:white;
-  font-size:14px; display:flex; align-items:center; gap:6px;
-}
-.q-frame {
-  width:100%; background:rgba(71,118,230,.07);
-  border-radius:11px; padding:9px 14px;
-  font-size:15px; color:#444; text-align:center; line-height:1.55;
-  border:1.5px solid rgba(71,118,230,.19);
-}
-.q-frame strong { color:#4776e6; }
-.q-frame .they  { color:#e74c3c; text-decoration:underline; font-weight:bold; }
-.q-box {
-  width:100%; background:#F8F4FF; border-radius:13px;
-  padding:12px 16px; font-size:16px; line-height:1.6;
-  color:#333; border:3px solid #C9B8F0;
-  text-align:center; min-height:66px;
-  display:flex; align-items:center; justify-content:center;
-}
-.ans-row   { display:flex; gap:15px; justify-content:center; width:100%; }
-.q-replay  { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; width:100%; }
-.ex-explain {
-  display:none; width:100%;
-  background:#E8F8E8; border:2px solid #A5D6A7; border-radius:12px;
-  padding:11px 15px; font-size:15px; color:#2E7D32;
-  text-align:center; line-height:1.6;
-}
-.trans-screen {
-  flex:1; display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  gap:10px; padding:22px; text-align:center;
-}
-.trans-msg { font-size:22px; font-weight:bold; color:#333; }
-.trans-sub { font-size:15px; color:#aaa; }
-.end-screen {
-  flex:1; display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  padding:24px; text-align:center; gap:10px;
-}
-.end-trophy-wrap { animation: bounceIn .85s cubic-bezier(.17,.67,.37,1.3); }
-@keyframes bounceIn {
-  0%{transform:scale(0);} 65%{transform:scale(1.18);} 82%{transform:scale(.94);} 100%{transform:scale(1);}
-}
-.end-title { font-size:29px; font-weight:bold; color:#f7971e; }
-.end-sub   { font-size:16px; color:#666; }
-.end-btns  { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:4px; }
-.admin-btn {
-  position:fixed; bottom:10px; right:10px;
-  width:34px; height:34px; border-radius:50%;
-  background:rgba(0,0,0,.13); border:none; cursor:pointer;
-  font-size:15px; display:flex; align-items:center; justify-content:center; z-index:500;
-}
-.admin-panel {
-  position:fixed; bottom:54px; right:10px;
-  background:white; border-radius:12px;
-  box-shadow: 0 4px 24px rgba(0,0,0,.2);
-  padding:14px; width:295px; z-index:500;
-  font-size:13px; display:none;
-}
-.admin-panel.open { display:block; }
-.admin-panel h3 { font-size:14px; margin-bottom:8px; color:#333; border-bottom:1px solid #eee; padding-bottom:5px; }
-.admin-section-label { font-weight:bold; font-size:11px; color:#888; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
-.admin-log {
-  max-height:120px; overflow-y:auto; font-size:10px;
-  font-family:monospace; background:#f8f8f8;
-  border-radius:6px; padding:6px; margin-bottom:7px; white-space:pre; line-height:1.5;
-}
-.admin-input, .admin-select {
-  width:100%; padding:5px 7px; font-size:11px;
-  border:1px solid #ddd; border-radius:6px;
-  margin-bottom:5px; outline:none; background:white;
-}
-.admin-row { display:flex; gap:5px; margin-bottom:5px; }
-.admin-btn-sm {
-  flex:1; padding:6px 4px; font-size:11px; font-family:inherit;
-  border-radius:6px; cursor:pointer; border:1px solid #ddd; background:#F0EDE8; color:#555;
-}
-.admin-btn-blue { background:#4776e6; color:white; border-color:#4776e6; }
-.admin-btn-gold { background:linear-gradient(135deg,#f7971e,#ffd200); color:white; border:none; font-weight:bold; }
-.info-box {
-  font-size:15px; color:#555; line-height:1.82;
-  max-width:500px; background:#F8F4FF;
-  padding:14px 18px; border-radius:14px; border:3px solid #C9B8F0;
-}
-.error-box { padding:28px; font-family:Arial,sans-serif; max-width:600px; margin:auto; text-align:center; }
-.unlock-btn {
-  background: linear-gradient(135deg,#4776e6,#8e54e9);
-  color: white; border: none; border-radius: 50px;
-  font-family: inherit; font-size: 17px; font-weight: bold;
-  padding: 13px 28px; cursor: pointer;
-  box-shadow: 0 4px 18px rgba(71,118,230,.45);
-  animation: pulse 1.5s ease infinite;
-}
-@media (max-width:480px) {
-  .wt { font-size:25px; }
-  .btn-green,.btn-red { font-size:22px; max-width:138px; }
-  .q-box { font-size:14px; }
-  .story-box { font-size:14px; }
-  .trans-msg { font-size:18px; }
-  .star-meter-large .star-item { font-size:26px; }
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'KG Piece By Piece', 'Fredoka', sans-serif; background: linear-gradient(135deg,#a8edea,#fed6e3); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:10px; }
+#app { width:100%; max-width:880px; background:#fff; border-radius:32px; box-shadow:0 20px 70px rgba(0,0,0,.18); min-height:640px; position:relative; }
+.screen { display:none; flex-direction:column; align-items:center; padding:26px 28px 24px; min-height:640px; animation:fadeIn .4s ease; position:relative; border-radius:32px; overflow:hidden; }
+.screen.active { display:flex; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+h1 { font-size:clamp(1.8em,5.5vw,2.8em); color:#2c3e50; text-align:center; margin-bottom:12px; }
+h2 { font-size:clamp(1.2em,4vw,1.9em); color:#2c3e50; text-align:center; margin-bottom:12px; }
+.txt { font-size:clamp(.95em,2.8vw,1.18em); color:#34495e; text-align:center; line-height:1.7; margin-bottom:10px; max-width:520px; }
+.btn { padding:12px 36px; font-size:clamp(.9em,2.7vw,1.15em); font-family:inherit; font-weight:600; border:none; border-radius:50px; cursor:pointer; margin:6px; box-shadow:0 5px 0 rgba(0,0,0,.2); transition:transform .12s,box-shadow .12s; }
+.btn:hover  { transform:translateY(-3px); box-shadow:0 8px 0 rgba(0,0,0,.2); }
+.btn:active { transform:translateY(2px);  box-shadow:0 3px 0 rgba(0,0,0,.2); }
+.btn-green  { background:#27ae60; color:#fff; }
+.btn-blue   { background:#2980b9; color:#fff; }
+.btn-gray   { background:#7f8c8d; color:#fff; }
+.btn-purple { background:#8e44ad; color:#fff; }
+.btn-orange { background:#e67e22; color:#fff; }
+.char-display { border-radius:50%; overflow:hidden; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.char-lg { width:clamp(90px,16vw,126px); height:clamp(90px,16vw,126px); }
+.char-md { width:clamp(68px,12vw,96px);  height:clamp(68px,12vw,96px); }
+.char-display svg { width:100%; height:100%; display:block; }
+.char-wrap { display:flex; flex-direction:column; align-items:center; gap:6px; }
+.ntag { color:#fff; padding:3px 14px; border-radius:20px; font-size:.85em; display:inline-block; font-family:inherit; }
+.nt-red  { background:#e74c3c; }
+.nt-blue { background:#2980b9; }
+.nt-gray { background:#7f8c8d; }
+@keyframes bounce  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px) scale(1.07)} }
+@keyframes wiggle  { 0%,100%{transform:rotate(-6deg)} 50%{transform:rotate(6deg)} }
+@keyframes sadshk  { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+@keyframes pulse   { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+@keyframes floatA  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+@keyframes snugBob { 0%,100%{transform:rotate(-5deg) translateY(0)} 50%{transform:rotate(5deg) translateY(-5px)} }
+.a-bounce { animation:bounce  .8s  ease-in-out infinite; }
+.a-wiggle { animation:wiggle  .7s  ease-in-out infinite; }
+.a-sadshk { animation:sadshk  .5s  ease-in-out infinite; }
+.a-pulse  { animation:pulse   .9s  ease-in-out infinite; }
+.a-float  { animation:floatA  2.2s ease-in-out infinite; }
+.a-snug   { animation:snugBob .7s  ease-in-out infinite; }
+.tears { display:flex; gap:14px; margin-top:4px; }
+@keyframes drip { 0%{opacity:1;transform:translateY(0)} 100%{opacity:0;transform:translateY(20px)} }
+.tear { width:7px; height:13px; background:#74b9ff; border-radius:50% 50% 60% 60%; animation:drip 1s ease-in infinite; }
+.tear:nth-child(2) { animation-delay:.5s; }
+.prog-wrap  { width:100%; max-width:440px; margin-bottom:12px; }
+.prog-label { font-size:.88em; color:#aaa; text-align:center; margin-bottom:3px; }
+.prog-track { height:15px; background:#ecf0f1; border-radius:8px; overflow:hidden; }
+.prog-fill  { height:100%; background:linear-gradient(90deg,#e74c3c,#f39c12); border-radius:8px; transition:width .5s; }
+.phase-badge { background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; padding:4px 20px; border-radius:50px; font-size:.88em; margin-bottom:10px; }
+.div { width:60%; height:2px; background:linear-gradient(90deg,transparent,#ddd,transparent); margin:10px 0; }
+.form-row { width:100%; max-width:420px; margin:6px 0; text-align:left; }
+.form-row label { display:block; font-size:1em; color:#2c3e50; margin-bottom:3px; font-weight:600; }
+.form-row input,.form-row select { width:100%; padding:9px 12px; font-size:1em; font-family:inherit; border:2px solid #bdc3c7; border-radius:10px; outline:none; }
+.form-row input:focus,.form-row select:focus { border-color:#3498db; }
+.door-area { display:grid; grid-template-columns:1fr 1fr; gap:16px; width:100%; max-width:480px; margin:8px auto; }
+.door-wrap { display:flex; flex-direction:column; align-items:center; cursor:pointer; transition:transform .15s; }
+.door-wrap:hover:not(.locked):not(.fading) { transform:translateY(-6px); }
+.door-wrap.locked  { pointer-events:none; }
+.door-wrap.fading  { opacity:.2; transition:opacity .4s; }
+.door-wrap.chosen  { opacity:1 !important; }
+.door-frame { position:relative; width:clamp(95px,19vw,138px); height:clamp(132px,27vw,190px); border:7px solid #4a2c0a; border-radius:14px 14px 0 0; background:#3e1f00; overflow:hidden; box-shadow:inset 0 0 16px rgba(0,0,0,.4); }
+.door-room  { position:absolute; inset:0; border-radius:9px 9px 0 0; background:linear-gradient(180deg,#fffde7 55%,#e8f5e9 55%); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:1; }
+.room-item  { font-size:clamp(1.8em,4.8vw,3em); }
+.door-room .char-display { width:clamp(50px,10vw,70px); height:clamp(50px,10vw,70px); }
+.door-panel { position:absolute; inset:0; border-radius:9px 9px 0 0; transform-origin:left center; transform:perspective(450px) rotateY(0deg); transition:transform .75s cubic-bezier(.4,0,.2,1); z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding-top:16%; gap:5px; }
+.door-panel.open { transform:perspective(450px) rotateY(-82deg); box-shadow:4px 0 18px rgba(0,0,0,.3); }
+.dc-green  .door-panel { background:linear-gradient(165deg,#4CAF50,#2E7D32); }
+.dc-blue   .door-panel { background:linear-gradient(165deg,#2196F3,#1565C0); }
+.dc-orange .door-panel { background:linear-gradient(165deg,#FF9800,#E65100); }
+.dc-purple .door-panel { background:linear-gradient(165deg,#9C27B0,#6A1B9A); }
+.dp-emoji  { font-size:clamp(1.6em,4.2vw,2.5em); position:relative; z-index:3; filter:drop-shadow(0 2px 5px rgba(0,0,0,.35)); }
+.dp-label  { font-size:clamp(.44em,1.2vw,.65em); color:rgba(255,255,255,.92); font-family:inherit; text-shadow:0 1px 3px rgba(0,0,0,.5); position:relative; z-index:3; text-align:center; padding:0 4px; }
+.dp-svg    { width:clamp(40px,8vw,56px); height:clamp(40px,8vw,56px); border-radius:50%; overflow:hidden; position:relative; z-index:3; flex-shrink:0; }
+.dp-svg svg { width:100%; height:100%; display:block; }
+.door-knob { position:absolute; right:9px; top:52%; width:11px; height:11px; background:#FFD700; border:2px solid #F57F17; border-radius:50%; box-shadow:0 1px 4px rgba(0,0,0,.4); z-index:3; }
+.door-step { width:clamp(109px,21vw,152px); height:12px; background:linear-gradient(180deg,#5d4037,#4a2c0a); border-radius:0 0 7px 7px; box-shadow:0 3px 8px rgba(0,0,0,.18); }
+#walk-char,#trn-walk { position:absolute; border-radius:50%; overflow:hidden; pointer-events:none; z-index:50; display:none; }
+#walk-char svg,#trn-walk svg { width:100%; height:100%; display:block; }
+.scene-char { position:absolute; bottom:22px; z-index:2; transition:left 1.1s cubic-bezier(.25,.46,.45,.94),opacity .4s; }
+.scene-char svg { width:100%; height:100%; display:block; }
+.scene-item { position:absolute; bottom:26px; font-size:clamp(1.8em,4.5vw,3em); transition:left 1.1s cubic-bezier(.25,.46,.45,.94),opacity .4s; z-index:2; user-select:none; }
+.stage { width:100%; max-width:580px; height:210px; background:linear-gradient(180deg,#87CEEB 56%,#90EE90 56%); border-radius:20px; position:relative; overflow:hidden; margin:10px 0; border:3px solid #bdc3c7; }
+.stage::before { content:'☀'; position:absolute; top:7px; right:12px; font-size:1.4em; pointer-events:none; z-index:1; }
+.scene-caption { position:absolute; bottom:5px; left:50%; transform:translateX(-50%); background:rgba(255,255,255,.88); border-radius:10px; padding:2px 14px; font-size:clamp(.72em,1.9vw,.92em); color:#2c3e50; white-space:nowrap; border:1px solid #ddd; z-index:4; }
+@keyframes heartFloat { 0%{opacity:1;transform:translateY(0) scale(.85)} 60%{opacity:1;transform:translateY(-38px) scale(1.1)} 100%{opacity:0;transform:translateY(-65px) scale(1.3)} }
+.heart-p { position:absolute; pointer-events:none; z-index:5; font-size:1.4em; animation:heartFloat 1.4s ease-out forwards; }
+.food-pop { position:absolute; background:#fff; border:2px solid #ddd; border-radius:12px; padding:3px 10px; pointer-events:none; opacity:0; transition:opacity .3s; white-space:nowrap; color:#2c3e50; z-index:3; box-shadow:0 2px 6px rgba(0,0,0,.08); font-size:.9em; }
+.food-pop.show { opacity:1; }
+.rr-stage { width:100%; max-width:440px; min-height:165px; background:linear-gradient(180deg,#fffde7 55%,#e8f5e9 55%); border-radius:20px; border:3px solid #bdc3c7; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; margin:12px 0; padding:20px; position:relative; overflow:hidden; box-shadow:inset 0 4px 12px rgba(0,0,0,.04); }
+.rr-chars { display:flex; gap:22px; align-items:flex-end; }
+.rr-char  { display:flex; flex-direction:column; align-items:center; gap:4px; }
+.rr-lbl   { font-size:.7em; color:#7f8c8d; }
+.sum-row { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; margin:16px 0; }
+.sum-card { border-radius:18px; padding:18px 14px; text-align:center; min-width:130px; max-width:155px; font-size:1em; color:#2c3e50; background:#f8f9fa; border:3px solid #bdc3c7; }
+.sum-card.sum-yes { background:#d5f5e3; border-color:#27ae60; }
+.sum-card.sum-no  { background:#fdecea; border-color:#e74c3c; }
+.sum-card.sum-unk { background:#eaf2ff; border-color:#2980b9; }
+.sum-card p { margin-top:8px; font-size:0.9em; }
+.star-row { display:flex; flex-wrap:wrap; justify-content:center; margin:8px 0; }
+@keyframes starPop { 0%{opacity:0;transform:scale(0) rotate(-15deg)} 70%{transform:scale(1.25) rotate(5deg)} 100%{opacity:1;transform:scale(1) rotate(0)} }
+.end-star { font-size:clamp(1.4em,4vw,2.1em); opacity:0; animation:starPop .5s cubic-bezier(.34,1.56,.64,1) forwards; animation-delay:calc(var(--d)*1s); margin:3px; }
+.res-scroll  { width:100%; overflow-x:auto; margin-top:10px; }
+.res-table   { width:100%; border-collapse:collapse; font-size:.78em; }
+.res-table th{ background:#2c3e50; color:#fff; padding:7px 9px; }
+.res-table td{ padding:5px 9px; border-bottom:1px solid #ecf0f1; }
+.res-table tr:nth-child(even) { background:#f8f9fa; }
+.flash-overlay { position:fixed; inset:0; background:rgba(0,0,0,.18); display:flex; align-items:center; justify-content:center; z-index:900; pointer-events:none; animation:fadeIn .2s; }
+.flash-box { background:#fff; border-radius:22px; padding:20px 46px; font-size:clamp(1.3em,4.5vw,2.2em); text-align:center; box-shadow:0 16px 50px rgba(0,0,0,.22); font-family:inherit; }
+@keyframes floatUp { 0%{opacity:1;transform:translate(-50%,-50%) translateY(0) scale(1)} 100%{opacity:0;transform:translate(-50%,-50%) translateY(-55px) scale(1.3)} }
+#mute-btn { position:fixed; top:12px; right:12px; width:42px; height:42px; background:rgba(255,255,255,.9); border:2px solid #ddd; border-radius:50%; font-size:1.1em; cursor:pointer; box-shadow:0 3px 8px rgba(0,0,0,.1); z-index:999; display:flex; align-items:center; justify-content:center; }
+@media(max-width:500px){ .screen{padding:16px 12px 12px} .door-area{gap:10px;max-width:340px} .stage{height:165px} }
 </style>
 </head>
-<body>
 
+<body>
+<button id="mute-btn">&#128266;</button>
 <div id="app">
-  <div style="padding:44px;text-align:center;font-family:Arial,sans-serif;color:#aaa">
-    <div style="font-size:54px;margin-bottom:14px">🔍</div>
-    <h2>Loading Friend Detective...</h2>
-    <p style="margin-top:10px;font-size:14px">If this does not go away, please check that JavaScript is enabled.</p>
+
+<!-- SETUP -->
+<div id="s-setup" class="screen active">
+  <h1>Help a Friend!</h1>
+  <p class="txt" style="color:#999;font-size:.9em;">Researcher Setup</p>
+  <div class="div"></div>
+  <div class="form-row"><label>Participant ID</label><input id="f-pid" type="text" placeholder="e.g. P001"></div>
+  <div class="form-row"><label>Age (years)</label><input id="f-age" type="number" placeholder="e.g. 4.5" min="1" max="100" step="0.1"></div>
+  <div class="form-row"><label>Participant Type</label>
+    <select id="f-type"><option value="child">Child</option><option value="adult">Adult</option></select>
+  </div>
+  <div class="form-row"><label>Starting Condition</label>
+    <select id="f-start">
+      <option value="random">Auto-randomise</option>
+      <option value="1">Food first</option>
+      <option value="2">Social first</option>
+    </select>
+  </div>
+  <div class="form-row"><label>Familiarisation Variant</label>
+    <select id="f-variant">
+      <option value="dislike">Standard — Pip likes / dislikes</option>
+      <option value="unknown">Novel — Pip likes / doesn't know</option>
+    </select>
+  </div>
+  <div class="form-row"><label>Trial Order</label>
+    <select id="f-order">
+      <option value="random">Randomised</option>
+      <option value="fixed">Fixed (Food - Sad - Neutral - Toy)</option>
+    </select>
+  </div>
+  <div class="div"></div>
+  <button class="btn btn-green" onclick="G.setup()">Start</button>
+  <p style="font-size:.75em;color:#bbb;margin-top:10px;">Obtain consent before starting.</p>
+</div>
+
+<!-- WELCOME -->
+<div id="s-welcome" class="screen">
+  <div class="char-wrap" style="margin:auto;">
+    <div class="char-display char-lg a-bounce" id="wel-pip"></div>
+    <span class="ntag nt-red">Pip</span>
+  </div>
+  <button class="btn btn-green" style="margin-top:30px;" onclick="G.goTrainIntro()">&#9654;</button>
+</div>
+
+<!-- TRAINING INTRO -->
+<div id="s-train-intro" class="screen">
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+    <h2>Let's Practice!</h2>
+  </div>
+  <button class="btn btn-green" style="font-size:2em;padding:14px 40px;margin-bottom:60px;" onclick="G.startTraining()">&#10003;</button>
+</div>
+
+<!-- TRAINING -->
+<div id="s-training" class="screen">
+  <div class="prog-wrap">
+    <p class="prog-label" id="trn-lbl">Practice 1 of 4</p>
+    <div class="prog-track"><div class="prog-fill" id="trn-fill" style="width:0%"></div></div>
+  </div>
+  <p class="txt" style="margin-bottom:6px;">Click any door to see what happens!</p>
+  <div class="char-wrap" style="margin:4px 0 10px;">
+    <div class="char-display char-md" id="trn-pip"></div>
+    <span class="ntag nt-red">Pip</span>
+  </div>
+  <div class="door-area" id="trn-doors" style="max-width:380px;"></div>
+  <div id="trn-walk"></div>
+</div>
+
+<!-- BLOCK INTRO -->
+<div id="s-base-intro" class="screen">
+  <div class="char-wrap" style="margin:auto 0 20px;">
+    <div class="char-display char-lg a-float" id="bi-pip"></div>
+    <span class="ntag nt-red">Pip</span>
+  </div>
+  <p class="txt" id="bi-text">Pip will show you how they are feeling.<br>You can open a door and Pip will go inside.</p>
+  <button class="btn btn-green" onclick="G.startTrials()">Let's go! &#9654;</button>
+</div>
+
+<!-- TRIAL -->
+<div id="s-trial" class="screen">
+  <div class="prog-wrap">
+    <p class="prog-label" id="trl-lbl">Trial 1 of 4</p>
+    <div class="prog-track"><div class="prog-fill" id="trl-fill" style="width:0%"></div></div>
+  </div>
+  <div class="phase-badge" id="trl-phase">Practice</div>
+  <div style="position:relative;display:flex;flex-direction:column;align-items:center;margin:4px 0 8px;">
+    <div class="char-display char-lg" id="trl-pip"></div>
+    <span class="ntag nt-red" style="margin-top:6px;">Pip</span>
+    <div class="tears" id="trl-tears" style="display:none;position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);">
+      <div class="tear"></div><div class="tear"></div>
+    </div>
+  </div>
+  <p class="txt" id="trl-prompt" style="margin:8px 0 6px;min-height:1.6em;"></p>
+  <div class="door-area" id="trl-doors"></div>
+  <div id="walk-char"></div>
+</div>
+
+<!-- RESULT ROOM -->
+<div id="s-result" class="screen">
+  <div class="phase-badge" id="rr-phase">Practice</div>
+  <h2>Pip is inside!</h2>
+  <div class="rr-stage" id="rr-stage"></div>
+  <button class="btn btn-green" onclick="G.nextTrial()">Next &#9654;</button>
+</div>
+
+<!-- FOOD FAM INTRO -->
+<div id="s-ffi" class="screen">
+  <div class="char-wrap" style="margin:auto;">
+    <div class="char-display char-lg a-bounce" id="ffi-pip"></div>
+    <span class="ntag nt-red">Pip</span>
+  </div>
+  <button class="btn btn-orange" style="margin-top:30px;" onclick="G.playFoodFam()">&#128064;</button>
+</div>
+
+<!-- FOOD FAM -->
+<div id="s-ff" class="screen">
+  <div class="stage" id="food-scene"></div>
+  <p class="txt" id="food-cap" style="margin-top:8px;">Watch carefully...</p>
+  <div id="food-next" style="display:none;flex-direction:column;align-items:center;">
+    <button class="btn btn-green" onclick="G.doneFoodFam()">&#10003;</button>
   </div>
 </div>
 
-<button class="admin-btn" id="adminBtn" title="Researcher Panel">⚙️</button>
-<div class="admin-panel" id="adminPanel"></div>
+<!-- FOOD SUMMARY -->
+<div id="s-food-summary" class="screen">
+  <div class="char-wrap" style="margin-bottom:16px;">
+    <div class="char-display char-md a-float" id="food-sum-pip"></div>
+    <span class="ntag nt-red">Pip</span>
+  </div>
+  <div class="sum-row">
+    <div class="sum-card sum-yes">
+      <div id="fsum-like-emoji" style="font-size:2.6em;"></div>
+      <p id="fsum-like-text"></p>
+    </div>
+    <div class="sum-card" id="fsum-nope-card">
+      <div id="fsum-nope-emoji" style="font-size:2.6em;"></div>
+      <p id="fsum-nope-text"></p>
+    </div>
+  </div>
+  <button class="btn btn-green" onclick="G.afterFoodSummary()">&#10003;</button>
+</div>
+
+<!-- FOOD ATTENTION CHECK -->
+<div id="s-attn-food" class="screen">
+  <div class="char-wrap" style="margin:12px 0;">
+    <div class="char-display char-lg a-float" id="attn-pip-food"></div>
+    <span class="ntag nt-red">Pip</span>
+  </div>
+  <h2 id="attn-food-q">Which fruit does Pip like?</h2>
+  <div class="door-area" id="attn-food-doors" style="max-width:340px;"></div>
+</div>
+
+<!-- SOCIAL FAM INTRO -->
+<div id="s-sfi" class="screen">
+  <div style="display:flex;gap:28px;justify-content:center;flex-wrap:wrap;margin:auto;">
+    <div class="char-wrap">
+      <div class="char-display char-md a-float" id="sfi-pos"></div>
+      <span class="ntag nt-blue" id="sfi-pos-tag"></span>
+    </div>
+    <div class="char-wrap">
+      <div class="char-display char-md a-float" id="sfi-thin"></div>
+      <span class="ntag nt-gray" id="sfi-thin-tag"></span>
+    </div>
+  </div>
+  <button class="btn btn-purple" style="margin-top:30px;" onclick="G.playSocialFam()">&#128064;</button>
+</div>
+
+<!-- SOCIAL FAM -->
+<div id="s-sf" class="screen">
+  <div class="stage" id="snug-stage"></div>
+  <p class="txt" id="snug-cap" style="margin-top:8px;">Watch carefully...</p>
+  <div id="snug-next" style="display:none;flex-direction:column;align-items:center;">
+    <button class="btn btn-green" onclick="G.doneSocialFam()">&#10003;</button>
+  </div>
+</div>
+
+<!-- SOCIAL SUMMARY -->
+<div id="s-social-summary" class="screen">
+  <div class="char-wrap" style="margin-bottom:16px;">
+    <div class="char-display char-md a-float" id="soc-sum-pip"></div>
+    <span class="ntag nt-red">Pip</span>
+  </div>
+  <div class="sum-row">
+    <div class="sum-card sum-yes">
+      <div class="char-display" style="width:62px;height:62px;margin:0 auto 6px;" id="ssum-friend-char"></div>
+      <p id="ssum-friend-text"></p>
+    </div>
+    <div class="sum-card" id="ssum-nope-card">
+      <div class="char-display" style="width:62px;height:62px;margin:0 auto 6px;" id="ssum-nope-char"></div>
+      <p id="ssum-nope-text"></p>
+    </div>
+  </div>
+  <button class="btn btn-green" onclick="G.afterSocialSummary()">&#10003;</button>
+</div>
+
+<!-- SOCIAL ATTENTION CHECK -->
+<div id="s-attn-social" class="screen">
+  <div class="char-wrap" style="margin:12px 0;">
+    <div class="char-display char-lg a-float" id="attn-pip-social"></div>
+    <span class="ntag nt-red">Pip</span>
+  </div>
+  <h2 id="attn-social-q">Who is Pip's best friend?</h2>
+  <div class="door-area" id="attn-social-doors" style="max-width:340px;"></div>
+</div>
+
+<!-- TEST INTRO -->
+<div id="s-ti" class="screen">
+  <div class="char-wrap" style="margin:auto;">
+    <div class="char-display char-lg a-bounce" id="ti-pip"></div>
+    <span class="ntag nt-red">Pip</span>
+  </div>
+  <button class="btn btn-green" style="margin-top:30px;" onclick="G.startTrials()">&#9654;</button>
+</div>
+
+<!-- END -->
+<div id="s-end" class="screen">
+  <h1>Amazing Job!</h1>
+  <div class="star-row" id="end-stars"></div>
+  <div class="char-wrap" style="margin:10px 0;">
+    <div class="char-display char-lg a-bounce" id="end-pip"></div>
+    <span class="ntag nt-red">Pip</span>
+  </div>
+  <p class="txt">Thank you for playing!</p>
+  <div class="div"></div>
+  <p style="font-size:.85em;color:#999;margin-bottom:8px;">Researcher Panel</p>
+  <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;">
+    <button class="btn btn-blue"   onclick="G.downloadCSV()">Download CSV</button>
+    <button class="btn btn-purple" onclick="G.toggleTable()">View Data</button>
+    <button class="btn btn-gray"   onclick="G.restart()">New Participant</button>
+  </div>
+  <div id="res-wrap" style="display:none;width:100%;margin-top:12px;">
+    <div class="res-scroll" id="res-container"></div>
+  </div>
+</div>
+
+</div><!-- #app -->
 
 <script>
-'use strict';
-
-const W = 600, H = 300, GY = H * 0.70;
-const IMG_BASE = 'https://raw.githubusercontent.com/ashleyjthomas/GameRAD/main/';
-
-const KUDOS = [
-  "Brilliant work on that one!",
-  "Excellent thinking — you are really good at this!",
-  "Wonderful job! I love how carefully you are thinking!",
-  "Amazing detective work! Keep it up!",
-  "You are so good at this! Wow!",
-  "Fantastic! You are a true Friend Detective!",
-  "That was great! I am really impressed!",
-  "Super job! You are doing wonderfully!"
-];
-
-const EXAMPLE = {
-  id: 'ex',
-  char1: { name:'Friend 1', hair:'#5C3D11', shirt:'#4ECDC4', pants:'#34495E', style:'short' },
-  char2: { name:'Friend 2', hair:'#D4790A', shirt:'#FF6B6B', pants:'#7D3C98', style:'short' },
-  scene: 'outdoor',
-  parts: [
-    'These two friends are good friends.',
-    'Last month, they baked cookies together. One friend split the cookies into two equal piles, and the other picked the pile they wanted.',
-    'Last weekend, one friend brought the other some apples from their backyard tree. So this weekend, the other friend baked some cookies to give back.'
-  ],
-  questions: [
-    {
-      text: 'These two friends take turns using the tablet so they each get the same amount of time.',
-      keyed: 'YES', qIllust: 'computer',
-      explain: 'Since these friends like things to be fair and equal, and they always trade nice things back and forth, taking turns on the tablet sounds just like them! YES makes sense here.'
-    },
-    {
-      text: 'One friend decides what games they play, and the other just goes along with it.',
-      keyed: 'NO', qIllust: 'boss',
-      explain: 'These friends treat each other as equals, so it does not sound like just one of them would always be in charge. NO makes more sense here.'
-    },
-    {
-      text: 'When their class collected coins for a toy drive, these two friends each put in the same amount.',
-      keyed: 'YES', qIllust: 'coins',
-      explain: 'Putting in the same amount fits their style perfectly — they like things to be fair and equal between them. YES!'
-    }
-  ]
+const CHARS = {
+  pip:(state='neutral')=>{
+    const eyes={
+      neutral:`<circle cx="35" cy="47" r="5" fill="#2c1a0e"/><circle cx="65" cy="47" r="5" fill="#2c1a0e"/><circle cx="37" cy="45" r="1.8" fill="#fff"/><circle cx="67" cy="45" r="1.8" fill="#fff"/>`,
+      happy:  `<path d="M29 47 Q35 41 41 47" stroke="#2c1a0e" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M59 47 Q65 41 71 47" stroke="#2c1a0e" stroke-width="3.5" fill="none" stroke-linecap="round"/>`,
+      sad:    `<path d="M30 43 Q35 48 40 43" stroke="#4a5a7a" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="35" cy="49" r="5" fill="#5a6a8a"/><path d="M60 43 Q65 48 70 43" stroke="#4a5a7a" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="65" cy="49" r="5" fill="#5a6a8a"/>`,
+      hungry: `<circle cx="35" cy="46" r="5.5" fill="#2c1a0e"/><circle cx="65" cy="46" r="5.5" fill="#2c1a0e"/><circle cx="37" cy="44" r="2.2" fill="#fff"/><circle cx="67" cy="44" r="2.2" fill="#fff"/>`,
+      excited:`<path d="M27 47 Q35 40 43 47" stroke="#2c1a0e" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M57 47 Q65 40 73 47" stroke="#2c1a0e" stroke-width="4" fill="none" stroke-linecap="round"/>`
+    };
+    const mouths={
+      neutral:`<path d="M42 63 Q50 67 58 63" stroke="#b85555" stroke-width="2.5" fill="none" stroke-linecap="round"/>`,
+      happy:  `<path d="M38 62 Q50 73 62 62" stroke="#b85555" stroke-width="2.5" fill="none" stroke-linecap="round"/>`,
+      sad:    `<path d="M40 68 Q50 61 60 68" stroke="#b85555" stroke-width="2.5" fill="none" stroke-linecap="round"/>`,
+      hungry: `<path d="M40 61 Q50 71 60 61" stroke="#b85555" stroke-width="2.5" fill="none" stroke-linecap="round"/><ellipse cx="50" cy="67" rx="7" ry="4" fill="#e8a0a0" opacity="0.35"/>`,
+      excited:`<path d="M36 61 Q50 76 64 61" stroke="#b85555" stroke-width="2.5" fill="none" stroke-linecap="round"/><ellipse cx="50" cy="68" rx="10" ry="6" fill="#e8a0a0" opacity="0.3"/>`
+    };
+    const s=['neutral','happy','sad','hungry','excited'].includes(state)?state:'neutral';
+    return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+      <polygon points="22,40 15,21 36,33" fill="#de7575" stroke="#b85555" stroke-width="1.5"/>
+      <polygon points="78,40 85,21 64,33" fill="#de7575" stroke="#b85555" stroke-width="1.5"/>
+      <polygon points="23,38 18,24 34,32" fill="#ffb3b3"/>
+      <polygon points="77,38 82,24 66,32" fill="#ffb3b3"/>
+      <circle cx="50" cy="56" r="34" fill="#de7575" stroke="#b85555" stroke-width="2"/>
+      <circle cx="28" cy="58" r="9" fill="#ff9999" opacity="0.18"/>
+      <circle cx="72" cy="58" r="9" fill="#ff9999" opacity="0.18"/>
+      ${eyes[s]}
+      <ellipse cx="50" cy="57" rx="3.5" ry="2.5" fill="#b85555"/>
+      <line x1="16" y1="56" x2="40" y2="58" stroke="#ddd" stroke-width="1.4"/>
+      <line x1="16" y1="61" x2="40" y2="61" stroke="#ddd" stroke-width="1.4"/>
+      <line x1="60" y1="58" x2="84" y2="56" stroke="#ddd" stroke-width="1.4"/>
+      <line x1="60" y1="61" x2="84" y2="61" stroke="#ddd" stroke-width="1.4"/>
+      ${mouths[s]}
+    </svg>`;
+  },
+  benny:()=>`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block"><polygon points="22,40 15,21 36,33" fill="#7599de" stroke="#4a6db8" stroke-width="1.5"/><polygon points="78,40 85,21 64,33" fill="#7599de" stroke="#4a6db8" stroke-width="1.5"/><polygon points="23,38 18,24 34,32" fill="#b3c8f8"/><polygon points="77,38 82,24 66,32" fill="#b3c8f8"/><circle cx="50" cy="56" r="34" fill="#7599de" stroke="#4a6db8" stroke-width="2"/><circle cx="28" cy="58" r="9" fill="#8899ee" opacity="0.18"/><circle cx="72" cy="58" r="9" fill="#8899ee" opacity="0.18"/><circle cx="35" cy="47" r="5" fill="#1a1a2e"/><circle cx="65" cy="47" r="5" fill="#1a1a2e"/><circle cx="37" cy="45" r="1.8" fill="#fff"/><circle cx="67" cy="45" r="1.8" fill="#fff"/><ellipse cx="50" cy="57" rx="3.5" ry="2.5" fill="#4a6db8"/><line x1="16" y1="56" x2="40" y2="58" stroke="#cce" stroke-width="1.4"/><line x1="16" y1="61" x2="40" y2="61" stroke="#cce" stroke-width="1.4"/><line x1="60" y1="58" x2="84" y2="56" stroke="#cce" stroke-width="1.4"/><line x1="60" y1="61" x2="84" y2="61" stroke="#cce" stroke-width="1.4"/><path d="M42 63 Q50 67 58 63" stroke="#4a6db8" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+  milo:()=>`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block"><circle cx="28" cy="28" r="16" fill="#b0a0b0" stroke="#8a7890" stroke-width="1.5"/><circle cx="72" cy="28" r="16" fill="#b0a0b0" stroke="#8a7890" stroke-width="1.5"/><circle cx="28" cy="28" r="10" fill="#d4bcc4"/><circle cx="72" cy="28" r="10" fill="#d4bcc4"/><circle cx="50" cy="56" r="34" fill="#b8a8b8" stroke="#8a7890" stroke-width="2"/><ellipse cx="50" cy="60" rx="22" ry="16" fill="#d4bcc4" opacity="0.5"/><circle cx="37" cy="48" r="5" fill="#1e1830"/><circle cx="63" cy="48" r="5" fill="#1e1830"/><circle cx="39" cy="46" r="1.8" fill="#fff"/><circle cx="65" cy="46" r="1.8" fill="#fff"/><ellipse cx="50" cy="59" rx="4" ry="3" fill="#c06070"/><line x1="15" y1="57" x2="42" y2="60" stroke="#9a8898" stroke-width="1.4"/><line x1="15" y1="63" x2="42" y2="63" stroke="#9a8898" stroke-width="1.4"/><line x1="58" y1="60" x2="85" y2="57" stroke="#9a8898" stroke-width="1.4"/><line x1="58" y1="63" x2="85" y2="63" stroke="#9a8898" stroke-width="1.4"/><path d="M44 66 Q50 70 56 66" stroke="#8a6878" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+  rosie:()=>`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block"><ellipse cx="33" cy="22" rx="10" ry="21" fill="#f0b8cc" stroke="#c87898" stroke-width="1.5"/><ellipse cx="67" cy="22" rx="10" ry="21" fill="#f0b8cc" stroke="#c87898" stroke-width="1.5"/><ellipse cx="33" cy="22" rx="6" ry="16" fill="#fcd8e8"/><ellipse cx="67" cy="22" rx="6" ry="16" fill="#fcd8e8"/><circle cx="50" cy="58" r="33" fill="#f0b8cc" stroke="#c87898" stroke-width="2"/><circle cx="27" cy="62" r="9" fill="#ff88aa" opacity="0.2"/><circle cx="73" cy="62" r="9" fill="#ff88aa" opacity="0.2"/><circle cx="35" cy="50" r="5" fill="#1a1020"/><circle cx="65" cy="50" r="5" fill="#1a1020"/><circle cx="37" cy="48" r="1.8" fill="#fff"/><circle cx="67" cy="48" r="1.8" fill="#fff"/><ellipse cx="50" cy="60" rx="3.5" ry="2.5" fill="#c87898"/><line x1="15" y1="59" x2="40" y2="61" stroke="#ddd" stroke-width="1.4"/><line x1="15" y1="64" x2="40" y2="64" stroke="#ddd" stroke-width="1.4"/><line x1="60" y1="61" x2="85" y2="59" stroke="#ddd" stroke-width="1.4"/><line x1="60" y1="64" x2="85" y2="64" stroke="#ddd" stroke-width="1.4"/><path d="M43 66 Q50 71 57 66" stroke="#c87898" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+  bruno:()=>`<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block"><circle cx="24" cy="28" r="16" fill="#a06828" stroke="#784a10" stroke-width="1.5"/><circle cx="76" cy="28" r="16" fill="#a06828" stroke="#784a10" stroke-width="1.5"/><circle cx="24" cy="28" r="10" fill="#c88840"/><circle cx="76" cy="28" r="10" fill="#c88840"/><circle cx="50" cy="57" r="33" fill="#a06828" stroke="#784a10" stroke-width="2"/><ellipse cx="50" cy="65" rx="17" ry="12" fill="#c88840"/><circle cx="24" cy="60" r="9" fill="#b87838" opacity="0.18"/><circle cx="76" cy="60" r="9" fill="#b87838" opacity="0.18"/><circle cx="35" cy="46" r="6.5" fill="#fff"/><circle cx="65" cy="46" r="6.5" fill="#fff"/><circle cx="35" cy="47" r="4.5" fill="#1a0a00"/><circle cx="65" cy="47" r="4.5" fill="#1a0a00"/><circle cx="36" cy="45" r="1.8" fill="#fff"/><circle cx="66" cy="45" r="1.8" fill="#fff"/><ellipse cx="50" cy="59" rx="5.5" ry="3.5" fill="#1a0a00"/><path d="M44 65 Q50 70 56 65" stroke="#1a0a00" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>`
 };
 
-// ── VIGNETTES — CS, EM, AR only. No MP questions. ──────
-const VIGNETTES = [
-  {
-    id:1, model:'CS',
-    char1:{ name:'Rowan', img:'Rowan.png', hair:'#8B4513', shirt:'#4A90D9', pants:'#2C3E50', style:'short' },
-    char2:{ name:'Alex',  img:'Alex.png',  hair:'#1C1C1C', shirt:'#27AE60', pants:'#154360', style:'short' },
-    scene:'outdoor',
-    parts:[
-      'Rowan and Alex love their home.',
-      'It is where they grew up, where they play every day, and where they plan to stay for the rest of their lives.',
-      'Last weekend, when they were deciding where to eat their snack, they chose the spot under the old oak tree — the very spot where they first became best friends.'
-    ],
-    questions:[
-      { text:'Alex bought Rowan a treat on their birthday only because Rowan had bought them a treat on their birthday.', qM:'EM', keyed:'NO',  qIllust:'birthday'   },
-      { text:'When they have snacks, Rowan and Alex often share what they have, swapping bites or eating from the same bag.', qM:'CS', keyed:'YES', qIllust:'share_food' },
-      { text:'Rowan and Alex flipped a coin to decide which game they would play.', qM:'EM', keyed:'NO', qIllust:'coin' }
-    ]
-  },
-  {
-    id:3, model:'EM',
-    char1:{ name:'Avery',  img:'Avery.png',  hair:'#E0A835', shirt:'#E67E22', pants:'#154360', style:'short' },
-    char2:{ name:'Bailey', img:'Bailey.png', hair:'#1C1C1C', shirt:'#1ABC9C', pants:'#2C3E50', style:'short' },
-    scene:'playground',
-    parts:[
-      'Avery and Bailey take turns using the big swing at their school. Avery uses it one day, and Bailey uses it the next day.',
-      'Avery and Bailey each have their own backpacks with their own supplies for school — they both feel that having the exact same things makes them equal.'
-    ],
-    questions:[
-      { text:'Avery and Bailey feel like they have always been together and always will be.', qM:'CS', keyed:'NO',  qIllust:'forever'   },
-      { text:'When Avery has Bailey over for a snack, they both expect that Bailey will have Avery over for a snack in return sometime soon.', qM:'EM', keyed:'YES', qIllust:'birthday'  },
-      { text:'When the teacher gave out stickers, Avery and Bailey each made sure they took the same number.', qM:'EM', keyed:'YES', qIllust:'stickers' }
-    ]
-  },
-  {
-    id:5, model:'CS',
-    char1:{ name:'Blake',   img:'Blake.png',   hair:'#7B4F2A', shirt:'#1ABC9C', pants:'#2C3E50', style:'short' },
-    char2:{ name:'Cameron', img:'Cameron.png', hair:'#8B4513', shirt:'#3498DB', pants:'#154360', style:'short' },
-    scene:'home',
-    parts:[
-      "If Blake or Cameron is hungry, they just help themselves freely to snacks at each other's house — no need to ask.",
-      'When they had to decide where to play, they chose the park because going there always makes them feel closer to each other.'
-    ],
-    questions:[
-      { text:'When Blake and Cameron eat lunch together, they share their food, sometimes eating off the same plate.', qM:'CS', keyed:'YES', qIllust:'share_food' },
-      { text:'Cameron is careful not to interrupt Blake when they are talking, but Blake interrupts them sometimes.', qM:'AR', keyed:'NO',  qIllust:'interrupt'  },
-      { text:'When Blake got hurt at the playground, Cameron felt almost like they were hurt too. Sometimes they even say "when we got hurt."', qM:'CS', keyed:'YES', qIllust:'hurt' }
-    ]
-  },
-  {
-    id:6, model:'AR',
-    char1:{ name:'Casey',   img:'Casey.png',   hair:'#C0392B', shirt:'#8E44AD', pants:'#2C3E50', style:'long'     },
-    char2:{ name:'Charlie', img:'Charlie.png', hair:'#7B4F2A', shirt:'#E59866', pants:'#6C3483', style:'pigtails' },
-    scene:'school',
-    parts:[
-      'At the start of every art class, Casey gets to pick the best crayons and markers first. Charlie gets to choose from whatever is left over.',
-      'Also, when Casey and Charlie share a snack, Casey always brings the food. Charlie often does not bring anything.'
-    ],
-    questions:[
-      { text:'Casey and Charlie share a scooter — whoever wants to ride it just takes it whenever they like.', qM:'CS', keyed:'NO',  qIllust:'scooter' },
-      { text:'Casey makes the decisions and Charlie follows them.', qM:'AR', keyed:'YES', qIllust:'boss'    },
-      { text:'When working on a project together, Casey and Charlie watch each other to make sure neither one does more or less than the other.', qM:'EM', keyed:'NO', qIllust:'balance' }
-    ]
-  },
-  {
-    id:7, model:'EM',
-    char1:{ name:'Dakota', img:'Dakota.png', hair:'#1C1C1C', shirt:'#E74C3C', pants:'#2C3E50', style:'short' },
-    char2:{ name:'Drew',   img:'Drew.png',   hair:'#8B4513', shirt:'#3498DB', pants:'#154360', style:'short' },
-    scene:'outdoor',
-    parts:[
-      'When working on a school project, Dakota and Drew keep track of each other to make sure they each do the same amount of work.',
-      'Last weekend, Dakota brought Drew some apples from their backyard tree. So this weekend, Drew shared their cookies with Dakota to make things even.'
-    ],
-    questions:[
-      { text:'When Dakota and Drew eat lunch together, they share their food, sometimes eating off the same plate.', qM:'CS', keyed:'NO',  qIllust:'share_food' },
-      { text:'Dakota and Drew take turns using the computer to make sure they each get the same amount of time.', qM:'EM', keyed:'YES', qIllust:'computer'   },
-      // ── WAS MP, NOW AR-NO ──
-      { text:'When Dakota and Drew disagree about something, one of them just goes along with whatever the other one decides without saying anything.', qM:'AR', keyed:'NO', qIllust:'boss' }
-    ]
-  },
-  {
-    id:8, model:'CS',
-    char1:{ name:'Ellis',  img:'Ellis.png',  hair:'#DAA520', shirt:'#27AE60', pants:'#154360', style:'pigtails' },
-    char2:{ name:'Finley', img:'Finley.png', hair:'#7B4F2A', shirt:'#9B59B6', pants:'#2C3E50', style:'long'     },
-    scene:'school',
-    parts:[
-      'When Ellis and Finley did a school project together, they shared all their ideas openly and worked on every single part of it together.',
-      'Also, Ellis and Finley like to buy each other small gifts whenever they see something the other person would love — just because they like making each other happy.'
-    ],
-    questions:[
-      { text:'When Ellis and Finley eat lunch together, they share their food, sometimes eating off the same plate.', qM:'CS', keyed:'YES', qIllust:'share_food' },
-      { text:'Finley is careful not to interrupt Ellis when they are talking, but Ellis interrupts them sometimes.', qM:'AR', keyed:'NO',  qIllust:'interrupt'  },
-      { text:'When Ellis got hurt at the playground, Finley felt almost like they were hurt too. Sometimes they even say "when we got hurt."', qM:'CS', keyed:'YES', qIllust:'hurt' }
-    ]
-  },
-  {
-    id:9, model:'EM',
-    char1:{ name:'Harper', img:'Harper.png', hair:'#9B2335', shirt:'#2980B9', pants:'#2C3E50', style:'short' },
-    char2:{ name:'Hayden', img:'Hayden.png', hair:'#8B4513', shirt:'#E67E22', pants:'#154360', style:'short' },
-    scene:'birthday',
-    parts:[
-      'Harper had Hayden over to their birthday party last year, so Hayden is planning to invite Harper to their birthday party this year.',
-      'Harper and Hayden baked cookies together last week. Hayden split the cookies into two equal piles, and Harper got to pick which pile they wanted.'
-    ],
-    questions:[
-      // ── WAS MP-NO, NOW EM-YES ──
-      { text:'When Harper and Hayden work on a project together, they keep track to make sure they each do exactly the same amount of work.', qM:'EM', keyed:'YES', qIllust:'balance' },
-      { text:'Yesterday Harper chose which game they would play. Hayden went along with their choice without saying anything, even though they did not like the game.', qM:'AR', keyed:'NO', qIllust:'boss'     },
-      { text:'When Harper won a prize last month, Hayden was just as proud and happy as if they themselves had won it.', qM:'CS', keyed:'NO', qIllust:'trophy' }
-    ]
-  },
-  {
-    id:10, model:'AR',
-    char1:{ name:'Jamie',  img:'Jamie.png',  hair:'#1C1C1C', shirt:'#E91E8C', pants:'#2C3E50', style:'long'     },
-    char2:{ name:'Jordan', img:'Jordan.png', hair:'#7B4F2A', shirt:'#5DADE2', pants:'#154360', style:'pigtails' },
-    scene:'treehouse',
-    parts:[
-      'The treehouse belongs to Jamie. Jordan can only use it when Jamie says it is okay — they are just a guest there.',
-      'Jamie is the one who makes all the rules about what is and is not allowed at the treehouse.',
-      'Also, every time they share snacks, Jamie gets to pick the best ones first and takes as many as they want.'
-    ],
-    questions:[
-      { text:'Jordan is careful not to interrupt Jamie when they are talking, but Jamie interrupts Jordan sometimes.', qM:'AR', keyed:'YES', qIllust:'interrupt' },
-      { text:'Jamie makes the decisions and Jordan follows them.', qM:'AR', keyed:'YES', qIllust:'boss'      },
-      { text:'Jamie tells Jordan when they do not like something, but Jordan does not tell Jamie when they do not like something.', qM:'AR', keyed:'YES', qIllust:'feedback' }
-    ]
-  },
-  {
-    id:12, model:'AR',
-    char1:{ name:'Kai',     img:'Kai.png',     hair:'#9B2335', shirt:'#1ABC9C', pants:'#6C3483', style:'long'     },
-    char2:{ name:'Kennedy', img:'Kennedy.png', hair:'#E8D5A3', shirt:'#F39C12', pants:'#2C3E50', style:'pigtails' },
-    scene:'cafeteria',
-    parts:[
-      'Every day at lunch, Kai gets to pick the best items from the shared lunch tray first. Kennedy picks from whatever is left over.',
-      'Also, Kai tells Kennedy when they do not like something Kennedy made or shared, but Kennedy does not tell Kai when they do not like something Kai made or shared.'
-    ],
-    questions:[
-      { text:'Kai buys Kennedy a big present on their birthday every year, and Kennedy always makes sure Kai knows how thankful they are.', qM:'AR', keyed:'YES', qIllust:'birthday' },
-      { text:'Kai and Kennedy work in the school garden together, planting whatever they like and just doing whatever needs to be done.', qM:'CS', keyed:'NO',  qIllust:'garden'   },
-      { text:'When Kai and Kennedy made a painting together, Kai said their name had to go on it first.', qM:'AR', keyed:'YES', qIllust:'painting' }
-    ]
-  },
-  {
-    id:13, model:'EM',
-    char1:{ name:'Logan',  img:'Logan.png',  hair:'#7B4F2A', shirt:'#E67E22', pants:'#2C3E50', style:'short' },
-    char2:{ name:'Morgan', img:'Morgan.png', hair:'#1C1C1C', shirt:'#9B59B6', pants:'#154360', style:'short' },
-    scene:'icecream',
-    parts:[
-      'Logan had Morgan over for a sleepover last month, so Morgan is planning to invite Logan over for a sleepover next month.',
-      'Also, Logan took Morgan out for ice cream on their birthday because Morgan had taken Logan out for ice cream on their birthday earlier in the year.'
-    ],
-    questions:[
-      { text:'When their class collected coins for a toy drive, Logan and Morgan each put in the same amount.', qM:'EM', keyed:'YES', qIllust:'coins'    },
-      { text:'Logan tells Morgan when they do not like something Morgan shared, but Morgan does not tell Logan when they do not like something Logan shared.', qM:'AR', keyed:'NO', qIllust:'feedback' },
-      // ── WAS MP-NO, NOW CS-NO ──
-      { text:'When Logan and Morgan are working on something together, they share all their ideas openly and do not keep track of who contributed what.', qM:'CS', keyed:'NO', qIllust:'share_food' }
-    ]
-  },
-  {
-    id:14, model:'CS',
-    char1:{ name:'Parker', img:'Parker.png', hair:'#9B2335', shirt:'#2980B9', pants:'#6C3483', style:'long'     },
-    char2:{ name:'Quinn',  img:'Quinn.png',  hair:'#DAA520', shirt:'#F1C40F', pants:'#2C3E50', style:'pigtails' },
-    scene:'garden',
-    parts:[
-      'Parker and Quinn work on their school garden together, planting whatever they like and just doing whatever needs to be done.',
-      'Last year, Parker hurt their arm on the playground. Quinn felt almost like their own arm was hurt. It seemed like they both felt the same pain, and sometimes they even say "when we hurt our arm."'
-    ],
-    questions:[
-      { text:'Quinn bought Parker a treat on their birthday only because Parker had bought them a treat on their birthday.', qM:'EM', keyed:'NO', qIllust:'birthday' },
-      { text:'Parker tells Quinn when they do not like something Quinn shared, but Quinn does not tell Parker when they do not like something Parker shared.', qM:'AR', keyed:'NO', qIllust:'feedback' },
-      // ── WAS MP-NO, NOW CS-YES ──
-      { text:'Parker and Quinn share their snacks freely — if one of them is hungry, they just help themselves to the other\'s food without needing to ask.', qM:'CS', keyed:'YES', qIllust:'share_food' }
-    ]
-  },
-  {
-    id:15, model:'AR',
-    char1:{ name:'Reese', img:'Reese.png', hair:'#1C1C1C', shirt:'#E74C3C', pants:'#2C3E50', style:'short' },
-    char2:{ name:'Riley', img:'Riley.png', hair:'#E8D5A3', shirt:'#27AE60', pants:'#154360', style:'short' },
-    scene:'home',
-    parts:[
-      'Reese is the kind of kid that everyone naturally listens to — they are the best at almost everything the kids around them do, and whatever they think or say sets the tone for the whole group.',
-      'Riley thinks Reese is just about the coolest kid around, and they always feel lucky whenever Reese wants to spend time with them.',
-      'When Reese did something amazing last month, Riley looked up at them with great respect and admiration — they were almost in awe of what Reese had done.'
-    ],
-    questions:[
-      { text:'Riley is careful not to interrupt Reese when they are talking, but Reese interrupts Riley sometimes.', qM:'AR', keyed:'YES', qIllust:'interrupt' },
-      { text:'Reese makes the decisions and Riley follows them.', qM:'AR', keyed:'YES', qIllust:'boss'      },
-      { text:'Riley and Reese take turns using the computer to make sure they each get the same amount of time.', qM:'EM', keyed:'NO', qIllust:'computer' }
-    ]
-  }
+const FOOD_POOL=[
+  {emoji:'&#127827;',label:'Strawberry',type:'food0',isSocial:false},
+  {emoji:'&#129744;',label:'Blueberry', type:'food1',isSocial:false},
+  {emoji:'&#127820;',label:'Banana',    type:'food2',isSocial:false},
+  {emoji:'&#127817;',label:'Watermelon',type:'food3',isSocial:false},
+];
+const CHAR_POOL=[
+  {emoji:'&#128045;',label:'Milo', type:'char0',isSocial:true,charKey:'milo' },
+  {emoji:'&#128055;',label:'Benny',type:'char1',isSocial:true,charKey:'benny'},
+  {emoji:'&#128048;',label:'Rosie',type:'char2',isSocial:true,charKey:'rosie'},
+  {emoji:'&#128059;',label:'Bruno',type:'char3',isSocial:true,charKey:'bruno'},
 ];
 
-// ── STATE ──────────────────────────────────────────────
-const S = {
-  phase: 'welcome', name: '', age: '',
-  vi: 0, qi: 0, eqi: 0,
-  pendingAns: null,
-  answers: [], stars: 0, adminOpen: false,
-  elevenLabsKey:   localStorage.getItem('rad_elKey')   || '',
-  elevenLabsVoice: localStorage.getItem('rad_elVoice') || 'MF3mGyEYCl7XYWbV9V6O'
-};
+const DCOLS   =['dc-green','dc-blue','dc-orange','dc-purple'];
+const T_EMOJIS=['&#127822;','&#11088;','&#127752;','&#127880;','&#128056;','&#127800;','&#129419;','&#127846;','&#127872;','&#129412;'];
 
-// ── SPEECH ─────────────────────────────────────────────
-let voices = [], currentAudio = null, seqGen = 0, audioUnlocked = false;
+const G=(()=>{
 
-function initVoices() {
-  function load() { const v = speechSynthesis.getVoices(); if (v.length) voices = v; }
-  load();
-  speechSynthesis.onvoiceschanged = load;
-}
-
-function unlockAudio(thenSpeak) {
-  if (audioUnlocked) { if (thenSpeak) speak(thenSpeak); return; }
-  audioUnlocked = true;
-  if (window.speechSynthesis) {
-    const silent = new SpeechSynthesisUtterance(' ');
-    silent.volume = 0;
-    silent.onend = () => { if (thenSpeak) speak(thenSpeak); };
-    speechSynthesis.speak(silent);
-  } else { if (thenSpeak) speak(thenSpeak); }
-  const ub = document.getElementById('unlockBtn');
-  if (ub) ub.remove();
-}
-
-function bestVoice() {
-  const prefs = ['Google UK English Female','Samantha','Karen','Moira','Google US English','Microsoft Zira Desktop - English (United States)','Microsoft Zira - English (United States)'];
-  for (const p of prefs) { const v = voices.find(v => v.name === p || v.name.includes(p)); if (v) return v; }
-  return voices.find(v => v.lang && v.lang.startsWith('en') && v.localService) ||
-         voices.find(v => v.lang && v.lang.startsWith('en')) || voices[0] || null;
-}
-
-function speak(text, done) {
-  done = done || function(){};
-  if (!text || !text.trim()) { done(); return; }
-  if (S.elevenLabsKey && S.elevenLabsKey.trim()) { speakElevenLabs(text, done); }
-  else { speakWebSpeech(text, done); }
-}
-
-function speakWebSpeech(text, done) {
-  done = done || function(){};
-  if (!window.speechSynthesis) { done(); return; }
-  speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.voice = bestVoice(); u.rate = 1.06; u.pitch = 1.08; u.volume = 1;
-  u.onend = () => { setDot(false); done(); };
-  u.onerror = () => { setDot(false); done(); };
-  setDot(true);
-  speechSynthesis.speak(u);
-}
-
-function speakElevenLabs(text, done) {
-  done = done || function(){};
-  const voiceId = S.elevenLabsVoice || 'MF3mGyEYCl7XYWbV9V6O';
-  setDot(true);
-  fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
-    method: 'POST',
-    headers: { 'Accept':'audio/mpeg','Content-Type':'application/json','xi-api-key':S.elevenLabsKey },
-    body: JSON.stringify({ text, model_id:'eleven_turbo_v2', voice_settings:{ stability:0.42, similarity_boost:0.75, style:0.38, use_speaker_boost:true, speed:1.25 } })
-  })
-  .then(r => { if (!r.ok) throw new Error('ElevenLabs ' + r.status); return r.blob(); })
-  .then(blob => {
-    const url = URL.createObjectURL(blob);
-    const audio = new Audio(url);
-    currentAudio = audio;
-    audio.onended = () => { setDot(false); URL.revokeObjectURL(url); currentAudio = null; done(); };
-    audio.onerror = () => { setDot(false); URL.revokeObjectURL(url); currentAudio = null; speakWebSpeech(text, done); };
-    audio.play().catch(() => { setDot(false); speakWebSpeech(text, done); });
-  })
-  .catch(err => { console.warn('ElevenLabs error:', err.message); setDot(false); speakWebSpeech(text, done); });
-}
-
-function speakSeq(parts, highlightCb, done) {
-  const id = ++seqGen;
-  let i = 0;
-  function next() {
-    if (seqGen !== id) return;
-    if (i >= parts.length) { done(); return; }
-    if (highlightCb) highlightCb(i);
-    speak(parts[i], () => { i++; next(); });
-  }
-  next();
-}
-
-function stopSpeak() {
-  seqGen++;
-  if (currentAudio) { currentAudio.pause(); currentAudio.src = ''; currentAudio = null; }
-  if (window.speechSynthesis) speechSynthesis.cancel();
-  setDot(false);
-}
-
-function setDot(on) {
-  const d = document.querySelector('.audio-dot');
-  if (d) d.classList.toggle('on', on);
-  const l = document.getElementById('audioLabel');
-  if (l) l.textContent = on ? 'Listening...' : 'Done';
-}
-
-// ── SVG HELPERS ────────────────────────────────────────
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-const SKINS = ['#FDBCB4','#F0C090','#E0A878','#C87E50','#FDDBB4'];
-function skin(name) {
-  let h = 0;
-  for (let i = 0; i < name.length; i++) h = (h*31 + name.charCodeAt(i)) & 0xFFFF;
-  return SKINS[h % SKINS.length];
-}
-
-// ── KID SVG ────────────────────────────────────────────
-function kidSVG(cx, groundY, cfg, animOffset, flip) {
-  animOffset = animOffset || '0s';
-  flip = flip || false;
-  const { hair, shirt, pants, style, img } = cfg;
-  const bobBegin = (animOffset === 'wave') ? '0s' : animOffset;
-
-  if (img && animOffset !== 'wave') {
-    const imgUrl = IMG_BASE + img;
-    const imgW = 88, imgH = 182, imgYOffset = 20;
-    const p = [];
-    p.push(`<ellipse cx="${cx}" cy="${groundY}" rx="26" ry="6" fill="rgba(0,0,0,.10)"/>`);
-    const imgEl = `<image href="${imgUrl}" x="${cx - imgW/2}" y="${groundY - imgH + imgYOffset}" width="${imgW}" height="${imgH}" preserveAspectRatio="xMidYMax meet"/>`;
-    if (flip) {
-      p.push(`<g transform="translate(${cx * 2}, 0) scale(-1, 1)">${imgEl}</g>`);
-    } else {
-      p.push(imgEl);
-    }
-    return `<g><animateTransform attributeName="transform" type="translate" values="0,0; 0,-5; 0,0" dur="2.6s" begin="${bobBegin}" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>${p.join('')}</g>`;
-  }
-
-  const sk = skin(cfg.name || '');
-  const hR=28, bH=62, bW=50, lH=58, lW=19, aH=44, aW=12;
-  const fY=groundY, lT=fY-lH, bT=lT-bH, hY=bT-hR-3;
-  const p = [];
-  p.push(`<ellipse cx="${cx}" cy="${fY}" rx="26" ry="6" fill="rgba(0,0,0,.08)"/>`);
-  p.push(`<rect x="${cx-lW-2}" y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
-  p.push(`<rect x="${cx+2}"    y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
-  p.push(`<ellipse cx="${cx-lW*.5-1}" cy="${fY}" rx="13" ry="6" fill="#333"/>`);
-  p.push(`<ellipse cx="${cx+lW*.5+1}" cy="${fY}" rx="13" ry="6" fill="#333"/>`);
-  p.push(`<rect x="${cx-bW*.5-aW}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
-  p.push(`<circle cx="${cx-bW*.5-aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>`);
-  if (animOffset === 'wave') {
-    const pvX = (cx+bW*.5+aW*.5).toFixed(1), pvY = (bT+8).toFixed(1);
-    p.push(`<g><animateTransform attributeName="transform" type="rotate" values="-35 ${pvX} ${pvY}; 40 ${pvX} ${pvY}; -35 ${pvX} ${pvY}" dur="0.85s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
-      <rect x="${cx+bW*.5}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>
-      <circle cx="${cx+bW*.5+aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>
-    </g>`);
-  } else {
-    p.push(`<rect x="${cx+bW*.5}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
-    p.push(`<circle cx="${cx+bW*.5+aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>`);
-  }
-  p.push(`<rect x="${cx-bW*.5}" y="${bT}" width="${bW}" height="${bH}" rx="10" fill="${shirt}"/>`);
-  p.push(`<path d="M${cx-9},${bT} Q${cx},${bT+13} ${cx+9},${bT}" fill="white" opacity=".2"/>`);
-  p.push(`<circle cx="${cx}" cy="${hY}" r="${hR}" fill="${sk}"/>`);
-  if (style==='short') {
-    p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
-  } else if (style==='long') {
-    p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
-    p.push(`<rect x="${cx-hR-1}" y="${hY-6}" width="13" height="40" rx="6" fill="${hair}"/>`);
-    p.push(`<rect x="${cx+hR-12}" y="${hY-6}" width="13" height="40" rx="6" fill="${hair}"/>`);
-  } else if (style==='pigtails') {
-    p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
-    p.push(`<circle cx="${cx-hR-5}" cy="${hY-3}" r="10" fill="${hair}"/>`);
-    p.push(`<circle cx="${cx+hR+5}" cy="${hY-3}" r="10" fill="${hair}"/>`);
-    p.push(`<line x1="${cx-hR+1}" y1="${hY-1}" x2="${cx-hR-5}" y2="${hY-3}" stroke="${hair}" stroke-width="5"/>`);
-    p.push(`<line x1="${cx+hR-1}" y1="${hY-1}" x2="${cx+hR+5}" y2="${hY-3}" stroke="${hair}" stroke-width="5"/>`);
-  }
-  p.push(`<path d="M${cx-14},${hY-2} Q${cx-8},${hY-12} ${cx-2},${hY-2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
-  p.push(`<path d="M${cx+2},${hY-2} Q${cx+8},${hY-12} ${cx+14},${hY-2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
-  p.push(`<path d="M${cx-10},${hY+9} Q${cx},${hY+19} ${cx+10},${hY+9}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
-  p.push(`<circle cx="${cx-17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
-  p.push(`<circle cx="${cx+17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
-  return `<g><animateTransform attributeName="transform" type="translate" values="0,0; 0,-5; 0,0" dur="2.6s" begin="${bobBegin}" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>${p.join('')}</g>`;
-}
-
-// ── QUESTION ILLUSTRATIONS ─────────────────────────────
-function qIllustSVG(type) {
-  const W2 = 280, H2 = 108;
-  const bgs = {
-    share_food:'#FFF8E7', birthday:'#FFF0F5', coin:'#FFFDE7', hug:'#F0FFF4',
-    ice_cream:'#FFF0F5', forever:'#FFF0F5', stickers:'#FFFDE7', garden:'#F0FFF4',
-    interrupt:'#F0F8FF', hurt:'#FFF8F0', scooter:'#F0F8FF',
-    boss:'#FFF5F5', balance:'#F0FFF4', computer:'#F0F8FF', trophy:'#FFFDE7',
-    contract:'#F5F5FF', feedback:'#F0F8FF', clock:'#F5F5FF', coins:'#FFFDE7', painting:'#FFF0F5'
+  let S={
+    pid:'',age:0,pType:'child',
+    variant:'dislike',orderMode:'random',
+    likedFoodIdx:0,dislikedFoodIdx:1,
+    posCharIdx:0,thinCharIdx:1,
+    firstBlock:1,round:1,
+    phase:'baseline',
+    /*
+     * attnContext values:
+     *  'post_fam'     — immediately after a fam block
+     *  'pre_round2'   — reminder of fam1 before starting fam2
+     *  'pre_test2'    — reminder of fam1 before test2
+     *  'pre_test2_new'— reminder of fam2 before test2 (NEW — runs after pre_test2)
+     */
+    attnContext:'post_fam',
+    trialSeq:[],trialIdx:0,trialStart:0,
+    trainIdx:0,trainTrials:[],
+    data:[],muted:false,pipState:'neutral',
   };
-  const bg = bgs[type] || '#F8F9FA';
-  let inn = `<rect x="0" y="0" width="${W2}" height="${H2}" fill="${bg}"/>`;
-  switch(type) {
-    case 'share_food': {
-      inn += `<ellipse cx="140" cy="72" rx="48" ry="14" fill="#DEB887"/>`;
-      inn += `<circle cx="140" cy="58" r="28" fill="white" stroke="#DEB887" stroke-width="2"/>`;
-      inn += `<circle cx="130" cy="54" r="7" fill="#E74C3C"/>`;
-      inn += `<circle cx="148" cy="60" r="6" fill="#FFD700"/>`;
-      inn += `<circle cx="138" cy="66" r="5" fill="#27AE60"/>`;
-      inn += `<line x1="84" y1="44" x2="110" y2="62" stroke="#aaa" stroke-width="3" stroke-linecap="round"/>`;
-      inn += `<line x1="170" y1="62" x2="196" y2="44" stroke="#aaa" stroke-width="3" stroke-linecap="round"/>`;
-      inn += `<text x="140" y="98" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">sharing food together!</text>`;
-      break;
-    }
-    case 'birthday': {
-      inn += `<rect x="90" y="70" width="100" height="28" rx="6" fill="#FF69B4"/>`;
-      inn += `<rect x="94" y="54" width="92" height="20" rx="5" fill="#FFD700"/>`;
-      inn += `<rect x="98" y="41" width="84" height="16" rx="4" fill="#FF8C69"/>`;
-      for(let i=0;i<3;i++){const cx=115+i*25;inn+=`<rect x="${cx-3}" y="24" width="6" height="18" rx="2" fill="#9B59B6"/><ellipse cx="${cx}" cy="22" rx="4.5" ry="7" fill="#FFD700" opacity="0.9"/>`;}
-      inn += `<text x="140" y="108" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">birthday treat!</text>`;
-      break;
-    }
-    case 'coin': {
-      inn += `<circle cx="140" cy="46" r="32" fill="#FFD700" stroke="#F39C12" stroke-width="3"/>`;
-      inn += `<line x1="140" y1="30" x2="140" y2="62" stroke="#F39C12" stroke-width="2.5"/>`;
-      inn += `<path d="M132,34 Q124,34 124,42 Q124,50 140,50 Q156,50 156,58 Q156,66 140,66 Q128,66 124,58" stroke="#F39C12" stroke-width="2.5" fill="none"/>`;
-      inn += `<text x="140" y="100" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">flip a coin!</text>`;
-      break;
-    }
-    case 'forever': {
-      inn += `<circle cx="116" cy="46" r="24" fill="#FF69B4" opacity="0.65"/>`;
-      inn += `<circle cx="164" cy="46" r="24" fill="#FF69B4" opacity="0.65"/>`;
-      inn += `<polygon points="92,58 188,58 140,90" fill="#FF69B4" opacity="0.65"/>`;
-      inn += `<text x="140" y="106" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">always together!</text>`;
-      break;
-    }
-    case 'stickers': {
-      const sp = (cx,cy,r) => [...Array(10)].map((_,i)=>{const a=(i*36-90)*Math.PI/180,ri=i%2===0?r:r*0.45;return `${(cx+Math.cos(a)*ri).toFixed(1)},${(cy+Math.sin(a)*ri).toFixed(1)}`;}).join(' ');
-      inn += `<polygon points="${sp(75,32,18)}" fill="#FFD700" stroke="#F39C12" stroke-width="1.5"/>`;
-      inn += `<polygon points="${sp(205,32,18)}" fill="#FFD700" stroke="#F39C12" stroke-width="1.5"/>`;
-      inn += `<rect x="128" y="44" width="24" height="5" rx="2" fill="#27AE60"/>`;
-      inn += `<rect x="128" y="55" width="24" height="5" rx="2" fill="#27AE60"/>`;
-      inn += `<text x="140" y="96" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">same number!</text>`;
-      break;
-    }
-    case 'garden': {
-      inn += `<rect x="38" y="78" width="204" height="12" rx="6" fill="#8B4513" opacity="0.45"/>`;
-      const fc=['#FF69B4','#FFD700','#FF6B6B','#DA70D6','#FF8C00'];
-      for(let i=0;i<5;i++){const fx=60+i*42;inn+=`<line x1="${fx}" y1="78" x2="${fx}" y2="50" stroke="#228B22" stroke-width="3"/><circle cx="${fx}" cy="46" r="12" fill="${fc[i]}" opacity="0.85"/><circle cx="${fx}" cy="46" r="6" fill="#FFD700"/>`;}
-      inn += `<text x="140" y="104" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#666">working in the garden!</text>`;
-      break;
-    }
-    case 'interrupt': {
-      inn += `<rect x="12" y="18" width="118" height="50" rx="12" fill="#4ECDC4"/>`;
-      inn += `<polygon points="32,68 50,68 38,84" fill="#4ECDC4"/>`;
-      inn += `<circle cx="52" cy="43" r="5" fill="white"/>`;
-      inn += `<circle cx="68" cy="43" r="5" fill="white"/>`;
-      inn += `<circle cx="84" cy="43" r="5" fill="white"/>`;
-      inn += `<rect x="116" y="10" width="148" height="54" rx="12" fill="#FF6B6B" opacity="0.93"/>`;
-      inn += `<polygon points="136,64 154,64 142,80" fill="#FF6B6B" opacity="0.93"/>`;
-      inn += `<text x="185" y="42" text-anchor="middle" font-family="Arial Black" font-size="22" fill="white">!!!</text>`;
-      inn += `<text x="140" y="100" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">one interrupts!</text>`;
-      break;
-    }
-    case 'hurt': {
-      inn += `<circle cx="75" cy="32" r="18" fill="#FDBCB4"/>`;
-      inn += `<rect x="57" y="50" width="36" height="34" rx="8" fill="#4776e6"/>`;
-      inn += `<path d="M93,60 L108,52 L100,64 L118,56" stroke="#E74C3C" stroke-width="3" fill="none" stroke-linecap="round"/>`;
-      inn += `<path d="M128,52 Q148,44 162,52" stroke="#FF8C69" stroke-width="2.5" fill="none" stroke-dasharray="5,3"/>`;
-      inn += `<circle cx="200" cy="32" r="18" fill="#F0C090"/>`;
-      inn += `<rect x="182" y="50" width="36" height="34" rx="8" fill="#9B59B6"/>`;
-      inn += `<circle cx="193" cy="36" r="4" fill="#87CEEB" opacity="0.75"/>`;
-      inn += `<text x="140" y="97" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">feeling it together!</text>`;
-      break;
-    }
-    case 'scooter': {
-      inn += `<circle cx="88" cy="78" r="18" fill="none" stroke="#555" stroke-width="4"/>`;
-      inn += `<circle cx="192" cy="78" r="18" fill="none" stroke="#555" stroke-width="4"/>`;
-      inn += `<rect x="83" y="56" width="114" height="10" rx="5" fill="#E74C3C"/>`;
-      inn += `<line x1="140" y1="56" x2="130" y2="28" stroke="#8B4513" stroke-width="6" stroke-linecap="round"/>`;
-      inn += `<text x="140" y="106" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">whoever wants it!</text>`;
-      break;
-    }
-    case 'boss': {
-      inn += `<circle cx="82" cy="34" r="18" fill="#FDBCB4"/>`;
-      inn += `<polygon points="68,22 76,10 84,18 92,8 100,20 68,20" fill="#FFD700"/>`;
-      inn += `<rect x="64" y="52" width="36" height="30" rx="8" fill="#E74C3C"/>`;
-      inn += `<defs><marker id="arB" markerWidth="8" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 Z" fill="#888"/></marker></defs>`;
-      inn += `<line x1="118" y1="54" x2="158" y2="54" stroke="#888" stroke-width="3.5" marker-end="url(#arB)"/>`;
-      inn += `<circle cx="198" cy="34" r="18" fill="#F0C090"/>`;
-      inn += `<rect x="180" y="52" width="36" height="30" rx="8" fill="#3498DB"/>`;
-      inn += `<text x="140" y="108" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">one is in charge!</text>`;
-      break;
-    }
-    case 'balance': {
-      inn += `<line x1="140" y1="16" x2="140" y2="58" stroke="#8B4513" stroke-width="5" stroke-linecap="round"/>`;
-      inn += `<line x1="68" y1="58" x2="212" y2="58" stroke="#8B4513" stroke-width="5" stroke-linecap="round"/>`;
-      inn += `<rect x="46" y="58" width="52" height="26" rx="7" fill="#4ECDC4"/>`;
-      inn += `<text x="72" y="76" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="9" fill="white">work</text>`;
-      inn += `<rect x="182" y="58" width="52" height="26" rx="7" fill="#FF6B6B"/>`;
-      inn += `<text x="208" y="76" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="9" fill="white">work</text>`;
-      inn += `<text x="140" y="100" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">watching equal work!</text>`;
-      break;
-    }
-    case 'computer': {
-      inn += `<rect x="82" y="14" width="116" height="74" rx="8" fill="#2C3E50"/>`;
-      inn += `<rect x="89" y="21" width="102" height="58" rx="4" fill="#AED6F1"/>`;
-      inn += `<rect x="116" y="88" width="48" height="9" rx="3" fill="#2C3E50"/>`;
-      inn += `<circle cx="140" cy="50" r="24" fill="white" stroke="#2C3E50" stroke-width="2"/>`;
-      inn += `<line x1="140" y1="50" x2="140" y2="33" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>`;
-      inn += `<line x1="140" y1="50" x2="154" y2="57" stroke="#E74C3C" stroke-width="2" stroke-linecap="round"/>`;
-      inn += `<circle cx="42" cy="42" r="14" fill="#FDBCB4"/>`;
-      inn += `<rect x="28" y="56" width="28" height="22" rx="6" fill="#4ECDC4"/>`;
-      inn += `<circle cx="238" cy="42" r="14" fill="#F0C090"/>`;
-      inn += `<rect x="224" y="56" width="28" height="22" rx="6" fill="#FF6B6B"/>`;
-      inn += `<text x="140" y="108" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">taking turns!</text>`;
-      break;
-    }
-    case 'trophy': {
-      inn += `<path d="M96,20 L184,20 L168,72 Q140,90 112,72 Z" fill="#FFD700" stroke="#F39C12" stroke-width="2.5"/>`;
-      inn += `<path d="M96,20 Q70,20 70,46 Q70,72 96,72" fill="none" stroke="#F39C12" stroke-width="5" stroke-linecap="round"/>`;
-      inn += `<path d="M184,20 Q210,20 210,46 Q210,72 184,72" fill="none" stroke="#F39C12" stroke-width="5" stroke-linecap="round"/>`;
-      inn += `<rect x="128" y="88" width="24" height="14" rx="3" fill="#F39C12"/>`;
-      inn += `<rect x="110" y="100" width="60" height="10" rx="5" fill="#FFD700" stroke="#F39C12" stroke-width="1.5"/>`;
-      inn += `<text x="140" y="108" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">award!</text>`;
-      break;
-    }
-    case 'feedback': {
-      inn += `<rect x="14" y="16" width="128" height="54" rx="12" fill="#4ECDC4"/>`;
-      inn += `<polygon points="32,70 52,70 40,86" fill="#4ECDC4"/>`;
-      inn += `<text x="78" y="38" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="white">I don't</text>`;
-      inn += `<text x="78" y="54" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="white">like it!</text>`;
-      inn += `<circle cx="214" cy="38" r="24" fill="#F0C090"/>`;
-      inn += `<line x1="204" y1="50" x2="224" y2="50" stroke="#888" stroke-width="3" stroke-linecap="round"/>`;
-      inn += `<text x="140" y="102" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">only one speaks up!</text>`;
-      break;
-    }
-    case 'coins': {
-      for(let i=0;i<4;i++){inn+=`<ellipse cx="78" cy="${80-i*11}" rx="30" ry="10" fill="#FFD700" stroke="#F39C12" stroke-width="1.5"/>`;inn+=`<ellipse cx="202" cy="${80-i*11}" rx="30" ry="10" fill="#FFD700" stroke="#F39C12" stroke-width="1.5"/>`;}
-      inn += `<rect x="128" y="46" width="24" height="5" rx="2" fill="#27AE60"/>`;
-      inn += `<rect x="128" y="57" width="24" height="5" rx="2" fill="#27AE60"/>`;
-      inn += `<text x="140" y="100" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">same amount!</text>`;
-      break;
-    }
-    case 'painting': {
-      inn += `<rect x="72" y="10" width="136" height="82" rx="5" fill="#FFF9E8" stroke="#8B4513" stroke-width="7"/>`;
-      inn += `<rect x="80" y="18" width="120" height="66" rx="3" fill="#F0F8FF"/>`;
-      inn += `<ellipse cx="118" cy="48" rx="22" ry="28" fill="#FF69B4" opacity="0.4"/>`;
-      inn += `<ellipse cx="160" cy="42" rx="20" ry="22" fill="#4ECDC4" opacity="0.4"/>`;
-      inn += `<rect x="80" y="76" width="120" height="14" rx="3" fill="#FFD700"/>`;
-      inn += `<text x="100" y="88" font-family="Comic Sans MS,cursive" font-size="10" fill="#8B4513" font-weight="bold">MY NAME FIRST!</text>`;
-      inn += `<text x="140" y="106" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="10" fill="#888">my name goes first!</text>`;
-      break;
-    }
-    default: {
-      inn += `<circle cx="140" cy="54" r="34" fill="#FFE082"/>`;
-      inn += `<text x="140" y="64" text-anchor="middle" font-family="Arial Black" font-size="32" fill="#F39C12">?</text>`;
-    }
-  }
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W2} ${H2}" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block">${inn}</svg>`;
-}
 
-// ── SCENE SVGs ─────────────────────────────────────────
-function bgSVG(scene) {
-  const p = [];
-  const OUTDOOR = ['outdoor','playground','lemonade','garden','treehouse'];
-  if (OUTDOOR.includes(scene)) {
-    p.push(`<defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7EC8E3"/><stop offset="100%" stop-color="#C9EBF8"/></linearGradient></defs><rect x="0" y="0" width="${W}" height="${GY}" fill="url(#sk)"/>`);
-    p.push(`<g><animateTransform attributeName="transform" type="translate" values="0,0;22,0;0,0" dur="13s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/><ellipse cx="110" cy="50" rx="45" ry="23" fill="white" opacity=".88"/><ellipse cx="146" cy="41" rx="32" ry="19" fill="white" opacity=".88"/></g>`);
-    p.push(`<g><animateTransform attributeName="transform" type="translate" values="0,0;-16,0;0,0" dur="17s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/><ellipse cx="488" cy="63" rx="50" ry="25" fill="white" opacity=".88"/><ellipse cx="524" cy="53" rx="31" ry="17" fill="white" opacity=".88"/></g>`);
-    p.push(`<circle cx="546" cy="44" r="30" fill="#FFD700"/>`);
-    const rays = Array.from({length:8},(_,a)=>{const r=a*45*Math.PI/180;return `<line x1="${(Math.cos(r)*36).toFixed(1)}" y1="${(Math.sin(r)*36).toFixed(1)}" x2="${(Math.cos(r)*52).toFixed(1)}" y2="${(Math.sin(r)*52).toFixed(1)}" stroke="#FFD700" stroke-width="4" stroke-linecap="round"/>`;}).join('');
-    p.push(`<g transform="translate(546,44)"><animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="22s" repeatCount="indefinite" additive="sum"/>${rays}</g>`);
-    p.push(`<rect x="0" y="${GY}" width="${W}" height="${H-GY}" fill="#7EC850"/>`);
-    const tufts = Array.from({length:18},(_,i)=>{const gx=i*36;return `<path d="M${gx},${GY} Q${gx+9},${GY-13} ${gx+18},${GY}" fill="#5DAD3F"/>`;}).join('');
-    p.push(`<g><animateTransform attributeName="transform" type="skewX" values="0;2.5;0;-2.5;0" dur="5.5s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"/>${tufts}</g>`);
-  } else if (scene==='school'||scene==='cafeteria') {
-    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF9E8"/><rect x="0" y="${H-26}" width="${W}" height="26" fill="#E8D5A3"/><rect x="155" y="16" width="280" height="124" rx="5" fill="#4A7856"/><rect x="148" y="9" width="294" height="138" rx="8" fill="none" stroke="#8B4513" stroke-width="7"/><text x="295" y="79" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="17" fill="white" opacity=".55">Our Class</text><rect x="460" y="22" width="108" height="108" rx="5" fill="#AED6F1" stroke="#8B4513" stroke-width="5"/><line x1="514" y1="22" x2="514" y2="130" stroke="#8B4513" stroke-width="3"/><line x1="460" y1="76" x2="568" y2="76" stroke="#8B4513" stroke-width="3"/>`);
-  } else if (scene==='home') {
-    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF0E6"/><rect x="0" y="${H-26}" width="${W}" height="26" fill="#C4A882"/><rect x="26" y="${H-126}" width="200" height="100" rx="16" fill="#FF8C69"/><rect x="38" y="${H-126}" width="63" height="69" rx="10" fill="#FF7058"/><rect x="122" y="${H-126}" width="63" height="69" rx="10" fill="#FF7058"/><rect x="398" y="22" width="155" height="128" rx="6" fill="#AED6F1" stroke="#8B4513" stroke-width="6"/><line x1="476" y1="22" x2="476" y2="150" stroke="#8B4513" stroke-width="3"/><line x1="398" y1="86" x2="553" y2="86" stroke="#8B4513" stroke-width="3"/>`);
-  } else if (scene==='birthday') {
-    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF0F5"/><rect x="0" y="${H-26}" width="${W}" height="26" fill="#FFB6C1"/>`);
-    const bc=['#FF6B6B','#FFD700','#4ECDC4','#45B7D1','#FFA07A','#98D8C8','#FF69B4','#9B59B6'];
-    for(let i=0;i<8;i++){const bx=i*78;p.push(`<polygon points="${bx},7 ${bx+28},7 ${bx+14},36" fill="${bc[i%bc.length]}"/>`);}
-    [[70,70,'#FF6B6B','0'],[W-70,58,'#4ECDC4','0.7'],[300,46,'#FFD700','0.4']].forEach(([bx,by,col,del])=>{
-      p.push(`<g><animateTransform attributeName="transform" type="translate" values="0,0;0,-9;0,0" dur="3s" begin="${del}s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/><circle cx="${bx}" cy="${by}" r="30" fill="${col}" opacity=".82"/><line x1="${bx}" y1="${by+30}" x2="${bx}" y2="${by+88}" stroke="#ccc" stroke-width="1.5"/></g>`);
-    });
-  } else if (scene==='icecream') {
-    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#FFF5F0"/><rect x="0" y="${H-26}" width="${W}" height="26" fill="#F0D5A8"/><rect x="140" y="${H-175}" width="320" height="149" rx="12" fill="#FFE4C4" stroke="#E8C099" stroke-width="3"/>`);
-    const ic=['#FF69B4','#90EE90','#87CEEB','#FFD700'];
-    for(let i=0;i<4;i++){p.push(`<g><animateTransform attributeName="transform" type="translate" values="0,0;0,-4;0,0" dur="2.2s" begin="${i*0.55}s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/><circle cx="${190+i*78}" cy="${H-173}" r="27" fill="${ic[i]}"/></g>`);}
-    p.push(`<rect x="${W/2-106}" y="10" width="212" height="56" rx="12" fill="#FF69B4"/><text x="${W/2}" y="46" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="19" fill="white">Ice Cream!</text>`);
-  } else {
-    p.push(`<rect x="0" y="0" width="${W}" height="${H}" fill="#E8F4F8"/>`);
-  }
-  return p.join('');
-}
+  let attnFoodStart=0,attnSocStart=0;
 
-function propSVG(scene) {
-  const p = [];
-  if (scene==='outdoor') {
-    p.push(`<g><animateTransform attributeName="transform" type="rotate" values="0 69 ${GY};2 69 ${GY};0 69 ${GY};-2 69 ${GY};0 69 ${GY}" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"/><rect x="56" y="${GY-105}" width="26" height="110" rx="7" fill="#8B4513"/><circle cx="69" cy="${GY-120}" r="55" fill="#27AE60"/><circle cx="42" cy="${GY-102}" r="36" fill="#2ECC71"/><circle cx="98" cy="${GY-102}" r="36" fill="#2ECC71"/>${[[48,GY-138],[76,GY-152],[66,GY-122],[40,GY-115],[92,GY-135]].map(([ax,ay])=>`<circle cx="${ax}" cy="${ay}" r="7" fill="#E74C3C"/>`).join('')}</g>`);
-  } else if (scene==='playground') {
-    p.push(`<line x1="206" y1="12" x2="206" y2="${GY-7}" stroke="#8B4513" stroke-width="5"/><line x1="394" y1="12" x2="394" y2="${GY-7}" stroke="#8B4513" stroke-width="5"/><line x1="204" y1="12" x2="396" y2="12" stroke="#8B4513" stroke-width="5"/>`);
-    p.push(`<g><animateTransform attributeName="transform" type="rotate" values="-20 300 12;20 300 12;-20 300 12" dur="2.2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/><line x1="265" y1="12" x2="261" y2="${GY-47}" stroke="#888" stroke-width="2"/><line x1="335" y1="12" x2="339" y2="${GY-47}" stroke="#888" stroke-width="2"/><rect x="256" y="${GY-50}" width="88" height="12" rx="6" fill="#8B4513"/></g>`);
-    p.push(`<rect x="${W-158}" y="50" width="26" height="158" rx="5" fill="#E74C3C"/><line x1="${W-145}" y1="208" x2="${W-62}" y2="${GY}" stroke="#E74C3C" stroke-width="16" stroke-linecap="round"/>`);
-  } else if (scene==='lemonade') {
-    const sx=W/2-68;
-    p.push(`<rect x="${sx}" y="${GY-120}" width="136" height="122" rx="5" fill="#FFD700"/><rect x="${sx-11}" y="${GY-132}" width="158" height="18" rx="5" fill="#F39C12"/><text x="${W/2}" y="${GY-118}" text-anchor="middle" font-family="Comic Sans MS,cursive" font-size="13" fill="white" font-weight="bold">Lemonade!</text>`);
-    p.push(`<g><animateTransform attributeName="transform" type="translate" values="0,0;0,-3;0,0" dur="1.6s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/><rect x="${W/2-16}" y="${GY-106}" width="32" height="44" rx="6" fill="#FFFACD" stroke="#F1C40F" stroke-width="2"/></g>`);
-  } else if (scene==='treehouse') {
-    p.push(`<rect x="56" y="${GY-155}" width="52" height="159" rx="10" fill="#8B4513"/>`);
-    p.push(`<g><animateTransform attributeName="transform" type="rotate" values="0 82 ${GY};1.8 82 ${GY};0 82 ${GY};-1.8 82 ${GY};0 82 ${GY}" dur="7s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"/><circle cx="82" cy="${GY-175}" r="86" fill="#27AE60"/><circle cx="44" cy="${GY-144}" r="58" fill="#2ECC71"/><circle cx="122" cy="${GY-144}" r="58" fill="#2ECC71"/></g>`);
-    p.push(`<rect x="14" y="${GY-148}" width="164" height="14" rx="4" fill="#7D5A2A"/><rect x="18" y="${GY-228}" width="156" height="82" rx="5" fill="#DEB887"/><polygon points="14,${GY-228} 96,${GY-278} 178,${GY-228}" fill="#A0522D"/><rect x="83" y="${GY-190}" width="38" height="56" rx="19" fill="#8B4513"/><line x1="126" y1="${GY-148}" x2="126" y2="${GY+4}" stroke="#8B4513" stroke-width="4"/><line x1="112" y1="${GY-148}" x2="112" y2="${GY+4}" stroke="#8B4513" stroke-width="4"/>`);
-    for(let ry=GY-128;ry<GY;ry+=20) p.push(`<line x1="112" y1="${ry}" x2="126" y2="${ry}" stroke="#8B4513" stroke-width="3"/>`);
-  } else if (scene==='garden') {
-    p.push(`<rect x="190" y="${GY-9}" width="220" height="15" rx="7" fill="#8B4513" opacity=".42"/>`);
-    const fc=['#FF69B4','#FFD700','#FF6B6B','#DA70D6','#FF8C00'];
-    for(let i=0;i<5;i++){const fx=208+i*38,del=(i*0.4).toFixed(1);p.push(`<g><animateTransform attributeName="transform" type="rotate" values="0 ${fx} ${GY-9};9 ${fx} ${GY-9};0 ${fx} ${GY-9};-9 ${fx} ${GY-9};0 ${fx} ${GY-9}" dur="3.2s" begin="${del}s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1"/><line x1="${fx}" y1="${GY-9}" x2="${fx}" y2="${GY-50}" stroke="#228B22" stroke-width="3"/><circle cx="${fx}" cy="${GY-54}" r="12" fill="${fc[i]}"/><circle cx="${fx}" cy="${GY-54}" r="6" fill="#FFD700"/></g>`);}
-  } else if (scene==='school') {
-    const ty=H-80;
-    p.push(`<rect x="204" y="${ty}" width="192" height="11" rx="4" fill="#DEB887"/><rect x="218" y="${ty-38}" width="66" height="40" rx="5" fill="#F39C12"/>`);
-  } else if (scene==='cafeteria') {
-    const ty=GY-50;p.push(`<rect x="100" y="${ty}" width="400" height="20" rx="5" fill="#DEB887" stroke="#C4A265" stroke-width="2"/><rect x="116" y="${ty-62}" width="118" height="64" rx="8" fill="#DCDCDC" stroke="#B8B8B8" stroke-width="2"/><rect x="366" y="${ty-62}" width="118" height="64" rx="8" fill="#DCDCDC" stroke="#B8B8B8" stroke-width="2"/><circle cx="168" cy="${ty-33}" r="20" fill="#FF8C69"/><circle cx="214" cy="${ty-33}" r="13" fill="#7EC850"/><circle cx="418" cy="${ty-33}" r="20" fill="#FF8C69"/><circle cx="464" cy="${ty-33}" r="13" fill="#7EC850"/>`);
-  } else if (scene==='home') {
-    const ty=GY-82;p.push(`<rect x="236" y="${ty+48}" width="128" height="11" rx="4" fill="#DEB887"/><ellipse cx="300" cy="${ty+43}" rx="40" ry="15" fill="#FFB347"/><rect x="260" y="${ty+14}" width="80" height="32" rx="5" fill="#FFC870"/>`);
-  } else if (scene==='icecream') {
-    const hy=GY-72;p.push(`<path d="M143,${hy+20} L155,${hy+50} L167,${hy+20}" fill="#F4A460"/><circle cx="155" cy="${hy+15}" r="20" fill="#FF69B4"/><path d="M433,${hy+20} L445,${hy+50} L457,${hy+20}" fill="#F4A460"/><circle cx="445" cy="${hy+15}" r="20" fill="#90EE90"/>`);
-  } else if (scene==='birthday') {
-    const cx=W/2,cy2=GY-100;p.push(`<rect x="${cx-52}" y="${cy2}" width="104" height="54" rx="8" fill="#FF69B4"/><rect x="${cx-52}" y="${cy2-24}" width="104" height="28" rx="6" fill="#FFD700"/><rect x="${cx-52}" y="${cy2-46}" width="104" height="26" rx="6" fill="#FF8C69"/>`);
-    const cc=['#E74C3C','#F39C12','#27AE60','#2980B9','#9B59B6'];
-    for(let i=0;i<5;i++){const cx2=cx-38+i*19,fd=(0.18+i*0.06).toFixed(2);p.push(`<rect x="${cx2-3}" y="${cy2-64}" width="7" height="20" rx="3" fill="${cc[i]}"/><ellipse cx="${cx2}" cy="${cy2-66}" rx="4" ry="7" fill="#FFD700"><animate attributeName="rx" values="4;6;3;5;4" dur="${fd}s" repeatCount="indefinite"/></ellipse>`);}
-  }
-  return p.join('');
-}
+  const shuf=a=>{const b=[...a];for(let i=b.length-1;i>0;i--){const j=0|Math.random()*(i+1);[b[i],b[j]]=[b[j],b[i]];}return b;};
+  const $=id=>document.getElementById(id);
+  const wait=ms=>new Promise(r=>setTimeout(r,ms));
+  const showScreen=id=>{document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0);};
 
-function sceneSVG(v) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;display:block">${bgSVG(v.scene)}${propSVG(v.scene)}${kidSVG(155,GY,v.char1,'0s',true)}${kidSVG(445,GY,v.char2,'1.3s',false)}</svg>`;
-}
+  const setPip=(id,state,animCls='')=>{
+    const el=$(id);if(!el)return;
+    el.className=el.className.replace(/a-\S+/g,'').trim()+(animCls?' '+animCls:'');
+    el.innerHTML=CHARS.pip(state);
+  };
 
-function welcomeSVG(c1, c2) {
-  const gy = 165;
-  const rays6 = Array.from({length:6},(_,a)=>{
-    const r=a*60*Math.PI/180;
-    return `<line x1="${(Math.cos(r)*28).toFixed(1)}" y1="${(Math.sin(r)*28).toFixed(1)}" x2="${(Math.cos(r)*39).toFixed(1)}" y2="${(Math.sin(r)*39).toFixed(1)}" stroke="#FFD700" stroke-width="3" stroke-linecap="round"/>`;
-  }).join('');
-  const kid1 = c1
-    ? kidSVG(74,  gy, c1, '0s',   true)
-    : kidSVG(74,  gy, {hair:'#5C3D11',shirt:'#4ECDC4',pants:'#2C3E50',style:'short',  name:''}, 'wave');
-  const kid2 = c2
-    ? kidSVG(306, gy, c2, '1.1s', false)
-    : kidSVG(306, gy, {hair:'#D4790A',shirt:'#FF6B6B',pants:'#7D3C98',style:'pigtails',name:''}, '1.1s');
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 205" style="width:100%;display:block">
-    <rect x="0" y="0" width="380" height="${gy}" fill="#87CEEB"/>
-    <rect x="0" y="${gy}" width="380" height="${205-gy}" fill="#7EC850"/>
-    <g><animateTransform attributeName="transform" type="translate" values="0,0;16,0;0,0" dur="11s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
-      <ellipse cx="80" cy="38" rx="38" ry="19" fill="white" opacity=".9"/>
-      <ellipse cx="108" cy="30" rx="27" ry="15" fill="white" opacity=".9"/>
-    </g>
-    <circle cx="344" cy="33" r="25" fill="#FFD700"/>
-    <g transform="translate(344,33)">
-      <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="20s" repeatCount="indefinite" additive="sum"/>
-      ${rays6}
-    </g>
-    <circle cx="190" cy="87" r="36" fill="none" stroke="#F39C12" stroke-width="6" opacity=".78"/>
-    <circle cx="190" cy="87" r="28" fill="rgba(255,255,200,.32)"/>
-    <line x1="215" y1="111" x2="234" y2="135" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/>
-    <text x="190" y="97" text-anchor="middle" font-family="Arial Black,Arial" font-size="28" fill="#F39C12" font-weight="bold">?</text>
-    ${kid1}
-    ${kid2}
-  </svg>`;
-}
+  const synth=window.speechSynthesis;
+  const speak=(txt,rate=0.72,pitch=1.88)=>{
+    if(S.muted||!synth)return;synth.cancel();
+    const u=new SpeechSynthesisUtterance(txt);
+    u.rate=rate;u.pitch=pitch;u.volume=1;
+    const vs=synth.getVoices();
+    u.voice=vs.find(v=>v.lang==='en-US'&&/samantha|karen|female/i.test(v.name))||vs.find(v=>v.lang==='en-US')||vs[0]||null;
+    synth.speak(u);
+  };
 
-function trophySVG() {
-  return `<svg viewBox="0 0 160 175" width="115" height="126" style="display:block;margin:auto;overflow:visible"><circle cx="80" cy="80" r="55" fill="rgba(255,215,0,0.14)"><animate attributeName="r" values="50;66;50" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.14;0.04;0.14" dur="2.2s" repeatCount="indefinite"/></circle><g><animateTransform attributeName="transform" type="translate" values="0,0;0,-7;0,0" dur="2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/><path d="M28,18 L132,18 L117,88 Q80,114 43,88 Z" fill="#FFD700" stroke="#F39C12" stroke-width="3"/><path d="M28,18 Q4,18 4,50 Q4,82 28,82" fill="none" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/><path d="M132,18 Q156,18 156,50 Q156,82 132,82" fill="none" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/><rect x="67" y="108" width="26" height="30" rx="4" fill="#F39C12"/><rect x="43" y="136" width="74" height="19" rx="9" fill="#FFD700" stroke="#F39C12" stroke-width="2"/><polygon points="80,36 86,56 107,56 91,68 97,88 80,76 63,88 69,68 53,56 74,56" fill="white" opacity=".65"/></g></svg>`;
-}
+  $('mute-btn').addEventListener('click',()=>{S.muted=!S.muted;$('mute-btn').textContent=S.muted?'&#128263;':'&#128266;';if(S.muted)synth.cancel();});
+  if(synth.onvoiceschanged!==undefined)synth.onvoiceschanged=()=>{};
 
-function yesFaceSVG(size) {
-  size = size || 50;
-  return `<svg class="ans-face" width="${size}" height="${size}" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><circle cx="27" cy="27" r="23" fill="white" opacity=".9"/><path d="M14,21 Q18,13 22,21" stroke="#333" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M32,21 Q36,13 40,21" stroke="#333" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M13,30 Q27,45 41,30" stroke="#333" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="14" cy="29" r="5" fill="#FFB3B3" opacity=".5"/><circle cx="40" cy="29" r="5" fill="#FFB3B3" opacity=".5"/></svg>`;
-}
-function noFaceSVG(size) {
-  size = size || 50;
-  return `<svg class="ans-face" width="${size}" height="${size}" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><circle cx="27" cy="27" r="23" fill="white" opacity=".9"/><circle cx="19" cy="22" r="3.5" fill="#333"/><circle cx="35" cy="22" r="3.5" fill="#333"/><path d="M17,35 Q27,28 37,35" stroke="#333" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>`;
-}
-function maybeYesFaceSVG() {
-  return `<svg width="46" height="46" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto"><circle cx="27" cy="27" r="23" fill="white" opacity=".9"/><path d="M16,23 Q19,17 22,23" stroke="#333" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M32,23 Q35,17 38,23" stroke="#333" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M16,36 Q27,43 38,36" stroke="#333" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>`;
-}
-function maybeNoFaceSVG() {
-  return `<svg width="46" height="46" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto"><circle cx="27" cy="27" r="23" fill="white" opacity=".9"/><circle cx="19" cy="22" r="3" fill="#555"/><circle cx="35" cy="22" r="3" fill="#555"/><line x1="17" y1="37" x2="37" y2="37" stroke="#555" stroke-width="2.2" stroke-linecap="round"/></svg>`;
-}
+  const likedFood   =()=>FOOD_POOL[S.likedFoodIdx];
+  const dislikedFood=()=>FOOD_POOL[S.dislikedFoodIdx];
+  const posChar     =()=>CHAR_POOL[S.posCharIdx];
+  const thinChar    =()=>CHAR_POOL[S.thinCharIdx];
 
-// ── STAR METER ─────────────────────────────────────────
-function starHeaderHTML(earned, total) {
-  const items = Array.from({length:total},(_,i)=>`<span class="star-item${i<earned?' filled':''}">\u2605</span>`).join('');
-  return `<div class="star-meter-wrap"><div class="star-meter">${items}</div><div class="star-meter-lbl">Pair ${S.vi+1} of ${total}</div></div>`;
-}
-function starTransHTML(earned, total) {
-  const items = Array.from({length:total},(_,i)=>{
-    const filled=i<earned, isNew=filled&&i===earned-1;
-    return `<span class="star-item${filled?' filled':''}${isNew?' newly-filled':''}">\u2605</span>`;
-  }).join('');
-  return `<div class="star-meter star-meter-large">${items}</div>`;
-}
+  const buildChoices=()=>{
+    const f2=S.variant==='unknown'?'unknown_food':'disliked_food';
+    const c2=S.variant==='unknown'?'unknown_social':'thin_social';
+    return shuf([
+      {...likedFood(),   role:'liked_food'     },
+      {...dislikedFood(),role:f2               },
+      {...posChar(),     role:'positive_social'},
+      {...thinChar(),    role:c2               },
+    ]);
+  };
 
-// ── RENDER ─────────────────────────────────────────────
-const app = document.getElementById('app');
+  const isPreferred=role=>role==='liked_food'||role==='positive_social';
+  const buildSeq=()=>{const t=['food','sad','neutral','toy'];return S.orderMode==='random'?shuf(t):t;};
 
-function render() {
-  updateAdmin();
-  try {
-    switch (S.phase) {
-      case 'welcome':   renderWelcome();                               break;
-      case 'intro':     renderIntro();                                 break;
-      case 'ex-story':  renderStory(EXAMPLE, true);                   break;
-      case 'ex-q':      renderQuestion(EXAMPLE, S.eqi, true);         break;
-      case 'story':     renderStory(VIGNETTES[S.vi], false);          break;
-      case 'q':         renderQuestion(VIGNETTES[S.vi], S.qi, false); break;
-      case 'q-likert':  renderLikert();                                break;
-      case 'trans':     renderTrans();                                 break;
-      case 'end':       renderEnd();                                   break;
-    }
-  } catch(err) {
-    app.innerHTML = `<div class="error-box"><h2 style="color:#e74c3c">Something went wrong</h2><p style="margin:10px 0"><strong>${err.message}</strong></p><pre style="background:#f5f5f5;padding:12px;border-radius:8px;font-size:11px;text-align:left;overflow:auto">${err.stack||''}</pre><button class="btn btn-primary" style="margin-top:12px" onclick="resetGame()">Start Over</button></div>`;
-    console.error(err);
-  }
-}
+  const flash=(html,color='#27ae60')=>{
+    document.querySelector('.flash-overlay')?.remove();
+    const el=document.createElement('div');el.className='flash-overlay';
+    el.innerHTML=`<div class="flash-box" style="color:${color};">${html}</div>`;
+    document.body.appendChild(el);
+    setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(()=>el.remove(),320);},1100);
+  };
 
-function renderWelcome() {
-  const pool = [];
-  VIGNETTES.forEach(v => { pool.push(v.char1); pool.push(v.char2); });
-  const wi1 = Math.floor(Math.random() * pool.length);
-  let wi2;
-  do { wi2 = Math.floor(Math.random() * pool.length); } while (wi2 === wi1);
-  const wc1 = pool[wi1];
-  const wc2 = pool[wi2];
+  const confetti=(x,y)=>{'&#11088;&#128171;&#10024;&#127881;&#127882;'.split('').forEach((ch,i)=>{const p=document.createElement('div');p.textContent=ch;p.style.cssText=`position:fixed;font-size:1.5em;pointer-events:none;z-index:9999;left:${x+(Math.random()-.5)*80}px;top:${y+(Math.random()-.5)*50}px;transform:translate(-50%,-50%);animation:floatUp .9s ease-out ${i*.06}s forwards;`;document.body.appendChild(p);setTimeout(()=>p.remove(),1000+i*60);});};
 
-  app.innerHTML = `
-  <div class="screen" style="justify-content:center;text-align:center;padding-top:14px">
-    <div class="wt">Friend Detective!</div>
-    <div class="ws">Can you figure out how friends act toward each other?</div>
-    <div class="illus" style="max-width:330px">${welcomeSVG(wc1, wc2)}</div>
-    <button id="unlockBtn" class="unlock-btn"
-      onclick="unlockAudio('Hello there, and welcome to Friend Detective! I am so excited you are here today! First, can you type your name in the box. And then pick your age from the little menu. When you are all ready, press the big orange button that says Let us play — and we will get started together!')">
-      🔊 Tap here to turn on sound!
-    </button>
-    <div class="form-row">
-      <div class="form-group">
-        <label for="cname">What is your name?</label>
-        <input id="cname" class="name-input" type="text" placeholder="Your name!" maxlength="22" value="${escHtml(S.name)}"/>
-      </div>
-      <div class="form-group">
-        <label for="cage">How old are you?</label>
-        <select id="cage" class="age-select">
-          <option value="">Pick your age!</option>
-          <option value="4"  ${S.age==='4'  ?'selected':''}>I am 4</option>
-          <option value="5"  ${S.age==='5'  ?'selected':''}>I am 5</option>
-          <option value="6"  ${S.age==='6'  ?'selected':''}>I am 6</option>
-          <option value="7"  ${S.age==='7'  ?'selected':''}>I am 7</option>
-          <option value="8"  ${S.age==='8'  ?'selected':''}>I am 8</option>
-          <option value="9"  ${S.age==='9'  ?'selected':''}>I am 9</option>
-          <option value="10" ${S.age==='10' ?'selected':''}>I am 10</option>
-        </select>
-      </div>
-    </div>
-    <button class="btn btn-primary" style="font-size:19px;padding:13px 34px;margin-top:4px" onclick="startGame()">Let's Play!</button>
-  </div>`;
-  stopSpeak();
-  const inp = document.getElementById('cname');
-  const sel = document.getElementById('cage');
-  if (inp) inp.addEventListener('input',  e => S.name = e.target.value);
-  if (sel) sel.addEventListener('change', e => S.age  = e.target.value);
-}
-
-function renderIntro() {
-  const nm = S.name ? `, ${S.name}` : '';
-  app.innerHTML = `
-  <div class="screen" style="justify-content:center;text-align:center;gap:11px">
-    <div style="font-size:48px">🕵️</div>
-    <div style="font-size:23px;font-weight:bold;color:#333">Here is how to play!</div>
-    <div class="info-box">
-      I will tell you about <strong>two kids</strong> and how they
-      act <em>toward each other</em>.<br><br>
-      Then I will ask you — <strong>do you think those same two kids
-      would act that way in another situation?</strong><br><br>
-      For each question, use these buttons:<br><br>
-      <div style="display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap;margin:4px 0">
-        <div style="background:linear-gradient(135deg,#56ab2f,#a8e063);color:white;padding:10px 22px;border-radius:20px;font-size:26px;font-weight:bold;box-shadow:0 4px 12px rgba(86,171,47,.3)">
-          ✓ = YES
+  const makeDoor=(item,colorClass,roomContentHTML=null)=>{
+    const wrap=document.createElement('div');wrap.className=`door-wrap ${colorClass}`;
+    let roomContent;
+    if(roomContentHTML!==null){roomContent=roomContentHTML;}
+    else if(item.isSocial&&item.charKey){roomContent=`<div class="char-display" style="width:clamp(50px,10vw,70px);height:clamp(50px,10vw,70px);">${CHARS[item.charKey]()}</div>`;}
+    else{roomContent=`<div class="room-item">${item.emoji}</div>`;}
+    const doorFace=(item.isSocial&&item.charKey)?`<div class="dp-svg">${CHARS[item.charKey]()}</div>`:`<div class="dp-emoji">${item.emoji}</div>`;
+    wrap.innerHTML=`
+      <div class="door-frame">
+        <div class="door-room">${roomContent}</div>
+        <div class="door-panel">
+          ${doorFace}
+          ${(item.label&&item.isSocial)?`<div class="dp-label">${item.label}</div>`:''}
+          <div class="door-knob"></div>
         </div>
-        <div style="background:linear-gradient(135deg,#eb3349,#f45c43);color:white;padding:10px 22px;border-radius:20px;font-size:26px;font-weight:bold;box-shadow:0 4px 12px rgba(235,51,73,.3)">
-          ✗ = NO
-        </div>
-      </div><br>
-      Whenever you are ready to keep going,<br>
-      <strong>press the big orange button!</strong><br><br>
-      <strong>There are no wrong answers — just your best guess!</strong>
-    </div>
-    <div style="font-size:14px;color:#bbb">Let us try a practice example together first!</div>
-    <button class="btn btn-primary" style="font-size:18px;padding:12px 28px" onclick="goExStory()">Show me how!</button>
-  </div>`;
-  stopSpeak();
-  speak(`Wonderful${nm}! Here is how our game works. I am going to tell you about two kids and how they act toward each other. Then I will ask — do you think those same two kids would act a certain way in another situation? For each question, press the GREEN checkmark button if you think YES, or the RED X button if you think NO. And whenever you are ready to keep going, just press the big orange button! There are absolutely no wrong answers. We just want to know what you think! Press the orange button to try a practice example!`);
-}
-
-function renderStory(v, isEx) {
-  app.innerHTML = `
-  ${isEx ? '' : starHeaderHTML(S.stars, VIGNETTES.length)}
-  <div class="screen" style="padding-top:${isEx ? 12 : 6}px">
-    <div class="story-head">
-      <div class="pair-title">Meet ${escHtml(v.char1.name)} and ${escHtml(v.char2.name)}!</div>
-      <div class="audio-status">
-        <div class="audio-dot"></div>
-        <span id="audioLabel">Listening...</span>
       </div>
-    </div>
-    <div class="illus">${sceneSVG(v)}</div>
-    <div class="story-box" id="storyBox">
-      ${v.parts.map((s,i) => `<span class="sent" id="snt${i}">${escHtml(s)} </span>`).join('')}
-    </div>
-    <div class="story-btns">
-      <button class="btn btn-audio" onclick="replayStory()">Hear the story again</button>
-      <button class="btn btn-primary" id="readyBtn" style="display:none" onclick="goQs(${isEx})">I am ready for questions!</button>
-    </div>
-    ${isEx ? `<div style="font-size:12px;color:#ccc;margin-top:1px">Just a practice example!</div>` : ''}
-  </div>`;
-  stopSpeak();
-  const opener = isEx
-    ? `Okay! For our practice, I want you to meet ${v.char1.name} and ${v.char2.name}. Listen carefully while I tell you how they act toward each other!`
-    : `Alright! Now let us meet ${v.char1.name} and ${v.char2.name}! Listen carefully while I tell you how they act toward each other!`;
-  speak(opener, () => {
-    speakSeq(v.parts,
-      i => {
-        document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
-        const el = document.getElementById(`snt${i}`);
-        if (el) el.classList.add('hi');
-      },
-      () => {
-        document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
-        const rb = document.getElementById('readyBtn');
-        if (rb) rb.style.display = 'inline-flex';
-        speak(`Great listening! Now I will ask you some questions about ${v.char1.name} and ${v.char2.name}. For each one, press the green checkmark for YES or the red X for NO. When you are ready, press the big orange button!`);
-      }
-    );
-  });
-}
+      <div class="door-step"></div>`;
+    return wrap;
+  };
 
-function replayStory() {
-  const v = exPhase() ? EXAMPLE : VIGNETTES[S.vi];
-  stopSpeak();
-  const rb = document.getElementById('readyBtn');
-  if (rb) rb.style.display = 'none';
-  speak(`Sure! Let me tell you about ${v.char1.name} and ${v.char2.name} one more time. Listen carefully!`, () => {
-    speakSeq(v.parts,
-      i => {
-        document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
-        const el = document.getElementById(`snt${i}`);
-        if (el) el.classList.add('hi');
-      },
-      () => {
-        document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
-        const rb2 = document.getElementById('readyBtn');
-        if (rb2) rb2.style.display = 'inline-flex';
-      }
-    );
-  });
-}
+  /* ══════════ SETUP ══════════ */
+  const setup=()=>{
+    const pid=$('f-pid').value.trim();
+    const age=parseFloat($('f-age').value);
+    if(!pid){alert('Please enter a Participant ID.');return;}
+    if(isNaN(age)||age<1){alert('Please enter a valid age.');return;}
+    S.pid=pid;S.age=age;
+    S.pType=$('f-type').value;
+    S.variant=$('f-variant').value;
+    S.orderMode=$('f-order').value;
+    const sp=$('f-start').value;
+    S.firstBlock=sp==='random'?(Math.random()<.5?1:2):parseInt(sp);
+    const fIdxs=shuf([0,1,2,3]);S.likedFoodIdx=fIdxs[0];S.dislikedFoodIdx=fIdxs[1];
+    const cIdxs=shuf([0,1,2,3]);S.posCharIdx=cIdxs[0];S.thinCharIdx=cIdxs[1];
+    S.round=1;S.phase='baseline';S.attnContext='post_fam';S.data=[];
+    [['wel-pip','happy','a-bounce'],['bi-pip','neutral','a-float'],
+     ['ffi-pip','hungry','a-bounce'],['trn-pip','neutral','a-float'],
+     ['ti-pip','happy','a-bounce'],['end-pip','excited','a-bounce'],
+     ['attn-pip-food','neutral','a-float'],['attn-pip-social','neutral','a-float'],
+     ['food-sum-pip','happy','a-float'],['soc-sum-pip','excited','a-float'],
+    ].forEach(([id,st,an])=>setPip(id,st,an));
+    $('sfi-pos').innerHTML=CHARS[posChar().charKey]();
+    $('sfi-thin').innerHTML=CHARS[thinChar().charKey]();
+    $('sfi-pos-tag').textContent=posChar().label;
+    $('sfi-thin-tag').textContent=thinChar().label;
+    showScreen('s-welcome');
+    setTimeout(()=>speak('This is Pip. We are going to play a game with Pip today.'),500);
+  };
 
-function renderQuestion(v, qi, isEx) {
-  const q = v.questions[qi];
-  app.innerHTML = `
-  ${isEx ? '' : starHeaderHTML(S.stars, VIGNETTES.length)}
-  <div class="screen" style="padding-top:${isEx ? 10 : 4}px;gap:7px">
-    <div class="q-header">
-      Question ${qi+1} of 3 &nbsp;&middot;&nbsp;
-      <strong>${escHtml(v.char1.name)}</strong> &amp; <strong>${escHtml(v.char2.name)}</strong>
-    </div>
-    <div class="audio-status" style="justify-content:center">
-      <div class="audio-dot"></div>
-      <span id="audioLabel">Listen...</span>
-    </div>
-    <div class="q-frame">
-      Thinking about how <strong>${escHtml(v.char1.name)}</strong> and
-      <strong>${escHtml(v.char2.name)}</strong> act toward each other...<br>
-      <strong>do you think <span class="they">they</span> would act this way?</strong>
-    </div>
-    <div class="q-illust">${qIllustSVG(q.qIllust)}</div>
-    <div class="q-box">"${escHtml(q.text)}"</div>
-    <div class="ans-row">
-      <button class="btn btn-green" id="btnY" onclick="doAnswer('YES')" style="font-size:32px">
-        ${yesFaceSVG(46)} ✓
-      </button>
-      <button class="btn btn-red" id="btnN" onclick="doAnswer('NO')" style="font-size:32px">
-        ${noFaceSVG(46)} ✗
-      </button>
-    </div>
-    <div class="q-replay">
-      <button class="btn btn-audio"     onclick="replayQ()">Hear question again</button>
-      <button class="btn btn-secondary" onclick="replayStoryQ(${isEx})">Hear their story again</button>
-    </div>
-    ${isEx ? `<div class="ex-explain" id="exExp"></div>` : ''}
-  </div>`;
-  stopSpeak();
-  speak(`Question ${qi+1} of 3. ${q.text}. Do you think ${v.char1.name} and ${v.char2.name} would act that way? Press the green checkmark for YES or the red X for NO!`);
-}
+  /* ══════════ TRAINING ══════════ */
+  const goTrainIntro=()=>showScreen('s-train-intro');
 
-function renderLikert() {
-  const v  = VIGNETTES[S.vi];
-  const qi = S.qi;
-  const q  = v.questions[qi];
-  const isYes = S.pendingAns === 'YES';
-  const strongStyle = isYes
-    ? 'background:linear-gradient(135deg,#1e8449,#27AE60);color:white;box-shadow:0 6px 18px rgba(30,132,73,.4);'
-    : 'background:linear-gradient(135deg,#922b21,#C0392B);color:white;box-shadow:0 6px 18px rgba(146,43,33,.4);';
-  const mildStyle = isYes
-    ? 'background:linear-gradient(135deg,#a8e063,#d0f5a0);color:#1a5e2a;box-shadow:0 4px 12px rgba(168,224,99,.35);'
-    : 'background:linear-gradient(135deg,#f45c43,#ffbdad);color:#7B241C;box-shadow:0 4px 12px rgba(244,92,67,.3);';
-  app.innerHTML = `
-  ${starHeaderHTML(S.stars, VIGNETTES.length)}
-  <div class="screen" style="padding-top:4px;gap:8px">
-    <div class="q-header">
-      Question ${qi+1} of 3 &nbsp;&middot;&nbsp;
-      <strong>${escHtml(v.char1.name)}</strong> &amp; <strong>${escHtml(v.char2.name)}</strong>
-    </div>
-    <div style="text-align:center;font-size:18px;font-weight:bold;color:#333">
-      You said
-      <span style="background:${isYes?'linear-gradient(135deg,#56ab2f,#a8e063)':'linear-gradient(135deg,#eb3349,#f45c43)'};color:white;padding:4px 16px;border-radius:20px;font-size:26px;display:inline-block;vertical-align:middle;margin:0 4px">${isYes?'✓':'✗'}</span>
-      — how sure are you?
-    </div>
-    <div class="q-illust">${qIllustSVG(q.qIllust)}</div>
-    <div class="q-box" style="font-size:14px;color:#aaa;min-height:48px;">"${escHtml(q.text)}"</div>
-    <div class="ans-row" style="gap:14px">
-      <button class="btn-likert-strong" id="btnDef" style="${strongStyle}" onclick="doLikertAnswer('DEFINITELY')">
-        ${isYes ? yesFaceSVG(44) : noFaceSVG(44)}
-        <span style="margin-top:2px">Definitely<br>${isYes?'✓ YES':'✗ NO'}!</span>
-      </button>
-      <button class="btn-likert-mild" id="btnMay" style="${mildStyle}" onclick="doLikertAnswer('MAYBE')">
-        ${isYes ? maybeYesFaceSVG() : maybeNoFaceSVG()}
-        <span style="margin-top:2px">Maybe<br>${isYes?'✓ YES':'✗ NO'}</span>
-      </button>
-    </div>
-  </div>`;
-  stopSpeak();
-  speak(`You said ${isYes ? 'yes' : 'no'}! Now — how sure are you? Press Definitely ${isYes?'Yes':'No'} if you are really really sure. Press Maybe ${isYes?'Yes':'No'} if you think so but are not totally sure!`);
-}
+  const startTraining=()=>{
+    S.trainIdx=0;S.trainTrials=[];
+    const pool=[...T_EMOJIS];
+    for(let i=0;i<4;i++){let opts=[];while(opts.length<4){const r=pool[0|Math.random()*pool.length];if(!opts.includes(r))opts.push(r);}S.trainTrials.push({opts:shuf(opts)});}
+    showScreen('s-training');renderTrain();
+  };
 
-function replayQ() {
-  const v  = exPhase() ? EXAMPLE : VIGNETTES[S.vi];
-  const qi = exPhase() ? S.eqi   : S.qi;
-  stopSpeak();
-  speak(`Here is the question again. ${v.questions[qi].text}. Do you think ${v.char1.name} and ${v.char2.name} would act that way?`);
-}
-
-function replayStoryQ(isEx) {
-  const v = isEx ? EXAMPLE : VIGNETTES[S.vi];
-  stopSpeak();
-  speak(`Sure! Let me remind you about ${v.char1.name} and ${v.char2.name}.`, () => {
-    speakSeq(v.parts, null, () =>
-      speak(`Okay! Now, thinking about how ${v.char1.name} and ${v.char2.name} act toward each other — what do you think?`)
-    );
-  });
-}
-
-function doAnswer(ans) {
-  ['btnY','btnN'].forEach(id => { const b = document.getElementById(id); if (b) b.disabled = true; });
-  const isEx = exPhase();
-  const v    = isEx ? EXAMPLE : VIGNETTES[S.vi];
-  const qi   = isEx ? S.eqi   : S.qi;
-  const q    = v.questions[qi];
-  flashBtn(ans);
-  if (isEx) {
-    const exDiv = document.getElementById('exExp');
-    if (exDiv) { exDiv.style.display = 'block'; exDiv.textContent = q.explain || ''; }
-    stopSpeak();
-    const openers = ['Hmm, interesting thinking! Let me explain.','Nice guess! Here is what I was thinking.','Good job trying! Here is the reason.'];
-    speak(`${openers[qi % openers.length]} ${q.explain || ''}`, () => {
-      setTimeout(() => {
-        if (S.eqi < EXAMPLE.questions.length - 1) {
-          S.eqi++; S.phase = 'ex-q'; render();
-        } else {
-          speak('Great job on the practice! You are already thinking like a real detective! Now let us start the real game. Press the orange button whenever you are ready!', () => {
-            setTimeout(() => { S.phase = 'story'; S.vi = 0; S.qi = 0; render(); }, 500);
-          });
-        }
-      }, 2200);
+  const renderTrain=()=>{
+    const i=S.trainIdx;
+    if(i>=4){onTrainDone();return;}
+    const t=S.trainTrials[i];
+    $('trn-lbl').textContent=`Practice ${i+1} of 4`;
+    $('trn-fill').style.width=`${i/4*100}%`;
+    setTimeout(()=>speak('Click any door to see what happens!'),150);
+    setPip('trn-pip','neutral','a-float');
+    $('trn-pip').style.opacity='1';
+    const wc=$('trn-walk');if(wc)wc.style.display='none';
+    const grid=$('trn-doors');grid.innerHTML='';
+    const cols=shuf([...DCOLS]);
+    t.opts.forEach((opt,idx)=>{
+      const roomHTML=`<div style="display:flex;align-items:center;gap:3px;padding:4px;">
+        <div style="width:28px;height:28px;border-radius:50%;overflow:hidden;flex-shrink:0;">${CHARS.pip('happy')}</div>
+        <span style="font-size:1.5em;">${opt}</span>
+      </div>`;
+      const w=makeDoor({emoji:opt,label:'',isSocial:false},cols[idx],roomHTML);
+      w.addEventListener('click',()=>onTrainClick(w,grid));
+      grid.appendChild(w);
     });
-  } else {
-    S.pendingAns = ans;
-    setTimeout(() => { S.phase = 'q-likert'; render(); }, 480);
-  }
-}
+  };
 
-function doLikertAnswer(certainty) {
-  ['btnDef','btnMay'].forEach(id => { const b = document.getElementById(id); if (b) b.disabled = true; });
-  const btn = document.getElementById(certainty === 'DEFINITELY' ? 'btnDef' : 'btnMay');
-  if (btn) { btn.style.transform = 'scale(1.1)'; setTimeout(() => { if (btn) btn.style.transform = ''; }, 300); }
-  const v       = VIGNETTES[S.vi];
-  const q       = v.questions[S.qi];
-  const initAns = S.pendingAns;
-  const fullAns = certainty === 'DEFINITELY'
-    ? (initAns === 'YES' ? 'DEFINITELY_YES' : 'DEFINITELY_NO')
-    : (initAns === 'YES' ? 'MAYBE_YES'      : 'MAYBE_NO');
-  S.answers.push({
-    vid: v.id, vM: v.model, qi: S.qi, qM: q.qM,
-    ans: fullAns, initialAns: initAns,
-    keyed: q.keyed, ok: initAns === q.keyed,
-    congruent: v.model === q.qM,
-    ts: new Date().toISOString()
-  });
-  S.pendingAns = null;
-  stopSpeak();
-  setTimeout(() => {
-    if (S.qi < 2) { S.qi++; S.phase = 'q'; }
-    else          { S.stars++; S.phase = 'trans'; }
-    render();
-  }, 650);
-}
+  const walkIntoTrainDoor=async(doorWrap)=>{
+    const wc=$('trn-walk'),ce=$('trn-pip'),screen=$('s-training');
+    const sRect=screen.getBoundingClientRect(),cRect=ce.getBoundingClientRect(),dRect=doorWrap.querySelector('.door-frame').getBoundingClientRect();
+    const sx=cRect.left-sRect.left+cRect.width/2,sy=cRect.top-sRect.top+cRect.height/2;
+    const tx=dRect.left-sRect.left+dRect.width/2,ty=dRect.top-sRect.top+dRect.height/2;
+    const sz=cRect.width;
+    wc.innerHTML=CHARS.pip('neutral');
+    wc.style.cssText=`display:block;position:absolute;width:${sz}px;height:${sz}px;left:${sx}px;top:${sy}px;border-radius:50%;overflow:hidden;transform:translate(-50%,-50%) scale(1);opacity:1;transition:none;z-index:50;pointer-events:none;`;
+    ce.style.opacity='0.12';await wait(60);
+    wc.style.transition='all .9s cubic-bezier(.4,0,.2,1)';
+    wc.style.left=`${tx}px`;wc.style.top=`${ty}px`;
+    wc.style.transform='translate(-50%,-50%) scale(0.25)';wc.style.opacity='0';
+    await wait(960);ce.style.opacity='1';wc.style.display='none';
+  };
 
-function flashBtn(ans) {
-  const b = document.getElementById(ans === 'YES' ? 'btnY' : 'btnN');
-  if (!b) return;
-  b.style.transition = 'transform 0.15s, box-shadow 0.15s';
-  b.style.transform  = 'scale(1.14)';
-  b.style.boxShadow  = '0 0 0 8px rgba(255,255,255,0.68)';
-  setTimeout(() => { b.style.transform = ''; b.style.boxShadow = ''; }, 320);
-}
+  const onTrainClick=async(wrap,grid)=>{
+    grid.querySelectorAll('.door-wrap').forEach(w=>w.classList.add('locked'));
+    wrap.querySelector('.door-panel').classList.add('open');
+    await wait(380);await walkIntoTrainDoor(wrap);await wait(1200);
+    S.trainIdx++;renderTrain();
+  };
 
-function renderTrans() {
-  const ni   = S.vi + 1;
-  const last = ni >= VIGNETTES.length;
-  const np   = last ? null : VIGNETTES[ni];
-  const kudo = KUDOS[Math.floor(Math.random() * KUDOS.length)];
-  app.innerHTML = `
-  <div class="trans-screen">
-    ${starTransHTML(S.stars, VIGNETTES.length)}
-    <div class="trans-msg" style="margin-top:6px">${kudo}</div>
-    <div style="font-size:20px;font-weight:bold;color:#F39C12">${S.stars} star${S.stars===1?'':'s'} collected!</div>
-    <div class="trans-sub">
-      ${last
-        ? 'That was the very last pair — you are almost done!'
-        : `Next up: meet <strong>${escHtml(np.char1.name)}</strong> and <strong>${escHtml(np.char2.name)}</strong>!`}
-    </div>
-  </div>`;
-  const msg = last
-    ? `${kudo} You just finished all twelve pairs! You are almost done now — what an amazing job!`
-    : `${kudo} You collected a star! You have ${S.stars} star${S.stars===1?'':'s'} now! Next up, let us meet ${np.char1.name} and ${np.char2.name}!`;
-  stopSpeak();
-  speak(msg, () => {
-    setTimeout(() => {
-      if (last) { S.phase = 'end'; }
-      else      { S.vi++; S.qi = 0; S.phase = 'story'; }
-      render();
-    }, 750);
-  });
-}
+  const onTrainDone=()=>{speak('Great!');setTimeout(()=>{setBaseIntro();showScreen('s-base-intro');},900);};
 
-function renderEnd() {
-  const nm  = S.name || 'Detective';
-  const tot = S.answers.length;
-  const cor = S.answers.filter(a => a.ok).length;
-  app.innerHTML = `
-  <div class="end-screen">
-    <div class="end-trophy-wrap">${trophySVG()}</div>
-    <div class="end-title">Amazing, ${escHtml(nm)}!</div>
-    ${starTransHTML(S.stars, VIGNETTES.length)}
-    <div class="end-sub" style="margin-top:4px">You answered questions about all ${VIGNETTES.length} pairs of friends!</div>
-    <div style="font-size:12px;color:#ccc">${cor} of ${tot} answers matched the scoring key</div>
-    <div class="end-btns">
-      <button class="btn btn-primary"   onclick="exportCSV()">Download Results</button>
-      <button class="btn btn-secondary" onclick="resetGame()">Play Again</button>
-    </div>
-  </div>`;
-  stopSpeak();
-  speak(`${nm}, you have done something truly amazing today! You answered questions about all twelve pairs of friends, and you thought so carefully about every single one. I am incredibly proud of you. You really are a true Friend Detective! Give yourself a big pat on the back — you have really really earned it today!`);
-}
+  /* ══════════ BLOCK INTRO ══════════ */
+  const setBaseIntro=()=>{
+    $('bi-text').innerHTML='Pip will show you how they are feeling.<br>You can open a door and Pip will go inside.';
+    setPip('bi-pip',S.round===2?'excited':'neutral','a-float');
+    speak(S.round===2?'New round!':"Let's play!");
+  };
 
-// ── NAVIGATION ─────────────────────────────────────────
-function exPhase() { return S.phase === 'ex-story' || S.phase === 'ex-q'; }
+  /* ══════════ TRIALS ══════════ */
+  const startTrials=()=>{S.trialIdx=0;S.trialSeq=buildSeq();showScreen('s-trial');renderTrial();};
 
-function startGame() {
-  const inp = document.getElementById('cname');
-  const sel = document.getElementById('cage');
-  S.name = (inp ? inp.value.trim() : '') || '';
-  S.age  = (sel ? sel.value        : '') || '';
-  if (!S.name) { unlockAudio("Oops! Can you type your name first?"); return; }
-  audioUnlocked = true;
+  const renderTrial=()=>{
+    const i=S.trialIdx,type=S.trialSeq[i],isTest=S.phase==='test';
+    $('trl-lbl').textContent=`Trial ${i+1} of 4`;
+    $('trl-fill').style.width=`${i/4*100}%`;
+    const badge=S.phase==='baseline'?'Practice':(S.round===1?'Round 1':'Round 2');
+    $('trl-phase').textContent=badge;
+    const tear=$('trl-tears'),prompt=$('trl-prompt');
+    $('trl-pip').style.opacity='1';tear.style.display='none';
+    switch(type){
+      case 'food':  setPip('trl-pip','hungry','a-pulse');  S.pipState='hungry';  prompt.textContent='Pip is hungry!';      setTimeout(()=>speak('Pip is hungry!'),300);      break;
+      case 'sad':   setPip('trl-pip','sad','a-sadshk');    S.pipState='sad';     tear.style.display='flex'; prompt.textContent='Pip is sad.'; setTimeout(()=>speak('Pip is sad.'),300); break;
+      case 'neutral':setPip('trl-pip','neutral','a-wiggle');S.pipState='neutral';prompt.textContent='Pip is feeling fine.';setTimeout(()=>speak('Pip is feeling fine.'),300);break;
+      case 'toy':   setPip('trl-pip','excited','a-bounce');S.pipState='excited'; prompt.textContent='Pip wants to play!'; setTimeout(()=>speak('Pip wants to play!'),300);   break;
+    }
+    prompt.style.visibility=isTest?'hidden':'visible';
+    $('walk-char').style.display='none';
+    const choices=buildChoices(),cols=shuf([...DCOLS]);
+    const grid=$('trl-doors');grid.innerHTML='';
+    choices.forEach((c,idx)=>{const w=makeDoor(c,cols[idx]);w.addEventListener('click',()=>onDoorClick(w,c,type));grid.appendChild(w);});
+    S.trialStart=Date.now();
+  };
 
-  // ── Fisher-Yates shuffle ──
-  for (let i = VIGNETTES.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [VIGNETTES[i], VIGNETTES[j]] = [VIGNETTES[j], VIGNETTES[i]];
-  }
+  const onDoorClick=async(chosenWrap,choice,trialType)=>{
+    const rt=Date.now()-S.trialStart;
+    document.querySelectorAll('#trl-doors .door-wrap').forEach(w=>{w.classList.add('locked');if(w!==chosenWrap)w.classList.add('fading');});
+    chosenWrap.classList.add('chosen');
+    chosenWrap.querySelector('.door-panel').classList.add('open');
+    await wait(380);await walkIntoDoor(chosenWrap);
+    const phaseLabel=S.phase==='baseline'?'baseline':(S.round===1?'test1':'test2');
+    S.data.push({
+      pid:S.pid,age:S.age,pType:S.pType,variant:S.variant,
+      firstBlock:S.firstBlock,round:S.round,phase:phaseLabel,
+      trialNum:S.trialIdx+1,trialType,
+      role:choice.role,choiceLabel:choice.label,
+      chosePreferred:isPreferred(choice.role)?1:0,
+      rt_ms:rt,trialOrder:S.trialSeq.join('-'),
+      likedFood:likedFood().label,dislikedFood:dislikedFood().label,
+      posChar:posChar().label,thinChar:thinChar().label,
+      attnCorrect:'',timestamp:new Date().toISOString(),
+    });
+    await wait(280);showResultRoom(choice);
+  };
 
-  // ── Random characters for practice example ──
-  const pool = [];
-  VIGNETTES.forEach(v => { pool.push(v.char1); pool.push(v.char2); });
-  const i1 = Math.floor(Math.random() * pool.length);
-  let i2;
-  do { i2 = Math.floor(Math.random() * pool.length); } while (i2 === i1);
-  EXAMPLE.char1 = Object.assign({}, pool[i1]);
-  EXAMPLE.char2 = Object.assign({}, pool[i2]);
+  const walkIntoDoor=async(doorWrap)=>{
+    const wc=$('walk-char'),ce=$('trl-pip'),screen=$('s-trial');
+    const sRect=screen.getBoundingClientRect(),cRect=ce.getBoundingClientRect(),dRect=doorWrap.querySelector('.door-frame').getBoundingClientRect();
+    const sx=cRect.left-sRect.left+cRect.width/2,sy=cRect.top-sRect.top+cRect.height/2;
+    const tx=dRect.left-sRect.left+dRect.width/2,ty=dRect.top-sRect.top+dRect.height/2;
+    const sz=cRect.width;
+    wc.innerHTML=CHARS.pip(S.pipState);
+    wc.style.cssText=`display:block;position:absolute;width:${sz}px;height:${sz}px;left:${sx}px;top:${sy}px;border-radius:50%;overflow:hidden;transform:translate(-50%,-50%) scale(1);opacity:1;transition:none;z-index:50;pointer-events:none;`;
+    ce.style.opacity='0.12';await wait(60);
+    wc.style.transition='all .9s cubic-bezier(.4,0,.2,1)';
+    wc.style.left=`${tx}px`;wc.style.top=`${ty}px`;
+    wc.style.transform='translate(-50%,-50%) scale(0.25)';wc.style.opacity='0';
+    await wait(960);ce.style.opacity='1';wc.style.display='none';
+  };
 
-  S.phase = 'intro';
-  render();
-}
+  /* ══════════ RESULT ROOM ══════════ */
+  const showResultRoom=(choice)=>{
+    const badge=S.phase==='baseline'?'Practice':(S.round===1?'Round 1':'Round 2');
+    $('rr-phase').textContent=badge;
+    const stage=$('rr-stage');stage.innerHTML='';
+    const chars=document.createElement('div');chars.className='rr-chars';
+    const pipDiv=document.createElement('div');pipDiv.className='rr-char';
+    pipDiv.innerHTML=`<div class="char-display" style="width:72px;height:72px;">${CHARS.pip('neutral')}</div><div class="rr-lbl">Pip</div>`;
+    chars.appendChild(pipDiv);
+    const foundDiv=document.createElement('div');foundDiv.className='rr-char';
+    if(choice.isSocial&&choice.charKey){foundDiv.innerHTML=`<div class="char-display" style="width:72px;height:72px;">${CHARS[choice.charKey]()}</div>`;}
+    else{foundDiv.innerHTML=`<div style="font-size:clamp(2.2em,6vw,3.5em);">${choice.emoji}</div>`;}
+    chars.appendChild(foundDiv);stage.appendChild(chars);showScreen('s-result');
+  };
 
-function goExStory() { S.eqi = 0; S.phase = 'ex-story'; render(); }
-function goQs(isEx) {
-  if (isEx) { S.eqi = 0; S.phase = 'ex-q'; }
-  else      { S.qi  = 0; S.phase = 'q';    }
-  render();
-}
-function skipPair() {
-  if (S.phase === 'story' || S.phase === 'q' || S.phase === 'q-likert') {
-    S.pendingAns = null; S.stars++; S.phase = 'trans'; render();
-  }
-}
-function skipEnd()   { stopSpeak(); S.phase = 'end'; render(); }
-function resetGame() {
-  stopSpeak();
-  Object.assign(S, { phase:'welcome', name:'', age:'', vi:0, qi:0, eqi:0, pendingAns:null, answers:[], stars:0, adminOpen:false });
-  render();
-}
+  const nextTrial=()=>{S.trialIdx++;if(S.trialIdx>=4){onBlockDone();}else{showScreen('s-trial');renderTrial();}};
 
-// ── ADMIN ──────────────────────────────────────────────
-function setupAdmin() {
-  const panel = document.getElementById('adminPanel');
-  if (!panel) return;
-  panel.innerHTML = `
-    <h3>Researcher Panel</h3>
-    <div style="margin-bottom:9px;padding-bottom:9px;border-bottom:1px solid #eee">
-      <div class="admin-section-label">Voice</div>
-      <div style="font-size:10.5px;color:#bbb;margin-bottom:6px;line-height:1.55">
-        For the most natural voice, enter a free
-        <a href="https://elevenlabs.io" target="_blank" style="color:#4776e6">ElevenLabs</a>
-        API key. Without it, the device built-in voice is used.
-      </div>
-      <input id="elKeyInput" type="password" class="admin-input" placeholder="ElevenLabs API key..."/>
-      <select id="elVoiceSelect" class="admin-select">
-        <option value="MF3mGyEYCl7XYWbV9V6O">Elli — warm, young (recommended)</option>
-        <option value="jBpfuIE2acCO8z3wKNLl">Gigi — upbeat, enthusiastic</option>
-        <option value="21m00Tcm4TlvDq8ikWAM">Rachel — calm, clear</option>
-        <option value="ThT5KcBeYPX3keUQqHPh">Dorothy — warm, pleasant</option>
-        <option value="pNInz6obpgDQGcFmaJgB">Adam — friendly, clear</option>
-      </select>
-      <div class="admin-row">
-        <button class="admin-btn-sm" onclick="saveVoiceSettings()">Save</button>
-        <button class="admin-btn-sm admin-btn-blue" onclick="testVoice()">Test Voice</button>
-      </div>
-      <div id="voiceStatus" style="font-size:10.5px;color:#aaa;text-align:center;min-height:14px"></div>
-    </div>
-    <div class="admin-section-label">Responses</div>
-    <div class="admin-log" id="adminLog">No answers yet.</div>
-    <button class="admin-btn-sm admin-btn-gold" style="width:100%;margin-bottom:4px;padding:8px;font-size:11px;border-radius:7px" onclick="exportCSV()">Download Results (CSV)</button>
-    <button class="admin-btn-sm" style="width:100%;margin-bottom:4px;padding:7px;font-size:11px;border-radius:7px" onclick="skipPair()">Skip this pair</button>
-    <button class="admin-btn-sm" style="width:100%;padding:7px;font-size:11px;border-radius:7px" onclick="skipEnd()">Skip to End</button>`;
-  const ki = document.getElementById('elKeyInput');
-  const vs = document.getElementById('elVoiceSelect');
-  if (ki) ki.value = S.elevenLabsKey;
-  if (vs) vs.value = S.elevenLabsVoice;
-  document.getElementById('adminBtn').addEventListener('click', () => {
-    S.adminOpen = !S.adminOpen;
-    panel.classList.toggle('open', S.adminOpen);
-    updateAdmin();
-  });
-  updateAdmin();
-}
+  const onBlockDone=()=>{
+    if(S.phase==='baseline'){
+      if(S.firstBlock===1){showScreen('s-ffi');}
+      else{showScreen('s-sfi');}
+    } else {
+      if(S.round===1){showPreRound2Check();}
+      else{showEndScreen();}
+    }
+  };
 
-function saveVoiceSettings() {
-  const ki = document.getElementById('elKeyInput');
-  const vs = document.getElementById('elVoiceSelect');
-  const st = document.getElementById('voiceStatus');
-  S.elevenLabsKey   = ki ? ki.value.trim() : '';
-  S.elevenLabsVoice = vs ? vs.value : 'MF3mGyEYCl7XYWbV9V6O';
-  try { localStorage.setItem('rad_elKey', S.elevenLabsKey); localStorage.setItem('rad_elVoice', S.elevenLabsVoice); } catch(e) {}
-  if (st) { st.textContent = S.elevenLabsKey ? 'Saved! ElevenLabs active.' : 'Saved. Using built-in voice.'; setTimeout(()=>{ st.textContent=''; },2500); }
-}
+  /* ══════════ FOOD FAM ══════════ */
+  const playFoodFam=()=>{showScreen('s-ff');runFoodAnim();};
 
-function testVoice() {
-  saveVoiceSettings(); stopSpeak();
-  speak("Hello! I am the Friend Detective voice. Does this sound good to you?");
-}
+  const runFoodAnim=async()=>{
+    const scene=$('food-scene'),capEl=$('food-cap'),nextDiv=$('food-next');
+    nextDiv.style.display='none';scene.innerHTML='';
+    const lf=likedFood(),df=dislikedFood();
+    const mkPip=(state,leftPct)=>{const el=document.createElement('div');el.className='scene-char';el.style.cssText=`left:${leftPct}%;width:62px;height:62px;z-index:3;`;el.innerHTML=CHARS.pip(state);scene.appendChild(el);return el;};
+    const mkItem=(emoji,leftPct)=>{const el=document.createElement('div');el.className='scene-item';el.textContent=emoji;el.style.left=leftPct+'%';scene.appendChild(el);return el;};
+    const setCaption=txt=>{let c=scene.querySelector('.scene-caption');if(!c){c=document.createElement('div');c.className='scene-caption';scene.appendChild(c);}c.textContent=txt;};
+    const popText=async(txt,lPct,tPx)=>{const el=document.createElement('div');el.className='food-pop';el.textContent=txt;el.style.left=lPct+'%';el.style.top=tPx+'px';scene.appendChild(el);await wait(50);el.classList.add('show');await wait(1800);el.classList.remove('show');await wait(400);el.remove();};
+    for(let rep=0;rep<3;rep++){
+      scene.innerHTML='';
+      setCaption('Pip sees some fruit!');capEl.textContent='Pip sees some fruit!';
+      const p1=mkPip('neutral',6);mkItem(lf.emoji,68);
+      await wait(1000);
+      p1.style.left='60%';
+      setCaption(`Pip tries the ${lf.label}...`);capEl.textContent=`Pip tries the ${lf.label}...`;
+      speak(`Pip tries the ${lf.label}.`);await wait(1400);
+      p1.innerHTML=CHARS.pip('excited');
+      setCaption(`Pip loves the ${lf.label}!`);capEl.textContent=`Pip loves the ${lf.label}!`;
+      speak('Yum!');popText('YUM!',50,8);await wait(2200);
+      scene.innerHTML='';
+      if(S.variant==='dislike'){
+        setCaption(`Now Pip sees the ${df.label}...`);capEl.textContent=`Now Pip sees the ${df.label}...`;
+        const p2=mkPip('neutral',6);mkItem(df.emoji,68);
+        await wait(1000);p2.style.left='60%';
+        setCaption(`Pip tries the ${df.label}...`);capEl.textContent=`Pip tries the ${df.label}...`;
+        speak(`Pip tries the ${df.label}.`);await wait(1400);
+        p2.innerHTML=CHARS.pip('sad');p2.style.left='26%';
+        setCaption(`Pip does NOT like the ${df.label}!`);capEl.textContent=`Pip does NOT like the ${df.label}!`;
+        speak('Yuck!');popText('YUCK!',22,8);await wait(2200);
+      } else {
+        setCaption(`Pip sees the ${df.label}...`);capEl.textContent=`Pip sees the ${df.label}...`;
+        const p2=mkPip('neutral',6);mkItem(df.emoji,68);
+        await wait(1000);p2.style.left='36%';
+        setCaption(`Pip doesn't know this fruit.`);capEl.textContent=`Pip doesn't know this fruit.`;
+        speak(`Pip doesn't know this fruit.`);await wait(2500);
+      }
+    }
+    capEl.textContent='';nextDiv.style.display='flex';
+  };
 
-function updateAdmin() {
-  const el = document.getElementById('adminLog');
-  if (!el) return;
-  if (!S.answers.length) { el.textContent = 'No answers yet.'; return; }
-  el.textContent = S.answers.map(a =>
-    `V${a.vid}[${a.vM}] Q${a.qi+1}[${a.qM}] ${a.congruent?'CON':'INC'}: ${a.ans} key:${a.keyed} ${a.ok?'ok':'x'}`
-  ).join('\n');
-}
+  const doneFoodFam=()=>showFoodSummary();
 
-// ── CSV ────────────────────────────────────────────────
-function exportCSV() {
-  const headers = ['ChildName','ChildAge','VignetteNumber','VignetteRelationalModel','QuestionNumber','QuestionRelationalModel','IsCongruent','LikertAnswer','InitialYesNo','KeyedAnswer','Correct','Timestamp'];
-  const rows = [headers.join(',')];
-  S.answers.forEach(a => {
-    rows.push([
-      S.name, S.age, a.vid, a.vM, a.qi+1, a.qM,
-      a.congruent?'TRUE':'FALSE',
-      a.ans,
-      a.initialAns || (a.ans.includes('YES')?'YES':'NO'),
-      a.keyed, a.ok?'TRUE':'FALSE', a.ts
-    ].join(','));
-  });
-  const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
-  const url  = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `RAD12C_${S.name||'child'}_age${S.age||'unknown'}_${new Date().toISOString().slice(0,10)}.csv`;
-  link.click();
-  URL.revokeObjectURL(url);
-}
+  const showFoodSummary=()=>{
+    const lf=likedFood(),df=dislikedFood();
+    setPip('food-sum-pip','happy','a-float');
+    $('fsum-like-emoji').textContent=lf.emoji;
+    $('fsum-nope-emoji').textContent=df.emoji;
+    $('fsum-like-text').textContent='Pip loves this!';
+    if(S.variant==='unknown'){$('fsum-nope-text').textContent="Pip doesn't know this.";$('fsum-nope-card').className='sum-card sum-unk';}
+    else{$('fsum-nope-text').textContent="Pip doesn't like this.";$('fsum-nope-card').className='sum-card sum-no';}
+    showScreen('s-food-summary');speak(`Pip loves ${lf.label}!`);
+  };
 
-// ── INIT ───────────────────────────────────────────────
-window.addEventListener('load', () => {
-  try { initVoices(); setupAdmin(); render(); }
-  catch(err) {
-    document.getElementById('app').innerHTML = `<div class="error-box"><h2 style="color:#e74c3c">Could not start the game</h2><p style="margin:10px 0"><strong>${err.message}</strong></p><pre style="background:#f5f5f5;padding:12px;border-radius:8px;font-size:11px;text-align:left;overflow:auto">${err.stack||''}</pre></div>`;
-    console.error(err);
-  }
-});
+  const afterFoodSummary=()=>{S.attnContext='post_fam';showFoodAttnCheck();};
 
-window.addEventListener('keydown', e => {
-  if (e.key === 'Backspace' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'SELECT') e.preventDefault();
-});
+  /* ══════════ SOCIAL FAM ══════════ */
+  const playSocialFam=()=>{showScreen('s-sf');runSnuggleAnim();};
+
+  const runSnuggleAnim=async()=>{
+    const stage=$('snug-stage'),capEl=$('snug-cap'),nextDiv=$('snug-next');
+    nextDiv.style.display='none';stage.innerHTML='';
+    const pos=posChar(),thin=thinChar();
+    const mkPip=(state,leftPct,size=64)=>{const el=document.createElement('div');el.className='scene-char';el.style.cssText=`left:${leftPct}%;width:${size}px;height:${size}px;z-index:3;`;el.innerHTML=CHARS.pip(state);stage.appendChild(el);return el;};
+    const mkChar=(charKey,leftPct,size=64)=>{const el=document.createElement('div');el.className='scene-char';el.style.cssText=`left:${leftPct}%;width:${size}px;height:${size}px;`;el.innerHTML=CHARS[charKey]();stage.appendChild(el);return el;};
+    const setCaption=txt=>{let c=stage.querySelector('.scene-caption');if(!c){c=document.createElement('div');c.className='scene-caption';stage.appendChild(c);}c.textContent=txt;};
+    const addHeart=(xPct,yPx)=>{const h=document.createElement('div');h.className='heart-p';h.textContent=['&#128149;','&#128151;','&#128150;','&#10084;'][0|Math.random()*4];h.style.left=xPct+'%';h.style.top=yPx+'px';stage.appendChild(h);setTimeout(()=>h.remove(),1550);};
+    for(let rep=0;rep<3;rep++){
+      stage.innerHTML='';
+      setCaption(`Pip sees ${pos.label}!`);capEl.textContent=`Pip sees ${pos.label}!`;
+      const pipA=mkPip('neutral',8);const posEl=mkChar(pos.charKey,72);
+      await wait(1000);
+      pipA.style.left='20%';posEl.style.left='52%';
+      setCaption(`Pip runs to ${pos.label}!`);capEl.textContent=`Pip runs to ${pos.label}!`;
+      await wait(1200);
+      pipA.style.left='28%';posEl.style.left='36%';
+      await wait(1200);
+      pipA.innerHTML=CHARS.pip('excited');
+      pipA.classList.add('a-snug');posEl.classList.add('a-snug');
+      setCaption(`${pos.label} and Pip are best friends!`);
+      capEl.textContent=`${pos.label} and Pip are best friends!`;
+      speak(`${pos.label} and Pip are best friends!`);
+      const hi=setInterval(()=>addHeart(28+Math.random()*18,8+Math.random()*38),270);
+      await wait(2800);clearInterval(hi);
+      pipA.classList.remove('a-snug');posEl.classList.remove('a-snug');
+      setCaption(`${pos.label} is Pip's best friend!`);
+      capEl.textContent=`${pos.label} is Pip's best friend!`;await wait(1400);
+      stage.innerHTML='';
+      setCaption(`Now Pip sees ${thin.label}...`);capEl.textContent=`Now Pip sees ${thin.label}...`;
+      const pipB=mkPip('neutral',8);const thinEl=mkChar(thin.charKey,72);
+      await wait(1000);
+      pipB.style.left='37%';
+      setCaption('Pip moves closer...');capEl.textContent='Pip moves closer...';await wait(1200);
+      if(S.variant==='dislike'){
+        thinEl.style.left='88%';
+        setCaption(`${thin.label} is not a friend.`);capEl.textContent=`${thin.label} is not a friend.`;
+        speak(`${thin.label} is not a friend.`);
+        pipB.innerHTML=CHARS.pip('sad');await wait(1900);
+        setCaption(`${thin.label} is not Pip's best friend.`);
+        capEl.textContent=`${thin.label} is not Pip's best friend.`;await wait(1400);
+      } else {
+        setCaption(`Pip doesn't know ${thin.label}.`);capEl.textContent=`Pip doesn't know ${thin.label}.`;
+        speak(`Pip doesn't know ${thin.label}.`);await wait(2500);
+      }
+    }
+    capEl.textContent='';nextDiv.style.display='flex';
+  };
+
+  const doneSocialFam=()=>showSocialSummary();
+
+  const showSocialSummary=()=>{
+    const pos=posChar(),thin=thinChar();
+    setPip('soc-sum-pip','excited','a-float');
+    $('ssum-friend-char').innerHTML=CHARS[pos.charKey]();
+    $('ssum-friend-text').textContent=`Pip is best friends with ${pos.label}!`;
+    $('ssum-nope-char').innerHTML=CHARS[thin.charKey]();
+    if(S.variant==='unknown'){$('ssum-nope-text').textContent=`Pip doesn't know ${thin.label}.`;$('ssum-nope-card').className='sum-card sum-unk';}
+    else{$('ssum-nope-text').textContent=`${thin.label} is not Pip's best friend.`;$('ssum-nope-card').className='sum-card sum-no';}
+    showScreen('s-social-summary');speak(`Pip is best friends with ${pos.label}!`);
+  };
+
+  const afterSocialSummary=()=>{S.attnContext='post_fam';showSocialAttnCheck();};
+
+  /* ══════════ PRE-ROUND 2 CHECK ══════════ */
+  const showPreRound2Check=()=>{
+    S.attnContext='pre_round2';
+    if(S.firstBlock===1){showFoodAttnCheck();}
+    else{showSocialAttnCheck();}
+  };
+
+  /* ══════════════════════════════════════════════════════
+     FOOD ATTENTION CHECK
+     Called from several contexts — attnContext determines
+     which question label is used and where we go next.
+  ══════════════════════════════════════════════════════ */
+  const showFoodAttnCheck=()=>{
+    showScreen('s-attn-food');
+    setPip('attn-pip-food','neutral','a-float');
+    /* "Do you remember?" for any pre-test or reminder context */
+    const isReminder=['pre_round2','pre_test2','pre_test2_new'].includes(S.attnContext);
+    const q=isReminder?'Do you remember? Which fruit does Pip like?':'Which fruit does Pip like?';
+    $('attn-food-q').textContent=q;
+    speak(q);
+    const choices=shuf([{...likedFood(),isCorrect:true},{...dislikedFood(),isCorrect:false}]);
+    const grid=$('attn-food-doors');grid.innerHTML='';
+    const cols=shuf([DCOLS[0],DCOLS[1]]);
+    choices.forEach((c,idx)=>{const w=makeDoor(c,cols[idx]);w.addEventListener('click',()=>onAttnFoodClick(w,c,grid));grid.appendChild(w);});
+    attnFoodStart=Date.now();
+  };
+
+  const onAttnFoodClick=async(wrap,choice,grid)=>{
+    const rt=Date.now()-attnFoodStart;
+    grid.querySelectorAll('.door-wrap').forEach(w=>w.classList.add('locked'));
+    wrap.querySelector('.door-panel').classList.add('open');
+    /* Label the row precisely so analysts know which check it was */
+    let trialType;
+    if     (S.attnContext==='pre_round2')    trialType='attn_reminder_food';
+    else if(S.attnContext==='pre_test2')     trialType='attn_pretest2_fam1_food';
+    else if(S.attnContext==='pre_test2_new') trialType='attn_pretest2_fam2_food';
+    else                                      trialType='attn_food';
+    S.data.push({
+      pid:S.pid,age:S.age,pType:S.pType,variant:S.variant,
+      firstBlock:S.firstBlock,round:S.round,phase:'attn_check',
+      trialNum:trialType,trialType,
+      role:choice.role||'',choiceLabel:choice.label,
+      chosePreferred:choice.isCorrect?1:0,
+      rt_ms:rt,trialOrder:'',
+      likedFood:likedFood().label,dislikedFood:dislikedFood().label,
+      posChar:posChar().label,thinChar:thinChar().label,
+      attnCorrect:choice.isCorrect,timestamp:new Date().toISOString(),
+    });
+    await wait(700);
+    if(choice.isCorrect){flash('&#10003;','#27ae60');}
+    else{
+      grid.querySelectorAll('.door-wrap').forEach(w=>{const dp=w.querySelector('.dp-emoji');if(dp&&dp.textContent.trim()===likedFood().emoji)w.querySelector('.door-panel').classList.add('open');});
+      flash(`Pip loves ${likedFood().emoji}!`,'#e67e22');
+      speak(`Pip loves ${likedFood().label}!`);
+    }
+    setTimeout(()=>afterFoodAttn(),1800);
+  };
+
+  /*
+   * afterFoodAttn — routing table
+   *
+   *  pre_round2    : fam1 reminder done  → start fam2 social
+   *  pre_test2     : fam1 reminder done  → now remind about fam2
+   *                  firstBlock===1 means fam2 was SOCIAL → ask social
+   *                  firstBlock===2 means fam2 was FOOD   → this function ran, impossible (food attn for fam2 = pre_test2_new)
+   *  pre_test2_new : fam2 (food) reminder done (firstBlock===2) → go to test
+   *  post_fam      : round===2 means food was fam2 (firstBlock===2)
+   *                  → queue fam1 (social) reminder as pre_test2
+   *                  round===1 → go to test
+   */
+  const afterFoodAttn=()=>{
+    if(S.attnContext==='pre_round2'){
+      /* fam1 reminder complete; start fam2 (social) */
+      S.attnContext='post_fam';S.round=2;
+      showScreen('s-sfi');
+    } else if(S.attnContext==='pre_test2'){
+      /*
+       * We just reminded about fam1 (food).
+       * fam1===food means firstBlock===1, so fam2===social.
+       * Now remind about fam2 (social).
+       */
+      S.attnContext='pre_test2_new';
+      showSocialAttnCheck();
+    } else if(S.attnContext==='pre_test2_new'){
+      /*
+       * We just reminded about fam2 (food) — firstBlock===2.
+       * Both reminders done → go to test.
+       */
+      S.phase='test';setPip('ti-pip','happy','a-bounce');showScreen('s-ti');
+    } else {
+      /* post_fam */
+      if(S.round===2){
+        /*
+         * Food was fam2 (firstBlock===2, social was fam1).
+         * Queue fam1 (social) reminder.
+         */
+        S.attnContext='pre_test2';
+        showSocialAttnCheck();
+      } else {
+        S.phase='test';setPip('ti-pip','happy','a-bounce');showScreen('s-ti');
+      }
+    }
+  };
+
+  /* ══════════════════════════════════════════════════════
+     SOCIAL ATTENTION CHECK
+  ══════════════════════════════════════════════════════ */
+  const showSocialAttnCheck=()=>{
+    showScreen('s-attn-social');
+    setPip('attn-pip-social','neutral','a-float');
+    const isReminder=['pre_round2','pre_test2','pre_test2_new'].includes(S.attnContext);
+    const q=isReminder?"Do you remember? Who is Pip's best friend?":"Who is Pip's best friend?";
+    $('attn-social-q').textContent=q;
+    speak(q);
+    const choices=shuf([{...posChar(),isCorrect:true},{...thinChar(),isCorrect:false}]);
+    const grid=$('attn-social-doors');grid.innerHTML='';
+    const cols=shuf([DCOLS[0],DCOLS[1]]);
+    choices.forEach((c,idx)=>{const w=makeDoor(c,cols[idx]);w.addEventListener('click',()=>onAttnSocialClick(w,c,grid));grid.appendChild(w);});
+    attnSocStart=Date.now();
+  };
+
+  const onAttnSocialClick=async(wrap,choice,grid)=>{
+    const rt=Date.now()-attnSocStart;
+    grid.querySelectorAll('.door-wrap').forEach(w=>w.classList.add('locked'));
+    wrap.querySelector('.door-panel').classList.add('open');
+    let trialType;
+    if     (S.attnContext==='pre_round2')    trialType='attn_reminder_social';
+    else if(S.attnContext==='pre_test2')     trialType='attn_pretest2_fam1_social';
+    else if(S.attnContext==='pre_test2_new') trialType='attn_pretest2_fam2_social';
+    else                                      trialType='attn_social';
+    S.data.push({
+      pid:S.pid,age:S.age,pType:S.pType,variant:S.variant,
+      firstBlock:S.firstBlock,round:S.round,phase:'attn_check',
+      trialNum:trialType,trialType,
+      role:choice.role||'',choiceLabel:choice.label,
+      chosePreferred:choice.isCorrect?1:0,
+      rt_ms:rt,trialOrder:'',
+      likedFood:likedFood().label,dislikedFood:dislikedFood().label,
+      posChar:posChar().label,thinChar:thinChar().label,
+      attnCorrect:choice.isCorrect,timestamp:new Date().toISOString(),
+    });
+    await wait(700);
+    if(choice.isCorrect){flash('&#10003;','#27ae60');}
+    else{
+      grid.querySelectorAll('.door-wrap').forEach(w=>{const lbl=w.querySelector('.dp-label');if(lbl&&lbl.textContent===posChar().label)w.querySelector('.door-panel').classList.add('open');});
+      flash(`${posChar().label} is Pip's best friend!`,'#e67e22');
+      speak(`${posChar().label} is Pip's best friend!`);
+    }
+    setTimeout(()=>afterSocialAttn(),1800);
+  };
+
+  /*
+   * afterSocialAttn — routing table
+   *
+   *  pre_round2    : fam1 reminder done  → start fam2 food
+   *  pre_test2     : fam1 reminder done  → now remind about fam2
+   *                  firstBlock===2 means fam2 was FOOD → ask food
+   *                  firstBlock===1 means fam2 was SOCIAL → this function ran, impossible (social attn for fam2 = pre_test2_new)
+   *  pre_test2_new : fam2 (social) reminder done (firstBlock===1) → go to test
+   *  post_fam      : round===2 means social was fam2 (firstBlock===1)
+   *                  → queue fam1 (food) reminder as pre_test2
+   *                  round===1 → go to test
+   */
+  const afterSocialAttn=()=>{
+    if(S.attnContext==='pre_round2'){
+      /* fam1 reminder complete; start fam2 (food) */
+      S.attnContext='post_fam';S.round=2;
+      showScreen('s-ffi');
+    } else if(S.attnContext==='pre_test2'){
+      /*
+       * We just reminded about fam1 (social).
+       * fam1===social means firstBlock===2, so fam2===food.
+       * Now remind about fam2 (food).
+       */
+      S.attnContext='pre_test2_new';
+      showFoodAttnCheck();
+    } else if(S.attnContext==='pre_test2_new'){
+      /*
+       * We just reminded about fam2 (social) — firstBlock===1.
+       * Both reminders done → go to test.
+       */
+      S.phase='test';setPip('ti-pip','happy','a-bounce');showScreen('s-ti');
+    } else {
+      /* post_fam */
+      if(S.round===2){
+        /*
+         * Social was fam2 (firstBlock===1, food was fam1).
+         * Queue fam1 (food) reminder.
+         */
+        S.attnContext='pre_test2';
+        showFoodAttnCheck();
+      } else {
+        S.phase='test';setPip('ti-pip','happy','a-bounce');showScreen('s-ti');
+      }
+    }
+  };
+
+  /* ══════════ END ══════════ */
+  const showEndScreen=()=>{
+    showScreen('s-end');setPip('end-pip','excited','a-bounce');speak('Amazing! Well done!');
+    const row=$('end-stars');row.innerHTML='';
+    ['&#11088;','&#127775;','&#128175;','&#10024;','&#127881;','&#127882;','&#127942;','&#127880;'].forEach((st,i)=>{
+      const el=document.createElement('span');el.className='end-star';el.innerHTML=st;
+      el.style.setProperty('--d',`${i*.12}`);row.appendChild(el);
+    });
+  };
+
+  /* ══════════ DATA ══════════ */
+  const downloadCSV=()=>{
+    if(!S.data.length){alert('No data yet.');return;}
+    const hdr=['pid','age','pType','variant','firstBlock','round','phase','trialNum','trialType','role','choiceLabel','chosePreferred','rt_ms','trialOrder','likedFood','dislikedFood','posChar','thinChar','attnCorrect','timestamp'];
+    const rows=S.data.map(d=>hdr.map(k=>String(d[k]??'').replace(/,/g,';')));
+    const csv=[hdr,...rows].map(r=>r.join(',')).join('\n');
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+    a.download=`haf_${S.pid}_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  };
+
+  const toggleTable=()=>{
+    const wrap=$('res-wrap');
+    if(wrap.style.display==='none'){
+      wrap.style.display='block';
+      if(!S.data.length){$('res-container').innerHTML='<p style="text-align:center;color:#aaa;padding:16px;">No data yet.</p>';return;}
+      const hdr=['pid','age','pType','variant','firstBlock','round','phase','trialNum','trialType','role','choiceLabel','chosePreferred','rt_ms','attnCorrect'];
+      let t=`<table class="res-table"><thead><tr>${hdr.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>`;
+      S.data.forEach(d=>{t+=`<tr>${hdr.map(x=>`<td>${d[x]??''}</td>`).join('')}</tr>`;});
+      $('res-container').innerHTML=t+'</tbody></table>';
+    } else {wrap.style.display='none';}
+  };
+
+  const restart=()=>{
+    if(!confirm('Start new participant?\nDownload data first!'))return;
+    S.data=[];$('f-pid').value='';$('f-age').value='';
+    $('res-wrap').style.display='none';showScreen('s-setup');
+  };
+
+  return {
+    setup,goTrainIntro,startTraining,startTrials,
+    playFoodFam,doneFoodFam,afterFoodSummary,
+    playSocialFam,doneSocialFam,afterSocialSummary,
+    nextTrial,downloadCSV,toggleTable,restart,
+  };
+})();
 </script>
 </body>
 </html>

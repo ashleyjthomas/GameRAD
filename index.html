@@ -217,6 +217,12 @@ body {
 }
 .trans-msg { font-size:22px; font-weight:600; color:#333; }
 .trans-sub { font-size:15px; color:#aaa; }
+.midpoint-screen {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:14px; padding:28px; text-align:center;
+  animation: fadeIn .35s ease;
+}
 .end-screen {
   flex:1; display:flex; flex-direction:column;
   align-items:center; justify-content:center;
@@ -292,7 +298,7 @@ body {
 <div id="app">
   <div style="padding:44px;text-align:center;font-family:Arial,sans-serif;color:#aaa">
     <div style="font-size:54px;margin-bottom:14px">🔍</div>
-    <h2>Loading relationship Detective...</h2>
+    <h2>Loading Relationship Detective...</h2>
     <p style="margin-top:10px;font-size:14px">If this does not go away, please check that JavaScript is enabled.</p>
   </div>
 </div>
@@ -358,7 +364,7 @@ const KUDOS = [
   "Wonderful job! I love how carefully you are thinking!",
   "Amazing detective work! Keep it up!",
   "You are so good at this! Wow!",
-  "Fantastic! You are a true relationship Detective!",
+  "Fantastic! You are a true Relationship Detective!",
   "That was great! I am really impressed!",
   "Super job! You are doing wonderfully!"
 ];
@@ -493,7 +499,6 @@ function assignAllQuestions() {
 
 // ── VIGNETTES ──────────────────────────────────────────
 const VIGNETTES = [
-
   {
     id: 1, model: 'CS', excludeItems: ['CS1','CS5'],
     char1: { name: 'Zumi', img: 'Asset%2027.png', hair: '#9B5DE5', shirt: '#4ECDC4', pants: '#1A3040', style: 'short' },
@@ -505,7 +510,6 @@ const VIGNETTES = [
       'When Blix got hurt last week, Zumi felt the pain in their own body. They always say "when we got hurt" because it felt exactly the same to both of them.'
     ]
   },
-
   {
     id: 2, model: 'EM', excludeItems: ['EM6'],
     char1: { name: 'Orro', img: 'Asset%2029.png', hair: '#4ECDC4', shirt: '#FF8FAB', pants: '#1A3040', style: 'short' },
@@ -517,7 +521,6 @@ const VIGNETTES = [
       'When they share the glow-ball, they use a timer so that each one uses it for exactly the same amount of time.'
     ]
   },
-
   {
     id: 3, model: 'CS', excludeItems: ['CS8'],
     char1: { name: 'Kiva', img: 'Asset%2031.png', hair: '#E0A835', shirt: '#6BCB77', pants: '#154360', style: 'long'  },
@@ -529,7 +532,6 @@ const VIGNETTES = [
       'When others ask about the meadow, Kiva and Doop always say "our meadow." They have never thought of anything there as just one of theirs alone.'
     ]
   },
-
   {
     id: 4, model: 'AR', excludeItems: ['AR1'],
     char1: { name: 'Wex',   img: 'Asset%2033.png', hair: '#FFD84D', shirt: '#9B5DE5', pants: '#1A0E30', style: 'short'    },
@@ -541,7 +543,6 @@ const VIGNETTES = [
       'At every meal, Wex picks their food first and takes as much as they want. Plara waits quietly until Wex is completely finished.'
     ]
   },
-
   {
     id: 5, model: 'EM', excludeItems: ['EM7'],
     char1: { name: 'Nuu',  img: 'Asset%2035.png', hair: '#FF6EC7', shirt: '#2980B9', pants: '#1A3040', style: 'pigtails' },
@@ -553,7 +554,6 @@ const VIGNETTES = [
       'When they work on things together, they talk about it if one of them did more, and always find a way to balance things out.'
     ]
   },
-
   {
     id: 6, model: 'AR', excludeItems: ['AR7'],
     char1: { name: 'Tazo', img: 'Asset%2037.png', hair: '#9B5DE5', shirt: '#E91E8C', pants: '#1A0E30', style: 'long'  },
@@ -565,7 +565,6 @@ const VIGNETTES = [
       'When visitors come to the cave, they greet Tazo first and ask Tazo\'s permission before they enter the cave.'
     ]
   },
-
   {
     id: 7, model: 'CS', excludeItems: ['CS1','CS5'],
     char1: { name: 'Mip',   img: 'Asset%2039.png', hair: '#4ECDC4', shirt: '#FF6B6B', pants: '#1A3040', style: 'short' },
@@ -577,7 +576,6 @@ const VIGNETTES = [
       'When others ask whose pod it is, Mip and Creel always answer: "It is ours."'
     ]
   },
-
   {
     id: 8, model: 'EM', excludeItems: ['EM6'],
     char1: { name: 'Yobi', img: 'Asset%2041.png', hair: '#FF6EC7', shirt: '#9B59B6', pants: '#154360', style: 'pigtails' },
@@ -589,7 +587,6 @@ const VIGNETTES = [
       'After Gorp missed a day of helping carry supplies, they carried a double load the next day to make things even again.'
     ]
   },
-
   {
     id: 9, model: 'CS', excludeItems: ['CS6'],
     char1: { name: 'Fuzz', img: 'Asset%2043.png', hair: '#FFD84D', shirt: '#1ABC9C', pants: '#1A3040', style: 'short' },
@@ -601,7 +598,6 @@ const VIGNETTES = [
       'When Orlo felt sad one afternoon, Fuzz felt it too, right in their own chest. It was as if their feelings were connected and one feeling.'
     ]
   },
-
   {
     id: 10, model: 'AR', excludeItems: ['AR7'],
     char1: { name: 'Beem', img: 'Asset%2045.png', hair: '#E91E8C', shirt: '#9B5DE5', pants: '#1A0E30', style: 'long'  },
@@ -613,7 +609,6 @@ const VIGNETTES = [
       'When they found a gaxa-fruit, Beem chose the best part to keep. Jovi received what was left over.'
     ]
   },
-
   {
     id: 11, model: 'EM', excludeItems: ['EM4','EM6'],
     char1: { name: 'Plix', img: 'Asset%2047.png', hair: '#4ECDC4', shirt: '#FF8FAB', pants: '#1A3040', style: 'short'    },
@@ -625,7 +620,6 @@ const VIGNETTES = [
       'When they found wubbas together, they counted carefully to make sure they each took the exact same number.'
     ]
   },
-
   {
     id: 12, model: 'AR', excludeItems: ['AR1','AR8'],
     char1: { name: 'Hoob', img: 'Asset%2049.png', hair: '#FFD84D', shirt: '#9B5DE5', pants: '#1A0E30', style: 'short' },
@@ -637,7 +631,6 @@ const VIGNETTES = [
       'Hoob drinks from the pool first every morning. Nev waits until Hoob is completely finished before they can drink.'
     ]
   }
-
 ];
 
 // ── STATE ──────────────────────────────────────────────
@@ -1153,6 +1146,7 @@ function render() {
       case 'q':         renderQuestion(VIGNETTES[S.vi], S.qi, false); break;
       case 'q-likert':  renderLikert();                                break;
       case 'trans':     renderTrans();                                 break;
+      case 'midpoint':  renderMidpoint();                              break; // ← NEW
       case 'end':       renderEnd();                                   break;
     }
   } catch(err) {
@@ -1169,13 +1163,12 @@ function renderWelcome() {
   let wi2;
   do { wi2 = Math.floor(Math.random() * pool.length); } while (wi2 === wi1);
 
-  // Read the PID from the URL — may already be set if user came back to welcome
   const urlPid = getUrlParam('pid');
   if (urlPid) S.pid = urlPid;
 
   app.innerHTML = `
   <div class="screen" style="justify-content:center;text-align:center;padding-top:14px">
-    <div class="wt">relationship Detective!</div>
+    <div class="wt">Relationship Detective!</div>
     <div class="ws">Can you figure out how these aliens act toward each other?</div>
     <div class="illus" style="max-width:330px">${welcomeSVG(pool[wi1], pool[wi2])}</div>
     <button id="unlockBtn" class="unlock-btn"
@@ -1545,11 +1538,14 @@ function flashBtn(ans) {
   setTimeout(() => { b.style.transform = ''; b.style.boxShadow = ''; }, 320);
 }
 
+// ── TRANSITION SCREEN ──────────────────────────────────
 function renderTrans() {
-  const ni   = S.vi + 1;
-  const last = ni >= VIGNETTES.length;
-  const np   = last ? null : VIGNETTES[ni];
-  const kudo = KUDOS[Math.floor(Math.random() * KUDOS.length)];
+  const ni         = S.vi + 1;
+  const last       = ni >= VIGNETTES.length;
+  const isMidpoint = ni === 6 && !last;           // ← after 6th vignette
+  const np         = last ? null : VIGNETTES[ni];
+  const kudo       = KUDOS[Math.floor(Math.random() * KUDOS.length)];
+
   app.innerHTML = `
   <div class="trans-screen">
     ${starTransHTML(S.stars, VIGNETTES.length)}
@@ -1558,27 +1554,92 @@ function renderTrans() {
     <div class="trans-sub">
       ${last
         ? 'That was the very last pair — you are almost done!'
-        : `Next up: meet <strong>${escHtml(np.char1.name)}</strong> and <strong>${escHtml(np.char2.name)}</strong>!`}
+        : isMidpoint
+          ? 'You are halfway through — incredible work! 🌟'
+          : `Next up: meet <strong>${escHtml(np.char1.name)}</strong> and <strong>${escHtml(np.char2.name)}</strong>!`}
     </div>
   </div>`;
+
   const lv   = getCurrentLevel(S.stars);
   const prev = getCurrentLevel(S.stars - 1);
   const lvUp = S.stars > 0 && lv.label !== prev.label;
   const msg  = last
     ? `${kudo} You just finished all twelve pairs! You are almost done now — what an amazing job!`
-    : lvUp
-      ? `${kudo} You leveled up to ${lv.label}! You have ${S.stars} star${S.stars===1?'':'s'} now! Next up, let us meet ${np.char1.name} and ${np.char2.name}!`
-      : `${kudo} You collected a star! You have ${S.stars} star${S.stars===1?'':'s'} now! Next up, let us meet ${np.char1.name} and ${np.char2.name}!`;
+    : isMidpoint
+      ? `${kudo} You have finished six whole pairs of aliens and collected ${S.stars} star${S.stars===1?'':'s'}! You are halfway through — that is so impressive!`
+      : lvUp
+        ? `${kudo} You leveled up to ${lv.label}! You have ${S.stars} star${S.stars===1?'':'s'} now! Next up, let us meet ${np.char1.name} and ${np.char2.name}!`
+        : `${kudo} You collected a star! You have ${S.stars} star${S.stars===1?'':'s'} now! Next up, let us meet ${np.char1.name} and ${np.char2.name}!`;
+
   stopSpeak();
   speak(msg, () => {
     setTimeout(() => {
-      if (last) { S.phase = 'end'; }
-      else      { S.vi++; S.qi = 0; S.phase = 'story'; }
+      if (last) {
+        S.phase = 'end';
+      } else {
+        S.vi++;
+        S.qi = 0;
+        S.phase = S.vi === 6 ? 'midpoint' : 'story'; // ← intercept at halfway
+      }
       render();
     }, 750);
   });
 }
 
+// ── MIDPOINT SCREEN ────────────────────────────────────
+function renderMidpoint() {
+  const nm = S.name || 'Detective';
+  app.innerHTML = `
+  <div class="midpoint-screen">
+    <div style="font-size:58px;animation:bounceIn .85s cubic-bezier(.17,.67,.37,1.3)">🌟</div>
+    <div style="font-size:26px;font-weight:600;color:#333">Halfway there, ${escHtml(nm)}!</div>
+    <div style="font-size:16px;color:#555;max-width:360px;line-height:1.75;background:#F8F4FF;padding:16px 20px;border-radius:16px;border:3px solid #C9B8F0">
+      You have already met <strong>6 pairs</strong> of alien friends —
+      that is so impressive!<br><br>
+      Would you like to keep going and meet <strong>6 more</strong>?<br>
+      Or would you like to <strong>say goodbye for now</strong>?
+    </div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:6px">
+      <button class="btn btn-primary" style="font-size:18px;padding:14px 30px"
+        onclick="continueGame()">
+        Keep Going! 🚀
+      </button>
+      <button class="btn btn-secondary" style="font-size:16px;padding:13px 26px"
+        onclick="exitToCHS()">
+        Bye for now! 👋
+      </button>
+    </div>
+    <div style="font-size:11px;color:#ccc;margin-top:4px">
+      Your answers so far have been saved.
+    </div>
+  </div>`;
+
+  stopSpeak();
+  speak(`Wow, ${nm} — you have already met six pairs of alien friends and you are doing such an amazing job! Would you like to keep going and meet six more? Or would you like to say goodbye for now? Press Keep Going to continue, or Bye for now if you are all done for today!`);
+}
+
+function continueGame() {
+  stopSpeak();
+  S.phase = 'story';
+  render();
+}
+
+function exitToCHS() {
+  stopSpeak();
+  markSessionComplete();
+  const nm = S.name || 'Detective';
+  // Disable buttons so child cannot click again while speech plays
+  document.querySelectorAll('.midpoint-screen button').forEach(b => b.disabled = true);
+  speak(
+    `Goodbye, ${nm}! You did such an amazing job today — you are a true Relationship Detective! See you next time!`,
+    () => {
+      const returnUrl = getUrlParam('return_url') || 'https://www.childrenhelpingscience.com';
+      window.location.href = returnUrl;
+    }
+  );
+}
+
+// ── END SCREEN ─────────────────────────────────────────
 function renderEnd() {
   const nm  = S.name || 'Detective';
   const testAnswers = S.answers.filter(a => a.type === 'test');
@@ -1695,6 +1756,7 @@ function setupAdmin() {
     <div class="admin-log" id="adminLog">No answers yet.</div>
     <button class="admin-btn-sm admin-btn-gold" style="width:100%;margin-bottom:4px;padding:8px;font-size:11px;border-radius:7px" onclick="exportCSV()">Download Results (CSV)</button>
     <button class="admin-btn-sm" style="width:100%;margin-bottom:4px;padding:7px;font-size:11px;border-radius:7px" onclick="skipPair()">Skip this pair</button>
+    <button class="admin-btn-sm" style="width:100%;margin-bottom:4px;padding:7px;font-size:11px;border-radius:7px" onclick="skipMidpoint()">Skip to midpoint</button>
     <button class="admin-btn-sm" style="width:100%;padding:7px;font-size:11px;border-radius:7px" onclick="skipEnd()">Skip to End</button>`;
   const ki = document.getElementById('elKeyInput');
   const vs = document.getElementById('elVoiceSelect');
@@ -1722,6 +1784,8 @@ function testVoice() {
   saveVoiceSettings(); stopSpeak();
   speak("Hello! I am the Relationship Detective voice. Does this sound good to you?");
 }
+
+function skipMidpoint() { stopSpeak(); S.vi = 6; S.qi = 0; S.phase = 'midpoint'; render(); }
 
 function updateAdmin() {
   const el = document.getElementById('adminLog');
@@ -1792,4 +1856,3 @@ window.addEventListener('keydown', e => {
 </script>
 </body>
 </html>
-

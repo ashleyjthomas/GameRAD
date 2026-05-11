@@ -24,6 +24,12 @@ body {
   display: flex; flex-direction: column;
   min-height: 580px;
 }
+/* in fullscreen, app fills the whole screen */
+:fullscreen #app,
+:-webkit-full-screen #app {
+  max-width: 100%; border-radius: 0;
+  min-height: 100vh; height: 100vh;
+}
 .star-meter-wrap {
   display: flex; flex-direction: column;
   align-items: center; padding: 8px 16px 3px; gap: 2px;
@@ -150,16 +156,11 @@ body {
 .btn-likert-strong:active, .btn-likert-mild:active { transform:scale(.95); }
 .btn-likert-strong:disabled, .btn-likert-mild:disabled { opacity:.44; cursor:not-allowed; }
 .btn-model-choice {
-  background: white;
-  border: 3px solid #E0E0E0;
-  border-radius: 16px;
-  padding: 10px;
-  cursor: pointer;
+  background: white; border: 3px solid #E0E0E0; border-radius: 16px;
+  padding: 10px; cursor: pointer;
   transition: transform .1s, border-color .1s, box-shadow .1s;
   -webkit-tap-highlight-color: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
 }
 .btn-model-choice:active  { transform: scale(.95); }
 .btn-model-choice:hover   { border-color: #4776e6; box-shadow: 0 4px 16px rgba(71,118,230,.25); }
@@ -235,12 +236,24 @@ body {
 .end-title { font-size:29px; font-weight:600; color:#f7971e; }
 .end-sub   { font-size:16px; color:#666; }
 .end-btns  { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:4px; }
+
+/* ── FIXED UTILITY BUTTONS ── */
 .admin-btn {
   position:fixed; bottom:10px; right:10px;
   width:34px; height:34px; border-radius:50%;
   background:rgba(0,0,0,.13); border:none; cursor:pointer;
   font-size:15px; display:flex; align-items:center; justify-content:center; z-index:500;
 }
+.fullscreen-btn {
+  position:fixed; bottom:10px; left:10px;
+  width:34px; height:34px; border-radius:50%;
+  background:rgba(0,0,0,.13); border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  z-index:500; transition:background .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.fullscreen-btn:hover { background:rgba(0,0,0,.28); }
+
 .admin-panel {
   position:fixed; bottom:54px; right:10px;
   background:white; border-radius:12px;
@@ -303,11 +316,43 @@ body {
   </div>
 </div>
 
+<!-- Fullscreen toggle (bottom-left) -->
+<button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()" title="Go Fullscreen"></button>
+
+<!-- Researcher panel (bottom-right) -->
 <button class="admin-btn" id="adminBtn" title="Researcher Panel">⚙️</button>
 <div class="admin-panel" id="adminPanel"></div>
 
 <script>
 'use strict';
+
+// ── FULLSCREEN ─────────────────────────────────────────
+const FS_ICON_ENTER = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>`;
+const FS_ICON_EXIT  = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="10" y1="14" x2="3" y2="21"/><line x1="21" y1="3" x2="14" y2="10"/></svg>`;
+
+function toggleFullscreen() {
+  const isFs = document.fullscreenElement || document.webkitFullscreenElement;
+  if (!isFs) {
+    const el = document.documentElement;
+    const req = el.requestFullscreen || el.webkitRequestFullscreen;
+    if (req) req.call(el).catch(err => console.warn('Fullscreen error:', err.message));
+  } else {
+    const exit = document.exitFullscreen || document.webkitExitFullscreen;
+    if (exit) exit.call(document);
+  }
+}
+
+function updateFullscreenBtn() {
+  const btn = document.getElementById('fullscreenBtn');
+  if (!btn) return;
+  const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+  btn.innerHTML = isFs ? FS_ICON_EXIT : FS_ICON_ENTER;
+  btn.title     = isFs ? 'Exit Fullscreen' : 'Go Fullscreen';
+}
+
+['fullscreenchange', 'webkitfullscreenchange'].forEach(evt =>
+  document.addEventListener(evt, updateFullscreenBtn)
+);
 
 // ── GOOGLE SHEETS UPLOAD ───────────────────────────────
 const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwDD5qinnX2su-gF2VDrWoKJ6YbBWX9GRbqIFDm8Wm_e3ifNA4S9n66qBj6Lrb10yAEog/exec';
@@ -339,10 +384,8 @@ function uploadToSheets(answerObj) {
     ModelIDCorrect: answerObj.correct   != null ? String(answerObj.correct).toUpperCase()   : '',
     Timestamp:      answerObj.ts               || ''
   };
-
   fetch(SHEETS_URL, {
-    method: 'POST',
-    mode: 'no-cors',
+    method: 'POST', mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ rows: [row] })
   }).catch(err => console.warn('Sheets upload failed:', err));
@@ -409,7 +452,7 @@ const EXAMPLE = {
     {
       text: 'When they collected rocks to build something, they each put in exactly the same number of rocks.',
       keyed: 'YES', png: 'EMmoonrocktower.png',
-      explain: 'Putting in the same amount fits their style perfectly — they always like things to be fair and equal between them. YES makes more sense here!'
+      explain: 'Putting in the same amount fits their style perfectly — they always like things to be fair and equal between them. YES!'
     }
   ]
 };
@@ -583,8 +626,8 @@ const VIGNETTES = [
     scene: 'alien_meadow',
     parts: [
       'Yobi and Gorp always swap star-fruits at the start of each new day. If Yobi brings a red one, Gorp makes sure to bring a red one back.',
-      'When they used the zibble device last week, they used a timer to make sure neither one used it for longer than the other.',
-      'After Gorp missed a day of helping carry supplies, Gorp carried a double load the next day to make things even again.'
+      'When they used the zibble device last week, they used a sand-timer to make sure neither one used it for longer than the other.',
+      'After Gorp missed a day of helping carry supplies, they carried a double load the next day to make things even again.'
     ]
   },
   {
@@ -637,8 +680,7 @@ const VIGNETTES = [
 const S = {
   phase: 'welcome', name: '', age: '', pid: '',
   vi: 0, qi: 0, eqi: 0,
-  pendingAns: null,
-  modelIdOrder: [],
+  pendingAns: null, modelIdOrder: [],
   answers: [], stars: 0, adminOpen: false,
   elevenLabsKey:   localStorage.getItem('rad_elKey')   || '',
   elevenLabsVoice: localStorage.getItem('rad_elVoice') || 'MF3mGyEYCl7XYWbV9V6O'
@@ -741,7 +783,6 @@ function skin(name) {
   return SKINS[h % SKINS.length];
 }
 
-// ── THUMB PNGs ─────────────────────────────────────────
 function thumbsUpSVG(size) {
   size = size || 50;
   return `<img class="ans-thumb" src="${IMG_BASE}thumbsup.png" width="${size}" height="${size}" style="display:block;margin:0 auto;object-fit:contain"/>`;
@@ -822,7 +863,6 @@ function kidSVG(cx, groundY, cfg, animOffset, flip, imgH, imgYOffset) {
 
 // ── SCENE BACKGROUNDS ──────────────────────────────────
 const SCENE_BACKGROUNDS = {
-
   alien_home: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#0D0B1E"/>
   <path d="M0 300 L0 115 Q0 18 300 14 Q600 18 600 115 L600 300 Z" fill="#1A1540"/>
@@ -1003,13 +1043,11 @@ const SCENE_BACKGROUNDS = {
 </svg>`
 };
 
-// ── QUESTION ILLUSTRATIONS ─────────────────────────────
 const QUESTION_ILLUSTRATIONS = {
   share_food: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#FFF1C9"/><circle cx="140" cy="56" r="40" fill="#FFFFFF"/><circle cx="140" cy="56" r="31" fill="#E8F7FF"/><g fill="none" stroke="#F4A261" stroke-width="4" stroke-linecap="round"><path d="M116 57 q10 -18 28 -8 q18 10 3 22 q-13 10 -27 0 q-13 -10 1 -22"/><path d="M125 49 q19 -12 33 3 q12 13 -5 24 q-17 10 -33 -3"/></g><circle cx="132" cy="58" r="5" fill="#D94B38"/><circle cx="151" cy="64" r="5" fill="#D94B38"/><g fill="#C8D6E5" stroke="#6E7F8D" stroke-width="1.3" stroke-linejoin="round"><g transform="rotate(-18 72 73)"><rect x="68" y="26" width="8" height="49" rx="4"/><rect x="64" y="71" width="16" height="10" rx="3"/></g><g transform="rotate(18 208 73)"><rect x="204" y="26" width="8" height="49" rx="4"/><rect x="200" y="71" width="16" height="10" rx="3"/></g></g></svg>`,
   balance: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#F0F7FF"/><rect x="70" y="72" width="140" height="12" rx="6" fill="#8EDBFF"/><rect x="82" y="84" width="10" height="18" rx="3" fill="#4D96FF"/><rect x="188" y="84" width="10" height="18" rx="3" fill="#4D96FF"/><g fill="#FFD166" stroke="#C89B00" stroke-width="2"><rect x="94" y="52" width="30" height="8" rx="2"/><rect x="94" y="61" width="30" height="8" rx="2"/><rect x="94" y="43" width="30" height="8" rx="2"/><rect x="156" y="52" width="30" height="8" rx="2"/><rect x="156" y="61" width="30" height="8" rx="2"/><rect x="156" y="43" width="30" height="8" rx="2"/></g><g stroke="#333" stroke-width="4" stroke-linecap="round" fill="#333"><circle cx="55" cy="48" r="10"/><line x1="55" y1="58" x2="55" y2="78"/><line x1="55" y1="66" x2="75" y2="58"/><circle cx="225" cy="48" r="10"/><line x1="225" y1="58" x2="225" y2="78"/><line x1="225" y1="66" x2="205" y2="58"/></g></svg>`
 };
 
-// ── CHAR POSITIONS ─────────────────────────────────────
 const CHAR_POS = {
   alien_home:   { x: [170, 430], gy: 216, h: 182, yo: 35 },
   alien_meadow: { x: [162, 438], gy: 213, h: 182, yo: 35 },
@@ -1018,14 +1056,12 @@ const CHAR_POS = {
   crystal_cave: { x: [155, 445], gy: 213, h: 182, yo: 35 }
 };
 
-// ── SVG COMPOSITION ────────────────────────────────────
 function svgInner(str) {
   return str.replace(/<svg[^>]*>/i, '').replace(/<\/svg>\s*$/i, '');
 }
 function bgSVG(scene) {
   return svgInner(SCENE_BACKGROUNDS[scene] || SCENE_BACKGROUNDS.alien_home);
 }
-
 function sceneSVG(v) {
   const pos = CHAR_POS[v.scene] || { x:[155,445], gy:GY, h:182, yo:35 };
   const [c1x, c2x] = pos.x;
@@ -1037,11 +1073,8 @@ function sceneSVG(v) {
     ${kidSVG(c2x, gys[1], v.char2, '1.3s', false, h, yo)}
   </svg>`;
 }
-
 function qIllustHTML(q) {
-  if (q.png) {
-    return `<img src="${IMG_BASE}${escHtml(q.png)}" style="width:100%;border-radius:10px;display:block" alt=""/>`;
-  }
+  if (q.png) return `<img src="${IMG_BASE}${escHtml(q.png)}" style="width:100%;border-radius:10px;display:block" alt=""/>`;
   return QUESTION_ILLUSTRATIONS[q.qIllust] || QUESTION_ILLUSTRATIONS.share_food;
 }
 
@@ -1146,7 +1179,7 @@ function render() {
       case 'q':         renderQuestion(VIGNETTES[S.vi], S.qi, false); break;
       case 'q-likert':  renderLikert();                                break;
       case 'trans':     renderTrans();                                 break;
-      case 'midpoint':  renderMidpoint();                              break; // ← NEW
+      case 'midpoint':  renderMidpoint();                              break;
       case 'end':       renderEnd();                                   break;
     }
   } catch(err) {
@@ -1448,9 +1481,7 @@ function replayStoryQ(isEx) {
   const v = isEx ? EXAMPLE : VIGNETTES[S.vi];
   stopSpeak();
   speak(`Sure! Let me remind you about ${v.char1.name} and ${v.char2.name}.`, () => {
-    speakSeq(v.parts, null, () =>
-      speak(`Okay! Now, what do you think?`)
-    );
+    speakSeq(v.parts, null, () => speak(`Okay! Now, what do you think?`));
   });
 }
 
@@ -1492,12 +1523,9 @@ function doLikertAnswer(certainty) {
     ? (initAns === 'YES' ? 'DEFINITELY_YES' : 'DEFINITELY_NO')
     : (initAns === 'YES' ? 'MAYBE_YES'      : 'MAYBE_NO');
   const testRecord = {
-    type: 'test',
-    vid: v.id, vM: v.model, qi: S.qi, qM: q.qM,
-    itemId: q.id,
-    ans: fullAns, initialAns: initAns,
-    keyed: q.keyed, ok: initAns === q.keyed,
-    congruent: q.congruent,
+    type: 'test', vid: v.id, vM: v.model, qi: S.qi, qM: q.qM,
+    itemId: q.id, ans: fullAns, initialAns: initAns,
+    keyed: q.keyed, ok: initAns === q.keyed, congruent: q.congruent,
     ts: new Date().toISOString()
   };
   S.answers.push(testRecord);
@@ -1515,11 +1543,8 @@ function doModelId(chosenModel) {
   document.querySelectorAll('.btn-model-choice').forEach(b => b.disabled = true);
   const v = VIGNETTES[S.vi];
   const modelRecord = {
-    type: 'model-id',
-    vid: v.id,
-    vM: v.model,
-    chosen: chosenModel,
-    correct: chosenModel === v.model,
+    type: 'model-id', vid: v.id, vM: v.model,
+    chosen: chosenModel, correct: chosenModel === v.model,
     ts: new Date().toISOString()
   };
   S.answers.push(modelRecord);
@@ -1538,11 +1563,11 @@ function flashBtn(ans) {
   setTimeout(() => { b.style.transform = ''; b.style.boxShadow = ''; }, 320);
 }
 
-// ── TRANSITION SCREEN ──────────────────────────────────
+// ── TRANSITION ─────────────────────────────────────────
 function renderTrans() {
   const ni         = S.vi + 1;
   const last       = ni >= VIGNETTES.length;
-  const isMidpoint = ni === 6 && !last;           // ← after 6th vignette
+  const isMidpoint = ni === 6 && !last;
   const np         = last ? null : VIGNETTES[ni];
   const kudo       = KUDOS[Math.floor(Math.random() * KUDOS.length)];
 
@@ -1577,16 +1602,15 @@ function renderTrans() {
       if (last) {
         S.phase = 'end';
       } else {
-        S.vi++;
-        S.qi = 0;
-        S.phase = S.vi === 6 ? 'midpoint' : 'story'; // ← intercept at halfway
+        S.vi++; S.qi = 0;
+        S.phase = S.vi === 6 ? 'midpoint' : 'story';
       }
       render();
     }, 750);
   });
 }
 
-// ── MIDPOINT SCREEN ────────────────────────────────────
+// ── MIDPOINT ───────────────────────────────────────────
 function renderMidpoint() {
   const nm = S.name || 'Detective';
   app.innerHTML = `
@@ -1601,34 +1625,22 @@ function renderMidpoint() {
     </div>
     <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:6px">
       <button class="btn btn-primary" style="font-size:18px;padding:14px 30px"
-        onclick="continueGame()">
-        Keep Going! 🚀
-      </button>
+        onclick="continueGame()">Keep Going! 🚀</button>
       <button class="btn btn-secondary" style="font-size:16px;padding:13px 26px"
-        onclick="exitToCHS()">
-        Bye for now! 👋
-      </button>
+        onclick="exitToCHS()">Bye for now! 👋</button>
     </div>
-    <div style="font-size:11px;color:#ccc;margin-top:4px">
-      Your answers so far have been saved.
-    </div>
+    <div style="font-size:11px;color:#ccc;margin-top:4px">Your answers so far have been saved.</div>
   </div>`;
-
   stopSpeak();
   speak(`Wow, ${nm} — you have already met six pairs of alien friends and you are doing such an amazing job! Would you like to keep going and meet six more? Or would you like to say goodbye for now? Press Keep Going to continue, or Bye for now if you are all done for today!`);
 }
 
-function continueGame() {
-  stopSpeak();
-  S.phase = 'story';
-  render();
-}
+function continueGame() { stopSpeak(); S.phase = 'story'; render(); }
 
 function exitToCHS() {
   stopSpeak();
   markSessionComplete();
   const nm = S.name || 'Detective';
-  // Disable buttons so child cannot click again while speech plays
   document.querySelectorAll('.midpoint-screen button').forEach(b => b.disabled = true);
   speak(
     `Goodbye, ${nm}! You did such an amazing job today — you are a true Relationship Detective! See you next time!`,
@@ -1639,7 +1651,7 @@ function exitToCHS() {
   );
 }
 
-// ── END SCREEN ─────────────────────────────────────────
+// ── END ────────────────────────────────────────────────
 function renderEnd() {
   const nm  = S.name || 'Detective';
   const testAnswers = S.answers.filter(a => a.type === 'test');
@@ -1678,7 +1690,6 @@ function startGame() {
     const j = Math.floor(Math.random() * (i + 1));
     [VIGNETTES[i], VIGNETTES[j]] = [VIGNETTES[j], VIGNETTES[i]];
   }
-
   assignAllQuestions();
 
   const pool = [];
@@ -1713,7 +1724,8 @@ function skipPair() {
   }
 }
 
-function skipEnd()   { stopSpeak(); S.phase = 'end'; render(); }
+function skipMidpoint() { stopSpeak(); S.vi = 6; S.qi = 0; S.phase = 'midpoint'; render(); }
+function skipEnd()      { stopSpeak(); S.phase = 'end'; render(); }
 
 function resetGame() {
   stopSpeak();
@@ -1785,16 +1797,12 @@ function testVoice() {
   speak("Hello! I am the Relationship Detective voice. Does this sound good to you?");
 }
 
-function skipMidpoint() { stopSpeak(); S.vi = 6; S.qi = 0; S.phase = 'midpoint'; render(); }
-
 function updateAdmin() {
   const el = document.getElementById('adminLog');
   if (!el) return;
   if (!S.answers.length) { el.textContent = 'No answers yet.'; return; }
   el.textContent = S.answers.map(a => {
-    if (a.type === 'model-id') {
-      return `V${a.vid}[${a.vM}] MODEL-ID: chose ${a.chosen} ${a.correct?'✓':'✗'}`;
-    }
+    if (a.type === 'model-id') return `V${a.vid}[${a.vM}] MODEL-ID: chose ${a.chosen} ${a.correct?'✓':'✗'}`;
     return `V${a.vid}[${a.vM}] Q${a.qi+1} ${a.itemId}[${a.qM}] ${a.congruent?'CON':'INC'}: ${a.ans} key:${a.keyed} ${a.ok?'✓':'✗'}`;
   }).join('\n');
 }
@@ -1806,30 +1814,14 @@ function exportCSV() {
     'VignetteID','VignetteModel',
     'QuestionIndex','QuestionModel','ItemID','IsCongruent',
     'Answer','InitialYesNo','KeyedAnswer','Correct',
-    'ModelIDChosen','ModelIDCorrect',
-    'Timestamp'
+    'ModelIDChosen','ModelIDCorrect','Timestamp'
   ];
   const rows = [headers.join(',')];
   S.answers.forEach(a => {
     if (a.type === 'model-id') {
-      rows.push([
-        S.pid, S.name, S.age, 'MODEL_ID',
-        a.vid, a.vM,
-        '','','','',
-        '','','','',
-        a.chosen, a.correct ? 'TRUE' : 'FALSE',
-        a.ts
-      ].join(','));
+      rows.push([S.pid, S.name, S.age, 'MODEL_ID', a.vid, a.vM, '','','','', '','','','', a.chosen, a.correct?'TRUE':'FALSE', a.ts].join(','));
     } else {
-      rows.push([
-        S.pid, S.name, S.age, 'TEST_ITEM',
-        a.vid, a.vM,
-        a.qi+1, a.qM, a.itemId||'', a.congruent ? 'TRUE' : 'FALSE',
-        a.ans, a.initialAns || (a.ans.includes('YES') ? 'YES' : 'NO'),
-        a.keyed, a.ok ? 'TRUE' : 'FALSE',
-        '','',
-        a.ts
-      ].join(','));
+      rows.push([S.pid, S.name, S.age, 'TEST_ITEM', a.vid, a.vM, a.qi+1, a.qM, a.itemId||'', a.congruent?'TRUE':'FALSE', a.ans, a.initialAns||(a.ans.includes('YES')?'YES':'NO'), a.keyed, a.ok?'TRUE':'FALSE', '','', a.ts].join(','));
     }
   });
   const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
@@ -1843,8 +1835,12 @@ function exportCSV() {
 
 // ── INIT ───────────────────────────────────────────────
 window.addEventListener('load', () => {
-  try { initVoices(); setupAdmin(); render(); }
-  catch(err) {
+  try {
+    initVoices();
+    setupAdmin();
+    updateFullscreenBtn(); // set initial icon
+    render();
+  } catch(err) {
     document.getElementById('app').innerHTML = `<div class="error-box"><h2 style="color:#e74c3c">Could not start the game</h2><p style="margin:10px 0"><strong>${err.message}</strong></p><pre style="background:#f5f5f5;padding:12px;border-radius:8px;font-size:11px;text-align:left;overflow:auto">${err.stack||''}</pre></div>`;
     console.error(err);
   }

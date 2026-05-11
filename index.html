@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Friend Detective</title>
+<title>Relationship Detective</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
@@ -292,7 +292,7 @@ body {
 <div id="app">
   <div style="padding:44px;text-align:center;font-family:Arial,sans-serif;color:#aaa">
     <div style="font-size:54px;margin-bottom:14px">🔍</div>
-    <h2>Loading Friend Detective...</h2>
+    <h2>Loading Relationship Detective...</h2>
     <p style="margin-top:10px;font-size:14px">If this does not go away, please check that JavaScript is enabled.</p>
   </div>
 </div>
@@ -356,7 +356,7 @@ const KUDOS = [
   "Wonderful job! I love how carefully you are thinking!",
   "Amazing detective work! Keep it up!",
   "You are so good at this! Wow!",
-  "Fantastic! You are a true Friend Detective!",
+  "Fantastic! You are a true Relationship Detective!",
   "That was great! I am really impressed!",
   "Super job! You are doing wonderfully!"
 ];
@@ -1187,11 +1187,11 @@ function renderWelcome() {
 
   app.innerHTML = `
   <div class="screen" style="justify-content:center;text-align:center;padding-top:14px">
-    <div class="wt">Friend Detective!</div>
-    <div class="ws">Can you figure out how these alien friends act toward each other?</div>
+    <div class="wt">Relationship Detective!</div>
+    <div class="ws">Can you figure out how these aliens act toward each other?</div>
     <div class="illus" style="max-width:330px">${welcomeSVG(pool[wi1], pool[wi2])}</div>
     <button id="unlockBtn" class="unlock-btn"
-      onclick="unlockAudio('Hello there, and welcome to Friend Detective! I am so excited you are here today! First, can you type your name in the box. And then pick your age from the little menu. When you are all ready, press the big orange button that says Let us play!')">
+      onclick="unlockAudio('Hello there, and welcome to relationship Detective! I am so excited you are here today! First, can you type your name in the box. And then pick your age from the little menu. When you are all ready, press the big orange button that says Let us play!')">
       🔊 Tap here to turn on sound!
     </button>
     <div class="form-row">
@@ -1234,7 +1234,7 @@ function renderIntro() {
     <div style="font-size:44px">🕵️</div>
     <div style="font-size:22px;font-weight:600;color:#333">Here is how to play!</div>
     <div class="info-box" style="font-size:14px;line-height:1.75">
-      I will tell you about <strong>two alien friends</strong> and how they act toward each other.<br><br>
+      I will tell you about <strong>two aliens</strong> and how they act toward each other.<br><br>
       <em>These aliens might do things differently from the way you do things — but that is okay!</em><br><br>
       Then I will ask — <strong>would those same two aliens act that way in another situation?</strong><br><br>
       <strong>Press the big 👍 thumb UP for YES</strong><br>
@@ -1265,7 +1265,7 @@ function renderIntro() {
     <button class="btn btn-primary" style="font-size:18px;padding:12px 28px" onclick="goExStory()">Show me how! 🚀</button>
   </div>`;
   stopSpeak();
-  speak(`Wonderful${nm}! Here is how our game works. I am going to tell you about two alien friends and how they act toward each other. These aliens might do things a little differently from the way you do things — but that is totally okay! Then I will ask — do you think those same two aliens would act a certain way in another situation? Press the big THUMBS UP if you think YES, or the big THUMBS DOWN if you think NO. After you answer, I will ask how sure you are — a big thumb means really sure, and a small thumb means pretty sure. There are absolutely no wrong answers — we just want to know what you think! Press the big orange button to try a practice example!`);
+  speak(`Wonderful${nm}! Here is how our game works. I am going to tell you about two aliens and how they act toward each other. These aliens might do things a little differently from the way you do things — but that is totally okay! Then I will ask — do you think those same two aliens would act a certain way in another situation? Press the big THUMBS UP if you think YES, or the big THUMBS DOWN if you think NO. After you answer, I will ask how sure you are — a big thumb means really sure, and a small thumb means pretty sure. There are absolutely no wrong answers — we just want to know what you think! Press the big orange button to try a practice example!`);
 }
 
 function renderStory(v, isEx) {
@@ -1442,14 +1442,14 @@ function renderExDone() {
     <div style="font-size:24px;font-weight:600;color:#333">Great practice!</div>
     <div style="font-size:16px;color:#777;max-width:320px;line-height:1.65">
       You are already thinking like a real detective!<br>
-      Now let us try the real game with some new alien friends!
+      Now let us try the real game with some new aliens!
     </div>
     <button class="btn btn-primary" style="font-size:20px;padding:14px 36px;margin-top:4px" onclick="startRealGame()">
       Start the Real Game! 🚀
     </button>
   </div>`;
   stopSpeak();
-  speak("Great job on the practice! You are already thinking like a real detective! Now let us start the real game and meet some brand new alien friends. Press the big orange button when you are ready!");
+  speak("Great job on the practice! You are already thinking like a real detective! Now let us start the real game and meet some brand new aliens. Press the big orange button when you are ready!");
 }
 
 function replayQ() {
@@ -1597,7 +1597,7 @@ function renderEnd() {
     <div class="end-trophy-wrap">${trophySVG()}</div>
     <div class="end-title">Amazing, ${escHtml(nm)}!</div>
     ${starTransHTML(S.stars, VIGNETTES.length)}
-    <div class="end-sub" style="margin-top:4px">You answered questions about all ${VIGNETTES.length} pairs of alien friends!</div>
+    <div class="end-sub" style="margin-top:4px">You answered questions about all ${VIGNETTES.length} pairs of aliens!</div>
     <div style="font-size:12px;color:#ccc">${cor} of ${tot} test answers matched the scoring key</div>
     <div class="end-btns">
       <button class="btn btn-primary"   onclick="exportCSV()">Download Results</button>
@@ -1607,7 +1607,7 @@ function renderEnd() {
   
   markSessionComplete();
   stopSpeak();
-  speak(`${nm}, you have done something truly amazing today! You answered questions about all twelve pairs of alien friends, and you thought so carefully about every single one. I am incredibly proud of you. You really are a true Friend Detective! Give yourself a big pat on the back — you have really really earned it today!`);
+  speak(`${nm}, you have done something truly amazing today! You answered questions about all twelve pairs of aliens, and you thought so carefully about every single one. I am incredibly proud of you. You really are a true relationship Detective! Give yourself a big pat on the back — you have really really earned it today!`);
 }
 
 // ── NAVIGATION ─────────────────────────────────────────
@@ -1724,7 +1724,7 @@ function saveVoiceSettings() {
 
 function testVoice() {
   saveVoiceSettings(); stopSpeak();
-  speak("Hello! I am the Friend Detective voice. Does this sound good to you?");
+  speak("Hello! I am the relationship Detective voice. Does this sound good to you?");
 }
 
 function updateAdmin() {

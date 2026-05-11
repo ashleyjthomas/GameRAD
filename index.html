@@ -239,20 +239,28 @@ body {
 
 /* ── FIXED UTILITY BUTTONS ── */
 .admin-btn {
-  position:fixed; bottom:10px; right:10px;
+  position:absolute; bottom:10px; right:10px;
   width:34px; height:34px; border-radius:50%;
-  background:rgba(0,0,0,.13); border:none; cursor:pointer;
-  font-size:15px; display:flex; align-items:center; justify-content:center; z-index:500;
+  background:rgba(0,0,0,.18); border:none; cursor:pointer;
+  font-size:15px; display:flex; align-items:center;
+  justify-content:center; z-index:500;
 }
 .fullscreen-btn {
-  position:fixed; bottom:10px; left:10px;
+  position:absolute; bottom:10px; left:10px;
   width:34px; height:34px; border-radius:50%;
-  background:rgba(0,0,0,.13); border:none; cursor:pointer;
-  display:flex; align-items:center; justify-content:center;
-  z-index:500; transition:background .2s;
-  -webkit-tap-highlight-color:transparent;
+  background:rgba(0,0,0,.18); border:none; cursor:pointer;
+  font-size:18px; display:flex; align-items:center;
+  justify-content:center; z-index:500;
+  transition:background .2s; -webkit-tap-highlight-color:transparent;
 }
-.fullscreen-btn:hover { background:rgba(0,0,0,.28); }
+.fullscreen-btn:hover { background:rgba(0,0,0,.32); }
+.admin-panel {
+  position:absolute; bottom:54px; right:10px;
+  background:white; border-radius:12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,.2);
+  padding:14px; width:295px; z-index:500;
+  font-size:13px; display:none;
+}
 
 .admin-panel {
   position:fixed; bottom:54px; right:10px;
@@ -316,12 +324,18 @@ body {
   </div>
 </div>
 
-<!-- Fullscreen toggle (bottom-left) -->
-<button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()" title="Go Fullscreen"></button>
+<div id="app">
+  <div style="padding:44px;text-align:center;font-family:Arial,sans-serif;color:#aaa">
+    <div style="font-size:54px;margin-bottom:14px">🔍</div>
+    <h2>Loading Relationship Detective...</h2>
+    <p style="margin-top:10px;font-size:14px">If this does not go away, please check that JavaScript is enabled.</p>
+  </div>
 
-<!-- Researcher panel (bottom-right) -->
-<button class="admin-btn" id="adminBtn" title="Researcher Panel">⚙️</button>
-<div class="admin-panel" id="adminPanel"></div>
+  <!-- These are now INSIDE #app so they always appear -->
+  <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()" title="Go Fullscreen">⛶</button>
+  <button class="admin-btn" id="adminBtn" title="Researcher Panel">⚙️</button>
+  <div class="admin-panel" id="adminPanel"></div>
+</div>
 
 <script>
 'use strict';

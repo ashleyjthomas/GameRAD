@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -292,7 +293,7 @@ body {
 <div id="app">
   <div style="padding:44px;text-align:center;font-family:Arial,sans-serif;color:#aaa">
     <div style="font-size:54px;margin-bottom:14px">🔍</div>
-    <h2>Loading Relationship Detective...</h2>
+    <h2>Loading relationship Detective...</h2>
     <p style="margin-top:10px;font-size:14px">If this does not go away, please check that JavaScript is enabled.</p>
   </div>
 </div>
@@ -302,7 +303,8 @@ body {
 
 <script>
 'use strict';
-  // ── GOOGLE SHEETS UPLOAD ───────────────────────────────
+
+// ── GOOGLE SHEETS UPLOAD ───────────────────────────────
 const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwDD5qinnX2su-gF2VDrWoKJ6YbBWX9GRbqIFDm8Wm_e3ifNA4S9n66qBj6Lrb10yAEog/exec';
 
 function getUrlParam(name) {
@@ -314,7 +316,8 @@ const CHS_RESPONSE_ID = getUrlParam('chsid');
 function uploadToSheets(answerObj) {
   const row = {
     CHSResponseID:  CHS_RESPONSE_ID,
-    ParticipantID:  S.name  || '',
+    ParticipantID:  S.pid   || '',
+    ChildName:      S.name  || '',
     Age:            S.age   || '',
     Type:           answerObj.type             || '',
     VignetteID:     answerObj.vid              || '',
@@ -342,7 +345,7 @@ function uploadToSheets(answerObj) {
 
 function markSessionComplete() {
   if (window.opener) {
-    window.opener.postMessage({ type: 'GAME_COMPLETE', pid: S.name }, '*');
+    window.opener.postMessage({ type: 'GAME_COMPLETE', pid: S.pid }, '*');
   }
 }
 
@@ -356,7 +359,7 @@ const KUDOS = [
   "Wonderful job! I love how carefully you are thinking!",
   "Amazing detective work! Keep it up!",
   "You are so good at this! Wow!",
-  "Fantastic! You are a true Relationship Detective!",
+  "Fantastic! You are a true relationship Detective!",
   "That was great! I am really impressed!",
   "Super job! You are doing wonderfully!"
 ];
@@ -448,7 +451,6 @@ function fillNames(text, v) {
 }
 
 // ── ASSIGN RANDOM QUESTIONS TO EACH VIGNETTE ──────────
-// CHANGED — pick() now skips excluded items
 function assignAllQuestions() {
   const pools = {
     EM: [...TEST_ITEMS.EM].sort(() => Math.random() - 0.5),
@@ -466,7 +468,6 @@ function assignAllQuestions() {
       if (!excluded.includes(item.id)) return item;
       attempts++;
     }
-    // Fallback if somehow all items excluded — return first available
     return arr.find(item => !excluded.includes(item.id)) || arr[0];
   }
 
@@ -483,7 +484,6 @@ function assignAllQuestions() {
         congruent: m === v.model
       };
     });
-    // Shuffle question order
     for (let i = questions.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [questions[i], questions[j]] = [questions[j], questions[i]];
@@ -493,10 +493,8 @@ function assignAllQuestions() {
 }
 
 // ── VIGNETTES ──────────────────────────────────────────
-// CHANGED — excludeItems added to each vignette
 const VIGNETTES = [
 
-  // ── 1  Zumi + Blix  ·  CS  ·  alien_home ─────────────
   {
     id: 1, model: 'CS', excludeItems: ['CS1','CS5'],
     char1: { name: 'Zumi', img: 'Asset%2027.png', hair: '#9B5DE5', shirt: '#4ECDC4', pants: '#1A3040', style: 'short' },
@@ -509,7 +507,6 @@ const VIGNETTES = [
     ]
   },
 
-  // ── 2  Orro + Fenn  ·  EM  ·  trading_post ───────────
   {
     id: 2, model: 'EM', excludeItems: ['EM6'],
     char1: { name: 'Orro', img: 'Asset%2029.png', hair: '#4ECDC4', shirt: '#FF8FAB', pants: '#1A3040', style: 'short' },
@@ -522,7 +519,6 @@ const VIGNETTES = [
     ]
   },
 
-  // ── 3  Kiva + Doop  ·  CS  ·  alien_meadow ───────────
   {
     id: 3, model: 'CS', excludeItems: ['CS8'],
     char1: { name: 'Kiva', img: 'Asset%2031.png', hair: '#E0A835', shirt: '#6BCB77', pants: '#154360', style: 'long'  },
@@ -535,7 +531,6 @@ const VIGNETTES = [
     ]
   },
 
-  // ── 4  Wex + Plara  ·  AR  ·  throne_room ────────────
   {
     id: 4, model: 'AR', excludeItems: ['AR1'],
     char1: { name: 'Wex',   img: 'Asset%2033.png', hair: '#FFD84D', shirt: '#9B5DE5', pants: '#1A0E30', style: 'short'    },
@@ -548,7 +543,6 @@ const VIGNETTES = [
     ]
   },
 
-  // ── 5  Nuu + Glim  ·  EM  ·  trading_post ────────────
   {
     id: 5, model: 'EM', excludeItems: ['EM7'],
     char1: { name: 'Nuu',  img: 'Asset%2035.png', hair: '#FF6EC7', shirt: '#2980B9', pants: '#1A3040', style: 'pigtails' },
@@ -561,7 +555,6 @@ const VIGNETTES = [
     ]
   },
 
-  // ── 6  Tazo + Vebb  ·  AR  ·  crystal_cave ───────────
   {
     id: 6, model: 'AR', excludeItems: ['AR7'],
     char1: { name: 'Tazo', img: 'Asset%2037.png', hair: '#9B5DE5', shirt: '#E91E8C', pants: '#1A0E30', style: 'long'  },
@@ -574,7 +567,6 @@ const VIGNETTES = [
     ]
   },
 
-  // ── 7  Mip + Creel  ·  CS  ·  alien_home ─────────────
   {
     id: 7, model: 'CS', excludeItems: ['CS1','CS5'],
     char1: { name: 'Mip',   img: 'Asset%2039.png', hair: '#4ECDC4', shirt: '#FF6B6B', pants: '#1A3040', style: 'short' },
@@ -587,7 +579,6 @@ const VIGNETTES = [
     ]
   },
 
-  // ── 8  Yobi + Gorp  ·  EM  ·  alien_meadow ──────────
   {
     id: 8, model: 'EM', excludeItems: ['EM6'],
     char1: { name: 'Yobi', img: 'Asset%2041.png', hair: '#FF6EC7', shirt: '#9B59B6', pants: '#154360', style: 'pigtails' },
@@ -600,7 +591,6 @@ const VIGNETTES = [
     ]
   },
 
-  // ── 9  Fuzz + Orlo  ·  CS  ·  crystal_cave ───────────
   {
     id: 9, model: 'CS', excludeItems: ['CS6'],
     char1: { name: 'Fuzz', img: 'Asset%2043.png', hair: '#FFD84D', shirt: '#1ABC9C', pants: '#1A3040', style: 'short' },
@@ -613,7 +603,6 @@ const VIGNETTES = [
     ]
   },
 
-  // ── 10  Beem + Jovi  ·  AR  ·  throne_room ───────────
   {
     id: 10, model: 'AR', excludeItems: ['AR7'],
     char1: { name: 'Beem', img: 'Asset%2045.png', hair: '#E91E8C', shirt: '#9B5DE5', pants: '#1A0E30', style: 'long'  },
@@ -626,7 +615,6 @@ const VIGNETTES = [
     ]
   },
 
-  // ── 11  Plix + Zara  ·  EM  ·  trading_post ──────────
   {
     id: 11, model: 'EM', excludeItems: ['EM4','EM6'],
     char1: { name: 'Plix', img: 'Asset%2047.png', hair: '#4ECDC4', shirt: '#FF8FAB', pants: '#1A3040', style: 'short'    },
@@ -639,7 +627,6 @@ const VIGNETTES = [
     ]
   },
 
-  // ── 12  Hoob + Nev  ·  AR  ·  crystal_cave ───────────
   {
     id: 12, model: 'AR', excludeItems: ['AR1','AR8'],
     char1: { name: 'Hoob', img: 'Asset%2049.png', hair: '#FFD84D', shirt: '#9B5DE5', pants: '#1A0E30', style: 'short' },
@@ -656,7 +643,7 @@ const VIGNETTES = [
 
 // ── STATE ──────────────────────────────────────────────
 const S = {
-  phase: 'welcome', name: '', age: '',
+  phase: 'welcome', name: '', age: '', pid: '',
   vi: 0, qi: 0, eqi: 0,
   pendingAns: null,
   modelIdOrder: [],
@@ -1024,13 +1011,10 @@ const SCENE_BACKGROUNDS = {
 </svg>`
 };
 
-// ── QUESTION ILLUSTRATIONS (kept for example questions) ─
+// ── QUESTION ILLUSTRATIONS ─────────────────────────────
 const QUESTION_ILLUSTRATIONS = {
   share_food: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#FFF1C9"/><circle cx="140" cy="56" r="40" fill="#FFFFFF"/><circle cx="140" cy="56" r="31" fill="#E8F7FF"/><g fill="none" stroke="#F4A261" stroke-width="4" stroke-linecap="round"><path d="M116 57 q10 -18 28 -8 q18 10 3 22 q-13 10 -27 0 q-13 -10 1 -22"/><path d="M125 49 q19 -12 33 3 q12 13 -5 24 q-17 10 -33 -3"/></g><circle cx="132" cy="58" r="5" fill="#D94B38"/><circle cx="151" cy="64" r="5" fill="#D94B38"/><g fill="#C8D6E5" stroke="#6E7F8D" stroke-width="1.3" stroke-linejoin="round"><g transform="rotate(-18 72 73)"><rect x="68" y="26" width="8" height="49" rx="4"/><rect x="64" y="71" width="16" height="10" rx="3"/></g><g transform="rotate(18 208 73)"><rect x="204" y="26" width="8" height="49" rx="4"/><rect x="200" y="71" width="16" height="10" rx="3"/></g></g></svg>`,
-  balance: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#F0F7FF"/><rect x="70" y="72" width="140" height="12" rx="6" fill="#8EDBFF"/><rect x="82" y="84" width="10" height="18" rx="3" fill="#4D96FF"/><rect x="188" y="84" width="10" height="18" rx="3" fill="#4D96FF"/><g fill="#FFD166" stroke="#C89B00" stroke-width="2"><rect x="94" y="52" width="30" height="8" rx="2"/><rect x="94" y="61" width="30" height="8" rx="2"/><rect x="94" y="43" width="30" height="8" rx="2"/><rect x="156" y="52" width="30" height="8" rx="2"/><rect x="156" y="61" width="30" height="8" rx="2"/><rect x="156" y="43" width="30" height="8" rx="2"/></g><g stroke="#333" stroke-width="4" stroke-linecap="round" fill="#333"><circle cx="55" cy="48" r="10"/><line x1="55" y1="58" x2="55" y2="78"/><line x1="55" y1="66" x2="75" y2="58"/><circle cx="225" cy="48" r="10"/><line x1="225" y1="58" x2="225" y2="78"/><line x1="225" y1="66" x2="205" y2="58"/></g></svg>`,
-  boss: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#F0F7FF"/><g stroke="#333" stroke-width="5" stroke-linecap="round" fill="#333"><circle cx="95" cy="38" r="12"/><line x1="95" y1="50" x2="95" y2="72"/><line x1="95" y1="72" x2="82" y2="90"/><line x1="95" y1="72" x2="108" y2="90"/><line x1="95" y1="58" x2="82" y2="62"/><line x1="95" y1="58" x2="108" y2="62"/></g><path d="M82 18 L88 8 L92 16 L96 8 L100 16 L104 8 L110 18 L110 22 L82 22 Z" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/><g stroke="#777" stroke-width="5" stroke-linecap="round" fill="#777"><circle cx="190" cy="38" r="12"/><line x1="190" y1="50" x2="190" y2="72"/><line x1="190" y1="72" x2="178" y2="90"/><line x1="190" y1="72" x2="202" y2="90"/><line x1="190" y1="58" x2="178" y2="72"/><line x1="190" y1="58" x2="202" y2="72"/></g></svg>`,
-  coins: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#FFF4C7"/><g><ellipse cx="100" cy="72" rx="24" ry="8" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/><ellipse cx="100" cy="64" rx="24" ry="8" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/><ellipse cx="100" cy="56" rx="24" ry="8" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/></g><g><ellipse cx="180" cy="72" rx="24" ry="8" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/><ellipse cx="180" cy="64" rx="24" ry="8" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/><ellipse cx="180" cy="56" rx="24" ry="8" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/></g></svg>`,
-  computer: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#EAF4FF"/><rect x="90" y="28" width="100" height="50" rx="8" fill="#333"/><rect x="95" y="33" width="90" height="40" rx="4" fill="#8EDBFF"/><circle cx="140" cy="53" r="12" fill="#FFFFFF" stroke="#333" stroke-width="2"/><line x1="140" y1="53" x2="140" y2="46" stroke="#333" stroke-width="2" stroke-linecap="round"/><line x1="140" y1="53" x2="147" y2="53" stroke="#333" stroke-width="2" stroke-linecap="round"/><rect x="80" y="78" width="120" height="8" rx="4" fill="#555"/><g stroke="#333" stroke-width="4" stroke-linecap="round" fill="none"><circle cx="55" cy="50" r="8" fill="#333"/><line x1="55" y1="58" x2="55" y2="74"/><line x1="55" y1="62" x2="75" y2="58"/><line x1="55" y1="62" x2="35" y2="58"/><line x1="55" y1="74" x2="45" y2="88"/><line x1="55" y1="74" x2="65" y2="88"/><circle cx="225" cy="50" r="8" fill="#333"/><line x1="225" y1="58" x2="225" y2="74"/><line x1="225" y1="62" x2="205" y2="58"/><line x1="225" y1="62" x2="245" y2="58"/><line x1="225" y1="74" x2="215" y2="88"/><line x1="225" y1="74" x2="235" y2="88"/></g></svg>`
+  balance: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#F0F7FF"/><rect x="70" y="72" width="140" height="12" rx="6" fill="#8EDBFF"/><rect x="82" y="84" width="10" height="18" rx="3" fill="#4D96FF"/><rect x="188" y="84" width="10" height="18" rx="3" fill="#4D96FF"/><g fill="#FFD166" stroke="#C89B00" stroke-width="2"><rect x="94" y="52" width="30" height="8" rx="2"/><rect x="94" y="61" width="30" height="8" rx="2"/><rect x="94" y="43" width="30" height="8" rx="2"/><rect x="156" y="52" width="30" height="8" rx="2"/><rect x="156" y="61" width="30" height="8" rx="2"/><rect x="156" y="43" width="30" height="8" rx="2"/></g><g stroke="#333" stroke-width="4" stroke-linecap="round" fill="#333"><circle cx="55" cy="48" r="10"/><line x1="55" y1="58" x2="55" y2="78"/><line x1="55" y1="66" x2="75" y2="58"/><circle cx="225" cy="48" r="10"/><line x1="225" y1="58" x2="225" y2="78"/><line x1="225" y1="66" x2="205" y2="58"/></g></svg>`
 };
 
 // ── CHAR POSITIONS ─────────────────────────────────────
@@ -1178,6 +1162,7 @@ function render() {
   }
 }
 
+// ── WELCOME ────────────────────────────────────────────
 function renderWelcome() {
   const pool = [];
   VIGNETTES.forEach(v => { pool.push(v.char1); pool.push(v.char2); });
@@ -1185,18 +1170,22 @@ function renderWelcome() {
   let wi2;
   do { wi2 = Math.floor(Math.random() * pool.length); } while (wi2 === wi1);
 
+  // Read the PID from the URL — may already be set if user came back to welcome
+  const urlPid = getUrlParam('pid');
+  if (urlPid) S.pid = urlPid;
+
   app.innerHTML = `
   <div class="screen" style="justify-content:center;text-align:center;padding-top:14px">
-    <div class="wt">Relationship Detective!</div>
+    <div class="wt">relationship Detective!</div>
     <div class="ws">Can you figure out how these aliens act toward each other?</div>
     <div class="illus" style="max-width:330px">${welcomeSVG(pool[wi1], pool[wi2])}</div>
     <button id="unlockBtn" class="unlock-btn"
-      onclick="unlockAudio('Hello there, and welcome to relationship Detective! I am so excited you are here today! First, can you type your name in the box. And then pick your age from the little menu. When you are all ready, press the big orange button that says Let us play!')">
+      onclick="unlockAudio('Hello there, and welcome to Relationship Detective! I am so excited you are here today! First, can you type your first name in the box. And then pick your age from the little menu. When you are all ready, press the big orange button that says Let us play!')">
       🔊 Tap here to turn on sound!
     </button>
     <div class="form-row">
       <div class="form-group">
-        <label for="cname">What is your name?</label>
+        <label for="cname">What is your first name?</label>
         <input id="cname" class="name-input" type="text" placeholder="Your name!" maxlength="22" value="${escHtml(S.name)}"/>
       </div>
       <div class="form-group">
@@ -1213,16 +1202,20 @@ function renderWelcome() {
         </select>
       </div>
     </div>
+    ${S.pid ? `
+    <div style="text-align:center;margin-top:2px">
+      <span style="font-size:11px;color:#ccc">Study ID: </span>
+      <input id="cpid" type="text" readonly
+        style="font-family:inherit;font-size:11px;color:#bbb;background:transparent;
+               border:none;outline:none;text-align:center;width:220px;cursor:default"
+        value="${escHtml(S.pid)}"/>
+    </div>` : ''}
     <button class="btn btn-primary" style="font-size:19px;padding:13px 34px;margin-top:4px" onclick="startGame()">Let's Play!</button>
   </div>`;
+
   stopSpeak();
   const inp = document.getElementById('cname');
   const sel = document.getElementById('cage');
-  const urlPid = getUrlParam('pid');
-  if (urlPid && inp) {
-    inp.value = urlPid;
-    S.name = urlPid;
-  }
   if (inp) inp.addEventListener('input',  e => S.name = e.target.value);
   if (sel) sel.addEventListener('change', e => S.age  = e.target.value);
 }
@@ -1604,10 +1597,9 @@ function renderEnd() {
       <button class="btn btn-secondary" onclick="resetGame()">Play Again</button>
     </div>
   </div>`;
-  
   markSessionComplete();
   stopSpeak();
-  speak(`${nm}, you have done something truly amazing today! You answered questions about all twelve pairs of aliens, and you thought so carefully about every single one. I am incredibly proud of you. You really are a true relationship Detective! Give yourself a big pat on the back — you have really really earned it today!`);
+  speak(`${nm}, you have done something truly amazing today! You answered questions about all twelve pairs of aliens, and you thought so carefully about every single one. I am incredibly proud of you. You really are a true Relationship Detective! Give yourself a big pat on the back — you have really really earned it today!`);
 }
 
 // ── NAVIGATION ─────────────────────────────────────────
@@ -1618,7 +1610,8 @@ function startGame() {
   const sel = document.getElementById('cage');
   S.name = (inp ? inp.value.trim() : '') || '';
   S.age  = (sel ? sel.value        : '') || '';
-  if (!S.name) { unlockAudio("Oops! Can you type your name first?"); return; }
+  S.pid  = getUrlParam('pid') || S.pid || '';
+  if (!S.name) { unlockAudio("Oops! Can you type your first name first?"); return; }
   audioUnlocked = true;
 
   for (let i = VIGNETTES.length - 1; i > 0; i--) {
@@ -1664,7 +1657,11 @@ function skipEnd()   { stopSpeak(); S.phase = 'end'; render(); }
 
 function resetGame() {
   stopSpeak();
-  Object.assign(S, { phase:'welcome', name:'', age:'', vi:0, qi:0, eqi:0, pendingAns:null, modelIdOrder:[], answers:[], stars:0, adminOpen:false });
+  Object.assign(S, {
+    phase: 'welcome', name: '', age: '', pid: '',
+    vi: 0, qi: 0, eqi: 0, pendingAns: null,
+    modelIdOrder: [], answers: [], stars: 0, adminOpen: false
+  });
   render();
 }
 
@@ -1724,7 +1721,7 @@ function saveVoiceSettings() {
 
 function testVoice() {
   saveVoiceSettings(); stopSpeak();
-  speak("Hello! I am the relationship Detective voice. Does this sound good to you?");
+  speak("Hello! I am the Relationship Detective voice. Does this sound good to you?");
 }
 
 function updateAdmin() {
@@ -1742,7 +1739,7 @@ function updateAdmin() {
 // ── CSV EXPORT ─────────────────────────────────────────
 function exportCSV() {
   const headers = [
-    'ChildName','ChildAge','Type',
+    'ParticipantID','ChildName','ChildAge','Type',
     'VignetteID','VignetteModel',
     'QuestionIndex','QuestionModel','ItemID','IsCongruent',
     'Answer','InitialYesNo','KeyedAnswer','Correct',
@@ -1753,7 +1750,7 @@ function exportCSV() {
   S.answers.forEach(a => {
     if (a.type === 'model-id') {
       rows.push([
-        S.name, S.age, 'MODEL_ID',
+        S.pid, S.name, S.age, 'MODEL_ID',
         a.vid, a.vM,
         '','','','',
         '','','','',
@@ -1762,7 +1759,7 @@ function exportCSV() {
       ].join(','));
     } else {
       rows.push([
-        S.name, S.age, 'TEST_ITEM',
+        S.pid, S.name, S.age, 'TEST_ITEM',
         a.vid, a.vM,
         a.qi+1, a.qM, a.itemId||'', a.congruent ? 'TRUE' : 'FALSE',
         a.ans, a.initialAns || (a.ans.includes('YES') ? 'YES' : 'NO'),
@@ -1776,7 +1773,7 @@ function exportCSV() {
   const url  = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `RAD12C_${S.name||'child'}_age${S.age||'unknown'}_${new Date().toISOString().slice(0,10)}.csv`;
+  link.download = `RAD12C_${S.pid||S.name||'child'}_age${S.age||'unknown'}_${new Date().toISOString().slice(0,10)}.csv`;
   link.click();
   URL.revokeObjectURL(url);
 }
@@ -1796,3 +1793,4 @@ window.addEventListener('keydown', e => {
 </script>
 </body>
 </html>
+```

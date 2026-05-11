@@ -1361,10 +1361,8 @@ function renderModelId() {
     <div class="q-header">
       🔍 ${escHtml(v.char1.name)} &amp; ${escHtml(v.char2.name)}
     </div>
-    <div class="q-box">
-      Which of the following pictures matches how
-      <strong>${escHtml(v.char1.name)}</strong> and <strong>${escHtml(v.char2.name)}</strong>
-      act with each other?
+   <div class="q-box">
+      <span>Which of the following pictures matches how <strong>${escHtml(v.char1.name)}</strong> and <strong>${escHtml(v.char2.name)}</strong> act with each other?</span>
     </div>
     <div class="ans-row" style="gap:18px;justify-content:center;flex-wrap:wrap">
       ${models.map(m => `

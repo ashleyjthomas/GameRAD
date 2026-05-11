@@ -302,6 +302,49 @@ body {
 
 <script>
 'use strict';
+  // ── GOOGLE SHEETS UPLOAD ───────────────────────────────
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwDD5qinnX2su-gF2VDrWoKJ6YbBWX9GRbqIFDm8Wm_e3ifNA4S9n66qBj6Lrb10yAEog/exec';
+
+function getUrlParam(name) {
+  return new URLSearchParams(window.location.search).get(name) || '';
+}
+
+const CHS_RESPONSE_ID = getUrlParam('chsid');
+
+function uploadToSheets(answerObj) {
+  const row = {
+    CHSResponseID:  CHS_RESPONSE_ID,
+    ParticipantID:  S.name  || '',
+    Age:            S.age   || '',
+    Type:           answerObj.type             || '',
+    VignetteID:     answerObj.vid              || '',
+    VignetteModel:  answerObj.vM               || '',
+    QuestionIndex:  answerObj.qi != null ? answerObj.qi + 1 : '',
+    QuestionModel:  answerObj.qM               || '',
+    ItemID:         answerObj.itemId           || '',
+    IsCongruent:    answerObj.congruent != null ? String(answerObj.congruent).toUpperCase() : '',
+    Answer:         answerObj.ans              || '',
+    InitialYesNo:   answerObj.initialAns       || '',
+    KeyedAnswer:    answerObj.keyed            || '',
+    Correct:        answerObj.ok        != null ? String(answerObj.ok).toUpperCase()        : '',
+    ModelIDChosen:  answerObj.chosen           || '',
+    ModelIDCorrect: answerObj.correct   != null ? String(answerObj.correct).toUpperCase()   : '',
+    Timestamp:      answerObj.ts               || ''
+  };
+
+  fetch(SHEETS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ rows: [row] })
+  }).catch(err => console.warn('Sheets upload failed:', err));
+}
+
+function markSessionComplete() {
+  if (window.opener) {
+    window.opener.postMessage({ type: 'GAME_COMPLETE', pid: S.name }, '*');
+  }
+}
 
 const W = 600, H = 300, GY = H * 0.70;
 const IMG_BASE = 'https://raw.githubusercontent.com/ashleyjthomas/GameRAD/main/';
@@ -1175,6 +1218,11 @@ function renderWelcome() {
   stopSpeak();
   const inp = document.getElementById('cname');
   const sel = document.getElementById('cage');
+  const urlPid = getUrlParam('pid');
+  if (urlPid && inp) {
+    inp.value = urlPid;
+    S.name = urlPid;
+  }
   if (inp) inp.addEventListener('input',  e => S.name = e.target.value);
   if (sel) sel.addEventListener('change', e => S.age  = e.target.value);
 }
@@ -1458,7 +1506,7 @@ function doLikertAnswer(certainty) {
   const fullAns = certainty === 'DEFINITELY'
     ? (initAns === 'YES' ? 'DEFINITELY_YES' : 'DEFINITELY_NO')
     : (initAns === 'YES' ? 'MAYBE_YES'      : 'MAYBE_NO');
-  S.answers.push({
+  const testRecord = {
     type: 'test',
     vid: v.id, vM: v.model, qi: S.qi, qM: q.qM,
     itemId: q.id,
@@ -1466,7 +1514,9 @@ function doLikertAnswer(certainty) {
     keyed: q.keyed, ok: initAns === q.keyed,
     congruent: q.congruent,
     ts: new Date().toISOString()
-  });
+  };
+  S.answers.push(testRecord);
+  uploadToSheets(testRecord);
   S.pendingAns = null;
   stopSpeak();
   setTimeout(() => {
@@ -1479,14 +1529,16 @@ function doLikertAnswer(certainty) {
 function doModelId(chosenModel) {
   document.querySelectorAll('.btn-model-choice').forEach(b => b.disabled = true);
   const v = VIGNETTES[S.vi];
-  S.answers.push({
+  const modelRecord = {
     type: 'model-id',
     vid: v.id,
     vM: v.model,
     chosen: chosenModel,
     correct: chosenModel === v.model,
     ts: new Date().toISOString()
-  });
+  };
+  S.answers.push(modelRecord);
+  uploadToSheets(modelRecord);
   S.qi = 0;
   stopSpeak();
   setTimeout(() => { S.phase = 'q'; render(); }, 400);
@@ -1552,6 +1604,8 @@ function renderEnd() {
       <button class="btn btn-secondary" onclick="resetGame()">Play Again</button>
     </div>
   </div>`;
+  
+  markSessionComplete();
   stopSpeak();
   speak(`${nm}, you have done something truly amazing today! You answered questions about all twelve pairs of alien friends, and you thought so carefully about every single one. I am incredibly proud of you. You really are a true Friend Detective! Give yourself a big pat on the back — you have really really earned it today!`);
 }

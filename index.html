@@ -733,54 +733,112 @@ const SCENE_BACKGROUNDS = {
 </svg>`,
 
   // 2. Orro & Fenn (EM) — LEFT: pink rounded stall | RIGHT: teal angular stall  (no scale)
-  market_a: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+ market_a: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#FFF0D0"/>
-  <circle cx="210" cy="40" r="26" fill="#FFD84D"/>
-  <circle cx="210" cy="40" r="18" fill="#FFE566" opacity=".6"/>
+  <!-- Sun shifted to upper-LEFT (not centred) -->
+  <circle cx="80" cy="45" r="30" fill="#FFD84D"/>
+  <circle cx="80" cy="45" r="22" fill="#FFE566" opacity=".6"/>
   <g stroke="#FFBE00" stroke-linecap="round" stroke-width="2.5" opacity=".55">
-    <line x1="210" y1="8" x2="210" y2="16"/><line x1="233" y1="13" x2="227" y2="21"/>
-    <line x1="252" y1="27" x2="244" y2="33"/><line x1="258" y1="40" x2="250" y2="40"/>
-    <line x1="187" y1="8" x2="193" y2="16"/><line x1="168" y1="13" x2="174" y2="21"/>
-    <line x1="252" y1="53" x2="244" y2="47"/><line x1="168" y1="53" x2="174" y2="47"/>
+    <line x1="80" y1="8" x2="80" y2="17"/><line x1="104" y1="14" x2="98" y2="22"/>
+    <line x1="122" y1="28" x2="114" y2="34"/><line x1="128" y1="45" x2="119" y2="45"/>
+    <line x1="56" y1="8" x2="62" y2="17"/><line x1="38" y1="14" x2="44" y2="22"/>
+    <line x1="32" y1="45" x2="41" y2="45"/>
+    <line x1="122" y1="62" x2="114" y2="56"/><line x1="38" y1="62" x2="44" y2="56"/>
   </g>
-  <circle cx="210" cy="40" r="34" fill="#FFD84D" opacity=".08"><animate attributeName="r" values="30;42;30" dur="2.8s" repeatCount="indefinite"/></circle>
-  <ellipse cx="460" cy="38" rx="38" ry="15" fill="white" opacity=".55"/>
-  <ellipse cx="490" cy="30" rx="26" ry="13" fill="white" opacity=".45"/>
-  <ellipse cx="545" cy="45" rx="20" ry="10" fill="white" opacity=".35"/>
+  <circle cx="80" cy="45" r="38" fill="#FFD84D" opacity=".07"><animate attributeName="r" values="34;46;34" dur="3s" repeatCount="indefinite"/></circle>
+  <!-- Clouds upper-RIGHT only -->
+  <ellipse cx="462" cy="36" rx="48" ry="18" fill="white" opacity=".6"/>
+  <ellipse cx="500" cy="26" rx="30" ry="15" fill="white" opacity=".5"/>
+  <ellipse cx="548" cy="42" rx="22" ry="12" fill="white" opacity=".38"/>
+  <ellipse cx="422" cy="50" rx="18" ry="10" fill="white" opacity=".3"/>
+  <!-- Ground -->
   <rect x="0" y="210" width="600" height="90" fill="#D4A574"/>
   <path d="M0 210 H600" stroke="#B8865A" stroke-width="3" opacity=".6"/>
   <path d="M0 222 Q60 217 120 224 Q180 218 240 225" stroke="#C49050" stroke-width="1.5" fill="none" opacity=".4"/>
   <path d="M360 224 Q420 218 480 225 Q540 219 600 222" stroke="#C49050" stroke-width="1.5" fill="none" opacity=".4"/>
-  <rect x="22" y="116" width="162" height="94" rx="10" fill="#FF8FAB"/>
-  <rect x="30" y="124" width="146" height="80" rx="7" fill="#FFAFC4"/>
-  <path d="M16 116 Q103 72 198 116 Z" fill="#E63980"/>
-  <path d="M16 116 Q103 80 198 116" fill="#FF4E8C" opacity=".4"/>
-  <circle cx="60" cy="148" r="12" fill="#7EDBFF" stroke="#4ECDC4" stroke-width="2"/>
-  <circle cx="60" cy="148" r="7" fill="#4ECDC4"/>
-  <circle cx="103" cy="145" r="12" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/>
-  <circle cx="103" cy="145" r="7" fill="#F4C300"/>
-  <circle cx="148" cy="148" r="12" fill="#C09AFF" stroke="#7B3DB5" stroke-width="2"/>
-  <circle cx="148" cy="148" r="7" fill="#9B5DE5"/>
-  <rect x="30" y="178" width="146" height="10" rx="3" fill="#E6598A" opacity=".7"/>
-  <circle cx="52" cy="181" r="7" fill="#FFD84D"/><circle cx="74" cy="181" r="6" fill="#7EDBFF"/>
-  <circle cx="96" cy="181" r="7" fill="#FF8FAB"/><circle cx="118" cy="181" r="5" fill="#C09AFF"/>
-  <circle cx="140" cy="181" r="6" fill="#FFD84D"/><circle cx="160" cy="181" r="5" fill="#7EDBFF"/>
-  <rect x="416" y="116" width="162" height="94" rx="10" fill="#88E0EF"/>
-  <rect x="424" y="124" width="146" height="80" rx="7" fill="#AAE8F5"/>
-  <path d="M410 116 L497 74 L584 116 Z" fill="#4ECDC4"/>
-  <path d="M410 116 L497 82 L584 116" fill="#3ABFBD" opacity=".4"/>
-  <polygon points="452,165 461,147 470,165" fill="#FF6EC7" stroke="#D44A9E" stroke-width="1.5"/>
-  <polygon points="488,162 497,144 506,162" fill="#FFD84D" stroke="#C89B00" stroke-width="1.5"/>
-  <polygon points="524,165 533,147 542,165" fill="#6BCB77" stroke="#3E9F4E" stroke-width="1.5"/>
-  <rect x="424" y="178" width="146" height="10" rx="3" fill="#3ABFBD" opacity=".7"/>
-  <path d="M438 188 L446 175 L454 188 Z" fill="#FF6EC7"/>
-  <path d="M462 188 L471 175 L480 188 Z" fill="#FFD84D"/>
-  <path d="M486 188 L495 175 L504 188 Z" fill="#9B5DE5"/>
-  <rect x="520" y="180" width="12" height="8" rx="2" fill="#6BCB77"/>
-  <rect x="538" y="180" width="14" height="8" rx="2" fill="#FFD84D"/>
-  <circle cx="285" cy="212" r="3.5" fill="#FFD84D" opacity=".6"/>
-  <circle cx="300" cy="211" r="4" fill="#FF6EC7" opacity=".6"/>
-  <circle cx="315" cy="212" r="3.5" fill="#7EDBFF" opacity=".6"/>
+
+  <!-- ═══ LEFT: WIDE + SQUAT organic market stall (220px wide, only 55px tall) ═══ -->
+  <rect x="8" y="160" width="222" height="50" rx="7" fill="#FF8FAB"/>
+  <rect x="14" y="166" width="210" height="38" rx="5" fill="#FFAFC4"/>
+  <!-- Lopsided awning — left edge droops 30px lower than right -->
+  <path d="M2 160 Q50 108 150 118 Q220 124 234 160 Z" fill="#E63980"/>
+  <path d="M2 160 Q50 116 150 126 Q220 132 234 160" fill="#FF4E8C" opacity=".42"/>
+  <!-- Fringe on left droop only -->
+  <line x1="8"  y1="157" x2="4"  y2="169" stroke="#C02060" stroke-width="1.8"/>
+  <line x1="22" y1="150" x2="19" y2="162" stroke="#C02060" stroke-width="1.8"/>
+  <line x1="36" y1="144" x2="34" y2="155" stroke="#C02060" stroke-width="1.8"/>
+  <line x1="50" y1="140" x2="49" y2="151" stroke="#C02060" stroke-width="1.8"/>
+  <!-- Hanging globe wares — clustered left side, sparse right -->
+  <circle cx="28"  cy="136" r="8"  fill="#7EDBFF" stroke="#4ECDC4" stroke-width="1.5"/>
+  <circle cx="28"  cy="136" r="4.5" fill="#4ECDC4"/>
+  <circle cx="52"  cy="130" r="10" fill="#FFD84D" stroke="#C89B00" stroke-width="1.5"/>
+  <circle cx="52"  cy="130" r="5.5" fill="#F4C300"/>
+  <circle cx="78"  cy="126" r="9"  fill="#C09AFF" stroke="#7B3DB5" stroke-width="1.5"/>
+  <circle cx="78"  cy="126" r="5"  fill="#9B5DE5"/>
+  <circle cx="106" cy="124" r="11" fill="#FF8FAB" stroke="#E63980" stroke-width="1.5"/>
+  <circle cx="106" cy="124" r="6"  fill="#E63980"/>
+  <circle cx="136" cy="126" r="8"  fill="#6BCB77" stroke="#3E9F4E" stroke-width="1.5"/>
+  <circle cx="136" cy="126" r="4.5" fill="#4A9F5A"/>
+  <circle cx="162" cy="128" r="7"  fill="#FFD84D" stroke="#C89B00" stroke-width="1.5"/>
+  <circle cx="162" cy="128" r="3.5" fill="#F4C300"/>
+  <!-- Shelf with many round items -->
+  <rect x="14" y="183" width="210" height="9" rx="3" fill="#E6598A" opacity=".7"/>
+  <circle cx="35"  cy="187" r="7"  fill="#FFD84D"/>
+  <circle cx="55"  cy="185" r="6"  fill="#7EDBFF"/>
+  <circle cx="74"  cy="187" r="8"  fill="#FF8FAB"/>
+  <circle cx="94"  cy="185" r="5"  fill="#C09AFF"/>
+  <circle cx="112" cy="187" r="7"  fill="#FFD84D"/>
+  <circle cx="130" cy="185" r="6"  fill="#FF6EC7"/>
+  <circle cx="148" cy="187" r="5"  fill="#4ECDC4"/>
+  <circle cx="166" cy="185" r="7"  fill="#FFD84D"/>
+  <circle cx="184" cy="187" r="6"  fill="#7EDBFF"/>
+  <circle cx="202" cy="185" r="5"  fill="#FF8FAB"/>
+  <!-- Items spilling onto ground in front of LEFT stall only -->
+  <circle cx="20"  cy="213" r="6"  fill="#FFD84D" opacity=".7"/>
+  <circle cx="38"  cy="212" r="5"  fill="#FF8FAB" opacity=".7"/>
+  <circle cx="55"  cy="213" r="6"  fill="#7EDBFF" opacity=".65"/>
+  <circle cx="72"  cy="212" r="4"  fill="#C09AFF" opacity=".6"/>
+  <circle cx="88"  cy="213" r="5"  fill="#FFD84D" opacity=".65"/>
+
+  <!-- ═══ RIGHT: TALL + NARROW tower shop (90px wide, 145px tall — very different proportions) ═══ -->
+  <rect x="462" y="65" width="112" height="145" rx="4" fill="#3A7A8A"/>
+  <rect x="468" y="71" width="100" height="133" rx="3" fill="#4A9AB0"/>
+  <!-- Geometric flat top with stepped parapet — nothing like the organic left awning -->
+  <rect x="457" y="58" width="122" height="12" rx="2" fill="#2A6A7A"/>
+  <rect x="462" y="48" width="20" height="14" rx="1" fill="#2A6A7A"/>
+  <rect x="497" y="42" width="20" height="20" rx="1" fill="#2A6A7A"/>
+  <rect x="532" y="48" width="20" height="14" rx="1" fill="#2A6A7A"/>
+  <!-- Flag on top (only on right side) -->
+  <line x1="577" y1="18" x2="577" y2="58" stroke="#2A6A7A" stroke-width="2.5"/>
+  <path d="M577 18 L598 27 L577 36 Z" fill="#FF6EC7" opacity=".9"/>
+  <!-- Rectangular shelves — evenly spaced, very geometric unlike organic left -->
+  <rect x="468" y="100" width="100" height="3" fill="#2A6A7A" opacity=".7"/>
+  <rect x="468" y="132" width="100" height="3" fill="#2A6A7A" opacity=".7"/>
+  <rect x="468" y="164" width="100" height="3" fill="#2A6A7A" opacity=".7"/>
+  <!-- Top shelf: triangles only (very different from left's circles) -->
+  <path d="M476 97 L485 82 L494 97 Z" fill="#FF6EC7"/>
+  <path d="M500 97 L510 82 L520 97 Z" fill="#FFD84D"/>
+  <path d="M526 97 L536 82 L546 97 Z" fill="#9B5DE5"/>
+  <path d="M552 97 L562 82 L572 97 Z" fill="#4ECDC4"/>
+  <!-- Middle shelf: rectangles -->
+  <rect x="472" y="112" width="22" height="18" rx="2" fill="#4ECDC4" opacity=".85"/>
+  <rect x="500" y="108" width="26" height="22" rx="2" fill="#FF6EC7" opacity=".85"/>
+  <rect x="532" y="112" width="20" height="18" rx="2" fill="#FFD84D" opacity=".85"/>
+  <rect x="558" y="110" width="18" height="20" rx="2" fill="#9B5DE5" opacity=".85"/>
+  <!-- Lower shelf: mixed angular shapes -->
+  <path d="M472 163 L480 150 L488 163 Z" fill="#FF6EC7"/>
+  <rect x="492" y="152" width="16" height="11" rx="1" fill="#4ECDC4"/>
+  <path d="M514 163 L524 150 L534 163 Z" fill="#FFD84D"/>
+  <rect x="538" y="152" width="22" height="11" rx="1" fill="#C09AFF"/>
+  <path d="M562 163 L570 152 L578 163 Z" fill="#7EDBFF"/>
+  <!-- Window (unique to right stall — no equivalent on left) -->
+  <rect x="492" y="176" width="52" height="26" rx="3" fill="#1A3A4A" stroke="#4ECDC4" stroke-width="2"/>
+  <line x1="518" y1="176" x2="518" y2="202" stroke="#4ECDC4" stroke-width="1.2" opacity=".6"/>
+  <circle cx="506" cy="189" r="5" fill="#4ECDC4" opacity=".45"/>
+  <circle cx="530" cy="189" r="5" fill="#7EDBFF" opacity=".45"/>
+  <!-- Door at base (only right stall has an explicit door) -->
+  <rect x="498" y="192" width="40" height="18" rx="2" fill="#1E4A5A"/>
+  <circle cx="536" cy="201" r="2" fill="#4ECDC4" opacity=".8"/>
 </svg>`,
 
   // 3. Kiva & Doop (CS) — LEFT: large moon + multi-layer mushroom tree | RIGHT: ringed planet + spire tree

@@ -1112,11 +1112,11 @@ const QUESTION_ILLUSTRATIONS = {
 
 // throne_room: gy array so char1 sits higher (visual authority cue)
 const CHAR_POS = {
-  alien_home:   { x: [170, 430], gy: 216,        h: 182, yo: 35 },
-  alien_meadow: { x: [162, 438], gy: 213,        h: 182, yo: 35 },
-  trading_post: { x: [148, 452], gy: 213,        h: 165, yo: 30 },
-  throne_room:  { x: [172, 432], gy: [185, 216], h: 165, yo: 28 },
-  crystal_cave: { x: [155, 445], gy: 213,        h: 182, yo: 35 }
+  alien_home:   { x: [170, 430], gy: 216, h: 182, yo: 35 },
+  alien_meadow: { x: [162, 438], gy: 213, h: 182, yo: 35 },
+  trading_post: { x: [148, 452], gy: 213, h: 165, yo: 30 },
+  throne_room:  { x: [172, 432], gy: 216, h: 165, yo: 28 }, // ← single value = equal
+  crystal_cave: { x: [155, 445], gy: 213, h: 182, yo: 35 }
 };
 
 function svgInner(str) { return str.replace(/<svg[^>]*>/i,'').replace(/<\/svg>\s*$/i,''); }

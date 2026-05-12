@@ -24,323 +24,148 @@ body {
   display: flex; flex-direction: column;
   min-height: 580px;
 }
-:fullscreen body,
-:-webkit-full-screen body {
-  padding: 0;
-  align-items: stretch;
-  justify-content: stretch;
-}
-:fullscreen #app,
-:-webkit-full-screen #app {
-  max-width: 100%;
-  border-radius: 0;
-  min-height: 100vh;
-  height: 100vh;
-}
+:fullscreen body, :-webkit-full-screen body { padding:0; align-items:stretch; justify-content:stretch; }
+:fullscreen #app, :-webkit-full-screen #app { max-width:100%; border-radius:0; min-height:100vh; height:100vh; }
 
-/* ── FULLSCREEN BUTTON — always visible, top-right ── */
-.fullscreen-btn {
-  position: absolute;
-  top: 10px; right: 10px;
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: rgba(71,118,230,.18);
-  border: 2px solid rgba(71,118,230,.35);
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  z-index: 600;
-  transition: background .2s, transform .1s;
+/* ── OVERLAY ELEMENTS — fixed to viewport, never wiped by render() ── */
+#fullscreenBtn {
+  position: fixed; top: 10px; right: 10px;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(71,118,230,.18); border: 2px solid rgba(71,118,230,.35);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  z-index: 9999; transition: background .2s, transform .1s;
   -webkit-tap-highlight-color: transparent;
 }
-.fullscreen-btn:hover  { background: rgba(71,118,230,.35); }
-.fullscreen-btn:active { transform: scale(.92); }
+#fullscreenBtn:hover  { background: rgba(71,118,230,.35); }
+#fullscreenBtn:active { transform: scale(.92); }
 
-/* ── ADMIN PANEL — hidden until secret tap ── */
-.admin-btn {
-  position: absolute; bottom: 10px; right: 10px;
+#adminBtn {
+  position: fixed; bottom: 10px; right: 10px;
   width: 34px; height: 34px; border-radius: 50%;
   background: rgba(0,0,0,.15); border: none; cursor: pointer;
   font-size: 15px; display: none;
-  align-items: center; justify-content: center; z-index: 500;
+  align-items: center; justify-content: center; z-index: 9999;
 }
-.admin-btn.visible { display: flex; }
-.admin-panel {
-  position: absolute; bottom: 54px; right: 10px;
+#adminBtn.visible { display: flex; }
+
+#adminPanel {
+  position: fixed; bottom: 54px; right: 10px;
   background: white; border-radius: 12px;
   box-shadow: 0 4px 24px rgba(0,0,0,.2);
-  padding: 14px; width: 295px; z-index: 500;
+  padding: 14px; width: 295px; z-index: 9998;
   font-size: 13px; display: none;
+  font-family: 'Fredoka', sans-serif;
 }
-.admin-panel.open { display: block; }
-.admin-panel h3 { font-size:14px; margin-bottom:8px; color:#333; border-bottom:1px solid #eee; padding-bottom:5px; }
-.admin-section-label { font-weight:600; font-size:11px; color:#888; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
-.admin-log {
-  max-height:120px; overflow-y:auto; font-size:10px;
-  font-family:monospace; background:#f8f8f8;
-  border-radius:6px; padding:6px; margin-bottom:7px; white-space:pre; line-height:1.5;
-}
-.admin-input, .admin-select {
-  width:100%; padding:5px 7px; font-size:11px;
-  border:1px solid #ddd; border-radius:6px;
-  margin-bottom:5px; outline:none; background:white;
-}
-.admin-row { display:flex; gap:5px; margin-bottom:5px; }
-.admin-btn-sm {
-  flex:1; padding:6px 4px; font-size:11px; font-family:inherit;
-  border-radius:6px; cursor:pointer; border:1px solid #ddd; background:#F0EDE8; color:#555;
-}
-.admin-btn-blue { background:#4776e6; color:white; border-color:#4776e6; }
-.admin-btn-gold { background:linear-gradient(135deg,#f7971e,#ffd200); color:white; border:none; font-weight:600; }
+#adminPanel.open { display: block; }
+#adminPanel h3 { font-size:14px; margin-bottom:8px; color:#333; border-bottom:1px solid #eee; padding-bottom:5px; }
 
-/* ── SECRET TAP ZONE — invisible, bottom-right ── */
 #secretZone {
-  position: absolute; bottom: 0; right: 0;
-  width: 60px; height: 60px; z-index: 700;
+  position: fixed; bottom: 0; right: 0;
+  width: 70px; height: 70px; z-index: 10000;
   -webkit-tap-highlight-color: transparent;
 }
 
 /* ── FULLSCREEN BANNER ── */
 .fs-banner {
-  background: linear-gradient(135deg, #4776e6, #8e54e9);
-  color: white; text-align: center;
-  padding: 10px 16px; font-size: 14px; font-weight: 500;
-  display: flex; align-items: center; justify-content: center;
-  gap: 10px; flex-wrap: wrap;
+  background: linear-gradient(135deg, #4776e6, #8e54e9); color: white;
+  text-align: center; padding: 10px 16px; font-size: 14px; font-weight: 500;
+  display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
 }
 .fs-banner-btn {
-  background: white; color: #4776e6;
-  border: none; border-radius: 50px;
-  font-family: inherit; font-size: 13px; font-weight: 600;
-  padding: 6px 14px; cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
+  background: white; color: #4776e6; border: none; border-radius: 50px;
+  font-family: inherit; font-size: 13px; font-weight: 600; padding: 6px 14px; cursor: pointer;
 }
-.fs-banner-btn:active { transform: scale(.95); }
 .fs-banner-dismiss {
-  background: transparent; color: rgba(255,255,255,.7);
-  border: none; font-size: 18px; cursor: pointer; padding: 0 4px;
-  -webkit-tap-highlight-color: transparent;
+  background: transparent; color: rgba(255,255,255,.7); border: none;
+  font-size: 18px; cursor: pointer; padding: 0 4px;
 }
+
+/* ── ADMIN INTERNALS ── */
+.admin-section-label { font-weight:600; font-size:11px; color:#888; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
+.admin-log { max-height:120px; overflow-y:auto; font-size:10px; font-family:monospace; background:#f8f8f8; border-radius:6px; padding:6px; margin-bottom:7px; white-space:pre; line-height:1.5; }
+.admin-input, .admin-select { width:100%; padding:5px 7px; font-size:11px; border:1px solid #ddd; border-radius:6px; margin-bottom:5px; outline:none; background:white; font-family:inherit; }
+.admin-row { display:flex; gap:5px; margin-bottom:5px; }
+.admin-btn-sm { flex:1; padding:6px 4px; font-size:11px; font-family:inherit; border-radius:6px; cursor:pointer; border:1px solid #ddd; background:#F0EDE8; color:#555; }
+.admin-btn-blue { background:#4776e6; color:white; border-color:#4776e6; }
+.admin-btn-gold { background:linear-gradient(135deg,#f7971e,#ffd200); color:white; border:none; font-weight:600; }
 
 /* ── STARS / METER ── */
-.star-meter-wrap {
-  display: flex; flex-direction: column;
-  align-items: center; padding: 8px 16px 3px; gap: 2px;
-}
-.star-meter {
-  display: flex; gap: 2px;
-  justify-content: center; flex-wrap: nowrap; align-items: center;
-}
-.star-item {
-  font-size: 17px; color: #E0E0E0; line-height: 1;
-  display: inline-block; transition: color 0.3s;
-}
-.star-item.filled { color: #FFD700; text-shadow: 0 0 5px rgba(255,180,0,.65); }
-.star-item.newly-filled { animation: starPop 0.8s cubic-bezier(0.17,0.67,0.37,1.5) forwards; }
-@keyframes starPop {
-  0%   { transform: scale(0.1) rotate(-190deg); }
-  65%  { transform: scale(1.5) rotate(8deg); }
-  100% { transform: scale(1)   rotate(0deg); }
-}
-.star-meter-lbl { font-size: 10px; color: #ccc; }
-.star-meter-large { flex-wrap: wrap; max-width: 220px; gap: 6px; }
-.star-meter-large .star-item { font-size: 34px; }
-.meter-bar-wrap {
-  width: 220px; height: 20px; background: #E8E8E8;
-  border-radius: 10px; overflow: hidden; position: relative;
-  margin: 8px auto 0;
-}
-.meter-bar {
-  height: 100%; border-radius: 10px;
-  transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
-}
-.meter-pct {
-  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px; color: #555; font-weight: 600;
-}
-.level-badge { text-align: center; animation: bounceIn .85s cubic-bezier(.17,.67,.37,1.3); }
+.star-meter-wrap { display:flex; flex-direction:column; align-items:center; padding:8px 16px 3px; gap:2px; }
+.star-meter { display:flex; gap:2px; justify-content:center; flex-wrap:nowrap; align-items:center; }
+.star-item { font-size:17px; color:#E0E0E0; line-height:1; display:inline-block; transition:color 0.3s; }
+.star-item.filled { color:#FFD700; text-shadow:0 0 5px rgba(255,180,0,.65); }
+.star-item.newly-filled { animation:starPop 0.8s cubic-bezier(0.17,0.67,0.37,1.5) forwards; }
+@keyframes starPop { 0%{transform:scale(0.1) rotate(-190deg);} 65%{transform:scale(1.5) rotate(8deg);} 100%{transform:scale(1) rotate(0deg);} }
+.star-meter-lbl { font-size:10px; color:#ccc; }
+.star-meter-large { flex-wrap:wrap; max-width:220px; gap:6px; }
+.star-meter-large .star-item { font-size:34px; }
+.meter-bar-wrap { width:220px; height:20px; background:#E8E8E8; border-radius:10px; overflow:hidden; position:relative; margin:8px auto 0; }
+.meter-bar { height:100%; border-radius:10px; transition:width 1.2s cubic-bezier(0.4,0,0.2,1); }
+.meter-pct { position:absolute; top:0; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; font-size:10px; color:#555; font-weight:600; }
+.level-badge { text-align:center; animation:bounceIn .85s cubic-bezier(.17,.67,.37,1.3); }
 
-/* ── LAYOUT / TYPO ── */
-.screen {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; padding: 11px 17px 17px;
-  animation: fadeIn .35s ease; gap: 9px;
-}
-@keyframes fadeIn {
-  from { opacity:0; transform:translateY(8px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-.wt {
-  font-size: 36px; font-weight: 600; text-align: center; line-height: 1.2;
-  background: linear-gradient(135deg,#f7971e,#f64f59);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.ws { font-size: 16px; color: #888; text-align: center; }
-.form-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; width: 100%; }
-.form-group { text-align: center; }
-.form-group label { display: block; font-size: 14px; color: #666; margin-bottom: 5px; }
-.name-input, .age-select {
-  font-family: inherit; font-size: 18px; padding: 9px 14px;
-  border: 3px solid #FFD200; border-radius: 50px;
-  outline: none; text-align: center; color: #333; background: #FFFEF7;
-}
-.name-input { width: 180px; }
-.age-select { width: 140px; cursor: pointer; }
-.name-input:focus, .age-select:focus {
-  border-color: #F7971E; box-shadow: 0 0 0 4px rgba(247,151,30,.13);
-}
+/* ── LAYOUT ── */
+.screen { flex:1; display:flex; flex-direction:column; align-items:center; padding:11px 17px 17px; animation:fadeIn .35s ease; gap:9px; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
+.wt { font-size:36px; font-weight:600; text-align:center; line-height:1.2; background:linear-gradient(135deg,#f7971e,#f64f59); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.ws { font-size:16px; color:#888; text-align:center; }
+.form-row { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; width:100%; }
+.form-group { text-align:center; }
+.form-group label { display:block; font-size:14px; color:#666; margin-bottom:5px; }
+.name-input, .age-select { font-family:inherit; font-size:18px; padding:9px 14px; border:3px solid #FFD200; border-radius:50px; outline:none; text-align:center; color:#333; background:#FFFEF7; }
+.name-input { width:180px; } .age-select { width:140px; cursor:pointer; }
+.name-input:focus, .age-select:focus { border-color:#F7971E; box-shadow:0 0 0 4px rgba(247,151,30,.13); }
 
 /* ── BUTTONS ── */
-.btn {
-  font-family: inherit; font-size: 17px; font-weight: 600;
-  border: none; border-radius: 50px; padding: 11px 24px;
-  cursor: pointer; transition: transform .1s, box-shadow .1s;
-  display: inline-flex; align-items: center; gap: 6px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.14);
-  -webkit-tap-highlight-color: transparent;
-}
-.btn:active  { transform: scale(.95); }
-.btn:disabled { opacity:.44; cursor:not-allowed; }
-.btn-primary   { background: linear-gradient(135deg,#f7971e,#ffd200); color:white; }
+.btn { font-family:inherit; font-size:17px; font-weight:600; border:none; border-radius:50px; padding:11px 24px; cursor:pointer; transition:transform .1s,box-shadow .1s; display:inline-flex; align-items:center; gap:6px; box-shadow:0 4px 12px rgba(0,0,0,.14); -webkit-tap-highlight-color:transparent; }
+.btn:active { transform:scale(.95); } .btn:disabled { opacity:.44; cursor:not-allowed; }
+.btn-primary { background:linear-gradient(135deg,#f7971e,#ffd200); color:white; }
 .btn-secondary { background:#F0EDE8; color:#555; font-size:14px; padding:8px 17px; }
-.btn-audio     { background: linear-gradient(135deg,#4776e6,#8e54e9); color:white; font-size:14px; padding:8px 16px; }
-.btn-story-replay { background: linear-gradient(135deg,#2196F3,#21CBF3); color:white; font-size:14px; padding:8px 16px; border:none; border-radius:50px; cursor:pointer; font-family:inherit; font-weight:600; box-shadow:0 3px 10px rgba(0,0,0,.12); -webkit-tap-highlight-color:transparent; }
+.btn-audio { background:linear-gradient(135deg,#4776e6,#8e54e9); color:white; font-size:14px; padding:8px 16px; }
+.btn-story-replay { background:linear-gradient(135deg,#2196F3,#21CBF3); color:white; font-size:14px; padding:8px 16px; border:none; border-radius:50px; cursor:pointer; font-family:inherit; font-weight:600; box-shadow:0 3px 10px rgba(0,0,0,.12); -webkit-tap-highlight-color:transparent; }
 .btn-story-replay:active { transform:scale(.95); }
-
-.btn-green {
-  background: linear-gradient(135deg,#56ab2f,#a8e063); color:white;
-  font-size:22px; padding:14px 18px;
-  box-shadow: 0 6px 20px rgba(86,171,47,.38);
-  flex:1; max-width:165px;
-  justify-content:center; flex-direction:column; gap:5px; border-radius:20px;
-}
-.btn-red {
-  background: linear-gradient(135deg,#eb3349,#f45c43); color:white;
-  font-size:22px; padding:14px 18px;
-  box-shadow: 0 6px 20px rgba(235,51,73,.38);
-  flex:1; max-width:165px;
-  justify-content:center; flex-direction:column; gap:5px; border-radius:20px;
-}
-
+.btn-green { background:linear-gradient(135deg,#56ab2f,#a8e063); color:white; font-size:22px; padding:14px 18px; box-shadow:0 6px 20px rgba(86,171,47,.38); flex:1; max-width:165px; justify-content:center; flex-direction:column; gap:5px; border-radius:20px; }
+.btn-red { background:linear-gradient(135deg,#eb3349,#f45c43); color:white; font-size:22px; padding:14px 18px; box-shadow:0 6px 20px rgba(235,51,73,.38); flex:1; max-width:165px; justify-content:center; flex-direction:column; gap:5px; border-radius:20px; }
 .ans-thumb { display:block; margin:0 auto; object-fit:contain; }
-
-/* certainty buttons */
-.btn-likert-strong {
-  font-family:inherit; font-size:15px; font-weight:600;
-  border:none; border-radius:20px; padding:12px 10px;
-  cursor:pointer; transition:transform .1s, box-shadow .1s;
-  display:flex; align-items:center; justify-content:center;
-  flex-direction:column; gap:5px; flex:1; max-width:170px;
-  box-shadow:0 6px 18px rgba(0,0,0,.18);
-  -webkit-tap-highlight-color:transparent;
-}
-.btn-likert-mild {
-  font-family:inherit; font-size:14px; font-weight:600;
-  border:none; border-radius:20px; padding:10px 8px;
-  cursor:pointer; transition:transform .1s, box-shadow .1s;
-  display:flex; align-items:center; justify-content:center;
-  flex-direction:column; gap:4px; flex:1; max-width:145px;
-  box-shadow:0 4px 12px rgba(0,0,0,.12);
-  -webkit-tap-highlight-color:transparent;
-}
+.btn-likert-strong { font-family:inherit; font-size:15px; font-weight:600; border:none; border-radius:20px; padding:12px 10px; cursor:pointer; transition:transform .1s,box-shadow .1s; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:5px; flex:1; max-width:170px; box-shadow:0 6px 18px rgba(0,0,0,.18); -webkit-tap-highlight-color:transparent; }
+.btn-likert-mild { font-family:inherit; font-size:14px; font-weight:600; border:none; border-radius:20px; padding:10px 8px; cursor:pointer; transition:transform .1s,box-shadow .1s; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:4px; flex:1; max-width:145px; box-shadow:0 4px 12px rgba(0,0,0,.12); -webkit-tap-highlight-color:transparent; }
 .btn-likert-strong:active, .btn-likert-mild:active { transform:scale(.95); }
 .btn-likert-strong:disabled, .btn-likert-mild:disabled { opacity:.44; cursor:not-allowed; }
+.btn-model-choice { background:white; border:3px solid #E0E0E0; border-radius:16px; padding:10px; cursor:pointer; transition:transform .1s,border-color .1s,box-shadow .1s; -webkit-tap-highlight-color:transparent; display:flex; align-items:center; justify-content:center; }
+.btn-model-choice:active { transform:scale(.95); }
+.btn-model-choice:hover { border-color:#4776e6; box-shadow:0 4px 16px rgba(71,118,230,.25); }
+.btn-model-choice:disabled { opacity:.5; cursor:not-allowed; }
 
-.btn-model-choice {
-  background: white; border: 3px solid #E0E0E0; border-radius: 16px;
-  padding: 10px; cursor: pointer;
-  transition: transform .1s, border-color .1s, box-shadow .1s;
-  -webkit-tap-highlight-color: transparent;
-  display: flex; align-items: center; justify-content: center;
-}
-.btn-model-choice:active  { transform: scale(.95); }
-.btn-model-choice:hover   { border-color: #4776e6; box-shadow: 0 4px 16px rgba(71,118,230,.25); }
-.btn-model-choice:disabled { opacity: .5; cursor: not-allowed; }
-
-/* ── STORY / QUESTION UI ── */
-.illus {
-  width:100%; border-radius:13px; overflow:hidden;
-  background:#E8F4FF; box-shadow: inset 0 2px 8px rgba(0,0,0,.07);
-}
-.q-illust {
-  width:100%; max-width:360px; align-self:center;
-  border-radius:12px; overflow:hidden;
-  border:2px solid #F0EDE8; background:#FAFAFA;
-}
+/* ── STORY / QUESTION ── */
+.illus { width:100%; border-radius:13px; overflow:hidden; background:#E8F4FF; box-shadow:inset 0 2px 8px rgba(0,0,0,.07); }
+.q-illust { width:100%; max-width:360px; align-self:center; border-radius:12px; overflow:hidden; border:2px solid #F0EDE8; background:#FAFAFA; }
 .story-head { display:flex; justify-content:space-between; align-items:center; width:100%; }
-.pair-title  { font-size:18px; font-weight:600; color:#333; }
-.story-box {
-  width:100%; background:white; border-radius:12px;
-  padding:11px 15px; font-size:16px; line-height:1.72;
-  color:#333; border:2px solid #F0EDE8;
-}
+.pair-title { font-size:18px; font-weight:600; color:#333; }
+.story-box { width:100%; background:white; border-radius:12px; padding:11px 15px; font-size:16px; line-height:1.72; color:#333; border:2px solid #F0EDE8; }
 .sent { display:inline; border-radius:4px; padding:1px 2px; transition:background .3s; }
 .sent.hi { background:#FFF3B0; }
-
 .story-btns { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; width:100%; }
-
-.q-header {
-  width:100%; background:linear-gradient(135deg,#4776e6,#8e54e9);
-  border-radius:11px; padding:8px 14px; color:white;
-  font-size:14px; display:flex; align-items:center; gap:6px;
-}
-.q-box {
-  width:100%; background:#F8F4FF; border-radius:13px;
-  padding:12px 16px; font-size:16px; line-height:1.6;
-  color:#333; border:3px solid #C9B8F0;
-  text-align:center; min-height:66px;
-  display:flex; align-items:center; justify-content:center;
-}
-.ans-row   { display:flex; gap:15px; justify-content:center; width:100%; }
-
+.q-header { width:100%; background:linear-gradient(135deg,#4776e6,#8e54e9); border-radius:11px; padding:8px 14px; color:white; font-size:14px; display:flex; align-items:center; gap:6px; }
+.q-box { width:100%; background:#F8F4FF; border-radius:13px; padding:12px 16px; font-size:16px; line-height:1.6; color:#333; border:3px solid #C9B8F0; text-align:center; min-height:66px; display:flex; align-items:center; justify-content:center; }
+.ans-row { display:flex; gap:15px; justify-content:center; width:100%; }
 .replay-section { display:flex; flex-direction:column; align-items:center; gap:5px; width:100%; }
 .replay-label { font-size:11px; color:#bbb; text-align:center; }
 .replay-btns { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
 
-.trans-screen {
-  flex:1; display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  gap:10px; padding:22px; text-align:center;
-}
+/* ── SCREENS ── */
+.trans-screen { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:22px; text-align:center; }
 .trans-msg { font-size:22px; font-weight:600; color:#333; }
 .trans-sub { font-size:15px; color:#aaa; }
-
-.midpoint-screen {
-  flex:1; display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  gap:14px; padding:28px; text-align:center;
-  animation: fadeIn .35s ease;
-}
-
-.end-screen {
-  flex:1; display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  padding:24px; text-align:center; gap:10px;
-}
-.end-trophy-wrap { animation: bounceIn .85s cubic-bezier(.17,.67,.37,1.3); }
-@keyframes bounceIn {
-  0%{transform:scale(0);} 65%{transform:scale(1.18);} 82%{transform:scale(.94);} 100%{transform:scale(1);}
-}
+.midpoint-screen { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:28px; text-align:center; animation:fadeIn .35s ease; }
+.end-screen { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center; gap:10px; }
+.end-trophy-wrap { animation:bounceIn .85s cubic-bezier(.17,.67,.37,1.3); }
+@keyframes bounceIn { 0%{transform:scale(0);} 65%{transform:scale(1.18);} 82%{transform:scale(.94);} 100%{transform:scale(1);} }
 .end-title { font-size:29px; font-weight:600; color:#f7971e; }
-.end-sub   { font-size:16px; color:#666; }
-.end-btns  { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:4px; }
-
-.info-box {
-  font-size:15px; color:#555; line-height:1.82;
-  max-width:500px; background:#F8F4FF;
-  padding:14px 18px; border-radius:14px; border:3px solid #C9B8F0;
-}
-
+.end-sub { font-size:16px; color:#666; }
+.end-btns { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:4px; }
+.info-box { font-size:15px; color:#555; line-height:1.82; max-width:500px; background:#F8F4FF; padding:14px 18px; border-radius:14px; border:3px solid #C9B8F0; }
 .error-box { padding:28px; font-family:Arial,sans-serif; max-width:600px; margin:auto; text-align:center; }
-
-.unlock-btn {
-  background: linear-gradient(135deg,#4776e6,#8e54e9);
-  color: white; border: none; border-radius: 50px;
-  font-family: inherit; font-size: 17px; font-weight: 600;
-  padding: 13px 28px; cursor: pointer;
-  box-shadow: 0 4px 18px rgba(71,118,230,.45);
-  animation: pulse 1.5s ease infinite;
-}
+.unlock-btn { background:linear-gradient(135deg,#4776e6,#8e54e9); color:white; border:none; border-radius:50px; font-family:inherit; font-size:17px; font-weight:600; padding:13px 28px; cursor:pointer; box-shadow:0 4px 18px rgba(71,118,230,.45); animation:pulse 1.5s ease infinite; }
 @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.04);} }
 
 @media (max-width:480px) {
@@ -361,25 +186,19 @@ body {
     <h2>Loading Relationship Detective...</h2>
     <p style="margin-top:10px;font-size:14px">If this does not go away, please check that JavaScript is enabled.</p>
   </div>
-
-  <!-- Fullscreen button — always visible, top-right -->
-  <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()" title="Fullscreen">
-    <svg id="fsIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-         fill="none" stroke="#4776e6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="15 3 21 3 21 9"/>
-      <polyline points="9 21 3 21 3 15"/>
-      <line x1="21" y1="3" x2="14" y2="10"/>
-      <line x1="3" y1="21" x2="10" y2="14"/>
-    </svg>
-  </button>
-
-  <!-- Researcher panel — hidden until secret tap -->
-  <button class="admin-btn" id="adminBtn" title="Researcher Panel">⚙️</button>
-  <div class="admin-panel" id="adminPanel"></div>
-
-  <!-- Invisible secret tap zone — bottom-right corner -->
-  <div id="secretZone"></div>
 </div>
+
+<!-- ── OVERLAY ELEMENTS: outside #app so render() never destroys them ── -->
+<button id="fullscreenBtn" onclick="toggleFullscreen()" title="Go Fullscreen">
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+       fill="none" stroke="#4776e6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+    <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+  </svg>
+</button>
+<button id="adminBtn" title="Researcher Panel">⚙️</button>
+<div id="adminPanel"></div>
+<div id="secretZone"></div>
 
 <script>
 'use strict';
@@ -401,21 +220,19 @@ function toggleFullscreen() {
 }
 
 function updateFullscreenBtn() {
-  const btn  = document.getElementById('fullscreenBtn');
+  const btn = document.getElementById('fullscreenBtn');
   if (!btn) return;
   const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
   btn.innerHTML = isFs ? FS_SVG_EXIT : FS_SVG_ENTER;
   btn.title     = isFs ? 'Exit Fullscreen' : 'Go Fullscreen';
-  // Also hide the banner once in fullscreen
   const banner = document.getElementById('fsBanner');
   if (banner) banner.style.display = isFs ? 'none' : '';
 }
-
 ['fullscreenchange','webkitfullscreenchange'].forEach(evt =>
   document.addEventListener(evt, updateFullscreenBtn)
 );
 
-// ── SECRET RESEARCHER UNLOCK ───────────────────────────
+// ── SECRET RESEARCHER UNLOCK (5 taps bottom-right within 3s) ──
 let secretTaps = 0, secretTimer = null;
 
 function setupSecretZone() {
@@ -447,30 +264,29 @@ const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwDD5qinnX2su-gF2VDr
 function getUrlParam(name) {
   return new URLSearchParams(window.location.search).get(name) || '';
 }
-
 const CHS_RESPONSE_ID = getUrlParam('chsid');
 
 function uploadToSheets(answerObj) {
   const row = {
-    CHSResponseID:  CHS_RESPONSE_ID,
-    ParticipantID:  S.pid   || '',
-    ChildName:      S.name  || '',
-    Age:            S.age   || '',
-    Type:           answerObj.type             || '',
-    VignetteID:     answerObj.vid              || '',
-    VignetteModel:  answerObj.vM               || '',
-    QuestionIndex:  answerObj.qi != null ? answerObj.qi + 1 : '',
-    QuestionModel:  answerObj.qM               || '',
-    ItemID:         answerObj.itemId           || '',
-    IsCongruent:    answerObj.congruent != null ? String(answerObj.congruent).toUpperCase() : '',
-    Answer:         answerObj.ans              || '',
-    InitialYesNo:   answerObj.initialAns       || '',
-    KeyedAnswer:    answerObj.keyed            || '',
-    Correct:        answerObj.ok        != null ? String(answerObj.ok).toUpperCase()        : '',
-    ModelIDChosen:  answerObj.chosen           || '',
-    ModelIDCorrect: answerObj.correct   != null ? String(answerObj.correct).toUpperCase()   : '',
-    ModelIDCertainty: answerObj.modelCertainty || '',
-    Timestamp:      answerObj.ts               || ''
+    CHSResponseID:    CHS_RESPONSE_ID,
+    ParticipantID:    S.pid   || '',
+    ChildName:        S.name  || '',
+    Age:              S.age   || '',
+    Type:             answerObj.type             || '',
+    VignetteID:       answerObj.vid              || '',
+    VignetteModel:    answerObj.vM               || '',
+    QuestionIndex:    answerObj.qi != null ? answerObj.qi + 1 : '',
+    QuestionModel:    answerObj.qM               || '',
+    ItemID:           answerObj.itemId           || '',
+    IsCongruent:      answerObj.congruent != null ? String(answerObj.congruent).toUpperCase() : '',
+    Answer:           answerObj.ans              || '',
+    InitialYesNo:     answerObj.initialAns       || '',
+    KeyedAnswer:      answerObj.keyed            || '',
+    Correct:          answerObj.ok        != null ? String(answerObj.ok).toUpperCase()        : '',
+    ModelIDChosen:    answerObj.chosen           || '',
+    ModelIDCorrect:   answerObj.correct   != null ? String(answerObj.correct).toUpperCase()   : '',
+    ModelIDCertainty: answerObj.modelCertainty   || '',
+    Timestamp:        answerObj.ts               || ''
   };
   fetch(SHEETS_URL, {
     method: 'POST', mode: 'no-cors',
@@ -480,9 +296,7 @@ function uploadToSheets(answerObj) {
 }
 
 function markSessionComplete() {
-  if (window.opener) {
-    window.opener.postMessage({ type: 'GAME_COMPLETE', pid: S.pid }, '*');
-  }
+  if (window.opener) window.opener.postMessage({ type: 'GAME_COMPLETE', pid: S.pid }, '*');
 }
 
 const W = 600, H = 300, GY = H * 0.70;
@@ -496,7 +310,6 @@ const DETECTIVE_LEVELS = [
   { min:  9, label: 'Super Detective',   emoji: '💫', color: '#FF8FAB', color2: '#E91E8C' },
   { min: 12, label: 'Master Detective!', emoji: '🏆', color: '#FFD700', color2: '#F39C12' }
 ];
-
 function getCurrentLevel(stars) {
   let lv = DETECTIVE_LEVELS[0];
   for (const l of DETECTIVE_LEVELS) { if (stars >= l.min) lv = l; }
@@ -549,13 +362,10 @@ function assignAllQuestions() {
   };
   const counters = { EM: 0, CS: 0, AR: 0 };
   function pick(model, excluded) {
-    const arr = pools[model];
-    let attempts = 0;
+    const arr = pools[model]; let attempts = 0;
     while (attempts < arr.length) {
-      const item = arr[counters[model] % arr.length];
-      counters[model]++;
-      if (!excluded.includes(item.id)) return item;
-      attempts++;
+      const item = arr[counters[model] % arr.length]; counters[model]++;
+      if (!excluded.includes(item.id)) return item; attempts++;
     }
     return arr.find(item => !excluded.includes(item.id)) || arr[0];
   }
@@ -563,14 +373,7 @@ function assignAllQuestions() {
     const excluded = v.excludeItems || [];
     const questions = ['EM','CS','AR'].map(m => {
       const item = pick(m, excluded);
-      return {
-        id: item.id,
-        text: fillNames(item.text, v),
-        qM: m,
-        png: item.png,
-        keyed: m === v.model ? 'YES' : 'NO',
-        congruent: m === v.model
-      };
+      return { id: item.id, text: fillNames(item.text, v), qM: m, png: item.png, keyed: m === v.model ? 'YES' : 'NO', congruent: m === v.model };
     });
     for (let i = questions.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -720,10 +523,8 @@ const VIGNETTES = [
 const S = {
   phase: 'welcome', name: '', age: '', pid: '',
   vi: 0, qi: 0,
-  pendingAns: null,
-  pendingModelChoice: null,
-  modelIdOrder: [],
-  answers: [], stars: 0, adminOpen: false,
+  pendingAns: null, pendingModelChoice: null,
+  modelIdOrder: [], answers: [], stars: 0, adminOpen: false,
   elevenLabsKey:   localStorage.getItem('rad_elKey')   || '',
   elevenLabsVoice: localStorage.getItem('rad_elVoice') || 'MF3mGyEYCl7XYWbV9V6O'
 };
@@ -740,21 +541,16 @@ function unlockAudio(thenSpeak) {
   if (audioUnlocked) { if (thenSpeak) speak(thenSpeak); return; }
   audioUnlocked = true;
   if (window.speechSynthesis) {
-    const silent = new SpeechSynthesisUtterance(' ');
-    silent.volume = 0;
+    const silent = new SpeechSynthesisUtterance(' '); silent.volume = 0;
     silent.onend = () => { if (thenSpeak) speak(thenSpeak); };
     speechSynthesis.speak(silent);
   } else { if (thenSpeak) speak(thenSpeak); }
-  const ub = document.getElementById('unlockBtn');
-  if (ub) ub.remove();
+  const ub = document.getElementById('unlockBtn'); if (ub) ub.remove();
 }
 
 function bestVoice() {
   const prefs = ['Google UK English Female','Samantha','Karen','Moira','Google US English','Microsoft Zira Desktop - English (United States)','Microsoft Zira - English (United States)'];
-  for (const p of prefs) {
-    const v = voices.find(v => v.name === p || v.name.includes(p));
-    if (v) return v;
-  }
+  for (const p of prefs) { const v = voices.find(v => v.name === p || v.name.includes(p)); if (v) return v; }
   return voices.find(v => v.lang && v.lang.startsWith('en') && v.localService) ||
          voices.find(v => v.lang && v.lang.startsWith('en')) || voices[0] || null;
 }
@@ -772,8 +568,7 @@ function speakWebSpeech(text, done) {
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.voice = bestVoice(); u.rate = 1.06; u.pitch = 1.08; u.volume = 1;
-  u.onend = () => { done(); };
-  u.onerror = () => { done(); };
+  u.onend = () => done(); u.onerror = () => done();
   speechSynthesis.speak(u);
 }
 
@@ -788,18 +583,16 @@ function speakElevenLabs(text, done) {
   .then(r => { if (!r.ok) throw new Error('ElevenLabs ' + r.status); return r.blob(); })
   .then(blob => {
     const url = URL.createObjectURL(blob);
-    const audio = new Audio(url);
-    currentAudio = audio;
+    const audio = new Audio(url); currentAudio = audio;
     audio.onended = () => { URL.revokeObjectURL(url); currentAudio = null; done(); };
     audio.onerror = () => { URL.revokeObjectURL(url); currentAudio = null; speakWebSpeech(text, done); };
-    audio.play().catch(() => { speakWebSpeech(text, done); });
+    audio.play().catch(() => speakWebSpeech(text, done));
   })
   .catch(err => { console.warn('ElevenLabs error:', err.message); speakWebSpeech(text, done); });
 }
 
 function speakSeq(parts, highlightCb, done) {
-  const id = ++seqGen;
-  let i = 0;
+  const id = ++seqGen; let i = 0;
   function next() {
     if (seqGen !== id) return;
     if (i >= parts.length) { done(); return; }
@@ -820,179 +613,496 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 const SKINS = ['#FDBCB4','#F0C090','#E0A878','#C87E50','#FDDBB4'];
-function skin(name) {
-  let h = 0;
-  for (let i = 0; i < name.length; i++) h = (h*31 + name.charCodeAt(i)) & 0xFFFF;
-  return SKINS[h % SKINS.length];
-}
-function thumbsUpSVG(size) {
-  size = size || 50;
-  return `<img class="ans-thumb" src="${IMG_BASE}thumbsup.png" width="${size}" height="${size}" style="display:block;margin:0 auto;object-fit:contain"/>`;
-}
-function thumbsDownSVG(size) {
-  size = size || 50;
-  return `<img class="ans-thumb" src="${IMG_BASE}thumbsdown.png" width="${size}" height="${size}" style="display:block;margin:0 auto;object-fit:contain"/>`;
-}
+function skin(name) { let h=0; for(let i=0;i<name.length;i++) h=(h*31+name.charCodeAt(i))&0xFFFF; return SKINS[h%SKINS.length]; }
+function thumbsUpSVG(sz)   { return `<img class="ans-thumb" src="${IMG_BASE}thumbsup.png"   width="${sz||50}" height="${sz||50}" style="display:block;margin:0 auto;object-fit:contain"/>`; }
+function thumbsDownSVG(sz) { return `<img class="ans-thumb" src="${IMG_BASE}thumbsdown.png" width="${sz||50}" height="${sz||50}" style="display:block;margin:0 auto;object-fit:contain"/>`; }
 
-// ── STATIC KID SVG (no animation) ─────────────────────
+// ── KID SVG ────────────────────────────────────────────
 function kidSVG(cx, groundY, cfg, animOffset, flip, imgH, imgYOffset) {
-  imgH = imgH || 182;
-  imgYOffset = imgYOffset || 35;
-  flip = flip || false;
-  const { hair, shirt, pants, style, img } = cfg;
-
+  imgH=imgH||182; imgYOffset=imgYOffset||35; flip=flip||false;
+  const {hair,shirt,pants,style,img}=cfg;
   if (img && animOffset !== 'wave') {
-    const imgUrl = IMG_BASE + img;
-    const imgW = Math.round(imgH * 88 / 182);
-    const p = [];
+    const imgUrl=IMG_BASE+img, imgW=Math.round(imgH*88/182), p=[];
     p.push(`<ellipse cx="${cx}" cy="${groundY}" rx="26" ry="6" fill="rgba(0,0,0,.10)"/>`);
-    const imgEl = `<image href="${imgUrl}" x="${cx - imgW/2}" y="${groundY - imgH + imgYOffset}" width="${imgW}" height="${imgH}" preserveAspectRatio="xMidYMax meet"/>`;
-    if (flip) p.push(`<g transform="translate(${cx * 2}, 0) scale(-1, 1)">${imgEl}</g>`);
-    else p.push(imgEl);
+    const imgEl=`<image href="${imgUrl}" x="${cx-imgW/2}" y="${groundY-imgH+imgYOffset}" width="${imgW}" height="${imgH}" preserveAspectRatio="xMidYMax meet"/>`;
+    p.push(flip?`<g transform="translate(${cx*2},0) scale(-1,1)">${imgEl}</g>`:imgEl);
     return `<g>${p.join('')}</g>`;
   }
-
-  const sk = skin(cfg.name || '');
-  const hR = 28, bH = 62, bW = 50, lH = 58, lW = 19, aH = 44, aW = 12;
-  const fY = groundY, lT = fY - lH, bT = lT - bH, hY = bT - hR - 3;
-  const p = [];
-
+  const sk=skin(cfg.name||''), hR=28, bH=62, bW=50, lH=58, lW=19, aH=44, aW=12;
+  const fY=groundY, lT=fY-lH, bT=lT-bH, hY=bT-hR-3, p=[];
   p.push(`<ellipse cx="${cx}" cy="${fY}" rx="26" ry="6" fill="rgba(0,0,0,.08)"/>`);
-
-  p.push(`<rect x="${cx - lW - 2}" y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
-  p.push(`<rect x="${cx + 2}" y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
-  p.push(`<ellipse cx="${cx - lW * .5 - 1}" cy="${fY}" rx="13" ry="6" fill="#333"/>`);
-  p.push(`<ellipse cx="${cx + lW * .5 + 1}" cy="${fY}" rx="13" ry="6" fill="#333"/>`);
-
-  p.push(`<rect x="${cx - bW * .5 - aW}" y="${bT + 4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
-  p.push(`<circle cx="${cx - bW * .5 - aW * .5}" cy="${bT + 4 + aH}" r="7" fill="${sk}"/>`);
-
-  p.push(`<rect x="${cx + bW * .5}" y="${bT + 4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
-  p.push(`<circle cx="${cx + bW * .5 + aW * .5}" cy="${bT + 4 + aH}" r="7" fill="${sk}"/>`);
-
-  p.push(`<rect x="${cx - bW * .5}" y="${bT}" width="${bW}" height="${bH}" rx="10" fill="${shirt}"/>`);
-  p.push(`<path d="M${cx - 9},${bT} Q${cx},${bT + 13} ${cx + 9},${bT}" fill="white" opacity=".2"/>`);
-
+  p.push(`<rect x="${cx-lW-2}" y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
+  p.push(`<rect x="${cx+2}" y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
+  p.push(`<ellipse cx="${cx-lW*.5-1}" cy="${fY}" rx="13" ry="6" fill="#333"/>`);
+  p.push(`<ellipse cx="${cx+lW*.5+1}" cy="${fY}" rx="13" ry="6" fill="#333"/>`);
+  p.push(`<rect x="${cx-bW*.5-aW}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
+  p.push(`<circle cx="${cx-bW*.5-aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>`);
+  p.push(`<rect x="${cx+bW*.5}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
+  p.push(`<circle cx="${cx+bW*.5+aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>`);
+  p.push(`<rect x="${cx-bW*.5}" y="${bT}" width="${bW}" height="${bH}" rx="10" fill="${shirt}"/>`);
+  p.push(`<path d="M${cx-9},${bT} Q${cx},${bT+13} ${cx+9},${bT}" fill="white" opacity=".2"/>`);
   p.push(`<circle cx="${cx}" cy="${hY}" r="${hR}" fill="${sk}"/>`);
-
-  if (style === 'short') {
-    p.push(`<ellipse cx="${cx}" cy="${hY - hR + 10}" rx="${hR}" ry="${hR * .52}" fill="${hair}"/>`);
-  } else if (style === 'long') {
-    p.push(`<ellipse cx="${cx}" cy="${hY - hR + 10}" rx="${hR}" ry="${hR * .52}" fill="${hair}"/>`);
-    p.push(`<rect x="${cx - hR - 1}" y="${hY - 6}" width="13" height="40" rx="6" fill="${hair}"/>`);
-    p.push(`<rect x="${cx + hR - 12}" y="${hY - 6}" width="13" height="40" rx="6" fill="${hair}"/>`);
-  } else if (style === 'pigtails') {
-    p.push(`<ellipse cx="${cx}" cy="${hY - hR + 10}" rx="${hR}" ry="${hR * .52}" fill="${hair}"/>`);
-    p.push(`<circle cx="${cx - hR - 5}" cy="${hY - 3}" r="10" fill="${hair}"/>`);
-    p.push(`<circle cx="${cx + hR + 5}" cy="${hY - 3}" r="10" fill="${hair}"/>`);
-    p.push(`<line x1="${cx - hR + 1}" y1="${hY - 1}" x2="${cx - hR - 5}" y2="${hY - 3}" stroke="${hair}" stroke-width="5"/>`);
-    p.push(`<line x1="${cx + hR - 1}" y1="${hY - 1}" x2="${cx + hR + 5}" y2="${hY - 3}" stroke="${hair}" stroke-width="5"/>`);
+  if (style==='short') {
+    p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
+  } else if (style==='long') {
+    p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
+    p.push(`<rect x="${cx-hR-1}" y="${hY-6}" width="13" height="40" rx="6" fill="${hair}"/>`);
+    p.push(`<rect x="${cx+hR-12}" y="${hY-6}" width="13" height="40" rx="6" fill="${hair}"/>`);
+  } else if (style==='pigtails') {
+    p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
+    p.push(`<circle cx="${cx-hR-5}" cy="${hY-3}" r="10" fill="${hair}"/>`);
+    p.push(`<circle cx="${cx+hR+5}" cy="${hY-3}" r="10" fill="${hair}"/>`);
+    p.push(`<line x1="${cx-hR+1}" y1="${hY-1}" x2="${cx-hR-5}" y2="${hY-3}" stroke="${hair}" stroke-width="5"/>`);
+    p.push(`<line x1="${cx+hR-1}" y1="${hY-1}" x2="${cx+hR+5}" y2="${hY-3}" stroke="${hair}" stroke-width="5"/>`);
   }
-
-  p.push(`<path d="M${cx - 14},${hY - 2} Q${cx - 8},${hY - 12} ${cx - 2},${hY - 2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
-  p.push(`<path d="M${cx + 2},${hY - 2} Q${cx + 8},${hY - 12} ${cx + 14},${hY - 2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
-  p.push(`<path d="M${cx - 10},${hY + 9} Q${cx},${hY + 19} ${cx + 10},${hY + 9}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
-  p.push(`<circle cx="${cx - 17}" cy="${hY + 6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
-  p.push(`<circle cx="${cx + 17}" cy="${hY + 6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
-
+  p.push(`<path d="M${cx-14},${hY-2} Q${cx-8},${hY-12} ${cx-2},${hY-2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
+  p.push(`<path d="M${cx+2},${hY-2} Q${cx+8},${hY-12} ${cx+14},${hY-2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
+  p.push(`<path d="M${cx-10},${hY+9} Q${cx},${hY+19} ${cx+10},${hY+9}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
+  p.push(`<circle cx="${cx-17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
+  p.push(`<circle cx="${cx+17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
   return `<g>${p.join('')}</g>`;
 }
 
-// ── SCENE BACKGROUNDS (animated) ───────────────────────
+// ── SCENE BACKGROUNDS (asymmetric, swaying plants, rich stars) ───
 const SCENE_BACKGROUNDS = {
+
+  // LEFT: teal mushroom-tree with drooping branches
+  // RIGHT: pink fan-tree with upward petals  (totally different silhouette)
   alien_home: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#0D0B1E"/>
   <path d="M0 300 L0 115 Q0 18 300 14 Q600 18 600 115 L600 300 Z" fill="#1A1540"/>
   <path d="M45 300 L45 130 Q45 56 300 52 Q555 56 555 130 L555 300 Z" fill="#1E1848"/>
+  <!-- 14 twinkling stars: varied positions, sizes, colors, durations -->
+  <circle cx="28" cy="24" r="1.2" fill="white" opacity=".85"><animate attributeName="opacity" values=".85;.15;.85" dur="2.4s" repeatCount="indefinite"/></circle>
+  <circle cx="78" cy="16" r="1.8" fill="#B0E8FF" opacity=".7"><animate attributeName="opacity" values=".7;.1;.7" dur="3.6s" repeatCount="indefinite"/></circle>
+  <circle cx="130" cy="32" r="1" fill="#FFE8C8" opacity=".8"><animate attributeName="opacity" values=".8;.2;.8" dur="2.1s" repeatCount="indefinite"/></circle>
+  <circle cx="190" cy="20" r="1.5" fill="white" opacity=".6"><animate attributeName="opacity" values=".6;.05;.6" dur="4.8s" repeatCount="indefinite"/></circle>
+  <circle cx="248" cy="28" r="1" fill="#FFD4EE" opacity=".75"><animate attributeName="opacity" values=".75;.2;.75" dur="3.1s" repeatCount="indefinite"/></circle>
+  <circle cx="350" cy="22" r="1.3" fill="white" opacity=".9"><animate attributeName="opacity" values=".9;.25;.9" dur="1.9s" repeatCount="indefinite"/></circle>
+  <circle cx="408" cy="35" r="1.1" fill="#C8FFD4" opacity=".7"><animate attributeName="opacity" values=".7;.1;.7" dur="4.2s" repeatCount="indefinite"/></circle>
+  <circle cx="460" cy="19" r="1.6" fill="white" opacity=".8"><animate attributeName="opacity" values=".8;.2;.8" dur="2.7s" repeatCount="indefinite"/></circle>
+  <circle cx="520" cy="30" r="1" fill="#FFE8C8" opacity=".65"><animate attributeName="opacity" values=".65;.1;.65" dur="3.9s" repeatCount="indefinite"/></circle>
+  <circle cx="570" cy="24" r="1.4" fill="#B0E8FF" opacity=".75"><animate attributeName="opacity" values=".75;.15;.75" dur="2.5s" repeatCount="indefinite"/></circle>
+  <circle cx="108" cy="48" r="1" fill="white" opacity=".5"><animate attributeName="opacity" values=".5;.05;.5" dur="5.2s" repeatCount="indefinite"/></circle>
+  <circle cx="325" cy="40" r="1.2" fill="#D4C8FF" opacity=".6"><animate attributeName="opacity" values=".6;.1;.6" dur="3.3s" repeatCount="indefinite"/></circle>
+  <circle cx="488" cy="45" r="1" fill="white" opacity=".55"><animate attributeName="opacity" values=".55;.1;.55" dur="4.0s" repeatCount="indefinite"/></circle>
+  <circle cx="178" cy="44" r="1.3" fill="#FFD4EE" opacity=".65"><animate attributeName="opacity" values=".65;.15;.65" dur="2.8s" repeatCount="indefinite"/></circle>
+  <!-- Central glowing orb -->
   <circle cx="300" cy="46" r="12" fill="#4ECDC4" opacity=".85"><animate attributeName="opacity" values=".6;1;.6" dur="2.5s" repeatCount="indefinite"/></circle>
   <ellipse cx="300" cy="54" rx="55" ry="18" fill="#4ECDC4" opacity=".09"><animate attributeName="rx" values="50;66;50" dur="2.5s" repeatCount="indefinite"/></ellipse>
-  <circle cx="160" cy="68" r="6" fill="#9B5DE5" opacity=".7"><animate attributeName="opacity" values=".5;.9;.5" dur="3.1s" repeatCount="indefinite"/></circle>
-  <circle cx="440" cy="68" r="6" fill="#FF6EC7" opacity=".7"><animate attributeName="opacity" values=".7;1;.7" dur="2.7s" repeatCount="indefinite"/></circle>
+  <!-- Floor -->
   <rect x="0" y="210" width="600" height="90" fill="#100C28"/>
   <path d="M0 210 H600" stroke="#4ECDC4" stroke-width="2.5" opacity=".65"/>
-  <line x1="72" y1="210" x2="72" y2="138" stroke="#4ECDC4" stroke-width="4" stroke-linecap="round"/>
-  <circle cx="72" cy="130" r="16" fill="#4ECDC4" opacity=".75"><animate attributeName="opacity" values=".55;.88;.55" dur="2.2s" repeatCount="indefinite"/></circle>
-  <line x1="528" y1="210" x2="528" y2="138" stroke="#FF6EC7" stroke-width="4" stroke-linecap="round"/>
-  <circle cx="528" cy="130" r="16" fill="#FF6EC7" opacity=".75"><animate attributeName="opacity" values=".6;.88;.6" dur="2.3s" repeatCount="indefinite"/></circle>
+  <!-- LEFT: Teal mushroom-tree (drooping branches, sways left-right) -->
+  <g><animateTransform attributeName="transform" type="rotate"
+    values="-2.5 72 210; 2.5 72 210; -2.5 72 210"
+    dur="5s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <line x1="72" y1="210" x2="72" y2="136" stroke="#4ECDC4" stroke-width="4.5" stroke-linecap="round"/>
+    <path d="M72 162 Q55 158 44 148" stroke="#4ECDC4" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M72 155 Q87 149 97 141" stroke="#7EDBFF" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M72 178 Q57 172 48 167" stroke="#4ECDC4" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <ellipse cx="72" cy="130" rx="22" ry="14" fill="#4ECDC4" opacity=".7"><animate attributeName="opacity" values=".55;.88;.55" dur="2.2s" repeatCount="indefinite"/></ellipse>
+    <ellipse cx="72" cy="136" rx="22" ry="6" fill="#0D0B1E" opacity=".3"/>
+    <circle cx="72" cy="128" r="8" fill="#9BFFE8" opacity=".5"/>
+    <circle cx="44" cy="147" r="11" fill="#7EDBFF" opacity=".6"><animate attributeName="opacity" values=".45;.85;.45" dur="2.7s" repeatCount="indefinite"/></circle>
+    <circle cx="97" cy="140" r="10" fill="#9B5DE5" opacity=".65"><animate attributeName="opacity" values=".5;.9;.5" dur="1.9s" repeatCount="indefinite"/></circle>
+    <circle cx="48" cy="166" r="6" fill="#4ECDC4" opacity=".5"><animate attributeName="opacity" values=".4;.72;.4" dur="3.4s" repeatCount="indefinite"/></circle>
+    <circle cx="54" cy="154" r="3" fill="#FFD84D" opacity=".9"/>
+    <circle cx="48" cy="149" r="2.5" fill="#FF6EC7" opacity=".8"/>
+    <circle cx="84" cy="147" r="2.5" fill="#7EDBFF" opacity=".9"/>
+  </g>
+  <!-- LEFT tiny ground sprouts -->
+  <g><animateTransform attributeName="transform" type="rotate" values="-5 32 210; 5 32 210; -5 32 210" dur="3.5s" begin="0.8s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <line x1="32" y1="210" x2="32" y2="190" stroke="#9B5DE5" stroke-width="2.5" stroke-linecap="round"/>
+    <ellipse cx="32" cy="187" rx="9" ry="6" fill="#9B5DE5" opacity=".7"/>
+    <circle cx="26" cy="185" r="3" fill="#C09AFF" opacity=".65"/>
+  </g>
+  <g><animateTransform attributeName="transform" type="rotate" values="5 18 210; -3 18 210; 5 18 210" dur="4.3s" begin="0.3s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <line x1="18" y1="210" x2="18" y2="196" stroke="#4ECDC4" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="18" cy="193" r="5" fill="#4ECDC4" opacity=".6"/>
+  </g>
+  <!-- RIGHT: Pink fan-tree (upward branching, totally different shape from left) -->
+  <g><animateTransform attributeName="transform" type="rotate"
+    values="2.5 528 210; -3 528 210; 2.5 528 210"
+    dur="4.2s" begin="1s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <line x1="528" y1="210" x2="528" y2="148" stroke="#FF6EC7" stroke-width="5.5" stroke-linecap="round"/>
+    <path d="M528 170 Q510 155 498 142" stroke="#FF6EC7" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M528 162 Q548 148 558 135" stroke="#FFD84D" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M528 180 Q515 172 508 164" stroke="#FF8FAB" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M528 175 Q542 170 550 163" stroke="#FFD84D" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <circle cx="528" cy="140" r="22" fill="#FF6EC7" opacity=".6"><animate attributeName="opacity" values=".5;.82;.5" dur="2.3s" repeatCount="indefinite"/></circle>
+    <circle cx="528" cy="140" r="14" fill="#FFD84D" opacity=".5"/>
+    <circle cx="528" cy="138" r="7" fill="white" opacity=".22"/>
+    <circle cx="498" cy="140" r="13" fill="#FF8FAB" opacity=".65"><animate attributeName="opacity" values=".5;.85;.5" dur="2.0s" repeatCount="indefinite"/></circle>
+    <circle cx="558" cy="134" r="11" fill="#FFD84D" opacity=".7"><animate attributeName="opacity" values=".6;.92;.6" dur="1.7s" repeatCount="indefinite"/></circle>
+    <circle cx="508" cy="162" r="7" fill="#FF6EC7" opacity=".55"><animate attributeName="opacity" values=".4;.75;.4" dur="3.2s" repeatCount="indefinite"/></circle>
+    <circle cx="550" cy="161" r="6" fill="#FFD84D" opacity=".5"><animate attributeName="opacity" values=".4;.7;.4" dur="2.8s" repeatCount="indefinite"/></circle>
+    <circle cx="515" cy="132" r="4" fill="white" opacity=".3"/>
+    <circle cx="540" cy="133" r="3" fill="white" opacity=".25"/>
+  </g>
+  <!-- RIGHT tiny ground sprouts (different style from left) -->
+  <g><animateTransform attributeName="transform" type="rotate" values="-3 565 210; 4 565 210; -3 565 210" dur="3.9s" begin="0.5s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <line x1="565" y1="210" x2="565" y2="192" stroke="#FFD84D" stroke-width="2.5" stroke-linecap="round"/>
+    <ellipse cx="565" cy="189" rx="8" ry="5" fill="#FFD84D" opacity=".7"/>
+    <circle cx="572" cy="187" r="3" fill="#FF6EC7" opacity=".65"/>
+  </g>
+  <g><animateTransform attributeName="transform" type="rotate" values="4 580 210; -3 580 210; 4 580 210" dur="5.0s" begin="1.2s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <line x1="580" y1="210" x2="580" y2="196" stroke="#FF6EC7" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="580" cy="193" r="4.5" fill="#FF6EC7" opacity=".65"/>
+  </g>
+  <!-- Central pod/bowl -->
   <ellipse cx="300" cy="220" rx="36" ry="9" fill="#4ECDC4" opacity=".18"/>
   <path d="M268 212 Q300 226 332 212 Q330 202 300 200 Q270 202 268 212 Z" fill="#100C28" stroke="#4ECDC4" stroke-width="2.5"/>
   <circle cx="287" cy="207" r="4.5" fill="#FFD84D"><animate attributeName="opacity" values=".8;1;.8" dur="1.5s" repeatCount="indefinite"/></circle>
   <circle cx="300" cy="205" r="4.5" fill="#FF6EC7"><animate attributeName="opacity" values="1;.7;1" dur="1.8s" repeatCount="indefinite"/></circle>
   <circle cx="313" cy="207" r="4.5" fill="#7EDBFF"><animate attributeName="opacity" values=".9;1;.9" dur="1.3s" repeatCount="indefinite"/></circle>
+  <!-- Wall screen -->
   <rect x="254" y="70" width="92" height="58" rx="8" fill="#1E1848" stroke="#7B5EA7" stroke-width="2"/>
   <circle cx="300" cy="97" r="14" fill="none" stroke="#4ECDC4" stroke-width="2.5" opacity=".7"/>
+  <path d="M292 97 Q300 85 308 97 Q300 109 292 97 Z" fill="#9B5DE5" opacity=".7"/>
+  <!-- Floating sparkles -->
+  <circle cx="185" cy="132" r="2" fill="#4ECDC4"><animate attributeName="cy" values="132;108;132" dur="4.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="4.5s" repeatCount="indefinite"/></circle>
+  <circle cx="415" cy="122" r="2" fill="#FF6EC7"><animate attributeName="cy" values="122;98;122" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="5s" repeatCount="indefinite"/></circle>
+  <circle cx="145" cy="158" r="1.5" fill="#FFD84D"><animate attributeName="cy" values="158;138;158" dur="3.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="3.8s" repeatCount="indefinite"/></circle>
+  <circle cx="455" cy="168" r="1.5" fill="#9B5DE5"><animate attributeName="cy" values="168;145;168" dur="4.3s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="4.3s" repeatCount="indefinite"/></circle>
 </svg>`,
+
+  // LEFT: Large purple mushroom-canopy tree (swaying)
+  // RIGHT: Blue crystalline spire-tree — angular, very different silhouette
   alien_meadow: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#0D1B3E"/>
-  <circle cx="45" cy="22" r="1.5" fill="white" opacity=".8"/><circle cx="118" cy="14" r="1" fill="white" opacity=".6"/>
-  <circle cx="198" cy="28" r="1.5" fill="white" opacity=".7"/><circle cx="310" cy="18" r="1" fill="white" opacity=".9"/>
-  <circle cx="425" cy="32" r="1.5" fill="white" opacity=".6"/><circle cx="505" cy="16" r="1" fill="white" opacity=".8"/>
+  <!-- 15 twinkling stars -->
+  <circle cx="25" cy="18" r="1.5" fill="white" opacity=".8"><animate attributeName="opacity" values=".8;.15;.8" dur="2.3s" repeatCount="indefinite"/></circle>
+  <circle cx="78" cy="12" r="1" fill="#FFE8C8" opacity=".7"><animate attributeName="opacity" values=".7;.1;.7" dur="3.8s" repeatCount="indefinite"/></circle>
+  <circle cx="145" cy="25" r="1.8" fill="white" opacity=".9"><animate attributeName="opacity" values=".9;.2;.9" dur="1.7s" repeatCount="indefinite"/></circle>
+  <circle cx="202" cy="14" r="1.2" fill="#B0E8FF" opacity=".75"><animate attributeName="opacity" values=".75;.1;.75" dur="4.4s" repeatCount="indefinite"/></circle>
+  <circle cx="265" cy="30" r="1" fill="white" opacity=".6"><animate attributeName="opacity" values=".6;.05;.6" dur="5.0s" repeatCount="indefinite"/></circle>
+  <circle cx="320" cy="16" r="1.4" fill="#FFD4EE" opacity=".8"><animate attributeName="opacity" values=".8;.2;.8" dur="2.6s" repeatCount="indefinite"/></circle>
+  <circle cx="375" cy="28" r="1.1" fill="white" opacity=".7"><animate attributeName="opacity" values=".7;.15;.7" dur="3.2s" repeatCount="indefinite"/></circle>
+  <circle cx="430" cy="15" r="1.6" fill="#C8FFD4" opacity=".8"><animate attributeName="opacity" values=".8;.2;.8" dur="2.1s" repeatCount="indefinite"/></circle>
+  <circle cx="488" cy="32" r="1" fill="white" opacity=".65"><animate attributeName="opacity" values=".65;.1;.65" dur="4.1s" repeatCount="indefinite"/></circle>
+  <circle cx="555" cy="22" r="1.3" fill="#B0E8FF" opacity=".75"><animate attributeName="opacity" values=".75;.15;.75" dur="3.5s" repeatCount="indefinite"/></circle>
+  <circle cx="110" cy="46" r="1" fill="#FFD4EE" opacity=".55"><animate attributeName="opacity" values=".55;.05;.55" dur="4.8s" repeatCount="indefinite"/></circle>
+  <circle cx="340" cy="44" r="1.2" fill="white" opacity=".6"><animate attributeName="opacity" values=".6;.1;.6" dur="2.9s" repeatCount="indefinite"/></circle>
+  <circle cx="510" cy="48" r="1" fill="#FFE8C8" opacity=".6"><animate attributeName="opacity" values=".6;.1;.6" dur="3.7s" repeatCount="indefinite"/></circle>
+  <circle cx="168" cy="42" r="1.3" fill="white" opacity=".7"><animate attributeName="opacity" values=".7;.15;.7" dur="2.4s" repeatCount="indefinite"/></circle>
+  <circle cx="52" cy="50" r="1" fill="#C8FFD4" opacity=".5"><animate attributeName="opacity" values=".5;.05;.5" dur="6.0s" repeatCount="indefinite"/></circle>
+  <!-- LEFT: Warm moon -->
   <circle cx="88" cy="56" r="38" fill="#E8D5A3"/>
-  <circle cx="516" cy="44" r="22" fill="#4ECDC4" opacity=".72"/>
+  <circle cx="78" cy="46" r="6" fill="#D4C090" opacity=".5"/>
+  <circle cx="99" cy="62" r="4" fill="#D4C090" opacity=".4"/>
+  <circle cx="72" cy="68" r="3" fill="#D4C090" opacity=".35"/>
+  <!-- RIGHT: Teal ringed planet (different from warm moon) -->
+  <circle cx="516" cy="44" r="22" fill="#2A8A8A"/>
+  <ellipse cx="516" cy="44" rx="32" ry="9" fill="none" stroke="#4ECDC4" stroke-width="2.5" opacity=".75"/>
+  <circle cx="508" cy="38" r="5" fill="#3ABFBD" opacity=".5"/>
+  <circle cx="522" cy="50" r="3" fill="#3ABFBD" opacity=".4"/>
+  <!-- Ground layers -->
   <path d="M0 208 C90 193 195 213 300 200 C405 187 510 212 600 200 L600 300 L0 300 Z" fill="#1A3D2A"/>
   <path d="M0 224 C85 210 168 228 255 215 C355 200 455 226 600 210 L600 300 L0 300 Z" fill="#12302A"/>
-  <line x1="88" y1="208" x2="88" y2="128" stroke="#4A2D6E" stroke-width="8" stroke-linecap="round"/>
-  <circle cx="88" cy="100" r="38" fill="#8B3DB8"/>
-  <circle cx="88" cy="80" r="22" fill="#9B5DE5"/>
-  <circle cx="70" cy="92" r="5" fill="#FF6EC7" opacity=".9"><animate attributeName="opacity" values=".7;1;.7" dur="1.8s" repeatCount="indefinite"/></circle>
-  <circle cx="98" cy="105" r="5" fill="#FFD84D" opacity=".9"><animate attributeName="opacity" values=".8;1;.8" dur="2.2s" repeatCount="indefinite"/></circle>
-  <line x1="510" y1="208" x2="510" y2="148" stroke="#2A4A6E" stroke-width="7" stroke-linecap="round"/>
-  <circle cx="510" cy="120" r="34" fill="#2E6E9E"/>
-  <circle cx="510" cy="100" r="18" fill="#4ECDC4" opacity=".75"/>
+  <path d="M0 208 H600" stroke="#4ECDC4" stroke-width="1.5" opacity=".35"/>
+  <!-- LEFT: Purple mushroom-canopy tree (sways gently) -->
+  <g><animateTransform attributeName="transform" type="rotate"
+    values="-2 88 208; 2.5 88 208; -2 88 208"
+    dur="5.5s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <line x1="88" y1="208" x2="88" y2="126" stroke="#4A2D6E" stroke-width="9" stroke-linecap="round"/>
+    <path d="M88 148 C68 132 52 112 38 92" stroke="#4A2D6E" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <path d="M88 158 C110 140 128 120 145 98" stroke="#5A3D7E" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M88 180 C74 172 65 168" stroke="#4A2D6E" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <circle cx="55" cy="88" r="28" fill="#6B2D8E"/>
+    <circle cx="88" cy="100" r="38" fill="#8B3DB8"/>
+    <circle cx="122" cy="92" r="26" fill="#7B2D9E"/>
+    <circle cx="88" cy="80" r="22" fill="#9B5DE5"/>
+    <circle cx="70" cy="92" r="5" fill="#FF6EC7" opacity=".9"><animate attributeName="opacity" values=".7;1;.7" dur="1.8s" repeatCount="indefinite"/></circle>
+    <circle cx="98" cy="105" r="5" fill="#FFD84D" opacity=".9"><animate attributeName="opacity" values=".8;1;.8" dur="2.2s" repeatCount="indefinite"/></circle>
+    <circle cx="108" cy="88" r="4" fill="#7EDBFF" opacity=".9"><animate attributeName="opacity" values=".9;1;.9" dur="1.6s" repeatCount="indefinite"/></circle>
+    <circle cx="65" cy="78" r="3.5" fill="#C09AFF" opacity=".8"><animate attributeName="opacity" values=".7;1;.7" dur="2.9s" repeatCount="indefinite"/></circle>
+    <circle cx="64" cy="167" r="7" fill="#9B5DE5" opacity=".6"><animate attributeName="opacity" values=".5;.8;.5" dur="3.5s" repeatCount="indefinite"/></circle>
+  </g>
+  <!-- LEFT ground clump -->
+  <g><animateTransform attributeName="transform" type="rotate" values="-5 118 208; 4 118 208; -5 118 208" dur="3.2s" begin="0.6s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <line x1="118" y1="208" x2="118" y2="193" stroke="#6B2D8E" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="118" cy="191" r="7" fill="#9B5DE5" opacity=".7"/>
+    <circle cx="112" cy="189" r="3" fill="#FF6EC7" opacity=".8"/>
+    <circle cx="124" cy="189" r="3" fill="#FFD84D" opacity=".8"/>
+  </g>
+  <!-- RIGHT: Crystalline spire-tree (angular, very different from left mushroom) -->
+  <g><animateTransform attributeName="transform" type="rotate"
+    values="2.5 510 208; -2 510 208; 2.5 510 208"
+    dur="4.8s" begin="1.5s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <line x1="510" y1="208" x2="510" y2="148" stroke="#2A4A6E" stroke-width="7" stroke-linecap="round"/>
+    <path d="M510 162 C488 147 472 130 456 110" stroke="#2A4A6E" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M510 167 C532 150 548 132 562 112" stroke="#1E3A5E" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <!-- Left crystal spires (pointed, not round like left tree) -->
+    <path d="M458 108 L450 86 L456 65 L462 86 Z" fill="#1E5E8E" opacity=".9"/>
+    <path d="M448 104 L440 80 L447 60 L453 80 Z" fill="#2E6E9E" opacity=".85"/>
+    <circle cx="456" cy="65" r="5" fill="#7EDBFF" opacity=".9"><animate attributeName="opacity" values=".7;1;.7" dur="2.1s" repeatCount="indefinite"/></circle>
+    <circle cx="447" cy="60" r="4" fill="#4ECDC4" opacity=".85"><animate attributeName="opacity" values=".75;1;.75" dur="1.8s" repeatCount="indefinite"/></circle>
+    <!-- Center tall spire -->
+    <path d="M510 118 L502 92 L510 70 L518 92 Z" fill="#2E6E9E" opacity=".9"/>
+    <circle cx="510" cy="70" r="8" fill="#4ECDC4" opacity=".9"><animate attributeName="opacity" values=".7;1;.7" dur="2.5s" repeatCount="indefinite"/></circle>
+    <!-- Right crystal spires -->
+    <path d="M562 110 L554 86 L560 66 L567 86 Z" fill="#3E8EBE" opacity=".88"/>
+    <path d="M573 106 L566 84 L573 66 L580 84 Z" fill="#2E7EAE" opacity=".8"/>
+    <circle cx="560" cy="66" r="5" fill="#7EDBFF" opacity=".85"><animate attributeName="opacity" values=".7;1;.7" dur="1.9s" repeatCount="indefinite"/></circle>
+    <circle cx="573" cy="66" r="4" fill="#4ECDC4" opacity=".8"><animate attributeName="opacity" values=".65;.95;.65" dur="2.7s" repeatCount="indefinite"/></circle>
+  </g>
+  <!-- RIGHT ground clump (angular leaves, not round like left) -->
+  <g><animateTransform attributeName="transform" type="rotate" values="-4 478 208; 5 478 208; -4 478 208" dur="3.8s" begin="0.3s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <line x1="478" y1="208" x2="478" y2="195" stroke="#2A4A6E" stroke-width="3" stroke-linecap="round"/>
+    <path d="M478 195 L469 183 L478 188 L487 183 Z" fill="#2E6E9E" opacity=".8"/>
+    <circle cx="478" cy="183" r="3" fill="#4ECDC4" opacity=".9"/>
+  </g>
+  <!-- Center dotted path flowers -->
+  <path d="M185 208 Q242 175 300 188 Q358 201 415 208" stroke="#4ECDC4" stroke-width="2" fill="none" opacity=".4" stroke-dasharray="8 5"/>
   <circle cx="242" cy="180" r="6" fill="#FFD84D"><animate attributeName="opacity" values=".7;1;.7" dur="2s" repeatCount="indefinite"/></circle>
   <circle cx="300" cy="176" r="6" fill="#FF6EC7"><animate attributeName="opacity" values=".8;1;.8" dur="2.3s" repeatCount="indefinite"/></circle>
   <circle cx="358" cy="182" r="6" fill="#7EDBFF"><animate attributeName="opacity" values=".75;1;.75" dur="1.8s" repeatCount="indefinite"/></circle>
+  <!-- Floating particles -->
+  <circle cx="158" cy="158" r="2" fill="#FFD84D"><animate attributeName="cy" values="158;138;158" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="3s" repeatCount="indefinite"/></circle>
+  <circle cx="352" cy="148" r="2" fill="#4ECDC4"><animate attributeName="cy" values="148;128;148" dur="4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".7;0;.7" dur="4s" repeatCount="indefinite"/></circle>
+  <circle cx="442" cy="162" r="2" fill="#FF6EC7"><animate attributeName="cy" values="162;142;162" dur="3.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="3.5s" repeatCount="indefinite"/></circle>
+  <circle cx="200" cy="145" r="1.5" fill="#C09AFF"><animate attributeName="cy" values="145;125;145" dur="4.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="4.8s" repeatCount="indefinite"/></circle>
 </svg>`,
+
+  // LEFT stall: Pink/rose, rounded awning, sphere wares
+  // RIGHT stall: Teal, pointed angular awning, triangular wares
   trading_post: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#FFF0D0"/>
+  <!-- Sun with uneven rays -->
   <circle cx="300" cy="34" r="28" fill="#FFD84D"/>
+  <circle cx="300" cy="34" r="20" fill="#FFE566" opacity=".6"/>
+  <g stroke="#FFBE00" stroke-linecap="round" stroke-width="3" opacity=".55">
+    <line x1="300" y1="0" x2="300" y2="8"/><line x1="323" y1="5" x2="318" y2="13"/>
+    <line x1="342" y1="17" x2="335" y2="24"/><line x1="350" y1="34" x2="341" y2="34"/>
+    <line x1="342" y1="51" x2="335" y2="44"/><line x1="277" y1="5" x2="282" y2="13"/>
+    <line x1="258" y1="17" x2="265" y2="24"/><line x1="250" y1="34" x2="259" y2="34"/>
+    <line x1="258" y1="51" x2="265" y2="44"/>
+  </g>
+  <circle cx="300" cy="34" r="36" fill="#FFD84D" opacity=".1"><animate attributeName="r" values="32;44;32" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values=".1;.03;.1" dur="3s" repeatCount="indefinite"/></circle>
+  <!-- Ground (different textures left vs right) -->
   <rect x="0" y="210" width="600" height="90" fill="#D4A574"/>
   <path d="M0 210 H600" stroke="#B8865A" stroke-width="3" opacity=".6"/>
-  <rect x="28" y="118" width="158" height="92" rx="8" fill="#FF8FAB"/>
-  <rect x="35" y="125" width="144" height="78" rx="6" fill="#FFAFC4"/>
-  <path d="M20 118 L28 86 L186 86 L194 118 Z" fill="#E63980"/>
-  <circle cx="72" cy="165" r="11" fill="#7EDBFF" stroke="#4ECDC4" stroke-width="2"/><circle cx="72" cy="165" r="6" fill="#4ECDC4"/>
-  <circle cx="107" cy="162" r="11" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/><circle cx="107" cy="162" r="6" fill="#F4C300"/>
-  <circle cx="142" cy="165" r="11" fill="#9B5DE5" stroke="#7B3DB5" stroke-width="2"/><circle cx="142" cy="165" r="6" fill="#8B3DB5"/>
-  <rect x="414" y="118" width="158" height="92" rx="8" fill="#88E0EF"/>
-  <path d="M406 118 L414 86 L572 86 L580 118 Z" fill="#4ECDC4"/>
-  <line x1="300" y1="130" x2="300" y2="208" stroke="#C89B00" stroke-width="5" stroke-linecap="round"/>
-  <line x1="240" y1="145" x2="360" y2="145" stroke="#C89B00" stroke-width="4" stroke-linecap="round"/>
-  <circle cx="300" cy="128" r="14" fill="#FFD84D" opacity=".88"><animate attributeName="opacity" values=".7;1;.7" dur="2s" repeatCount="indefinite"/></circle>
+  <path d="M0 222 Q50 217 100 224 Q150 218 200 225" stroke="#C49050" stroke-width="1.5" fill="none" opacity=".4"/>
+  <path d="M400 224 Q450 218 500 225 Q550 219 600 222" stroke="#C49050" stroke-width="1.5" fill="none" opacity=".4"/>
+  <!-- LEFT STALL: Pink, rounded awning, sphere/globe wares -->
+  <rect x="25" y="118" width="160" height="92" rx="10" fill="#FF8FAB"/>
+  <rect x="33" y="126" width="144" height="78" rx="7" fill="#FFAFC4"/>
+  <!-- Rounded awning (not pointed) -->
+  <path d="M18 118 Q107 76 196 118 Z" fill="#E63980"/>
+  <path d="M18 118 Q107 84 196 118" fill="#FF4E8C" opacity=".45"/>
+  <!-- Round globe wares hanging -->
+  <circle cx="62" cy="145" r="12" fill="#7EDBFF" stroke="#4ECDC4" stroke-width="2"/>
+  <circle cx="62" cy="145" r="7" fill="#4ECDC4"/>
+  <circle cx="107" cy="142" r="12" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/>
+  <circle cx="107" cy="142" r="7" fill="#F4C300"/>
+  <circle cx="152" cy="145" r="12" fill="#C09AFF" stroke="#7B3DB5" stroke-width="2"/>
+  <circle cx="152" cy="145" r="7" fill="#9B5DE5"/>
+  <!-- Shelf with round items -->
+  <rect x="33" y="175" width="144" height="10" rx="3" fill="#E6598A" opacity=".7"/>
+  <circle cx="55" cy="178" r="7" fill="#FFD84D"/><circle cx="78" cy="178" r="6" fill="#7EDBFF"/>
+  <circle cx="100" cy="178" r="7" fill="#FF8FAB"/><circle cx="122" cy="178" r="5" fill="#C09AFF"/>
+  <circle cx="143" cy="178" r="7" fill="#FFD84D"/><circle cx="163" cy="178" r="5" fill="#7EDBFF"/>
+  <!-- RIGHT STALL: Teal, pointed angular awning, triangular wares -->
+  <rect x="415" y="118" width="160" height="92" rx="10" fill="#88E0EF"/>
+  <rect x="423" y="126" width="144" height="78" rx="7" fill="#AAE8F5"/>
+  <!-- Pointed angular awning (very different from left's rounded) -->
+  <path d="M408 118 L492 80 L576 118 Z" fill="#4ECDC4"/>
+  <path d="M408 118 L492 88 L576 118" fill="#3ABFBD" opacity=".4"/>
+  <!-- Triangular wares hanging -->
+  <polygon points="455,162 463,146 471,162" fill="#FF6EC7" stroke="#D44A9E" stroke-width="1.5"/>
+  <polygon points="489,160 497,144 505,160" fill="#FFD84D" stroke="#C89B00" stroke-width="1.5"/>
+  <polygon points="523,162 531,146 539,162" fill="#6BCB77" stroke="#3E9F4E" stroke-width="1.5"/>
+  <!-- Shelf with angular items -->
+  <rect x="423" y="175" width="144" height="10" rx="3" fill="#3ABFBD" opacity=".7"/>
+  <path d="M440 185 L447 173 L454 185 Z" fill="#FF6EC7"/>
+  <path d="M460 185 L469 173 L478 185 Z" fill="#FFD84D"/>
+  <path d="M482 185 L491 173 L500 185 Z" fill="#9B5DE5"/>
+  <path d="M502 185 L509 173 L516 185 Z" fill="#FF8FAB"/>
+  <rect x="520" y="176" width="12" height="9" rx="2" fill="#6BCB77"/>
+  <rect x="537" y="176" width="12" height="9" rx="2" fill="#FFD84D"/>
+  <!-- CENTER: Balance scale -->
+  <line x1="300" y1="128" x2="300" y2="208" stroke="#C89B00" stroke-width="5" stroke-linecap="round"/>
+  <rect x="279" y="208" width="42" height="8" rx="4" fill="#C89B00"/>
+  <line x1="238" y1="143" x2="362" y2="143" stroke="#C89B00" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="300" cy="143" r="7" fill="#FFD84D" stroke="#C89B00" stroke-width="2"/>
+  <!-- Left pan with round items -->
+  <path d="M238 143 Q248 160 258 143" stroke="#C89B00" stroke-width="2.5" fill="none"/>
+  <ellipse cx="248" cy="160" rx="18" ry="5" fill="#C89B00" opacity=".35"/>
+  <circle cx="243" cy="158" r="4" fill="#7EDBFF" opacity=".85"/>
+  <circle cx="253" cy="158" r="4" fill="#FFD84D" opacity=".85"/>
+  <!-- Right pan with triangular items -->
+  <path d="M362 143 Q352 160 342 143" stroke="#C89B00" stroke-width="2.5" fill="none"/>
+  <ellipse cx="352" cy="160" rx="18" ry="5" fill="#C89B00" opacity=".35"/>
+  <path d="M345 162 L352 150 L359 162 Z" fill="#FF6EC7" opacity=".9"/>
+  <!-- Scale glow -->
+  <circle cx="300" cy="128" r="16" fill="#FFD84D" opacity=".7"><animate attributeName="opacity" values=".6;1;.6" dur="2s" repeatCount="indefinite"/></circle>
+  <circle cx="300" cy="128" r="28" fill="#FFD84D" opacity=".08"><animate attributeName="r" values="20;32;20" dur="2s" repeatCount="indefinite"/></circle>
 </svg>`,
+
+  // LEFT: Stepped dais + ornate throne (char1 elevated)
+  // RIGHT: Tall ceremonial torch-pillar (different vertical structure)
   throne_room: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#1A0E30"/>
   <path d="M0 300 L0 80 Q0 30 60 30 L540 30 Q600 30 600 80 L600 300 Z" fill="#22194A" opacity=".7"/>
+  <!-- Faint stars through high windows -->
+  <circle cx="130" cy="45" r="1" fill="white" opacity=".5"><animate attributeName="opacity" values=".5;.1;.5" dur="3.5s" repeatCount="indefinite"/></circle>
+  <circle cx="220" cy="35" r="1.2" fill="#D4C8FF" opacity=".6"><animate attributeName="opacity" values=".6;.1;.6" dur="2.8s" repeatCount="indefinite"/></circle>
+  <circle cx="380" cy="38" r="1" fill="white" opacity=".5"><animate attributeName="opacity" values=".5;.1;.5" dur="4.2s" repeatCount="indefinite"/></circle>
+  <circle cx="470" cy="44" r="1.1" fill="#D4C8FF" opacity=".55"><animate attributeName="opacity" values=".55;.1;.55" dur="3.1s" repeatCount="indefinite"/></circle>
+  <!-- LEFT: Stepped dais (4 steps, each narrower going up) -->
   <rect x="0" y="196" width="268" height="14" rx="2" fill="#3A2868"/>
   <rect x="0" y="184" width="248" height="12" rx="2" fill="#4A3878"/>
-  <rect x="0" y="172" width="236" height="12" rx="2" fill="#5A4888"/>
-  <path d="M0 172 H236" stroke="#9B5DE5" stroke-width="2.5" opacity=".7"/>
-  <rect x="132" y="118" width="40" height="54" rx="4" fill="#6B4E97" stroke="#9B5DE5" stroke-width="2"/>
-  <path d="M148 172 L130 118 L172 118 Z" fill="#7B5EA7" stroke="#9B5DE5" stroke-width="2"/>
-  <circle cx="152" cy="112" r="11" fill="#FFD84D" opacity=".95"><animate attributeName="opacity" values=".78;1;.78" dur="1.5s" repeatCount="indefinite"/></circle>
+  <rect x="0" y="172" width="228" height="12" rx="2" fill="#5A4888"/>
+  <rect x="0" y="162" width="200" height="10" rx="2" fill="#6A5898"/>
+  <path d="M0 162 H200" stroke="#9B5DE5" stroke-width="2" opacity=".6"/>
+  <path d="M0 172 H228" stroke="#9B5DE5" stroke-width="2" opacity=".6"/>
+  <path d="M0 184 H248" stroke="#9B5DE5" stroke-width="2.5" opacity=".7"/>
+  <ellipse cx="100" cy="163" rx="88" ry="5" fill="#9B5DE5" opacity=".08"/>
+  <path d="M228 172 L268 196 L268 210 L228 184 Z" fill="#3A2868"/>
+  <!-- Throne at top of steps -->
+  <rect x="130" y="120" width="42" height="42" rx="4" fill="#6B4E97" stroke="#9B5DE5" stroke-width="2"/>
+  <path d="M148 120 L130 78 L172 78 L154 120 Z" fill="#7B5EA7" stroke="#9B5DE5" stroke-width="2"/>
+  <!-- Crown on throne back -->
+  <path d="M130 78 L134 66 L141 75 L151 63 L161 75 L168 66 L172 78 Z" fill="#FFD84D" opacity=".9"/>
+  <circle cx="151" cy="92" r="14" fill="#FFD84D" opacity=".9"><animate attributeName="opacity" values=".7;1;.7" dur="1.8s" repeatCount="indefinite"/></circle>
+  <circle cx="151" cy="92" r="24" fill="#FFD84D" opacity=".08"><animate attributeName="r" values="18;28;18" dur="1.8s" repeatCount="indefinite"/></circle>
+  <rect x="128" y="148" width="11" height="14" rx="3" fill="#7B5EA7"/>
+  <rect x="163" y="148" width="11" height="14" rx="3" fill="#7B5EA7"/>
+  <!-- LEFT carpet glow -->
+  <ellipse cx="151" cy="163" rx="52" ry="4" fill="#9B5DE5" opacity=".1"/>
+  <!-- Floor -->
   <rect x="0" y="210" width="600" height="90" fill="#1E1540"/>
   <path d="M0 210 H600" stroke="#9B5DE5" stroke-width="2" opacity=".4"/>
-  <circle cx="320" cy="145" r="2" fill="#9B5DE5"><animate attributeName="cy" values="145;120;145" dur="4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="4s" repeatCount="indefinite"/></circle>
-  <circle cx="450" cy="162" r="1.5" fill="#4ECDC4"><animate attributeName="cy" values="162;137;162" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="5s" repeatCount="indefinite"/></circle>
+  <!-- RIGHT: Tall torch-pillar (single tall structure, totally different from stairs on left) -->
+  <rect x="442" y="80" width="22" height="130" rx="5" fill="#2E2058" stroke="#7B5EA7" stroke-width="2"/>
+  <rect x="434" y="76" width="38" height="12" rx="4" fill="#3A2868" stroke="#9B5DE5" stroke-width="1.5"/>
+  <rect x="434" y="208" width="38" height="8" rx="3" fill="#3A2868"/>
+  <rect x="442" y="112" width="22" height="4" rx="2" fill="#4A3878"/>
+  <rect x="442" y="144" width="22" height="4" rx="2" fill="#4A3878"/>
+  <rect x="442" y="176" width="22" height="4" rx="2" fill="#4A3878"/>
+  <!-- Flame at pillar top -->
+  <path d="M453 74 Q446 58 452 44 Q455 37 453 28 Q463 42 460 52 Q467 40 462 28 Q471 44 465 58 Q463 68 453 74 Z" fill="#FF8C00" opacity=".85"/>
+  <path d="M453 74 Q449 60 453 48 Q456 42 453 36 Q461 48 457 58 Q453 68 453 74 Z" fill="#FFD84D" opacity=".8"/>
+  <path d="M453 74 Q451 64 453 54 Q455 60 453 74 Z" fill="white" opacity=".4"/>
+  <circle cx="453" cy="48" r="20" fill="#FF8C00" opacity=".12"><animate attributeName="r" values="16;26;16" dur="1.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".12;.04;.12" dur="1.5s" repeatCount="indefinite"/></circle>
+  <circle cx="453" cy="48" r="10" fill="#FFD84D" opacity=".22"><animate attributeName="opacity" values=".22;.08;.22" dur="0.9s" repeatCount="indefinite"/></circle>
+  <!-- Second shorter decorative pillar further right -->
+  <rect x="506" y="100" width="18" height="110" rx="4" fill="#2A1E54" stroke="#7B5EA7" stroke-width="1.5"/>
+  <rect x="499" y="95" width="32" height="10" rx="3" fill="#3A2868" stroke="#9B5DE5" stroke-width="1"/>
+  <circle cx="515" cy="90" r="7" fill="#9B5DE5" opacity=".7"><animate attributeName="opacity" values=".5;.9;.5" dur="3.2s" repeatCount="indefinite"/></circle>
+  <!-- Floating embers near torch (right side, more) -->
+  <circle cx="440" cy="168" r="2" fill="#FF8C00"><animate attributeName="cy" values="168;140;168" dur="3.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="3.5s" repeatCount="indefinite"/></circle>
+  <circle cx="456" cy="175" r="1.5" fill="#FFD84D"><animate attributeName="cy" values="175;148;175" dur="4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="4s" repeatCount="indefinite"/></circle>
+  <circle cx="466" cy="162" r="2" fill="#FF8C00"><animate attributeName="cy" values="162;134;162" dur="3.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".55;0;.55" dur="3.2s" repeatCount="indefinite"/></circle>
+  <!-- Left side magic particles (fewer, purple) -->
+  <circle cx="320" cy="155" r="2" fill="#9B5DE5"><animate attributeName="cy" values="155;130;155" dur="4.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="4.2s" repeatCount="indefinite"/></circle>
+  <circle cx="342" cy="168" r="1.5" fill="#C09AFF"><animate attributeName="cy" values="168;142;168" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="5s" repeatCount="indefinite"/></circle>
+  <!-- Window/tapestry on left wall -->
+  <rect x="100" y="52" width="100" height="66" rx="4" fill="#2A1848" stroke="#9B5DE5" stroke-width="2"/>
+  <circle cx="150" cy="82" r="18" fill="none" stroke="#FFD84D" stroke-width="2.5" opacity=".7"/>
+  <path d="M142 82 L150 64 L158 82 L150 95 Z" fill="#FFD84D" opacity=".55"/>
+  <rect x="108" y="60" width="34" height="22" rx="2" fill="#3A2060" opacity=".8"/>
+  <rect x="158" y="60" width="34" height="22" rx="2" fill="#1E3060" opacity=".8"/>
+  <rect x="108" y="88" width="34" height="22" rx="2" fill="#1E3060" opacity=".8"/>
+  <rect x="158" y="88" width="34" height="22" rx="2" fill="#3A2060" opacity=".8"/>
 </svg>`,
+
+  // LEFT: Purple/pink crystal cluster (5 varied crystals)
+  // RIGHT: Teal/gold crystal cluster (different heights, different colors)
   crystal_cave: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#0A0A18"/>
-  <path d="M0 0 L0 62 Q42 92 52 62 Q62 96 82 60 Q102 93 122 56 Q142 91 162 59 Q178 89 198 56 Q218 87 238 59 Q254 86 274 56 Q292 85 312 56 Q330 83 350 53 Q370 83 390 56 Q407 86 427 59 Q447 89 467 56 Q484 89 504 63 Q524 93 544 63 Q560 91 577 66 Q591 93 600 61 L600 0 Z" fill="#1A1530"/>
+  <!-- Jagged stalactite ceiling -->
+  <path d="M0 0 L0 62 Q25 88 35 62 Q45 92 58 55 Q70 95 88 54 Q108 95 128 52 Q148 94 165 55 Q182 92 200 52 Q220 92 240 55 Q256 90 274 50 Q292 88 312 52 Q330 87 350 48 Q372 86 392 52 Q410 90 430 55 Q450 93 468 50 Q485 92 506 60 Q524 95 540 60 Q558 93 572 65 Q587 95 600 62 L600 0 Z" fill="#1A1530"/>
+  <!-- Drips from stalactites — different colors each side -->
+  <line x1="38" y1="88" x2="38" y2="110" stroke="#9B5DE5" stroke-width="2" opacity=".4" stroke-linecap="round"/>
+  <line x1="90" y1="93" x2="90" y2="116" stroke="#C09AFF" stroke-width="1.8" opacity=".35" stroke-linecap="round"/>
+  <line x1="165" y1="90" x2="165" y2="114" stroke="#7EDBFF" stroke-width="2" opacity=".4" stroke-linecap="round"/>
+  <line x1="314" y1="86" x2="314" y2="110" stroke="#9B5DE5" stroke-width="2" opacity=".38" stroke-linecap="round"/>
+  <line x1="393" y1="88" x2="393" y2="112" stroke="#4ECDC4" stroke-width="1.8" opacity=".35" stroke-linecap="round"/>
+  <line x1="470" y1="92" x2="470" y2="118" stroke="#7EDBFF" stroke-width="2" opacity=".4" stroke-linecap="round"/>
+  <line x1="542" y1="88" x2="542" y2="112" stroke="#FFD84D" stroke-width="1.5" opacity=".3" stroke-linecap="round"/>
+  <!-- Floor -->
   <rect x="0" y="210" width="600" height="90" fill="#0D0D20"/>
-  <path d="M0 210 C60 205 120 215 180 210 C250 205 340 215 420 210 C490 205 550 215 600 210" stroke="#4ECDC4" stroke-width="2" fill="none" opacity=".35"/>
-  <g transform="translate(50,148)">
-    <path d="M0 62 L-9 20 L0 0 L9 20 Z" fill="#9B5DE5" opacity=".88"/>
-    <circle cx="0" cy="0" r="4" fill="#C09AFF" opacity=".82"><animate attributeName="opacity" values=".6;1;.6" dur="2.3s" repeatCount="indefinite"/></circle>
+  <path d="M0 210 C60 205 120 215 180 210 C250 205 340 215 420 210 C490 205 550 215 600 210" stroke="#4ECDC4" stroke-width="2" fill="none" opacity=".3"/>
+  <!-- CENTER: Glowing reflective pool -->
+  <ellipse cx="300" cy="220" rx="72" ry="14" fill="#4ECDC4" opacity=".11"/>
+  <ellipse cx="300" cy="218" rx="56" ry="10" fill="#7EDBFF" opacity=".09"><animate attributeName="rx" values="52;64;52" dur="4s" repeatCount="indefinite"/></ellipse>
+  <!-- LEFT CLUSTER: Purple/pink — 5 crystals, varied heights -->
+  <!-- Tallest: thin, dark purple -->
+  <g transform="translate(55,148)">
+    <path d="M0 62 L-8 18 L0 0 L8 18 Z" fill="#7B3DA5" opacity=".92"/>
+    <path d="M0 62 L-3 0 L3 0 Z" fill="#C09AFF" opacity=".5"/>
+    <circle cx="0" cy="0" r="5" fill="#C09AFF" opacity=".85"><animate attributeName="opacity" values=".65;1;.65" dur="2.4s" repeatCount="indefinite"/></circle>
   </g>
-  <g transform="translate(510,146)">
-    <path d="M0 64 L-9 22 L0 0 L9 22 Z" fill="#4ECDC4" opacity=".88"/>
-    <circle cx="0" cy="0" r="4" fill="#9BFFE8" opacity=".82"><animate attributeName="opacity" values=".6;1;.6" dur="2.1s" repeatCount="indefinite"/></circle>
+  <!-- Medium-wide, medium purple -->
+  <g transform="translate(76,148)">
+    <path d="M0 62 L-11 25 L0 4 L11 25 Z" fill="#9B5DE5" opacity=".88"/>
+    <path d="M0 62 L-5 4 L5 4 Z" fill="#D4AAFF" opacity=".45"/>
+    <circle cx="0" cy="4" r="4" fill="#D4AAFF" opacity=".8"><animate attributeName="opacity" values=".6;1;.6" dur="1.9s" repeatCount="indefinite"/></circle>
   </g>
-  <path d="M278 210 L270 163 L278 145 L286 163 Z" fill="#FF6EC7" opacity=".55"/>
-  <path d="M300 210 L293 168 L301 152 L308 170 Z" fill="#9B5DE5" opacity=".52"/>
-  <path d="M322 210 L314 166 L324 150 L332 168 Z" fill="#4ECDC4" opacity=".55"/>
-  <circle cx="180" cy="135" r="1.5" fill="#9B5DE5"><animate attributeName="cy" values="135;115;135" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="5s" repeatCount="indefinite"/></circle>
-  <circle cx="380" cy="125" r="1.5" fill="#4ECDC4"><animate attributeName="cy" values="125;105;125" dur="4.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="4.5s" repeatCount="indefinite"/></circle>
+  <!-- Medium-tall, pink tinge -->
+  <g transform="translate(42,148)">
+    <path d="M0 62 L-6 22 L0 6 L6 22 Z" fill="#8B3DA5" opacity=".85"/>
+    <path d="M0 62 L-3 6 L3 6 Z" fill="#FF8FAB" opacity=".4"/>
+    <circle cx="0" cy="6" r="3.5" fill="#FF8FAB" opacity=".75"><animate attributeName="opacity" values=".55;.92;.55" dur="3.1s" repeatCount="indefinite"/></circle>
+  </g>
+  <!-- Short wide, bright pink -->
+  <g transform="translate(96,148)">
+    <path d="M0 62 L-13 32 L0 14 L13 32 Z" fill="#B04EC5" opacity=".82"/>
+    <path d="M0 62 L-6 14 L6 14 Z" fill="#FF6EC7" opacity=".5"/>
+    <circle cx="0" cy="14" r="5" fill="#FF6EC7" opacity=".82"><animate attributeName="opacity" values=".65;1;.65" dur="2.1s" repeatCount="indefinite"/></circle>
+  </g>
+  <!-- Tiny, far left -->
+  <g transform="translate(22,148)">
+    <path d="M0 62 L-5 36 L0 22 L5 36 Z" fill="#6B2D8E" opacity=".7"/>
+    <circle cx="0" cy="22" r="3" fill="#C09AFF" opacity=".6"><animate attributeName="opacity" values=".45;.82;.45" dur="2.8s" repeatCount="indefinite"/></circle>
+  </g>
+  <ellipse cx="62" cy="212" rx="54" ry="7" fill="#9B5DE5" opacity=".1"/>
+  <!-- RIGHT CLUSTER: Teal/aqua/gold — different heights & colors from left -->
+  <!-- Very tall, teal -->
+  <g transform="translate(512,148)">
+    <path d="M0 62 L-7 14 L0 0 L7 14 Z" fill="#2A8A8A" opacity=".92"/>
+    <path d="M0 62 L-3 0 L3 0 Z" fill="#9BFFE8" opacity=".5"/>
+    <circle cx="0" cy="0" r="5" fill="#9BFFE8" opacity=".85"><animate attributeName="opacity" values=".65;1;.65" dur="2.2s" repeatCount="indefinite"/></circle>
+  </g>
+  <!-- Short wide, gold -->
+  <g transform="translate(532,148)">
+    <path d="M0 62 L-14 30 L0 10 L14 30 Z" fill="#5A7A22" opacity=".8"/>
+    <path d="M0 62 L-6 10 L6 10 Z" fill="#FFD84D" opacity=".5"/>
+    <circle cx="0" cy="10" r="6" fill="#FFD84D" opacity=".85"><animate attributeName="opacity" values=".7;1;.7" dur="1.8s" repeatCount="indefinite"/></circle>
+  </g>
+  <!-- Medium, slightly angled, aqua -->
+  <g transform="translate(494,148)">
+    <path d="M4 62 L-6 24 L4 5 L13 24 Z" fill="#3ABFBC" opacity=".88"/>
+    <path d="M4 62 L-1 5 L9 5 Z" fill="#9BFFE8" opacity=".45"/>
+    <circle cx="4" cy="5" r="4" fill="#9BFFE8" opacity=".8"><animate attributeName="opacity" values=".6;1;.6" dur="2.5s" repeatCount="indefinite"/></circle>
+  </g>
+  <!-- Tall dark teal -->
+  <g transform="translate(550,148)">
+    <path d="M0 62 L-9 20 L0 3 L9 20 Z" fill="#1E6A6A" opacity=".88"/>
+    <path d="M0 62 L-4 3 L4 3 Z" fill="#4ECDC4" opacity=".45"/>
+    <circle cx="0" cy="3" r="4.5" fill="#4ECDC4" opacity=".8"><animate attributeName="opacity" values=".62;.95;.62" dur="3.0s" repeatCount="indefinite"/></circle>
+  </g>
+  <!-- Tiny gold, far right -->
+  <g transform="translate(572,148)">
+    <path d="M0 62 L-5 36 L0 24 L5 36 Z" fill="#6A7A1A" opacity=".7"/>
+    <circle cx="0" cy="24" r="3" fill="#FFD84D" opacity=".65"><animate attributeName="opacity" values=".5;.88;.5" dur="2.6s" repeatCount="indefinite"/></circle>
+  </g>
+  <ellipse cx="530" cy="212" rx="54" ry="7" fill="#4ECDC4" opacity=".1"/>
+  <!-- Center crystals -->
+  <path d="M294 210 L286 168 L294 148 L302 168 Z" fill="#7B3DA5" opacity=".52"/>
+  <path d="M306 210 L300 173 L307 155 L314 173 Z" fill="#4ECDC4" opacity=".5"/>
+  <path d="M318 210 L310 166 L318 146 L326 166 Z" fill="#9B5DE5" opacity=".48"/>
+  <!-- Floating sparkles: purple left, teal/gold right -->
+  <circle cx="82" cy="140" r="2" fill="#C09AFF"><animate attributeName="cy" values="140;116;140" dur="4.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="4.5s" repeatCount="indefinite"/></circle>
+  <circle cx="42" cy="128" r="1.5" fill="#9B5DE5"><animate attributeName="cy" values="128;106;128" dur="3.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="3.8s" repeatCount="indefinite"/></circle>
+  <circle cx="118" cy="146" r="1.5" fill="#FF6EC7"><animate attributeName="cy" values="146;120;146" dur="5.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".55;0;.55" dur="5.2s" repeatCount="indefinite"/></circle>
+  <circle cx="510" cy="136" r="2" fill="#4ECDC4"><animate attributeName="cy" values="136;112;136" dur="4.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="4.2s" repeatCount="indefinite"/></circle>
+  <circle cx="550" cy="128" r="1.5" fill="#FFD84D"><animate attributeName="cy" values="128;104;128" dur="3.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".55;0;.55" dur="3.5s" repeatCount="indefinite"/></circle>
+  <circle cx="478" cy="143" r="1.5" fill="#9BFFE8"><animate attributeName="cy" values="143;118;143" dur="4.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="4.8s" repeatCount="indefinite"/></circle>
+  <circle cx="240" cy="138" r="1.5" fill="#9B5DE5"><animate attributeName="cy" values="138;113;138" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="5s" repeatCount="indefinite"/></circle>
+  <circle cx="372" cy="130" r="1.5" fill="#4ECDC4"><animate attributeName="cy" values="130;106;130" dur="4.6s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="4.6s" repeatCount="indefinite"/></circle>
 </svg>`
 };
 
@@ -1000,30 +1110,21 @@ const QUESTION_ILLUSTRATIONS = {
   share_food: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#FFF1C9"/><circle cx="140" cy="56" r="40" fill="#FFFFFF"/><circle cx="140" cy="56" r="31" fill="#E8F7FF"/><g fill="none" stroke="#F4A261" stroke-width="4" stroke-linecap="round"><path d="M116 57 q10 -18 28 -8 q18 10 3 22 q-13 10 -27 0 q-13 -10 1 -22"/></g><circle cx="132" cy="58" r="5" fill="#D94B38"/><circle cx="151" cy="64" r="5" fill="#D94B38"/></svg>`
 };
 
+// throne_room: gy array so char1 sits higher (visual authority cue)
 const CHAR_POS = {
-  alien_home:   { x: [170, 430], gy: 216, h: 182, yo: 35 },
-  alien_meadow: { x: [162, 438], gy: 213, h: 182, yo: 35 },
-  trading_post: { x: [148, 452], gy: 213, h: 165, yo: 30 },
-  throne_room:  { x: [172, 432], gy: 216, h: 165, yo: 28 }, // both same height
-  crystal_cave: { x: [155, 445], gy: 213, h: 182, yo: 35 }
+  alien_home:   { x: [170, 430], gy: 216,        h: 182, yo: 35 },
+  alien_meadow: { x: [162, 438], gy: 213,        h: 182, yo: 35 },
+  trading_post: { x: [148, 452], gy: 213,        h: 165, yo: 30 },
+  throne_room:  { x: [172, 432], gy: [185, 216], h: 165, yo: 28 },
+  crystal_cave: { x: [155, 445], gy: 213,        h: 182, yo: 35 }
 };
 
-function svgInner(str) {
-  return str.replace(/<svg[^>]*>/i,'').replace(/<\/svg>\s*$/i,'');
-}
-function bgSVG(scene) {
-  return svgInner(SCENE_BACKGROUNDS[scene] || SCENE_BACKGROUNDS.alien_home);
-}
+function svgInner(str) { return str.replace(/<svg[^>]*>/i,'').replace(/<\/svg>\s*$/i,''); }
+function bgSVG(scene) { return svgInner(SCENE_BACKGROUNDS[scene]||SCENE_BACKGROUNDS.alien_home); }
 function sceneSVG(v) {
-  const pos = CHAR_POS[v.scene] || { x:[155,445], gy:GY, h:182, yo:35 };
-  const [c1x, c2x] = pos.x;
-  const gys = Array.isArray(pos.gy) ? pos.gy : [pos.gy, pos.gy];
-  const { h, yo } = pos;
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;display:block">
-    ${bgSVG(v.scene)}
-    ${kidSVG(c1x, gys[0], v.char1, '0s',   true,  h, yo)}
-    ${kidSVG(c2x, gys[1], v.char2, '1.3s', false, h, yo)}
-  </svg>`;
+  const pos=CHAR_POS[v.scene]||{x:[155,445],gy:GY,h:182,yo:35};
+  const [c1x,c2x]=pos.x, gys=Array.isArray(pos.gy)?pos.gy:[pos.gy,pos.gy], {h,yo}=pos;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;display:block">${bgSVG(v.scene)}${kidSVG(c1x,gys[0],v.char1,'0s',true,h,yo)}${kidSVG(c2x,gys[1],v.char2,'1.3s',false,h,yo)}</svg>`;
 }
 function qIllustHTML(q) {
   if (q.png) return `<img src="${IMG_BASE}${escHtml(q.png)}" style="width:100%;border-radius:10px;display:block" alt=""/>`;
@@ -1032,45 +1133,22 @@ function qIllustHTML(q) {
 
 // ── STAR / LEVEL METER ─────────────────────────────────
 function starHeaderHTML(earned, total) {
-  const lv = getCurrentLevel(earned);
-  const items = Array.from({length:total},(_,i)=>`<span class="star-item${i<earned?' filled':''}">\u2605</span>`).join('');
-  return `<div class="star-meter-wrap">
-    <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:2px">
-      <span style="font-size:14px">${lv.emoji}</span>
-      <span style="font-size:10px;font-weight:600;color:${lv.color2}">${lv.label}</span>
-    </div>
-    <div class="star-meter">${items}</div>
-    <div class="star-meter-lbl">Pair ${S.vi+1} of ${total}</div>
-  </div>`;
+  const lv=getCurrentLevel(earned);
+  const items=Array.from({length:total},(_,i)=>`<span class="star-item${i<earned?' filled':''}">\u2605</span>`).join('');
+  return `<div class="star-meter-wrap"><div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:2px"><span style="font-size:14px">${lv.emoji}</span><span style="font-size:10px;font-weight:600;color:${lv.color2}">${lv.label}</span></div><div class="star-meter">${items}</div><div class="star-meter-lbl">Pair ${S.vi+1} of ${total}</div></div>`;
 }
 
 function starTransHTML(earned, total) {
-  const pct  = Math.round((earned / total) * 100);
-  const lv   = getCurrentLevel(earned);
-  const prev = getCurrentLevel(Math.max(0, earned - 1));
-  const levelUp = earned > 0 && lv.label !== prev.label;
-  const items = Array.from({length:total},(_,i)=>{
-    const filled=i<earned, isNew=filled&&i===earned-1;
-    return `<span class="star-item${filled?' filled':''}${isNew?' newly-filled':''}">\u2605</span>`;
-  }).join('');
-  return `
-    <div style="text-align:center;margin-bottom:6px">
-      ${levelUp
-        ? `<div class="level-badge"><div style="font-size:44px">${lv.emoji}</div><div style="font-size:18px;font-weight:600;color:${lv.color2};margin-top:2px">⬆ Level Up! ${lv.label}</div></div>`
-        : `<div style="font-size:30px">${lv.emoji}</div><div style="font-size:13px;font-weight:600;color:${lv.color2}">${lv.label}</div>`
-      }
-    </div>
-    <div class="star-meter star-meter-large">${items}</div>
-    <div class="meter-bar-wrap">
-      <div class="meter-bar" style="width:${pct}%;background:linear-gradient(90deg,${lv.color},${lv.color2})"></div>
-      <span class="meter-pct">${earned} / ${total}</span>
-    </div>`;
+  const pct=Math.round((earned/total)*100), lv=getCurrentLevel(earned), prev=getCurrentLevel(Math.max(0,earned-1));
+  const levelUp=earned>0&&lv.label!==prev.label;
+  const items=Array.from({length:total},(_,i)=>{const f=i<earned,n=f&&i===earned-1;return `<span class="star-item${f?' filled':''}${n?' newly-filled':''}">\u2605</span>`;}).join('');
+  return `<div style="text-align:center;margin-bottom:6px">${levelUp?`<div class="level-badge"><div style="font-size:44px">${lv.emoji}</div><div style="font-size:18px;font-weight:600;color:${lv.color2};margin-top:2px">⬆ Level Up! ${lv.label}</div></div>`:`<div style="font-size:30px">${lv.emoji}</div><div style="font-size:13px;font-weight:600;color:${lv.color2}">${lv.label}</div>`}</div><div class="star-meter star-meter-large">${items}</div><div class="meter-bar-wrap"><div class="meter-bar" style="width:${pct}%;background:linear-gradient(90deg,${lv.color},${lv.color2})"></div><span class="meter-pct">${earned} / ${total}</span></div>`;
 }
 
 function welcomeSVG(c1, c2) {
-  const gy = 165;
-  const kid1 = c1 ? kidSVG(74, gy, c1, '0s', true) : kidSVG(74, gy, {hair:'#9B5DE5',shirt:'#4ECDC4',pants:'#1A3040',style:'short',name:''}, '0s');
-  const kid2 = c2 ? kidSVG(306, gy, c2, '1.1s', false) : kidSVG(306, gy, {hair:'#FFD84D',shirt:'#FF6EC7',pants:'#2E1E60',style:'short',name:''}, '1.1s');
+  const gy=165;
+  const k1=c1?kidSVG(74,gy,c1,'0s',true):kidSVG(74,gy,{hair:'#9B5DE5',shirt:'#4ECDC4',pants:'#1A3040',style:'short',name:''},'0s');
+  const k2=c2?kidSVG(306,gy,c2,'1.1s',false):kidSVG(306,gy,{hair:'#FFD84D',shirt:'#FF6EC7',pants:'#2E1E60',style:'short',name:''},'1.1s');
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 205" style="width:100%;display:block">
     <rect x="0" y="0" width="380" height="${gy}" fill="#0D1B3E"/>
     <circle cx="20" cy="18" r="1.2" fill="white" opacity=".7"/>
@@ -1080,8 +1158,7 @@ function welcomeSVG(c1, c2) {
     <circle cx="300" cy="18" r="1.2" fill="white" opacity=".7"/>
     <circle cx="355" cy="28" r="1" fill="white" opacity=".8"/>
     <rect x="0" y="${gy}" width="380" height="${205-gy}" fill="#1A3D2A"/>
-    ${kid1}
-    ${kid2}
+    ${k1}${k2}
   </svg>`;
 }
 
@@ -1089,65 +1166,47 @@ function trophySVG() {
   return `<svg viewBox="0 0 160 175" width="115" height="126" style="display:block;margin:auto;overflow:visible"><circle cx="80" cy="80" r="55" fill="rgba(255,215,0,0.14)"><animate attributeName="r" values="50;66;50" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.14;0.04;0.14" dur="2.2s" repeatCount="indefinite"/></circle><g><animateTransform attributeName="transform" type="translate" values="0,0;0,-7;0,0" dur="2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/><path d="M28,18 L132,18 L117,88 Q80,114 43,88 Z" fill="#FFD700" stroke="#F39C12" stroke-width="3"/><path d="M28,18 Q4,18 4,50 Q4,82 28,82" fill="none" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/><path d="M132,18 Q156,18 156,50 Q156,82 132,82" fill="none" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/><rect x="67" y="108" width="26" height="30" rx="4" fill="#F39C12"/><rect x="43" y="136" width="74" height="19" rx="9" fill="#FFD700" stroke="#F39C12" stroke-width="2"/><polygon points="80,36 86,56 107,56 91,68 97,88 80,76 63,88 69,68 53,56 74,56" fill="white" opacity=".65"/></g></svg>`;
 }
 
-// ── RENDER ─────────────────────────────────────────────
+// ── RENDER (no keepOverlayButtons needed — overlays are outside #app) ──
 const app = document.getElementById('app');
 
 function render() {
   updateAdmin();
   try {
     switch (S.phase) {
-      case 'welcome':          renderWelcome();                         break;
-      case 'intro':            renderIntro();                           break;
-      case 'story':            renderStory(VIGNETTES[S.vi]);            break;
-      case 'model-id':         renderModelId();                         break;
-      case 'model-certainty':  renderModelCertainty();                  break;
-      case 'q':                renderQuestion(VIGNETTES[S.vi], S.qi);   break;
-      case 'q-likert':         renderLikert();                          break;
-      case 'trans':            renderTrans();                           break;
-      case 'midpoint':         renderMidpoint();                        break;
-      case 'end':              renderEnd();                             break;
+      case 'welcome':         renderWelcome();                         break;
+      case 'intro':           renderIntro();                           break;
+      case 'story':           renderStory(VIGNETTES[S.vi]);            break;
+      case 'model-id':        renderModelId();                         break;
+      case 'model-certainty': renderModelCertainty();                  break;
+      case 'q':               renderQuestion(VIGNETTES[S.vi], S.qi);   break;
+      case 'q-likert':        renderLikert();                          break;
+      case 'trans':           renderTrans();                           break;
+      case 'midpoint':        renderMidpoint();                        break;
+      case 'end':             renderEnd();                             break;
     }
   } catch(err) {
     app.innerHTML = `<div class="error-box"><h2 style="color:#e74c3c">Something went wrong</h2><p style="margin:10px 0"><strong>${err.message}</strong></p><pre style="background:#f5f5f5;padding:12px;border-radius:8px;font-size:11px;text-align:left;overflow:auto">${err.stack||''}</pre><button class="btn btn-primary" style="margin-top:12px" onclick="resetGame()">Start Over</button></div>`;
     console.error(err);
   }
-  keepOverlayButtons();
-}
-
-function keepOverlayButtons() {
-  const fsBtn     = document.getElementById('fullscreenBtn');
-  const adminBtn  = document.getElementById('adminBtn');
-  const adminPane = document.getElementById('adminPanel');
-  const secZone   = document.getElementById('secretZone');
-  [fsBtn, adminBtn, adminPane, secZone].forEach(el => {
-    if (el) app.appendChild(el);
-  });
 }
 
 // ── WELCOME ────────────────────────────────────────────
 function renderWelcome() {
-  const pool = [];
-  VIGNETTES.forEach(v => { pool.push(v.char1); pool.push(v.char2); });
-  const wi1 = Math.floor(Math.random() * pool.length);
-  let wi2;
-  do { wi2 = Math.floor(Math.random() * pool.length); } while (wi2 === wi1);
-
-  const urlPid = getUrlParam('pid');
-  if (urlPid) S.pid = urlPid;
-
-  const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
-
-  app.innerHTML = `
-  ${!isFs ? `
-  <div class="fs-banner" id="fsBanner">
+  const pool=[];
+  VIGNETTES.forEach(v=>{pool.push(v.char1);pool.push(v.char2);});
+  const wi1=Math.floor(Math.random()*pool.length); let wi2; do{wi2=Math.floor(Math.random()*pool.length);}while(wi2===wi1);
+  const urlPid=getUrlParam('pid'); if(urlPid) S.pid=urlPid;
+  const isFs=!!(document.fullscreenElement||document.webkitFullscreenElement);
+  app.innerHTML=`
+  ${!isFs?`<div class="fs-banner" id="fsBanner">
     <span>📺 For the best experience, go fullscreen first!</span>
     <button class="fs-banner-btn" onclick="toggleFullscreen()">Go Fullscreen ⛶</button>
     <button class="fs-banner-dismiss" onclick="document.getElementById('fsBanner').style.display='none'" title="Dismiss">✕</button>
-  </div>` : ''}
+  </div>`:''}
   <div class="screen" style="justify-content:center;text-align:center;padding-top:14px">
     <div class="wt">Relationship Detective!</div>
     <div class="ws">Can you figure out how these people who live far away act toward each other?</div>
-    <div class="illus" style="max-width:330px">${welcomeSVG(pool[wi1], pool[wi2])}</div>
+    <div class="illus" style="max-width:330px">${welcomeSVG(pool[wi1],pool[wi2])}</div>
     <button id="unlockBtn" class="unlock-btn"
       onclick="unlockAudio('Hello there, and welcome to Relationship Detective! I am so glad you are here today. First, can you type your first name in the box, and then pick your age from the little menu. When you are all ready, press the big orange button that says Let us play!')">
       🔊 Tap here to turn on sound!
@@ -1171,26 +1230,18 @@ function renderWelcome() {
         </select>
       </div>
     </div>
-    ${S.pid ? `
-    <div style="text-align:center;margin-top:2px">
-      <span style="font-size:11px;color:#ccc">Study ID: </span>
-      <input type="text" readonly
-        style="font-family:inherit;font-size:11px;color:#bbb;background:transparent;border:none;outline:none;text-align:center;width:220px;cursor:default"
-        value="${escHtml(S.pid)}"/>
-    </div>` : ''}
+    ${S.pid?`<div style="text-align:center;margin-top:2px"><span style="font-size:11px;color:#ccc">Study ID: </span><input type="text" readonly style="font-family:inherit;font-size:11px;color:#bbb;background:transparent;border:none;outline:none;text-align:center;width:220px;cursor:default" value="${escHtml(S.pid)}"/></div>`:''}
     <button class="btn btn-primary" style="font-size:19px;padding:13px 34px;margin-top:4px" onclick="startGame()">Let's Play!</button>
   </div>`;
-
   stopSpeak();
-  const inp = document.getElementById('cname');
-  const sel = document.getElementById('cage');
-  if (inp) inp.addEventListener('input',  e => S.name = e.target.value);
-  if (sel) sel.addEventListener('change', e => S.age  = e.target.value);
+  const inp=document.getElementById('cname'), sel=document.getElementById('cage');
+  if(inp) inp.addEventListener('input',  e=>S.name=e.target.value);
+  if(sel) sel.addEventListener('change', e=>S.age=e.target.value);
 }
 
 function renderIntro() {
-  const nm = S.name ? `, ${S.name}` : '';
-  app.innerHTML = `
+  const nm=S.name?`, ${S.name}`:'';
+  app.innerHTML=`
   <div class="screen" style="justify-content:center;text-align:center;gap:10px">
     <div style="font-size:44px">🕵️</div>
     <div style="font-size:22px;font-weight:600;color:#333">Here is how to play!</div>
@@ -1210,73 +1261,51 @@ function renderIntro() {
   speak(`Wonderful${nm}! Here is how our game works. I am going to tell you about two people who live far away and how they act toward each other. These people might do things a little differently from the way you do things — and that is totally okay. Then I will ask if you think those same two people would act a certain way in another situation. Press the big thumbs up if you think YES, or the big thumbs down if you think NO. After you answer, I will ask how sure you are with a big thumb and a smaller thumb. There are no wrong answers — we just want to know what you think. When you are ready, press the big orange button to start!`);
 }
 
-// ── STORY ──────────────────────────────────────────────
 function renderStory(v) {
-  app.innerHTML = `
-  ${starHeaderHTML(S.stars, VIGNETTES.length)}
+  app.innerHTML=`
+  ${starHeaderHTML(S.stars,VIGNETTES.length)}
   <div class="screen" style="padding-top:6px">
-    <div class="story-head">
-      <div class="pair-title">Meet ${escHtml(v.char1.name)} and ${escHtml(v.char2.name)}!</div>
-    </div>
+    <div class="story-head"><div class="pair-title">Meet ${escHtml(v.char1.name)} and ${escHtml(v.char2.name)}!</div></div>
     <div class="illus">${sceneSVG(v)}</div>
-    <div class="story-box" id="storyBox">
-      ${v.parts.map((s,i) => `<span class="sent" id="snt${i}">${escHtml(s)} </span>`).join('')}
-    </div>
+    <div class="story-box" id="storyBox">${v.parts.map((s,i)=>`<span class="sent" id="snt${i}">${escHtml(s)} </span>`).join('')}</div>
     <div class="story-btns">
       <button class="btn btn-audio" onclick="replayStory()">🔊 Hear the story again</button>
       <button class="btn btn-primary" id="readyBtn" style="display:none" onclick="goModelId()">I am ready for questions!</button>
     </div>
   </div>`;
   stopSpeak();
-  const opener = `Now let us meet ${v.char1.name} and ${v.char2.name}.`;
-  speak(opener, () => {
-    speakSeq(v.parts,
-      i => {
-        document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
-        const el = document.getElementById(`snt${i}`);
-        if (el) el.classList.add('hi');
-      },
-      () => {
-        document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
-        const rb = document.getElementById('readyBtn');
-        if (rb) rb.style.display = 'inline-flex';
-        speak(`Now I will ask you some questions about ${v.char1.name} and ${v.char2.name}. When you are ready, press the big orange button!`);
-      }
-    );
+  speak(`Now let us meet ${v.char1.name} and ${v.char2.name}.`,()=>{
+    speakSeq(v.parts, i=>{
+      document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
+      const el=document.getElementById(`snt${i}`); if(el) el.classList.add('hi');
+    }, ()=>{
+      document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
+      const rb=document.getElementById('readyBtn'); if(rb) rb.style.display='inline-flex';
+      speak(`Now I will ask you some questions about ${v.char1.name} and ${v.char2.name}. When you are ready, press the big orange button!`);
+    });
   });
 }
 
 function replayStory() {
-  const v = VIGNETTES[S.vi];
-  stopSpeak();
-  const rb = document.getElementById('readyBtn');
-  if (rb) rb.style.display = 'none';
-  speak(`Sure! Let me tell you about ${v.char1.name} and ${v.char2.name} one more time.`, () => {
-    speakSeq(v.parts,
-      i => {
-        document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
-        const el = document.getElementById(`snt${i}`);
-        if (el) el.classList.add('hi');
-      },
-      () => {
-        document.querySelectorAll('.sent').forEach(el => el.classList.remove('hi'));
-        const rb2 = document.getElementById('readyBtn');
-        if (rb2) rb2.style.display = 'inline-flex';
-      }
-    );
+  const v=VIGNETTES[S.vi]; stopSpeak();
+  const rb=document.getElementById('readyBtn'); if(rb) rb.style.display='none';
+  speak(`Sure! Let me tell you about ${v.char1.name} and ${v.char2.name} one more time.`,()=>{
+    speakSeq(v.parts, i=>{
+      document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
+      const el=document.getElementById(`snt${i}`); if(el) el.classList.add('hi');
+    }, ()=>{
+      document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
+      const rb2=document.getElementById('readyBtn'); if(rb2) rb2.style.display='inline-flex';
+    });
   });
 }
 
-// ── INITIAL YES/NO QUESTION ───────────────────────────
 function renderQuestion(v, qi) {
-  const q = v.questions[qi];
-  app.innerHTML = `
-  ${starHeaderHTML(S.stars, VIGNETTES.length)}
+  const q=v.questions[qi];
+  app.innerHTML=`
+  ${starHeaderHTML(S.stars,VIGNETTES.length)}
   <div class="screen" style="padding-top:4px;gap:7px">
-    <div class="q-header">
-      Question ${qi+1} of 3 &nbsp;&middot;&nbsp;
-      <strong>${escHtml(v.char1.name)}</strong> &amp; <strong>${escHtml(v.char2.name)}</strong>
-    </div>
+    <div class="q-header">Question ${qi+1} of 3 &nbsp;&middot;&nbsp; <strong>${escHtml(v.char1.name)}</strong> &amp; <strong>${escHtml(v.char2.name)}</strong></div>
     <div class="q-illust">${qIllustHTML(q)}</div>
     <div class="q-box">"${escHtml(q.text)}"</div>
     <div class="ans-row">
@@ -1295,156 +1324,82 @@ function renderQuestion(v, qi) {
   speak(`Question ${qi+1} of 3. ${q.text}. Do you think ${v.char1.name} and ${v.char2.name} would act that way? Press the big thumbs up for YES or the big thumbs down for NO.`);
 }
 
-function replayQ() {
-  const v  = VIGNETTES[S.vi];
-  const qi = S.qi;
-  stopSpeak();
-  speak(`Here is the question again. ${v.questions[qi].text}. Do you think ${v.char1.name} and ${v.char2.name} would act that way?`);
-}
-
-function replayStoryQ() {
-  const v = VIGNETTES[S.vi];
-  stopSpeak();
-  speak(`Sure! Let me remind you about ${v.char1.name} and ${v.char2.name}.`, () => {
-    speakSeq(v.parts, null, () => speak(`Okay. Now, what do you think?`));
-  });
-}
-
-function doAnswer(ans) {
-  ['btnY','btnN'].forEach(id => { const b = document.getElementById(id); if (b) b.disabled = true; });
-  S.pendingAns = ans;
-  flashBtn(ans);
-  setTimeout(() => {
-    S.phase = 'q-likert';
-    render();
-  }, 480);
-}
-
-// ── LIKERT (YES/NO CERTAINTY) ─────────────────────────
+// ── LIKERT: colours now conditional on YES (green) vs NO (red) ──
 function renderLikert() {
-  const v  = VIGNETTES[S.vi];
-  const qi = S.qi;
-  const q  = v.questions[qi];
-  const isYes = S.pendingAns === 'YES';
+  const v=VIGNETTES[S.vi], qi=S.qi, q=v.questions[qi], isYes=S.pendingAns==='YES';
 
-  // Green for YES certainty, red for NO certainty
+  // FIX: these were always green — now correctly conditional
   const strongStyle = isYes
     ? 'background:linear-gradient(135deg,#1e8449,#27AE60);color:white;box-shadow:0 6px 18px rgba(30,132,73,.4);'
     : 'background:linear-gradient(135deg,#922b21,#C0392B);color:white;box-shadow:0 6px 18px rgba(146,43,33,.4);';
-
   const mildStyle = isYes
     ? 'background:linear-gradient(135deg,#a8e063,#d0f5a0);color:#1a5e2a;box-shadow:0 4px 12px rgba(168,224,99,.35);'
     : 'background:linear-gradient(135deg,#f45c43,#ffbdad);color:#7B241C;box-shadow:0 4px 12px rgba(244,92,67,.3);';
 
-  app.innerHTML = `
-  ${starHeaderHTML(S.stars, VIGNETTES.length)}
+  app.innerHTML=`
+  ${starHeaderHTML(S.stars,VIGNETTES.length)}
   <div class="screen" style="padding-top:4px;gap:9px">
-    <div class="q-header">
-      Question ${qi+1} of 3 &nbsp;&middot;&nbsp;
-      <strong>${escHtml(v.char1.name)}</strong> &amp; <strong>${escHtml(v.char2.name)}</strong>
-    </div>
+    <div class="q-header">Question ${qi+1} of 3 &nbsp;&middot;&nbsp; <strong>${escHtml(v.char1.name)}</strong> &amp; <strong>${escHtml(v.char2.name)}</strong></div>
     <div style="text-align:center;font-size:17px;font-weight:600;color:#333">
-      You said
-      <span style="background:${isYes?'linear-gradient(135deg,#56ab2f,#a8e063)':'linear-gradient(135deg,#eb3349,#f45c43)'};color:white;padding:3px 14px;border-radius:20px;font-size:22px;display:inline-block;vertical-align:middle;margin:0 4px">
-        ${isYes?'YES 👍':'NO 👎'}
-      </span>
+      You said <span style="background:${isYes?'linear-gradient(135deg,#56ab2f,#a8e063)':'linear-gradient(135deg,#eb3349,#f45c43)'};color:white;padding:3px 14px;border-radius:20px;font-size:22px;display:inline-block;vertical-align:middle;margin:0 4px">${isYes?'YES 👍':'NO 👎'}</span>
     </div>
     <div style="text-align:center;font-size:15px;color:#555;font-weight:500">How sure are you?</div>
     <div class="q-illust">${qIllustHTML(q)}</div>
     <div class="ans-row" style="gap:16px;align-items:flex-end">
       <button class="btn-likert-strong" id="btnDef" style="${strongStyle}" onclick="doLikertAnswer('DEFINITELY')">
-        ${isYes ? thumbsUpSVG(54) : thumbsDownSVG(54)}
+        ${isYes?thumbsUpSVG(54):thumbsDownSVG(54)}
         <span style="margin-top:4px;font-size:15px;font-weight:600">Really sure!<br>${isYes?'👍 YES':'👎 NO'}</span>
       </button>
       <button class="btn-likert-mild" id="btnMay" style="${mildStyle}" onclick="doLikertAnswer('MAYBE')">
-        ${isYes ? thumbsUpSVG(36) : thumbsDownSVG(36)}
+        ${isYes?thumbsUpSVG(36):thumbsDownSVG(36)}
         <span style="margin-top:3px;font-size:13px">A little sure<br>${isYes?'👍 YES':'👎 NO'}</span>
       </button>
     </div>
   </div>`;
   stopSpeak();
-  speak(`You said ${isYes ? 'yes' : 'no'}. Now, how sure are you? Press the big thumb if you are really really sure, or the smaller thumb if you think so but are not totally sure.`);
+  speak(`You said ${isYes?'yes':'no'}. Now, how sure are you? Press the big thumb if you are really really sure, or the smaller thumb if you think so but are not totally sure.`);
 }
 
 function doLikertAnswer(certainty) {
-  ['btnDef','btnMay'].forEach(id => { const b = document.getElementById(id); if (b) b.disabled = true; });
-  const btn = document.getElementById(certainty === 'DEFINITELY' ? 'btnDef' : 'btnMay');
-  if (btn) { btn.style.transform = 'scale(1.1)'; setTimeout(() => { if (btn) btn.style.transform = ''; }, 300); }
-
-  const v       = VIGNETTES[S.vi];
-  const q       = v.questions[S.qi];
-  const initAns = S.pendingAns;
-  const fullAns = certainty === 'DEFINITELY'
-    ? (initAns === 'YES' ? 'DEFINITELY_YES' : 'DEFINITELY_NO')
-    : (initAns === 'YES' ? 'MAYBE_YES'      : 'MAYBE_NO');
-
-  const testRecord = {
-    type: 'test', vid: v.id, vM: v.model, qi: S.qi, qM: q.qM,
-    itemId: q.id, ans: fullAns, initialAns: initAns,
-    keyed: q.keyed, ok: initAns === q.keyed, congruent: q.congruent,
-    ts: new Date().toISOString()
-  };
-  S.answers.push(testRecord);
-  uploadToSheets(testRecord);
-  S.pendingAns = null;
-  stopSpeak();
-
-  setTimeout(() => {
-    if (S.qi < 2) { S.qi++; S.phase = 'q'; }
-    else          { S.stars++; S.phase = 'trans'; }
-    render();
-  }, 650);
+  ['btnDef','btnMay'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=true;});
+  const btn=document.getElementById(certainty==='DEFINITELY'?'btnDef':'btnMay');
+  if(btn){btn.style.transform='scale(1.1)';setTimeout(()=>{if(btn)btn.style.transform='';},300);}
+  const v=VIGNETTES[S.vi], q=v.questions[S.qi], initAns=S.pendingAns;
+  const fullAns=certainty==='DEFINITELY'?(initAns==='YES'?'DEFINITELY_YES':'DEFINITELY_NO'):(initAns==='YES'?'MAYBE_YES':'MAYBE_NO');
+  const rec={type:'test',vid:v.id,vM:v.model,qi:S.qi,qM:q.qM,itemId:q.id,ans:fullAns,initialAns:initAns,keyed:q.keyed,ok:initAns===q.keyed,congruent:q.congruent,ts:new Date().toISOString()};
+  S.answers.push(rec); uploadToSheets(rec); S.pendingAns=null; stopSpeak();
+  setTimeout(()=>{if(S.qi<2){S.qi++;S.phase='q';}else{S.stars++;S.phase='trans';}render();},650);
 }
 
-// ── MODEL IDENTIFICATION (3 PICTURES) ──────────────────
 function renderModelId() {
-  const v = VIGNETTES[S.vi];
-  const models = S.modelIdOrder;
-  app.innerHTML = `
-  ${starHeaderHTML(S.stars, VIGNETTES.length)}
+  const v=VIGNETTES[S.vi], models=S.modelIdOrder;
+  app.innerHTML=`
+  ${starHeaderHTML(S.stars,VIGNETTES.length)}
   <div class="screen" style="padding-top:4px;gap:10px">
     <div class="q-header">🔍 ${escHtml(v.char1.name)} &amp; ${escHtml(v.char2.name)}</div>
-    <div class="q-box">
-      <span>Which of these pictures shows how <strong>${escHtml(v.char1.name)}</strong> and <strong>${escHtml(v.char2.name)}</strong> act with each other?</span>
-    </div>
+    <div class="q-box"><span>Which of these pictures shows how <strong>${escHtml(v.char1.name)}</strong> and <strong>${escHtml(v.char2.name)}</strong> act with each other?</span></div>
     <div class="ans-row" style="gap:18px;justify-content:center;flex-wrap:wrap">
-      ${models.map(m => `
-        <button class="btn-model-choice" onclick="doModelId('${m}')">
-          <img src="${IMG_BASE}${m}.png" style="width:100px;height:100px;object-fit:contain;display:block;border-radius:8px" alt="${m}"/>
-        </button>`).join('')}
+      ${models.map(m=>`<button class="btn-model-choice" onclick="doModelId('${m}')"><img src="${IMG_BASE}${m}.png" style="width:100px;height:100px;object-fit:contain;display:block;border-radius:8px" alt="${m}"/></button>`).join('')}
     </div>
-    <div class="replay-section">
-      <div class="replay-label">Need a reminder?</div>
-      <div class="replay-btns">
-        <button class="btn-story-replay" onclick="replayStoryQ()">📖 Hear their story again</button>
-      </div>
-    </div>
+    <div class="replay-section"><div class="replay-label">Need a reminder?</div><div class="replay-btns"><button class="btn-story-replay" onclick="replayStoryQ()">📖 Hear their story again</button></div></div>
   </div>`;
   stopSpeak();
   speak(`Which of these pictures shows how ${v.char1.name} and ${v.char2.name} act with each other? Pick the one that you think fits best.`);
 }
 
 function doModelId(chosenModel) {
-  document.querySelectorAll('.btn-model-choice').forEach(b => b.disabled = true);
-  S.pendingModelChoice = chosenModel;
-  stopSpeak();
-  setTimeout(() => {
-    S.phase = 'model-certainty';
-    render();
-  }, 300);
+  document.querySelectorAll('.btn-model-choice').forEach(b=>b.disabled=true);
+  S.pendingModelChoice=chosenModel; stopSpeak();
+  setTimeout(()=>{S.phase='model-certainty';render();},300);
 }
 
-// ── MODEL CERTAINTY (BIG / SMALL THUMBS UP) ────────────
 function renderModelCertainty() {
-  const v = VIGNETTES[S.vi];
-  const chosen = S.pendingModelChoice;
-  app.innerHTML = `
-  ${starHeaderHTML(S.stars, VIGNETTES.length)}
+  const v=VIGNETTES[S.vi], chosen=S.pendingModelChoice;
+  app.innerHTML=`
+  ${starHeaderHTML(S.stars,VIGNETTES.length)}
   <div class="screen" style="padding-top:4px;gap:10px">
     <div class="q-header">🔍 ${escHtml(v.char1.name)} &amp; ${escHtml(v.char2.name)}</div>
-    <div style="text-align:center;font-size:17px;font-weight:600;color:#333">
-      You picked this picture:
-    </div>
+    <div style="text-align:center;font-size:17px;font-weight:600;color:#333;margin-top:4px">You picked this picture:</div>
     <div style="display:flex;justify-content:center;margin-top:4px">
       <div style="border-radius:16px;border:3px solid #E0E0E0;padding:10px;background:white">
         <img src="${IMG_BASE}${chosen}.png" style="width:120px;height:120px;object-fit:contain;display:block;border-radius:8px" alt="${chosen}"/>
@@ -1471,86 +1426,59 @@ function renderModelCertainty() {
 }
 
 function doModelCertaintyAnswer(certainty) {
-  ['btnModelDef','btnModelMay'].forEach(id => {
-    const b = document.getElementById(id);
-    if (b) b.disabled = true;
-  });
-  const btn = document.getElementById(certainty === 'DEFINITELY' ? 'btnModelDef' : 'btnModelMay');
-  if (btn) { btn.style.transform = 'scale(1.1)'; setTimeout(() => { if (btn) btn.style.transform = ''; }, 300); }
-
-  const v = VIGNETTES[S.vi];
-  const chosen = S.pendingModelChoice;
-  const modelRecord = {
-    type: 'model-id',
-    vid: v.id,
-    vM: v.model,
-    chosen: chosen,
-    correct: chosen === v.model,
-    modelCertainty: certainty,
-    ts: new Date().toISOString()
-  };
-  S.answers.push(modelRecord);
-  uploadToSheets(modelRecord);
-  S.pendingModelChoice = null;
-  S.qi = 0;
-  stopSpeak();
-  setTimeout(() => { S.phase = 'q'; render(); }, 400);
+  ['btnModelDef','btnModelMay'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=true;});
+  const btn=document.getElementById(certainty==='DEFINITELY'?'btnModelDef':'btnModelMay');
+  if(btn){btn.style.transform='scale(1.1)';setTimeout(()=>{if(btn)btn.style.transform='';},300);}
+  const v=VIGNETTES[S.vi], chosen=S.pendingModelChoice;
+  const rec={type:'model-id',vid:v.id,vM:v.model,chosen:chosen,correct:chosen===v.model,modelCertainty:certainty,ts:new Date().toISOString()};
+  S.answers.push(rec); uploadToSheets(rec);
+  S.pendingModelChoice=null; S.qi=0; stopSpeak();
+  setTimeout(()=>{S.phase='q';render();},400);
 }
 
-// ── BUTTON FLASH ───────────────────────────────────────
 function flashBtn(ans) {
-  const b = document.getElementById(ans === 'YES' ? 'btnY' : 'btnN');
-  if (!b) return;
-  b.style.transition = 'transform 0.15s, box-shadow 0.15s';
-  b.style.transform  = 'scale(1.14)';
-  b.style.boxShadow  = '0 0 0 8px rgba(255,255,255,0.68)';
-  setTimeout(() => { b.style.transform = ''; b.style.boxShadow = ''; }, 320);
+  const b=document.getElementById(ans==='YES'?'btnY':'btnN'); if(!b) return;
+  b.style.transition='transform 0.15s, box-shadow 0.15s';
+  b.style.transform='scale(1.14)'; b.style.boxShadow='0 0 0 8px rgba(255,255,255,0.68)';
+  setTimeout(()=>{b.style.transform='';b.style.boxShadow='';},320);
 }
 
-// ── TRANSITION ─────────────────────────────────────────
-function renderTrans() {
-  const ni         = S.vi + 1;
-  const last       = ni >= VIGNETTES.length;
-  const isMidpoint = ni === 6 && !last;
-  const np         = last ? null : VIGNETTES[ni];
+function doAnswer(ans) {
+  ['btnY','btnN'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=true;});
+  S.pendingAns=ans; flashBtn(ans);
+  setTimeout(()=>{S.phase='q-likert';render();},480);
+}
 
-  app.innerHTML = `
+function replayQ() {
+  stopSpeak();
+  const v=VIGNETTES[S.vi], qi=S.qi;
+  speak(`Here is the question again. ${v.questions[qi].text}. Do you think ${v.char1.name} and ${v.char2.name} would act that way?`);
+}
+
+function replayStoryQ() {
+  const v=VIGNETTES[S.vi]; stopSpeak();
+  speak(`Sure! Let me remind you about ${v.char1.name} and ${v.char2.name}.`,()=>{speakSeq(v.parts,null,()=>speak(`Okay. Now, what do you think?`));});
+}
+
+function renderTrans() {
+  const ni=S.vi+1, last=ni>=VIGNETTES.length, isMidpoint=ni===6&&!last, np=last?null:VIGNETTES[ni];
+  app.innerHTML=`
   <div class="trans-screen">
-    ${starTransHTML(S.stars, VIGNETTES.length)}
+    ${starTransHTML(S.stars,VIGNETTES.length)}
     <div class="trans-msg" style="margin-top:8px">Thank you for your help.</div>
     <div style="font-size:19px;font-weight:600;color:#F39C12">${S.stars} star${S.stars===1?'':'s'} collected!</div>
-    <div class="trans-sub">
-      ${last ? 'That was the very last pair — you are almost done!'
-        : isMidpoint ? 'You are halfway through — great work!'
-        : `Next up: meet <strong>${escHtml(np.char1.name)}</strong> and <strong>${escHtml(np.char2.name)}</strong>!`}
-    </div>
+    <div class="trans-sub">${last?'That was the very last pair — you are almost done!':isMidpoint?'You are halfway through — great work!':`Next up: meet <strong>${escHtml(np.char1.name)}</strong> and <strong>${escHtml(np.char2.name)}</strong>!`}</div>
   </div>`;
-
-  const lastMsg = last
-    ? `Thank you for your help. You just finished all twelve pairs and collected ${S.stars} star${S.stars === 1 ? '' : 's'}.`
-    : isMidpoint
-      ? `Thank you for your help. You have finished six pairs and collected ${S.stars} star${S.stars === 1 ? '' : 's'}.`
-      : `Thank you for your help. You now have ${S.stars} star${S.stars === 1 ? '' : 's'}. Next, we will meet ${np.char1.name} and ${np.char2.name}.`;
-
+  const msg=last?`Thank you for your help. You just finished all twelve pairs and collected ${S.stars} star${S.stars===1?'':'s'}.`
+    :isMidpoint?`Thank you for your help. You have finished six pairs and collected ${S.stars} star${S.stars===1?'':'s'}.`
+    :`Thank you for your help. You now have ${S.stars} star${S.stars===1?'':'s'}. Next, we will meet ${np.char1.name} and ${np.char2.name}.`;
   stopSpeak();
-  speak(lastMsg, () => {
-    setTimeout(() => {
-      if (last) {
-        S.phase = 'end';
-      } else {
-        S.vi++;
-        S.qi = 0;
-        S.phase = S.vi === 6 ? 'midpoint' : 'story';
-      }
-      render();
-    }, 750);
-  });
+  speak(msg,()=>{setTimeout(()=>{if(last){S.phase='end';}else{S.vi++;S.qi=0;S.phase=S.vi===6?'midpoint':'story';}render();},750);});
 }
 
-// ── MIDPOINT ───────────────────────────────────────────
 function renderMidpoint() {
-  const nm = S.name || 'Detective';
-  app.innerHTML = `
+  const nm=S.name||'Detective';
+  app.innerHTML=`
   <div class="midpoint-screen">
     <div style="font-size:58px;animation:bounceIn .85s cubic-bezier(.17,.67,.37,1.3)">🌟</div>
     <div style="font-size:26px;font-weight:600;color:#333">Halfway there, ${escHtml(nm)}!</div>
@@ -1569,111 +1497,77 @@ function renderMidpoint() {
   speak(`Wow, ${nm}. You have already met six pairs of friends who live far away. Thank you for your help. Would you like to keep going and meet six more, or say goodbye for now? Press Keep Going to continue, or Bye for now if you are all done today.`);
 }
 
-function continueGame() { stopSpeak(); S.phase = 'story'; render(); }
+function continueGame() { stopSpeak(); S.phase='story'; render(); }
 
 function exitToCHS() {
-  stopSpeak();
-  markSessionComplete();
-  const nm = S.name || 'Detective';
-  document.querySelectorAll('.midpoint-screen button').forEach(b => b.disabled = true);
-  speak(`Goodbye, ${nm}. Thank you for helping today.`, () => {
-    const returnUrl = getUrlParam('return_url') || 'https://www.childrenhelpingscience.com';
-    window.location.href = returnUrl;
+  stopSpeak(); markSessionComplete();
+  const nm=S.name||'Detective';
+  document.querySelectorAll('.midpoint-screen button').forEach(b=>b.disabled=true);
+  speak(`Goodbye, ${nm}. Thank you for helping today.`,()=>{
+    window.location.href=getUrlParam('return_url')||'https://www.childrenhelpingscience.com';
   });
 }
 
-// ── END ────────────────────────────────────────────────
 function renderEnd() {
-  const nm  = S.name || 'Detective';
-  const testAnswers = S.answers.filter(a => a.type === 'test');
-  const tot = testAnswers.length;
-  const cor = testAnswers.filter(a => a.ok).length;
-  app.innerHTML = `
+  const nm=S.name||'Detective', testAns=S.answers.filter(a=>a.type==='test'), tot=testAns.length, cor=testAns.filter(a=>a.ok).length;
+  app.innerHTML=`
   <div class="end-screen">
     <div class="end-trophy-wrap">${trophySVG()}</div>
     <div class="end-title">Thank you, ${escHtml(nm)}!</div>
-    ${starTransHTML(S.stars, VIGNETTES.length)}
+    ${starTransHTML(S.stars,VIGNETTES.length)}
     <div class="end-sub" style="margin-top:4px">You answered questions about all ${VIGNETTES.length} pairs of people who live far away.</div>
     <div style="font-size:12px;color:#ccc">${cor} of ${tot} test answers matched the scoring key</div>
     <div class="end-btns">
-      <button class="btn btn-primary"   onclick="exportCSV()">Download Results</button>
+      <button class="btn btn-primary" onclick="exportCSV()">Download Results</button>
       <button class="btn btn-secondary" onclick="resetGame()">Play Again</button>
     </div>
   </div>`;
-  markSessionComplete();
-  stopSpeak();
+  markSessionComplete(); stopSpeak();
   speak(`${nm}, thank you so much for your help today. You answered questions about all twelve pairs of people who live far away, and you thought carefully about each one. You are a wonderful Relationship Detective.`);
 }
 
 // ── NAVIGATION ─────────────────────────────────────────
 function startGame() {
-  const inp = document.getElementById('cname');
-  const sel = document.getElementById('cage');
-  S.name = (inp ? inp.value.trim() : '') || '';
-  S.age  = (sel ? sel.value        : '') || '';
-  S.pid  = getUrlParam('pid') || S.pid || '';
-  if (!S.name) {
-    unlockAudio('Oops! Can you type your first name first?');
-    return;
-  }
-  audioUnlocked = true;
-  for (let i = VIGNETTES.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [VIGNETTES[i], VIGNETTES[j]] = [VIGNETTES[j], VIGNETTES[i]];
-  }
+  const inp=document.getElementById('cname'), sel=document.getElementById('cage');
+  S.name=(inp?inp.value.trim():'')||''; S.age=(sel?sel.value:'')||'';
+  S.pid=getUrlParam('pid')||S.pid||'';
+  if(!S.name){unlockAudio('Oops! Can you type your first name first?');return;}
+  audioUnlocked=true;
+  for(let i=VIGNETTES.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[VIGNETTES[i],VIGNETTES[j]]=[VIGNETTES[j],VIGNETTES[i]];}
   assignAllQuestions();
-  S.phase = 'intro';
-  render();
+  S.phase='intro'; render();
 }
 
-function startRealGame() {
-  stopSpeak();
-  S.phase = 'story';
-  S.vi = 0;
-  S.qi = 0;
-  render();
-}
+function startRealGame() { stopSpeak(); S.phase='story'; S.vi=0; S.qi=0; render(); }
 
 function goModelId() {
-  S.modelIdOrder = ['EM','CS','AR'].sort(() => Math.random() - 0.5);
-  S.phase = 'model-id';
-  render();
+  S.modelIdOrder=['EM','CS','AR'].sort(()=>Math.random()-.5);
+  S.phase='model-id'; render();
 }
 
 function skipPair() {
-  if (['story','model-id','model-certainty','q','q-likert'].includes(S.phase)) {
-    S.pendingAns = null; S.pendingModelChoice = null; S.stars++; S.phase = 'trans'; render();
+  if(['story','model-id','model-certainty','q','q-likert'].includes(S.phase)){
+    S.pendingAns=null; S.pendingModelChoice=null; S.stars++; S.phase='trans'; render();
   }
 }
-function skipMidpoint() { stopSpeak(); S.vi = 6; S.qi = 0; S.phase = 'midpoint'; render(); }
-function skipEnd()      { stopSpeak(); S.phase = 'end'; render(); }
+function skipMidpoint() { stopSpeak(); S.vi=6; S.qi=0; S.phase='midpoint'; render(); }
+function skipEnd()      { stopSpeak(); S.phase='end'; render(); }
 
 function resetGame() {
   stopSpeak();
-  Object.assign(S, {
-    phase: 'welcome', name: '', age: '', pid: '',
-    vi: 0, qi: 0, pendingAns: null,
-    pendingModelChoice: null,
-    modelIdOrder: [], answers: [], stars: 0, adminOpen: false,
-    elevenLabsKey:   localStorage.getItem('rad_elKey')   || '',
-    elevenLabsVoice: localStorage.getItem('rad_elVoice') || 'MF3mGyEYCl7XYWbV9V6O'
-  });
+  Object.assign(S,{phase:'welcome',name:'',age:'',pid:'',vi:0,qi:0,pendingAns:null,pendingModelChoice:null,modelIdOrder:[],answers:[],stars:0,adminOpen:false,elevenLabsKey:localStorage.getItem('rad_elKey')||'',elevenLabsVoice:localStorage.getItem('rad_elVoice')||'MF3mGyEYCl7XYWbV9V6O'});
   render();
 }
 
 // ── ADMIN ──────────────────────────────────────────────
 function setupAdmin() {
-  const panel = document.getElementById('adminPanel');
-  if (!panel) return;
-  panel.innerHTML = `
+  const panel=document.getElementById('adminPanel');
+  if(!panel) return;
+  panel.innerHTML=`
     <h3>Researcher Panel</h3>
     <div style="margin-bottom:9px;padding-bottom:9px;border-bottom:1px solid #eee">
       <div class="admin-section-label">Voice</div>
-      <div style="font-size:10.5px;color:#bbb;margin-bottom:6px;line-height:1.55">
-        For the most natural voice, enter a free
-        <a href="https://elevenlabs.io" target="_blank" style="color:#4776e6">ElevenLabs</a>
-        API key. Without it, the device built-in voice is used.
-      </div>
+      <div style="font-size:10.5px;color:#bbb;margin-bottom:6px;line-height:1.55">For the most natural voice, enter a free <a href="https://elevenlabs.io" target="_blank" style="color:#4776e6">ElevenLabs</a> API key.</div>
       <input id="elKeyInput" type="password" class="admin-input" placeholder="ElevenLabs API key..."/>
       <select id="elVoiceSelect" class="admin-select">
         <option value="MF3mGyEYCl7XYWbV9V6O">Elli — warm, young (recommended)</option>
@@ -1694,113 +1588,67 @@ function setupAdmin() {
     <button class="admin-btn-sm" style="width:100%;margin-bottom:4px;padding:7px;font-size:11px;border-radius:7px" onclick="skipPair()">Skip this pair</button>
     <button class="admin-btn-sm" style="width:100%;margin-bottom:4px;padding:7px;font-size:11px;border-radius:7px" onclick="skipMidpoint()">Skip to midpoint</button>
     <button class="admin-btn-sm" style="width:100%;padding:7px;font-size:11px;border-radius:7px" onclick="skipEnd()">Skip to End</button>`;
-  const ki = document.getElementById('elKeyInput');
-  const vs = document.getElementById('elVoiceSelect');
-  if (ki) ki.value = S.elevenLabsKey;
-  if (vs) vs.value = S.elevenLabsVoice;
-  document.getElementById('adminBtn').addEventListener('click', () => {
-    S.adminOpen = !S.adminOpen;
-    panel.classList.toggle('open', S.adminOpen);
+  const ki=document.getElementById('elKeyInput'), vs=document.getElementById('elVoiceSelect');
+  if(ki) ki.value=S.elevenLabsKey;
+  if(vs) vs.value=S.elevenLabsVoice;
+  document.getElementById('adminBtn').addEventListener('click',()=>{
+    S.adminOpen=!S.adminOpen;
+    panel.classList.toggle('open',S.adminOpen);
     updateAdmin();
   });
   updateAdmin();
 }
 
 function saveVoiceSettings() {
-  const ki = document.getElementById('elKeyInput');
-  const vs = document.getElementById('elVoiceSelect');
-  const st = document.getElementById('voiceStatus');
-  S.elevenLabsKey   = ki ? ki.value.trim() : '';
-  S.elevenLabsVoice = vs ? vs.value : 'MF3mGyEYCl7XYWbV9V6O';
-  try {
-    localStorage.setItem('rad_elKey', S.elevenLabsKey);
-    localStorage.setItem('rad_elVoice', S.elevenLabsVoice);
-  } catch(e) {}
-  if (st) {
-    st.textContent = S.elevenLabsKey ? 'Saved! ElevenLabs active.' : 'Saved. Using built-in voice.';
-    setTimeout(()=>{ st.textContent=''; },2500);
-  }
+  const ki=document.getElementById('elKeyInput'), vs=document.getElementById('elVoiceSelect'), st=document.getElementById('voiceStatus');
+  S.elevenLabsKey=ki?ki.value.trim():''; S.elevenLabsVoice=vs?vs.value:'MF3mGyEYCl7XYWbV9V6O';
+  try{localStorage.setItem('rad_elKey',S.elevenLabsKey);localStorage.setItem('rad_elVoice',S.elevenLabsVoice);}catch(e){}
+  if(st){st.textContent=S.elevenLabsKey?'Saved! ElevenLabs active.':'Saved. Using built-in voice.';setTimeout(()=>{st.textContent='';},2500);}
 }
 
-function testVoice() {
-  saveVoiceSettings(); stopSpeak();
-  speak('Hello! I am the Relationship Detective voice. Does this sound good to you?');
-}
+function testVoice() { saveVoiceSettings(); stopSpeak(); speak('Hello! I am the Relationship Detective voice. Does this sound good to you?'); }
 
 function updateAdmin() {
-  const el = document.getElementById('adminLog');
-  if (!el) return;
-  if (!S.answers.length) { el.textContent = 'No answers yet.'; return; }
-  el.textContent = S.answers.map(a => {
-    if (a.type === 'model-id') {
-      return `V${a.vid}[${a.vM}] MODEL-ID: chose ${a.chosen} ${a.correct?'✓':'✗'} (${a.modelCertainty || ''})`;
-    }
+  const el=document.getElementById('adminLog'); if(!el) return;
+  if(!S.answers.length){el.textContent='No answers yet.';return;}
+  el.textContent=S.answers.map(a=>{
+    if(a.type==='model-id') return `V${a.vid}[${a.vM}] MODEL-ID: chose ${a.chosen} ${a.correct?'✓':'✗'} (${a.modelCertainty||''})`;
     return `V${a.vid}[${a.vM}] Q${a.qi+1} ${a.itemId}[${a.qM}] ${a.congruent?'CON':'INC'}: ${a.ans} key:${a.keyed} ${a.ok?'✓':'✗'}`;
   }).join('\n');
 }
 
 // ── CSV EXPORT ─────────────────────────────────────────
 function exportCSV() {
-  const headers = [
-    'ParticipantID','ChildName','ChildAge','Type',
-    'VignetteID','VignetteModel','QuestionIndex','QuestionModel',
-    'ItemID','IsCongruent','Answer','InitialYesNo','KeyedAnswer','Correct',
-    'ModelIDChosen','ModelIDCorrect','ModelIDCertainty','Timestamp'
-  ];
-  const rows = [headers.join(',')];
-  S.answers.forEach(a => {
-    if (a.type === 'model-id') {
-      rows.push([
-        S.pid, S.name, S.age,
-        'MODEL_ID',
-        a.vid, a.vM,
-        '', '', '', '',
-        '', '', '', '',
-        a.chosen, a.correct ? 'TRUE' : 'FALSE', a.modelCertainty || '',
-        a.ts
-      ].join(','));
+  const headers=['ParticipantID','ChildName','ChildAge','Type','VignetteID','VignetteModel','QuestionIndex','QuestionModel','ItemID','IsCongruent','Answer','InitialYesNo','KeyedAnswer','Correct','ModelIDChosen','ModelIDCorrect','ModelIDCertainty','Timestamp'];
+  const rows=[headers.join(',')];
+  S.answers.forEach(a=>{
+    if(a.type==='model-id'){
+      rows.push([S.pid,S.name,S.age,'MODEL_ID',a.vid,a.vM,'','','','','','','','',a.chosen,a.correct?'TRUE':'FALSE',a.modelCertainty||'',a.ts].join(','));
     } else {
-      rows.push([
-        S.pid, S.name, S.age,
-        'TEST_ITEM',
-        a.vid, a.vM,
-        a.qi+1, a.qM,
-        a.itemId||'',
-        a.congruent?'TRUE':'FALSE',
-        a.ans,
-        a.initialAns||(a.ans.includes('YES')?'YES':'NO'),
-        a.keyed,
-        a.ok?'TRUE':'FALSE',
-        '', '', '',
-        a.ts
-      ].join(','));
+      rows.push([S.pid,S.name,S.age,'TEST_ITEM',a.vid,a.vM,a.qi+1,a.qM,a.itemId||'',a.congruent?'TRUE':'FALSE',a.ans,a.initialAns||(a.ans.includes('YES')?'YES':'NO'),a.keyed,a.ok?'TRUE':'FALSE','','','',a.ts].join(','));
     }
   });
-  const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
-  const url  = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `RAD12C_${S.pid||S.name||'child'}_age${S.age||'unknown'}_${new Date().toISOString().slice(0,10)}.csv`;
-  link.click();
-  URL.revokeObjectURL(url);
+  const blob=new Blob([rows.join('\n')],{type:'text/csv'}), url=URL.createObjectURL(blob), link=document.createElement('a');
+  link.href=url; link.download=`RAD12C_${S.pid||S.name||'child'}_age${S.age||'unknown'}_${new Date().toISOString().slice(0,10)}.csv`;
+  link.click(); URL.revokeObjectURL(url);
 }
 
 // ── INIT ───────────────────────────────────────────────
 window.addEventListener('load', () => {
   try {
     initVoices();
-    setupAdmin();
-    setupSecretZone();
+    setupAdmin();       // builds panel content + click listener (panel is outside #app, persists)
+    setupSecretZone();  // sets up tap listener (secretZone is outside #app, persists)
     updateFullscreenBtn();
     render();
   } catch(err) {
-    document.getElementById('app').innerHTML = `<div class="error-box"><h2 style="color:#e74c3c">Could not start the game</h2><p style="margin:10px 0"><strong>${err.message}</strong></p><pre style="background:#f5f5f5;padding:12px;border-radius:8px;font-size:11px;text-align:left;overflow:auto">${err.stack||''}</pre></div>`;
+    document.getElementById('app').innerHTML=`<div class="error-box"><h2 style="color:#e74c3c">Could not start the game</h2><p style="margin:10px 0"><strong>${err.message}</strong></p><pre style="background:#f5f5f5;padding:12px;border-radius:8px;font-size:11px;text-align:left;overflow:auto">${err.stack||''}</pre></div>`;
     console.error(err);
   }
 });
 
 window.addEventListener('keydown', e => {
-  if (e.key === 'Backspace' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'SELECT') e.preventDefault();
+  if(e.key==='Backspace'&&e.target.tagName!=='INPUT'&&e.target.tagName!=='SELECT') e.preventDefault();
 });
 </script>
 </body>

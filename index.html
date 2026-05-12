@@ -256,6 +256,10 @@ function revealResearcherControls() {
   btn.classList.add('visible');
   btn.style.background = 'rgba(71,118,230,.85)';
   setTimeout(() => { btn.style.background = ''; }, 700);
+
+  // Stop the invisible zone blocking gear button clicks
+  const zone = document.getElementById('secretZone');
+  if (zone) zone.style.pointerEvents = 'none';
 }
 
 // ── GOOGLE SHEETS UPLOAD ───────────────────────────────
@@ -921,13 +925,6 @@ const SCENE_BACKGROUNDS = {
   <path d="M502 185 L509 173 L516 185 Z" fill="#FF8FAB"/>
   <rect x="520" y="176" width="12" height="9" rx="2" fill="#6BCB77"/>
   <rect x="537" y="176" width="12" height="9" rx="2" fill="#FFD84D"/>
-  <!-- Right pan with triangular items -->
-  <path d="M362 143 Q352 160 342 143" stroke="#C89B00" stroke-width="2.5" fill="none"/>
-  <ellipse cx="352" cy="160" rx="18" ry="5" fill="#C89B00" opacity=".35"/>
-  <path d="M345 162 L352 150 L359 162 Z" fill="#FF6EC7" opacity=".9"/>
-  <!-- Scale glow -->
-  <circle cx="300" cy="128" r="16" fill="#FFD84D" opacity=".7"><animate attributeName="opacity" values=".6;1;.6" dur="2s" repeatCount="indefinite"/></circle>
-  <circle cx="300" cy="128" r="28" fill="#FFD84D" opacity=".08"><animate attributeName="r" values="20;32;20" dur="2s" repeatCount="indefinite"/></circle>
 </svg>`,
 
   // LEFT: Stepped dais + ornate throne (char1 elevated)

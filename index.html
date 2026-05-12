@@ -121,6 +121,7 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* ── STARS / METER ── */
 .star-meter-wrap {
   display: flex; flex-direction: column;
   align-items: center; padding: 8px 16px 3px; gap: 2px;
@@ -158,6 +159,8 @@ body {
   font-size: 10px; color: #555; font-weight: 600;
 }
 .level-badge { text-align: center; animation: bounceIn .85s cubic-bezier(.17,.67,.37,1.3); }
+
+/* ── LAYOUT / TYPO ── */
 .screen {
   flex: 1; display: flex; flex-direction: column;
   align-items: center; padding: 11px 17px 17px;
@@ -186,6 +189,8 @@ body {
 .name-input:focus, .age-select:focus {
   border-color: #F7971E; box-shadow: 0 0 0 4px rgba(247,151,30,.13);
 }
+
+/* ── BUTTONS ── */
 .btn {
   font-family: inherit; font-size: 17px; font-weight: 600;
   border: none; border-radius: 50px; padding: 11px 24px;
@@ -201,6 +206,7 @@ body {
 .btn-audio     { background: linear-gradient(135deg,#4776e6,#8e54e9); color:white; font-size:14px; padding:8px 16px; }
 .btn-story-replay { background: linear-gradient(135deg,#2196F3,#21CBF3); color:white; font-size:14px; padding:8px 16px; border:none; border-radius:50px; cursor:pointer; font-family:inherit; font-weight:600; box-shadow:0 3px 10px rgba(0,0,0,.12); -webkit-tap-highlight-color:transparent; }
 .btn-story-replay:active { transform:scale(.95); }
+
 .btn-green {
   background: linear-gradient(135deg,#56ab2f,#a8e063); color:white;
   font-size:22px; padding:14px 18px;
@@ -215,15 +221,10 @@ body {
   flex:1; max-width:165px;
   justify-content:center; flex-direction:column; gap:5px; border-radius:20px;
 }
+
 .ans-thumb { display:block; margin:0 auto; object-fit:contain; }
-.btn-green .ans-thumb { animation: faceBounce 1.1s ease-in-out infinite; }
-.btn-red   .ans-thumb { animation: faceWiggle 1.7s ease-in-out infinite; }
-@keyframes faceBounce {
-  0%,100%{transform:translateY(0) scale(1);} 45%{transform:translateY(-7px) scale(1.09);}
-}
-@keyframes faceWiggle {
-  0%,100%{transform:rotate(0deg);} 22%{transform:rotate(-9deg);} 62%{transform:rotate(9deg);}
-}
+
+/* certainty buttons */
 .btn-likert-strong {
   font-family:inherit; font-size:15px; font-weight:600;
   border:none; border-radius:20px; padding:12px 10px;
@@ -244,6 +245,7 @@ body {
 }
 .btn-likert-strong:active, .btn-likert-mild:active { transform:scale(.95); }
 .btn-likert-strong:disabled, .btn-likert-mild:disabled { opacity:.44; cursor:not-allowed; }
+
 .btn-model-choice {
   background: white; border: 3px solid #E0E0E0; border-radius: 16px;
   padding: 10px; cursor: pointer;
@@ -254,6 +256,8 @@ body {
 .btn-model-choice:active  { transform: scale(.95); }
 .btn-model-choice:hover   { border-color: #4776e6; box-shadow: 0 4px 16px rgba(71,118,230,.25); }
 .btn-model-choice:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ── STORY / QUESTION UI ── */
 .illus {
   width:100%; border-radius:13px; overflow:hidden;
   background:#E8F4FF; box-shadow: inset 0 2px 8px rgba(0,0,0,.07);
@@ -272,7 +276,9 @@ body {
 }
 .sent { display:inline; border-radius:4px; padding:1px 2px; transition:background .3s; }
 .sent.hi { background:#FFF3B0; }
+
 .story-btns { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; width:100%; }
+
 .q-header {
   width:100%; background:linear-gradient(135deg,#4776e6,#8e54e9);
   border-radius:11px; padding:8px 14px; color:white;
@@ -286,20 +292,11 @@ body {
   display:flex; align-items:center; justify-content:center;
 }
 .ans-row   { display:flex; gap:15px; justify-content:center; width:100%; }
+
 .replay-section { display:flex; flex-direction:column; align-items:center; gap:5px; width:100%; }
 .replay-label { font-size:11px; color:#bbb; text-align:center; }
 .replay-btns { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
-.ex-explain {
-  display:none; width:100%;
-  background:#E8F8E8; border:2px solid #A5D6A7; border-radius:12px;
-  padding:11px 15px; font-size:15px; color:#2E7D32;
-  text-align:center; line-height:1.6;
-}
-.thumb-guide {
-  display:flex; gap:18px; justify-content:center; align-items:center;
-  background:rgba(71,118,230,.05); border-radius:10px; padding:7px 14px;
-  border:1.5px solid rgba(71,118,230,.15); font-size:13px; color:#666;
-}
+
 .trans-screen {
   flex:1; display:flex; flex-direction:column;
   align-items:center; justify-content:center;
@@ -307,12 +304,14 @@ body {
 }
 .trans-msg { font-size:22px; font-weight:600; color:#333; }
 .trans-sub { font-size:15px; color:#aaa; }
+
 .midpoint-screen {
   flex:1; display:flex; flex-direction:column;
   align-items:center; justify-content:center;
   gap:14px; padding:28px; text-align:center;
   animation: fadeIn .35s ease;
 }
+
 .end-screen {
   flex:1; display:flex; flex-direction:column;
   align-items:center; justify-content:center;
@@ -325,12 +324,15 @@ body {
 .end-title { font-size:29px; font-weight:600; color:#f7971e; }
 .end-sub   { font-size:16px; color:#666; }
 .end-btns  { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:4px; }
+
 .info-box {
   font-size:15px; color:#555; line-height:1.82;
   max-width:500px; background:#F8F4FF;
   padding:14px 18px; border-radius:14px; border:3px solid #C9B8F0;
 }
+
 .error-box { padding:28px; font-family:Arial,sans-serif; max-width:600px; margin:auto; text-align:center; }
+
 .unlock-btn {
   background: linear-gradient(135deg,#4776e6,#8e54e9);
   color: white; border: none; border-radius: 50px;
@@ -340,6 +342,7 @@ body {
   animation: pulse 1.5s ease infinite;
 }
 @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.04);} }
+
 @media (max-width:480px) {
   .wt { font-size:25px; }
   .btn-green,.btn-red { font-size:18px; max-width:138px; }
@@ -413,7 +416,6 @@ function updateFullscreenBtn() {
 );
 
 // ── SECRET RESEARCHER UNLOCK ───────────────────────────
-// Tap the bottom-right corner 5 times within 3 seconds
 let secretTaps = 0, secretTimer = null;
 
 function setupSecretZone() {
@@ -435,7 +437,6 @@ function revealResearcherControls() {
   const btn = document.getElementById('adminBtn');
   if (!btn) return;
   btn.classList.add('visible');
-  // Brief blue flash so researcher knows it worked
   btn.style.background = 'rgba(71,118,230,.85)';
   setTimeout(() => { btn.style.background = ''; }, 700);
 }
@@ -468,6 +469,7 @@ function uploadToSheets(answerObj) {
     Correct:        answerObj.ok        != null ? String(answerObj.ok).toUpperCase()        : '',
     ModelIDChosen:  answerObj.chosen           || '',
     ModelIDCorrect: answerObj.correct   != null ? String(answerObj.correct).toUpperCase()   : '',
+    ModelIDCertainty: answerObj.modelCertainty || '',
     Timestamp:      answerObj.ts               || ''
   };
   fetch(SHEETS_URL, {
@@ -486,18 +488,6 @@ function markSessionComplete() {
 const W = 600, H = 300, GY = H * 0.70;
 const IMG_BASE = 'https://raw.githubusercontent.com/ashleyjthomas/GameRAD/main/';
 
-// ── KUDOS ──────────────────────────────────────────────
-const KUDOS = [
-  "Brilliant work on that one!",
-  "Excellent thinking — you are really good at this!",
-  "Wonderful job! I love how carefully you are thinking!",
-  "Amazing detective work! Keep it up!",
-  "You are so good at this! Wow!",
-  "Fantastic! You are a true Relationship Detective!",
-  "That was great! I am really impressed!",
-  "Super job! You are doing wonderfully!"
-];
-
 // ── DETECTIVE LEVELS ───────────────────────────────────
 const DETECTIVE_LEVELS = [
   { min:  0, label: 'Rookie Detective',  emoji: '🔍', color: '#7EDBFF', color2: '#4A90D9' },
@@ -513,36 +503,6 @@ function getCurrentLevel(stars) {
   return lv;
 }
 
-// ── EXAMPLE ────────────────────────────────────────────
-const EXAMPLE = {
-  id: 'ex',
-  char1: { name: 'Alien 1', hair: '#9B5DE5', shirt: '#4ECDC4', pants: '#1A3040', style: 'short' },
-  char2: { name: 'Alien 2', hair: '#FFD84D', shirt: '#FF6EC7', pants: '#2E1E60', style: 'short' },
-  scene: 'trading_post',
-  parts: [
-    'These two live on Planet Zazzo.',
-    'Last moon-cycle, they collected gaxa fruits together. One split the fruits into two exactly equal piles, and the other picked the pile they wanted.',
-    'Last week, one gave the other some flurp-berries. So the other made sure to bring back the same number of flurp-berries in return.'
-  ],
-  questions: [
-    {
-      text: 'These two aliens take turns using the starviewer so they each get the same amount of time.',
-      keyed: 'YES', png: 'EMstarviewer.png',
-      explain: 'Since these aliens like things to be fair and equal — they split fruits evenly and always give back what they receive — taking turns on the starviewer sounds just like them! YES makes sense here.'
-    },
-    {
-      text: 'One alien decides what they do, and the other just goes along with it.',
-      keyed: 'NO', png: 'ARboss.png',
-      explain: 'These aliens treat each other as equals, so it does not sound like just one of them would always be in charge. NO makes more sense here.'
-    },
-    {
-      text: 'When they collected rocks to build something, they each put in exactly the same number of rocks.',
-      keyed: 'YES', png: 'EMmoonrocktower.png',
-      explain: 'Putting in the same amount fits their style perfectly — they always like things to be fair and equal between them. YES!'
-    }
-  ]
-};
-
 // ── TEST ITEMS ─────────────────────────────────────────
 const TEST_ITEMS = {
   EM: [
@@ -557,7 +517,7 @@ const TEST_ITEMS = {
   ],
   CS: [
     { id: 'CS1', text: 'When {char1} and {char2} share food, they eat from the same big bowl without counting who has more.',                                                                 png: 'CSsamebowl.png'       },
-    { id: 'CS2', text: 'When either {char1} or {char2} wins a prize, both feel equally happy and proud — as though they both won together.',                                                  png: 'CSsproud.png'         },
+    { id: 'CS2', text: 'When either {char1} or {char2} wins a prize, both feel happy and proud — as though they both won together.',                                                         png: 'CSsproud.png'         },
     { id: 'CS3', text: 'When either {char1} or {char2} finds something nice, they bring it straight to the other to share — not because they have to, just because they share everything.',   png: 'CScrystalshare.png'   },
     { id: 'CS4', text: 'When {char1} and {char2} walk somewhere together, they always hold hands because it makes them feel like one.',                                                       png: 'CSholdinghands.png'   },
     { id: 'CS5', text: '{char1} and {char2} share all their things freely — if one of them wants to use something, they just take it without asking.',                                        png: 'CSsharedstuff.png'    },
@@ -603,7 +563,14 @@ function assignAllQuestions() {
     const excluded = v.excludeItems || [];
     const questions = ['EM','CS','AR'].map(m => {
       const item = pick(m, excluded);
-      return { id: item.id, text: fillNames(item.text, v), qM: m, png: item.png, keyed: m === v.model ? 'YES' : 'NO', congruent: m === v.model };
+      return {
+        id: item.id,
+        text: fillNames(item.text, v),
+        qM: m,
+        png: item.png,
+        keyed: m === v.model ? 'YES' : 'NO',
+        congruent: m === v.model
+      };
     });
     for (let i = questions.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -621,8 +588,8 @@ const VIGNETTES = [
     char2: { name: 'Blix', img: 'Asset%2028.png', hair: '#FFD84D', shirt: '#FF6EC7', pants: '#2E1E60', style: 'short' },
     scene: 'alien_home',
     parts: [
-      'Zumi and Blix share the same Zib-pod where they sleep. They have one big food bowl that they eat from, and they never count who ate more. Zumi and Blix just take what they need.',
-      'If Zumi finds a gaxa-berry in their yard, they just eat it without asking. If Blix uses Zumi\'s neeb-stone, that is perfectly fine too. Nothing really belongs to just one of them.',
+      'Zumi and Blix share the same sleep pod where they rest. They have one big food bowl that they eat from, and they never count who ate more. Zumi and Blix just take what they need.',
+      'If Zumi finds a special berry in their yard, they just eat it without asking. If Blix uses Zumi\'s shiny stone, that is perfectly fine too. Nothing really belongs to just one of them.',
       'When Blix got hurt last week, Zumi felt the pain in their own body. They always say "when we got hurt" because it felt exactly the same to both of them.'
     ]
   },
@@ -633,7 +600,7 @@ const VIGNETTES = [
     scene: 'trading_post',
     parts: [
       'This is Orro and Fenn. When one gives something, the other must give something back of the same size before the next sunrise.',
-      'Last week, Orro brought Fenn a wubba-fruit. So Fenn made sure to bring Orro a wubba-fruit the very next day.',
+      'Last week, Orro brought Fenn a fruit. So Fenn made sure to bring Orro a fruit the very next day.',
       'When they share the glow-ball, they use a timer so that each one uses it for exactly the same amount of time.'
     ]
   },
@@ -644,7 +611,7 @@ const VIGNETTES = [
     scene: 'alien_meadow',
     parts: [
       'Kiva and Doop walk through their meadow together every evening. They plan to live here forever and feel that they have always lived here.',
-      'Whatever Kiva finds in the meadow, Kiva thinks of it as belonging to both of them. A neeb-stone, a star-fruit, a sparkle-feather — it is always ours, never just mine.',
+      'Whatever Kiva finds in the meadow, Kiva thinks of it as belonging to both of them. A shiny stone, a star-fruit, a sparkle-feather — it is always ours, never just mine.',
       'When others ask about the meadow, Kiva and Doop always say "our meadow." They have never thought of anything there as just one of theirs alone.'
     ]
   },
@@ -654,7 +621,7 @@ const VIGNETTES = [
     char2: { name: 'Plara', img: 'Asset%2034.png', hair: '#4ECDC4', shirt: '#FF8FAB', pants: '#2C3E50', style: 'pigtails' },
     scene: 'throne_room',
     parts: [
-      'Wex has the special glow-mark on their arm — it shines brighter than the marks on Plara\'s arm.',
+      'Wex has a special glow-mark on their arm — it shines brighter than the marks on Plara\'s arm.',
       'When Wex and Plara need to choose which cave to explore or which activity to do, Wex decides and Plara agrees without question.',
       'At every meal, Wex picks their food first and takes as much as they want. Plara waits quietly until Wex is completely finished.'
     ]
@@ -721,8 +688,8 @@ const VIGNETTES = [
     scene: 'throne_room',
     parts: [
       'Beem has a special crystal badge that everyone can see. Beem always speaks for both Beem and Jovi.',
-      'Jovi thinks Beem is the most impressive alien they have ever met. Whenever Beem decides something, Jovi feels lucky to go along.',
-      'When they found a gaxa-fruit, Beem chose the best part to keep. Jovi received what was left over.'
+      'Jovi thinks Beem is the most impressive person they have ever met. Whenever Beem decides something, Jovi feels lucky to go along.',
+      'When they found a fruit, Beem chose the best part to keep. Jovi received what was left over.'
     ]
   },
   {
@@ -752,8 +719,10 @@ const VIGNETTES = [
 // ── STATE ──────────────────────────────────────────────
 const S = {
   phase: 'welcome', name: '', age: '', pid: '',
-  vi: 0, qi: 0, eqi: 0,
-  pendingAns: null, modelIdOrder: [],
+  vi: 0, qi: 0,
+  pendingAns: null,
+  pendingModelChoice: null,
+  modelIdOrder: [],
   answers: [], stars: 0, adminOpen: false,
   elevenLabsKey:   localStorage.getItem('rad_elKey')   || '',
   elevenLabsVoice: localStorage.getItem('rad_elVoice') || 'MF3mGyEYCl7XYWbV9V6O'
@@ -782,7 +751,10 @@ function unlockAudio(thenSpeak) {
 
 function bestVoice() {
   const prefs = ['Google UK English Female','Samantha','Karen','Moira','Google US English','Microsoft Zira Desktop - English (United States)','Microsoft Zira - English (United States)'];
-  for (const p of prefs) { const v = voices.find(v => v.name === p || v.name.includes(p)); if (v) return v; }
+  for (const p of prefs) {
+    const v = voices.find(v => v.name === p || v.name.includes(p));
+    if (v) return v;
+  }
   return voices.find(v => v.lang && v.lang.startsWith('en') && v.localService) ||
          voices.find(v => v.lang && v.lang.startsWith('en')) || voices[0] || null;
 }
@@ -862,12 +834,13 @@ function thumbsDownSVG(size) {
   return `<img class="ans-thumb" src="${IMG_BASE}thumbsdown.png" width="${size}" height="${size}" style="display:block;margin:0 auto;object-fit:contain"/>`;
 }
 
-// ── KID SVG ────────────────────────────────────────────
+// ── STATIC KID SVG (no animation) ─────────────────────
 function kidSVG(cx, groundY, cfg, animOffset, flip, imgH, imgYOffset) {
-  imgH = imgH || 182; imgYOffset = imgYOffset || 35;
-  animOffset = animOffset || '0s'; flip = flip || false;
+  imgH = imgH || 182;
+  imgYOffset = imgYOffset || 35;
+  flip = flip || false;
   const { hair, shirt, pants, style, img } = cfg;
-  const bobBegin = (animOffset === 'wave') ? '0s' : animOffset;
+
   if (img && animOffset !== 'wave') {
     const imgUrl = IMG_BASE + img;
     const imgW = Math.round(imgH * 88 / 182);
@@ -876,54 +849,56 @@ function kidSVG(cx, groundY, cfg, animOffset, flip, imgH, imgYOffset) {
     const imgEl = `<image href="${imgUrl}" x="${cx - imgW/2}" y="${groundY - imgH + imgYOffset}" width="${imgW}" height="${imgH}" preserveAspectRatio="xMidYMax meet"/>`;
     if (flip) p.push(`<g transform="translate(${cx * 2}, 0) scale(-1, 1)">${imgEl}</g>`);
     else p.push(imgEl);
-    return `<g><animateTransform attributeName="transform" type="translate" values="0,0; 0,-5; 0,0" dur="2.6s" begin="${bobBegin}" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>${p.join('')}</g>`;
+    return `<g>${p.join('')}</g>`;
   }
+
   const sk = skin(cfg.name || '');
-  const hR=28, bH=62, bW=50, lH=58, lW=19, aH=44, aW=12;
-  const fY=groundY, lT=fY-lH, bT=lT-bH, hY=bT-hR-3;
+  const hR = 28, bH = 62, bW = 50, lH = 58, lW = 19, aH = 44, aW = 12;
+  const fY = groundY, lT = fY - lH, bT = lT - bH, hY = bT - hR - 3;
   const p = [];
+
   p.push(`<ellipse cx="${cx}" cy="${fY}" rx="26" ry="6" fill="rgba(0,0,0,.08)"/>`);
-  p.push(`<rect x="${cx-lW-2}" y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
-  p.push(`<rect x="${cx+2}" y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
-  p.push(`<ellipse cx="${cx-lW*.5-1}" cy="${fY}" rx="13" ry="6" fill="#333"/>`);
-  p.push(`<ellipse cx="${cx+lW*.5+1}" cy="${fY}" rx="13" ry="6" fill="#333"/>`);
-  p.push(`<rect x="${cx-bW*.5-aW}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
-  p.push(`<circle cx="${cx-bW*.5-aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>`);
-  if (animOffset === 'wave') {
-    const pvX = (cx+bW*.5+aW*.5).toFixed(1), pvY = (bT+8).toFixed(1);
-    p.push(`<g><animateTransform attributeName="transform" type="rotate" values="-35 ${pvX} ${pvY}; 40 ${pvX} ${pvY}; -35 ${pvX} ${pvY}" dur="0.85s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1;0.4 0 0.6 1"/>
-      <rect x="${cx+bW*.5}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>
-      <circle cx="${cx+bW*.5+aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>
-    </g>`);
-  } else {
-    p.push(`<rect x="${cx+bW*.5}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
-    p.push(`<circle cx="${cx+bW*.5+aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>`);
-  }
-  p.push(`<rect x="${cx-bW*.5}" y="${bT}" width="${bW}" height="${bH}" rx="10" fill="${shirt}"/>`);
-  p.push(`<path d="M${cx-9},${bT} Q${cx},${bT+13} ${cx+9},${bT}" fill="white" opacity=".2"/>`);
+
+  p.push(`<rect x="${cx - lW - 2}" y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
+  p.push(`<rect x="${cx + 2}" y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
+  p.push(`<ellipse cx="${cx - lW * .5 - 1}" cy="${fY}" rx="13" ry="6" fill="#333"/>`);
+  p.push(`<ellipse cx="${cx + lW * .5 + 1}" cy="${fY}" rx="13" ry="6" fill="#333"/>`);
+
+  p.push(`<rect x="${cx - bW * .5 - aW}" y="${bT + 4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
+  p.push(`<circle cx="${cx - bW * .5 - aW * .5}" cy="${bT + 4 + aH}" r="7" fill="${sk}"/>`);
+
+  p.push(`<rect x="${cx + bW * .5}" y="${bT + 4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
+  p.push(`<circle cx="${cx + bW * .5 + aW * .5}" cy="${bT + 4 + aH}" r="7" fill="${sk}"/>`);
+
+  p.push(`<rect x="${cx - bW * .5}" y="${bT}" width="${bW}" height="${bH}" rx="10" fill="${shirt}"/>`);
+  p.push(`<path d="M${cx - 9},${bT} Q${cx},${bT + 13} ${cx + 9},${bT}" fill="white" opacity=".2"/>`);
+
   p.push(`<circle cx="${cx}" cy="${hY}" r="${hR}" fill="${sk}"/>`);
-  if (style==='short') {
-    p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
-  } else if (style==='long') {
-    p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
-    p.push(`<rect x="${cx-hR-1}" y="${hY-6}" width="13" height="40" rx="6" fill="${hair}"/>`);
-    p.push(`<rect x="${cx+hR-12}" y="${hY-6}" width="13" height="40" rx="6" fill="${hair}"/>`);
-  } else if (style==='pigtails') {
-    p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
-    p.push(`<circle cx="${cx-hR-5}" cy="${hY-3}" r="10" fill="${hair}"/>`);
-    p.push(`<circle cx="${cx+hR+5}" cy="${hY-3}" r="10" fill="${hair}"/>`);
-    p.push(`<line x1="${cx-hR+1}" y1="${hY-1}" x2="${cx-hR-5}" y2="${hY-3}" stroke="${hair}" stroke-width="5"/>`);
-    p.push(`<line x1="${cx+hR-1}" y1="${hY-1}" x2="${cx+hR+5}" y2="${hY-3}" stroke="${hair}" stroke-width="5"/>`);
+
+  if (style === 'short') {
+    p.push(`<ellipse cx="${cx}" cy="${hY - hR + 10}" rx="${hR}" ry="${hR * .52}" fill="${hair}"/>`);
+  } else if (style === 'long') {
+    p.push(`<ellipse cx="${cx}" cy="${hY - hR + 10}" rx="${hR}" ry="${hR * .52}" fill="${hair}"/>`);
+    p.push(`<rect x="${cx - hR - 1}" y="${hY - 6}" width="13" height="40" rx="6" fill="${hair}"/>`);
+    p.push(`<rect x="${cx + hR - 12}" y="${hY - 6}" width="13" height="40" rx="6" fill="${hair}"/>`);
+  } else if (style === 'pigtails') {
+    p.push(`<ellipse cx="${cx}" cy="${hY - hR + 10}" rx="${hR}" ry="${hR * .52}" fill="${hair}"/>`);
+    p.push(`<circle cx="${cx - hR - 5}" cy="${hY - 3}" r="10" fill="${hair}"/>`);
+    p.push(`<circle cx="${cx + hR + 5}" cy="${hY - 3}" r="10" fill="${hair}"/>`);
+    p.push(`<line x1="${cx - hR + 1}" y1="${hY - 1}" x2="${cx - hR - 5}" y2="${hY - 3}" stroke="${hair}" stroke-width="5"/>`);
+    p.push(`<line x1="${cx + hR - 1}" y1="${hY - 1}" x2="${cx + hR + 5}" y2="${hY - 3}" stroke="${hair}" stroke-width="5"/>`);
   }
-  p.push(`<path d="M${cx-14},${hY-2} Q${cx-8},${hY-12} ${cx-2},${hY-2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
-  p.push(`<path d="M${cx+2},${hY-2} Q${cx+8},${hY-12} ${cx+14},${hY-2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
-  p.push(`<path d="M${cx-10},${hY+9} Q${cx},${hY+19} ${cx+10},${hY+9}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
-  p.push(`<circle cx="${cx-17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
-  p.push(`<circle cx="${cx+17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
-  return `<g><animateTransform attributeName="transform" type="translate" values="0,0; 0,-5; 0,0" dur="2.6s" begin="${bobBegin}" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"/>${p.join('')}</g>`;
+
+  p.push(`<path d="M${cx - 14},${hY - 2} Q${cx - 8},${hY - 12} ${cx - 2},${hY - 2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
+  p.push(`<path d="M${cx + 2},${hY - 2} Q${cx + 8},${hY - 12} ${cx + 14},${hY - 2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
+  p.push(`<path d="M${cx - 10},${hY + 9} Q${cx},${hY + 19} ${cx + 10},${hY + 9}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
+  p.push(`<circle cx="${cx - 17}" cy="${hY + 6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
+  p.push(`<circle cx="${cx + 17}" cy="${hY + 6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
+
+  return `<g>${p.join('')}</g>`;
 }
 
-// ── SCENE BACKGROUNDS ──────────────────────────────────
+// ── SCENE BACKGROUNDS (animated) ───────────────────────
 const SCENE_BACKGROUNDS = {
   alien_home: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#0D0B1E"/>
@@ -1029,7 +1004,7 @@ const CHAR_POS = {
   alien_home:   { x: [170, 430], gy: 216, h: 182, yo: 35 },
   alien_meadow: { x: [162, 438], gy: 213, h: 182, yo: 35 },
   trading_post: { x: [148, 452], gy: 213, h: 165, yo: 30 },
-  throne_room:  { x: [172, 432], gy: [185, 216], h: 165, yo: 28 },
+  throne_room:  { x: [172, 432], gy: 216, h: 165, yo: 28 }, // both same height
   crystal_cave: { x: [155, 445], gy: 213, h: 182, yo: 35 }
 };
 
@@ -1094,11 +1069,7 @@ function starTransHTML(earned, total) {
 
 function welcomeSVG(c1, c2) {
   const gy = 165;
-  const rays6 = Array.from({length:6},(_,a)=>{
-    const r=a*60*Math.PI/180;
-    return `<line x1="${(Math.cos(r)*28).toFixed(1)}" y1="${(Math.sin(r)*28).toFixed(1)}" x2="${(Math.cos(r)*39).toFixed(1)}" y2="${(Math.sin(r)*39).toFixed(1)}" stroke="#9B5DE5" stroke-width="3" stroke-linecap="round"/>`;
-  }).join('');
-  const kid1 = c1 ? kidSVG(74, gy, c1, '0s', true) : kidSVG(74, gy, {hair:'#9B5DE5',shirt:'#4ECDC4',pants:'#1A3040',style:'short',name:''}, 'wave');
+  const kid1 = c1 ? kidSVG(74, gy, c1, '0s', true) : kidSVG(74, gy, {hair:'#9B5DE5',shirt:'#4ECDC4',pants:'#1A3040',style:'short',name:''}, '0s');
   const kid2 = c2 ? kidSVG(306, gy, c2, '1.1s', false) : kidSVG(306, gy, {hair:'#FFD84D',shirt:'#FF6EC7',pants:'#2E1E60',style:'short',name:''}, '1.1s');
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 205" style="width:100%;display:block">
     <rect x="0" y="0" width="380" height="${gy}" fill="#0D1B3E"/>
@@ -1109,16 +1080,6 @@ function welcomeSVG(c1, c2) {
     <circle cx="300" cy="18" r="1.2" fill="white" opacity=".7"/>
     <circle cx="355" cy="28" r="1" fill="white" opacity=".8"/>
     <rect x="0" y="${gy}" width="380" height="${205-gy}" fill="#1A3D2A"/>
-    <circle cx="344" cy="33" r="22" fill="#E8D5A3"/>
-    <g transform="translate(190,80)">
-      <circle cx="0" cy="0" r="36" fill="none" stroke="#9B5DE5" stroke-width="6" opacity=".78"/>
-      <line x1="25" y1="25" x2="44" y2="44" stroke="#9B5DE5" stroke-width="7" stroke-linecap="round"/>
-      <text x="0" y="12" text-anchor="middle" font-family="Arial Black,Arial" font-size="28" fill="#9B5DE5" font-weight="bold">?</text>
-    </g>
-    <g transform="translate(190,80)">
-      <animateTransform attributeName="transform" type="rotate" from="0 190 80" to="360 190 80" dur="22s" repeatCount="indefinite" additive="sum"/>
-      ${rays6}
-    </g>
     ${kid1}
     ${kid2}
   </svg>`;
@@ -1135,28 +1096,24 @@ function render() {
   updateAdmin();
   try {
     switch (S.phase) {
-      case 'welcome':   renderWelcome();                               break;
-      case 'intro':     renderIntro();                                 break;
-      case 'ex-story':  renderStory(EXAMPLE, true);                   break;
-      case 'ex-q':      renderQuestion(EXAMPLE, S.eqi, true);         break;
-      case 'ex-done':   renderExDone();                                break;
-      case 'story':     renderStory(VIGNETTES[S.vi], false);          break;
-      case 'model-id':  renderModelId();                               break;
-      case 'q':         renderQuestion(VIGNETTES[S.vi], S.qi, false); break;
-      case 'q-likert':  renderLikert();                                break;
-      case 'trans':     renderTrans();                                 break;
-      case 'midpoint':  renderMidpoint();                              break;
-      case 'end':       renderEnd();                                   break;
+      case 'welcome':          renderWelcome();                         break;
+      case 'intro':            renderIntro();                           break;
+      case 'story':            renderStory(VIGNETTES[S.vi]);            break;
+      case 'model-id':         renderModelId();                         break;
+      case 'model-certainty':  renderModelCertainty();                  break;
+      case 'q':                renderQuestion(VIGNETTES[S.vi], S.qi);   break;
+      case 'q-likert':         renderLikert();                          break;
+      case 'trans':            renderTrans();                           break;
+      case 'midpoint':         renderMidpoint();                        break;
+      case 'end':              renderEnd();                             break;
     }
   } catch(err) {
     app.innerHTML = `<div class="error-box"><h2 style="color:#e74c3c">Something went wrong</h2><p style="margin:10px 0"><strong>${err.message}</strong></p><pre style="background:#f5f5f5;padding:12px;border-radius:8px;font-size:11px;text-align:left;overflow:auto">${err.stack||''}</pre><button class="btn btn-primary" style="margin-top:12px" onclick="resetGame()">Start Over</button></div>`;
     console.error(err);
   }
-  // Always keep overlay buttons on top after render
   keepOverlayButtons();
 }
 
-// Keep fullscreen btn, admin btn, secret zone always on top after innerHTML rewrites
 function keepOverlayButtons() {
   const fsBtn     = document.getElementById('fullscreenBtn');
   const adminBtn  = document.getElementById('adminBtn');
@@ -1189,10 +1146,10 @@ function renderWelcome() {
   </div>` : ''}
   <div class="screen" style="justify-content:center;text-align:center;padding-top:14px">
     <div class="wt">Relationship Detective!</div>
-    <div class="ws">Can you figure out how these aliens act toward each other?</div>
+    <div class="ws">Can you figure out how these people who live far away act toward each other?</div>
     <div class="illus" style="max-width:330px">${welcomeSVG(pool[wi1], pool[wi2])}</div>
     <button id="unlockBtn" class="unlock-btn"
-      onclick="unlockAudio('Hello there, and welcome to Relationship Detective! I am so excited you are here today! First, can you type your first name in the box. And then pick your age from the little menu. When you are all ready, press the big orange button that says Let us play!')">
+      onclick="unlockAudio('Hello there, and welcome to Relationship Detective! I am so glad you are here today. First, can you type your first name in the box, and then pick your age from the little menu. When you are all ready, press the big orange button that says Let us play!')">
       🔊 Tap here to turn on sound!
     </button>
     <div class="form-row">
@@ -1238,44 +1195,26 @@ function renderIntro() {
     <div style="font-size:44px">🕵️</div>
     <div style="font-size:22px;font-weight:600;color:#333">Here is how to play!</div>
     <div class="info-box" style="font-size:14px;line-height:1.75">
-      I will tell you about <strong>two aliens</strong> and how they act toward each other.<br><br>
-      <em>These aliens might do things differently from the way you do things — but that is okay!</em><br><br>
-      Then I will ask — <strong>would those same two aliens act that way in another situation?</strong><br><br>
+      I will tell you about <strong>two people who live far away</strong> and how they act toward each other.<br><br>
+      <em>These people might do things differently from the way you do things — but that is okay!</em><br><br>
+      Then I will ask — <strong>would those same two people act that way in another situation?</strong><br><br>
       <strong>Press the big 👍 thumb UP for YES</strong><br>
       <strong>Press the big 👎 thumb DOWN for NO</strong><br><br>
-      <div style="display:flex;gap:12px;justify-content:center;align-items:flex-end;margin:6px 0 10px">
-        <div style="text-align:center">
-          <div style="font-size:11px;color:#27AE60;font-weight:600;margin-bottom:4px">Really sure YES</div>
-          ${thumbsUpSVG(52)}
-        </div>
-        <div style="text-align:center;opacity:.65">
-          <div style="font-size:11px;color:#27AE60;font-weight:600;margin-bottom:4px">A little sure YES</div>
-          ${thumbsUpSVG(36)}
-        </div>
-        <div style="width:10px"></div>
-        <div style="text-align:center;opacity:.65">
-          <div style="font-size:11px;color:#E74C3C;font-weight:600;margin-bottom:4px">A little sure NO</div>
-          ${thumbsDownSVG(36)}
-        </div>
-        <div style="text-align:center">
-          <div style="font-size:11px;color:#E74C3C;font-weight:600;margin-bottom:4px">Really sure NO</div>
-          ${thumbsDownSVG(52)}
-        </div>
-      </div>
-      After you pick YES or NO, I will ask <strong>how sure you are!</strong><br><br>
+      After you pick YES or NO, I will ask <strong>how sure you are</strong> using big and small thumbs.<br><br>
       <strong>There are no wrong answers — just your best guess!</strong>
     </div>
-    <div style="font-size:13px;color:#bbb">Let us try a practice example together first!</div>
-    <button class="btn btn-primary" style="font-size:18px;padding:12px 28px" onclick="goExStory()">Show me how! 🚀</button>
+    <div style="font-size:13px;color:#bbb">When you are ready, we will start with the first pair.</div>
+    <button class="btn btn-primary" style="font-size:18px;padding:12px 28px" onclick="startRealGame()">Let us start! 🚀</button>
   </div>`;
   stopSpeak();
-  speak(`Wonderful${nm}! Here is how our game works. I am going to tell you about two aliens and how they act toward each other. These aliens might do things a little differently from the way you do things — but that is totally okay! Then I will ask — do you think those same two aliens would act a certain way in another situation? Press the big THUMBS UP if you think YES, or the big THUMBS DOWN if you think NO. After you answer, I will ask how sure you are — a big thumb means really sure, and a small thumb means pretty sure. There are absolutely no wrong answers — we just want to know what you think! Press the big orange button to try a practice example!`);
+  speak(`Wonderful${nm}! Here is how our game works. I am going to tell you about two people who live far away and how they act toward each other. These people might do things a little differently from the way you do things — and that is totally okay. Then I will ask if you think those same two people would act a certain way in another situation. Press the big thumbs up if you think YES, or the big thumbs down if you think NO. After you answer, I will ask how sure you are with a big thumb and a smaller thumb. There are no wrong answers — we just want to know what you think. When you are ready, press the big orange button to start!`);
 }
 
-function renderStory(v, isEx) {
+// ── STORY ──────────────────────────────────────────────
+function renderStory(v) {
   app.innerHTML = `
-  ${isEx ? '' : starHeaderHTML(S.stars, VIGNETTES.length)}
-  <div class="screen" style="padding-top:${isEx ? 12 : 6}px">
+  ${starHeaderHTML(S.stars, VIGNETTES.length)}
+  <div class="screen" style="padding-top:6px">
     <div class="story-head">
       <div class="pair-title">Meet ${escHtml(v.char1.name)} and ${escHtml(v.char2.name)}!</div>
     </div>
@@ -1285,14 +1224,11 @@ function renderStory(v, isEx) {
     </div>
     <div class="story-btns">
       <button class="btn btn-audio" onclick="replayStory()">🔊 Hear the story again</button>
-      <button class="btn btn-primary" id="readyBtn" style="display:none" onclick="goQs(${isEx})">I am ready for questions!</button>
+      <button class="btn btn-primary" id="readyBtn" style="display:none" onclick="goModelId()">I am ready for questions!</button>
     </div>
-    ${isEx ? `<div style="font-size:12px;color:#ccc;margin-top:1px">Just a practice example!</div>` : ''}
   </div>`;
   stopSpeak();
-  const opener = isEx
-    ? `Okay! For our practice, I want you to meet ${v.char1.name} and ${v.char2.name}.`
-    : `Alright! Now let us meet ${v.char1.name} and ${v.char2.name}!`;
+  const opener = `Now let us meet ${v.char1.name} and ${v.char2.name}.`;
   speak(opener, () => {
     speakSeq(v.parts,
       i => {
@@ -1311,7 +1247,7 @@ function renderStory(v, isEx) {
 }
 
 function replayStory() {
-  const v = exPhase() ? EXAMPLE : VIGNETTES[S.vi];
+  const v = VIGNETTES[S.vi];
   stopSpeak();
   const rb = document.getElementById('readyBtn');
   if (rb) rb.style.display = 'none';
@@ -1331,22 +1267,18 @@ function replayStory() {
   });
 }
 
-function renderQuestion(v, qi, isEx) {
+// ── INITIAL YES/NO QUESTION ───────────────────────────
+function renderQuestion(v, qi) {
   const q = v.questions[qi];
   app.innerHTML = `
-  ${isEx ? '' : starHeaderHTML(S.stars, VIGNETTES.length)}
-  <div class="screen" style="padding-top:${isEx ? 10 : 4}px;gap:7px">
+  ${starHeaderHTML(S.stars, VIGNETTES.length)}
+  <div class="screen" style="padding-top:4px;gap:7px">
     <div class="q-header">
       Question ${qi+1} of 3 &nbsp;&middot;&nbsp;
       <strong>${escHtml(v.char1.name)}</strong> &amp; <strong>${escHtml(v.char2.name)}</strong>
     </div>
     <div class="q-illust">${qIllustHTML(q)}</div>
     <div class="q-box">"${escHtml(q.text)}"</div>
-    <div class="thumb-guide">
-      ${thumbsUpSVG(28)} <span style="color:#27AE60;font-weight:600">= YES!</span>
-      &nbsp;&nbsp;&nbsp;
-      ${thumbsDownSVG(28)} <span style="color:#E74C3C;font-weight:600">= NO!</span>
-    </div>
     <div class="ans-row">
       <button class="btn btn-green" id="btnY" onclick="doAnswer('YES')">${thumbsUpSVG(48)} YES</button>
       <button class="btn btn-red"   id="btnN" onclick="doAnswer('NO')">${thumbsDownSVG(48)} NO</button>
@@ -1355,26 +1287,48 @@ function renderQuestion(v, qi, isEx) {
       <div class="replay-label">Need a reminder?</div>
       <div class="replay-btns">
         <button class="btn btn-audio" onclick="replayQ()">🔊 Hear the question again</button>
-        <button class="btn-story-replay" onclick="replayStoryQ(${isEx})">📖 Hear their story again</button>
+        <button class="btn-story-replay" onclick="replayStoryQ()">📖 Hear their story again</button>
       </div>
     </div>
-    ${isEx ? `<div class="ex-explain" id="exExp"></div>` : ''}
   </div>`;
   stopSpeak();
-  speak(`Question ${qi+1} of 3. ${q.text}. Do you think ${v.char1.name} and ${v.char2.name} would act that way? Press the big thumbs up for YES or the big thumbs down for NO!`);
+  speak(`Question ${qi+1} of 3. ${q.text}. Do you think ${v.char1.name} and ${v.char2.name} would act that way? Press the big thumbs up for YES or the big thumbs down for NO.`);
 }
 
+function replayQ() {
+  const v  = VIGNETTES[S.vi];
+  const qi = S.qi;
+  stopSpeak();
+  speak(`Here is the question again. ${v.questions[qi].text}. Do you think ${v.char1.name} and ${v.char2.name} would act that way?`);
+}
+
+function replayStoryQ() {
+  const v = VIGNETTES[S.vi];
+  stopSpeak();
+  speak(`Sure! Let me remind you about ${v.char1.name} and ${v.char2.name}.`, () => {
+    speakSeq(v.parts, null, () => speak(`Okay. Now, what do you think?`));
+  });
+}
+
+function doAnswer(ans) {
+  ['btnY','btnN'].forEach(id => { const b = document.getElementById(id); if (b) b.disabled = true; });
+  S.pendingAns = ans;
+  flashBtn(ans);
+  setTimeout(() => {
+    S.phase = 'q-likert';
+    render();
+  }, 480);
+}
+
+// ── LIKERT (YES/NO CERTAINTY) ─────────────────────────
 function renderLikert() {
   const v  = VIGNETTES[S.vi];
   const qi = S.qi;
   const q  = v.questions[qi];
   const isYes = S.pendingAns === 'YES';
-  const strongStyle = isYes
-    ? 'background:linear-gradient(135deg,#1e8449,#27AE60);color:white;box-shadow:0 6px 18px rgba(30,132,73,.4);'
-    : 'background:linear-gradient(135deg,#922b21,#C0392B);color:white;box-shadow:0 6px 18px rgba(146,43,33,.4);';
-  const mildStyle = isYes
-    ? 'background:linear-gradient(135deg,#a8e063,#d0f5a0);color:#1a5e2a;box-shadow:0 4px 12px rgba(168,224,99,.35);'
-    : 'background:linear-gradient(135deg,#f45c43,#ffbdad);color:#7B241C;box-shadow:0 4px 12px rgba(244,92,67,.3);';
+  const strongStyle = 'background:linear-gradient(135deg,#1e8449,#27AE60);color:white;box-shadow:0 6px 18px rgba(30,132,73,.4);';
+  const mildStyle   = 'background:linear-gradient(135deg,#a8e063,#d0f5a0);color:#1a5e2a;box-shadow:0 4px 12px rgba(168,224,99,.35);';
+
   app.innerHTML = `
   ${starHeaderHTML(S.stars, VIGNETTES.length)}
   <div class="screen" style="padding-top:4px;gap:9px">
@@ -1384,7 +1338,9 @@ function renderLikert() {
     </div>
     <div style="text-align:center;font-size:17px;font-weight:600;color:#333">
       You said
-      <span style="background:${isYes?'linear-gradient(135deg,#56ab2f,#a8e063)':'linear-gradient(135deg,#eb3349,#f45c43)'};color:white;padding:3px 14px;border-radius:20px;font-size:22px;display:inline-block;vertical-align:middle;margin:0 4px">${isYes?'YES 👍':'NO 👎'}</span>
+      <span style="background:${isYes?'linear-gradient(135deg,#56ab2f,#a8e063)':'linear-gradient(135deg,#eb3349,#f45c43)'};color:white;padding:3px 14px;border-radius:20px;font-size:22px;display:inline-block;vertical-align:middle;margin:0 4px">
+        ${isYes?'YES 👍':'NO 👎'}
+      </span>
     </div>
     <div style="text-align:center;font-size:15px;color:#555;font-weight:500">How sure are you?</div>
     <div class="q-illust">${qIllustHTML(q)}</div>
@@ -1400,102 +1356,21 @@ function renderLikert() {
     </div>
   </div>`;
   stopSpeak();
-  speak(`You said ${isYes ? 'yes' : 'no'}! Now — how sure are you? Press the BIG thumb if you are really really sure. Press the smaller thumb if you think so but are not totally sure!`);
-}
-
-function renderModelId() {
-  const v = VIGNETTES[S.vi];
-  const models = S.modelIdOrder;
-  app.innerHTML = `
-  ${starHeaderHTML(S.stars, VIGNETTES.length)}
-  <div class="screen" style="padding-top:4px;gap:10px">
-    <div class="q-header">🔍 ${escHtml(v.char1.name)} &amp; ${escHtml(v.char2.name)}</div>
-    <div class="q-box">
-      <span>Which of the following pictures matches how <strong>${escHtml(v.char1.name)}</strong> and <strong>${escHtml(v.char2.name)}</strong> act with each other?</span>
-    </div>
-    <div class="ans-row" style="gap:18px;justify-content:center;flex-wrap:wrap">
-      ${models.map(m => `
-        <button class="btn-model-choice" onclick="doModelId('${m}')">
-          <img src="${IMG_BASE}${m}.png" style="width:100px;height:100px;object-fit:contain;display:block;border-radius:8px" alt="${m}"/>
-        </button>`).join('')}
-    </div>
-    <div class="replay-section">
-      <div class="replay-label">Need a reminder?</div>
-      <div class="replay-btns">
-        <button class="btn-story-replay" onclick="replayStoryQ(false)">📖 Hear their story again</button>
-      </div>
-    </div>
-  </div>`;
-  stopSpeak();
-  speak(`Which of the following pictures matches how ${v.char1.name} and ${v.char2.name} act with each other? Press the picture that you think fits best!`);
-}
-
-function renderExDone() {
-  app.innerHTML = `
-  <div class="screen" style="justify-content:center;text-align:center;gap:14px">
-    <div style="font-size:56px;animation:bounceIn .85s cubic-bezier(.17,.67,.37,1.3)">🌟</div>
-    <div style="font-size:24px;font-weight:600;color:#333">Great practice!</div>
-    <div style="font-size:16px;color:#777;max-width:320px;line-height:1.65">
-      You are already thinking like a real detective!<br>
-      Now let us try the real game with some new aliens!
-    </div>
-    <button class="btn btn-primary" style="font-size:20px;padding:14px 36px;margin-top:4px" onclick="startRealGame()">
-      Start the Real Game! 🚀
-    </button>
-  </div>`;
-  stopSpeak();
-  speak("Great job on the practice! You are already thinking like a real detective! Now let us start the real game and meet some brand new aliens. Press the big orange button when you are ready!");
-}
-
-function replayQ() {
-  const v  = exPhase() ? EXAMPLE : VIGNETTES[S.vi];
-  const qi = exPhase() ? S.eqi   : S.qi;
-  stopSpeak();
-  speak(`Here is the question again. ${v.questions[qi].text}. Do you think ${v.char1.name} and ${v.char2.name} would act that way?`);
-}
-
-function replayStoryQ(isEx) {
-  const v = isEx ? EXAMPLE : VIGNETTES[S.vi];
-  stopSpeak();
-  speak(`Sure! Let me remind you about ${v.char1.name} and ${v.char2.name}.`, () => {
-    speakSeq(v.parts, null, () => speak(`Okay! Now, what do you think?`));
-  });
-}
-
-function doAnswer(ans) {
-  ['btnY','btnN'].forEach(id => { const b = document.getElementById(id); if (b) b.disabled = true; });
-  const isEx = exPhase();
-  const v    = isEx ? EXAMPLE : VIGNETTES[S.vi];
-  const qi   = isEx ? S.eqi   : S.qi;
-  const q    = v.questions[qi];
-  flashBtn(ans);
-  if (isEx) {
-    const exDiv = document.getElementById('exExp');
-    if (exDiv) { exDiv.style.display = 'block'; exDiv.textContent = q.explain || ''; }
-    stopSpeak();
-    const openers = ['Hmm, interesting thinking! Let me explain.','Nice guess! Here is what I was thinking.','Good job trying! Here is the reason.'];
-    speak(`${openers[qi % openers.length]} ${q.explain || ''}`, () => {
-      setTimeout(() => {
-        if (S.eqi < EXAMPLE.questions.length - 1) { S.eqi++; S.phase = 'ex-q'; render(); }
-        else { S.phase = 'ex-done'; render(); }
-      }, 2200);
-    });
-  } else {
-    S.pendingAns = ans;
-    setTimeout(() => { S.phase = 'q-likert'; render(); }, 480);
-  }
+  speak(`You said ${isYes ? 'yes' : 'no'}. Now, how sure are you? Press the big thumb if you are really really sure, or the smaller thumb if you think so but are not totally sure.`);
 }
 
 function doLikertAnswer(certainty) {
   ['btnDef','btnMay'].forEach(id => { const b = document.getElementById(id); if (b) b.disabled = true; });
   const btn = document.getElementById(certainty === 'DEFINITELY' ? 'btnDef' : 'btnMay');
   if (btn) { btn.style.transform = 'scale(1.1)'; setTimeout(() => { if (btn) btn.style.transform = ''; }, 300); }
+
   const v       = VIGNETTES[S.vi];
   const q       = v.questions[S.qi];
   const initAns = S.pendingAns;
   const fullAns = certainty === 'DEFINITELY'
     ? (initAns === 'YES' ? 'DEFINITELY_YES' : 'DEFINITELY_NO')
     : (initAns === 'YES' ? 'MAYBE_YES'      : 'MAYBE_NO');
+
   const testRecord = {
     type: 'test', vid: v.id, vM: v.model, qi: S.qi, qM: q.qM,
     itemId: q.id, ans: fullAns, initialAns: initAns,
@@ -1506,6 +1381,7 @@ function doLikertAnswer(certainty) {
   uploadToSheets(testRecord);
   S.pendingAns = null;
   stopSpeak();
+
   setTimeout(() => {
     if (S.qi < 2) { S.qi++; S.phase = 'q'; }
     else          { S.stars++; S.phase = 'trans'; }
@@ -1513,21 +1389,108 @@ function doLikertAnswer(certainty) {
   }, 650);
 }
 
+// ── MODEL IDENTIFICATION (3 PICTURES) ──────────────────
+function renderModelId() {
+  const v = VIGNETTES[S.vi];
+  const models = S.modelIdOrder;
+  app.innerHTML = `
+  ${starHeaderHTML(S.stars, VIGNETTES.length)}
+  <div class="screen" style="padding-top:4px;gap:10px">
+    <div class="q-header">🔍 ${escHtml(v.char1.name)} &amp; ${escHtml(v.char2.name)}</div>
+    <div class="q-box">
+      <span>Which of these pictures shows how <strong>${escHtml(v.char1.name)}</strong> and <strong>${escHtml(v.char2.name)}</strong> act with each other?</span>
+    </div>
+    <div class="ans-row" style="gap:18px;justify-content:center;flex-wrap:wrap">
+      ${models.map(m => `
+        <button class="btn-model-choice" onclick="doModelId('${m}')">
+          <img src="${IMG_BASE}${m}.png" style="width:100px;height:100px;object-fit:contain;display:block;border-radius:8px" alt="${m}"/>
+        </button>`).join('')}
+    </div>
+    <div class="replay-section">
+      <div class="replay-label">Need a reminder?</div>
+      <div class="replay-btns">
+        <button class="btn-story-replay" onclick="replayStoryQ()">📖 Hear their story again</button>
+      </div>
+    </div>
+  </div>`;
+  stopSpeak();
+  speak(`Which of these pictures shows how ${v.char1.name} and ${v.char2.name} act with each other? Pick the one that you think fits best.`);
+}
+
 function doModelId(chosenModel) {
   document.querySelectorAll('.btn-model-choice').forEach(b => b.disabled = true);
+  S.pendingModelChoice = chosenModel;
+  stopSpeak();
+  setTimeout(() => {
+    S.phase = 'model-certainty';
+    render();
+  }, 300);
+}
+
+// ── MODEL CERTAINTY (BIG / SMALL THUMBS UP) ────────────
+function renderModelCertainty() {
   const v = VIGNETTES[S.vi];
+  const chosen = S.pendingModelChoice;
+  app.innerHTML = `
+  ${starHeaderHTML(S.stars, VIGNETTES.length)}
+  <div class="screen" style="padding-top:4px;gap:10px">
+    <div class="q-header">🔍 ${escHtml(v.char1.name)} &amp; ${escHtml(v.char2.name)}</div>
+    <div style="text-align:center;font-size:17px;font-weight:600;color:#333">
+      You picked this picture:
+    </div>
+    <div style="display:flex;justify-content:center;margin-top:4px">
+      <div style="border-radius:16px;border:3px solid #E0E0E0;padding:10px;background:white">
+        <img src="${IMG_BASE}${chosen}.png" style="width:120px;height:120px;object-fit:contain;display:block;border-radius:8px" alt="${chosen}"/>
+      </div>
+    </div>
+    <div style="text-align:center;font-size:15px;color:#555;font-weight:500;margin-top:8px">How sure are you about this choice?</div>
+    <div class="ans-row" style="gap:16px;align-items:flex-end;margin-top:6px">
+      <button class="btn-likert-strong" id="btnModelDef"
+        style="background:linear-gradient(135deg,#1e8449,#27AE60);color:white;box-shadow:0 6px 18px rgba(30,132,73,.4);"
+        onclick="doModelCertaintyAnswer('DEFINITELY')">
+        ${thumbsUpSVG(54)}
+        <span style="margin-top:4px;font-size:15px;font-weight:600">Really sure!<br>👍 This one</span>
+      </button>
+      <button class="btn-likert-mild" id="btnModelMay"
+        style="background:linear-gradient(135deg,#a8e063,#d0f5a0);color:#1a5e2a;box-shadow:0 4px 12px rgba(168,224,99,.35);"
+        onclick="doModelCertaintyAnswer('MAYBE')">
+        ${thumbsUpSVG(36)}
+        <span style="margin-top:3px;font-size:13px">A little sure<br>👍 This one</span>
+      </button>
+    </div>
+  </div>`;
+  stopSpeak();
+  speak(`You picked that picture. How sure are you about this choice? Press the big thumbs up if you are really really sure, or the smaller thumbs up if you are not totally sure.`);
+}
+
+function doModelCertaintyAnswer(certainty) {
+  ['btnModelDef','btnModelMay'].forEach(id => {
+    const b = document.getElementById(id);
+    if (b) b.disabled = true;
+  });
+  const btn = document.getElementById(certainty === 'DEFINITELY' ? 'btnModelDef' : 'btnModelMay');
+  if (btn) { btn.style.transform = 'scale(1.1)'; setTimeout(() => { if (btn) btn.style.transform = ''; }, 300); }
+
+  const v = VIGNETTES[S.vi];
+  const chosen = S.pendingModelChoice;
   const modelRecord = {
-    type: 'model-id', vid: v.id, vM: v.model,
-    chosen: chosenModel, correct: chosenModel === v.model,
+    type: 'model-id',
+    vid: v.id,
+    vM: v.model,
+    chosen: chosen,
+    correct: chosen === v.model,
+    modelCertainty: certainty,
     ts: new Date().toISOString()
   };
   S.answers.push(modelRecord);
   uploadToSheets(modelRecord);
+  S.pendingModelChoice = null;
   S.qi = 0;
   stopSpeak();
   setTimeout(() => { S.phase = 'q'; render(); }, 400);
 }
 
+// ── BUTTON FLASH ───────────────────────────────────────
 function flashBtn(ans) {
   const b = document.getElementById(ans === 'YES' ? 'btnY' : 'btnN');
   if (!b) return;
@@ -1543,33 +1506,35 @@ function renderTrans() {
   const last       = ni >= VIGNETTES.length;
   const isMidpoint = ni === 6 && !last;
   const np         = last ? null : VIGNETTES[ni];
-  const kudo       = KUDOS[Math.floor(Math.random() * KUDOS.length)];
+
   app.innerHTML = `
   <div class="trans-screen">
     ${starTransHTML(S.stars, VIGNETTES.length)}
-    <div class="trans-msg" style="margin-top:8px">${kudo}</div>
+    <div class="trans-msg" style="margin-top:8px">Thank you for your help.</div>
     <div style="font-size:19px;font-weight:600;color:#F39C12">${S.stars} star${S.stars===1?'':'s'} collected!</div>
     <div class="trans-sub">
       ${last ? 'That was the very last pair — you are almost done!'
-        : isMidpoint ? 'You are halfway through — incredible work! 🌟'
+        : isMidpoint ? 'You are halfway through — great work!'
         : `Next up: meet <strong>${escHtml(np.char1.name)}</strong> and <strong>${escHtml(np.char2.name)}</strong>!`}
     </div>
   </div>`;
-  const lv   = getCurrentLevel(S.stars);
-  const prev = getCurrentLevel(S.stars - 1);
-  const lvUp = S.stars > 0 && lv.label !== prev.label;
-  const msg  = last
-    ? `${kudo} You just finished all twelve pairs! You are almost done now — what an amazing job!`
+
+  const lastMsg = last
+    ? `Thank you for your help. You just finished all twelve pairs and collected ${S.stars} star${S.stars === 1 ? '' : 's'}.`
     : isMidpoint
-      ? `${kudo} You have finished six whole pairs and collected ${S.stars} star${S.stars===1?'':'s'}! You are halfway through — that is so impressive!`
-      : lvUp
-        ? `${kudo} You leveled up to ${lv.label}! You have ${S.stars} star${S.stars===1?'':'s'} now! Next up, let us meet ${np.char1.name} and ${np.char2.name}!`
-        : `${kudo} You collected a star! You have ${S.stars} star${S.stars===1?'':'s'} now! Next up, let us meet ${np.char1.name} and ${np.char2.name}!`;
+      ? `Thank you for your help. You have finished six pairs and collected ${S.stars} star${S.stars === 1 ? '' : 's'}.`
+      : `Thank you for your help. You now have ${S.stars} star${S.stars === 1 ? '' : 's'}. Next, we will meet ${np.char1.name} and ${np.char2.name}.`;
+
   stopSpeak();
-  speak(msg, () => {
+  speak(lastMsg, () => {
     setTimeout(() => {
-      if (last) { S.phase = 'end'; }
-      else { S.vi++; S.qi = 0; S.phase = S.vi === 6 ? 'midpoint' : 'story'; }
+      if (last) {
+        S.phase = 'end';
+      } else {
+        S.vi++;
+        S.qi = 0;
+        S.phase = S.vi === 6 ? 'midpoint' : 'story';
+      }
       render();
     }, 750);
   });
@@ -1583,7 +1548,7 @@ function renderMidpoint() {
     <div style="font-size:58px;animation:bounceIn .85s cubic-bezier(.17,.67,.37,1.3)">🌟</div>
     <div style="font-size:26px;font-weight:600;color:#333">Halfway there, ${escHtml(nm)}!</div>
     <div style="font-size:16px;color:#555;max-width:360px;line-height:1.75;background:#F8F4FF;padding:16px 20px;border-radius:16px;border:3px solid #C9B8F0">
-      You have already met <strong>6 pairs</strong> of alien friends — that is so impressive!<br><br>
+      You have already met <strong>6 pairs</strong> of friends who live far away — that is really helpful.<br><br>
       Would you like to keep going and meet <strong>6 more</strong>?<br>
       Or would you like to <strong>say goodbye for now</strong>?
     </div>
@@ -1594,7 +1559,7 @@ function renderMidpoint() {
     <div style="font-size:11px;color:#ccc;margin-top:4px">Your answers so far have been saved.</div>
   </div>`;
   stopSpeak();
-  speak(`Wow, ${nm} — you have already met six pairs of alien friends and you are doing such an amazing job! Would you like to keep going and meet six more? Or would you like to say goodbye for now? Press Keep Going to continue, or Bye for now if you are all done for today!`);
+  speak(`Wow, ${nm}. You have already met six pairs of friends who live far away. Thank you for your help. Would you like to keep going and meet six more, or say goodbye for now? Press Keep Going to continue, or Bye for now if you are all done today.`);
 }
 
 function continueGame() { stopSpeak(); S.phase = 'story'; render(); }
@@ -1604,7 +1569,7 @@ function exitToCHS() {
   markSessionComplete();
   const nm = S.name || 'Detective';
   document.querySelectorAll('.midpoint-screen button').forEach(b => b.disabled = true);
-  speak(`Goodbye, ${nm}! You did such an amazing job today — you are a true Relationship Detective! See you next time!`, () => {
+  speak(`Goodbye, ${nm}. Thank you for helping today.`, () => {
     const returnUrl = getUrlParam('return_url') || 'https://www.childrenhelpingscience.com';
     window.location.href = returnUrl;
   });
@@ -1619,9 +1584,9 @@ function renderEnd() {
   app.innerHTML = `
   <div class="end-screen">
     <div class="end-trophy-wrap">${trophySVG()}</div>
-    <div class="end-title">Amazing, ${escHtml(nm)}!</div>
+    <div class="end-title">Thank you, ${escHtml(nm)}!</div>
     ${starTransHTML(S.stars, VIGNETTES.length)}
-    <div class="end-sub" style="margin-top:4px">You answered questions about all ${VIGNETTES.length} pairs of aliens!</div>
+    <div class="end-sub" style="margin-top:4px">You answered questions about all ${VIGNETTES.length} pairs of people who live far away.</div>
     <div style="font-size:12px;color:#ccc">${cor} of ${tot} test answers matched the scoring key</div>
     <div class="end-btns">
       <button class="btn btn-primary"   onclick="exportCSV()">Download Results</button>
@@ -1630,48 +1595,47 @@ function renderEnd() {
   </div>`;
   markSessionComplete();
   stopSpeak();
-  speak(`${nm}, you have done something truly amazing today! You answered questions about all twelve pairs of aliens, and you thought so carefully about every single one. I am incredibly proud of you. You really are a true Relationship Detective! Give yourself a big pat on the back — you have really really earned it today!`);
+  speak(`${nm}, thank you so much for your help today. You answered questions about all twelve pairs of people who live far away, and you thought carefully about each one. You are a wonderful Relationship Detective.`);
 }
 
 // ── NAVIGATION ─────────────────────────────────────────
-function exPhase() { return S.phase === 'ex-story' || S.phase === 'ex-q'; }
-
 function startGame() {
   const inp = document.getElementById('cname');
   const sel = document.getElementById('cage');
   S.name = (inp ? inp.value.trim() : '') || '';
   S.age  = (sel ? sel.value        : '') || '';
   S.pid  = getUrlParam('pid') || S.pid || '';
-  if (!S.name) { unlockAudio("Oops! Can you type your first name first?"); return; }
+  if (!S.name) {
+    unlockAudio('Oops! Can you type your first name first?');
+    return;
+  }
   audioUnlocked = true;
   for (let i = VIGNETTES.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [VIGNETTES[i], VIGNETTES[j]] = [VIGNETTES[j], VIGNETTES[i]];
   }
   assignAllQuestions();
-  const pool = [];
-  VIGNETTES.forEach(v => { pool.push(v.char1); pool.push(v.char2); });
-  const i1 = Math.floor(Math.random() * pool.length);
-  let i2; do { i2 = Math.floor(Math.random() * pool.length); } while (i2 === i1);
-  EXAMPLE.char1 = Object.assign({}, pool[i1]);
-  EXAMPLE.char2 = Object.assign({}, pool[i2]);
   S.phase = 'intro';
   render();
 }
 
-function goExStory()  { S.eqi = 0; S.phase = 'ex-story'; render(); }
-
-function goQs(isEx) {
-  if (isEx) { S.eqi = 0; S.phase = 'ex-q'; }
-  else { S.modelIdOrder = ['EM','CS','AR'].sort(() => Math.random() - 0.5); S.phase = 'model-id'; }
+function startRealGame() {
+  stopSpeak();
+  S.phase = 'story';
+  S.vi = 0;
+  S.qi = 0;
   render();
 }
 
-function startRealGame() { stopSpeak(); S.phase = 'story'; S.vi = 0; S.qi = 0; render(); }
+function goModelId() {
+  S.modelIdOrder = ['EM','CS','AR'].sort(() => Math.random() - 0.5);
+  S.phase = 'model-id';
+  render();
+}
 
 function skipPair() {
-  if (['story','model-id','q','q-likert'].includes(S.phase)) {
-    S.pendingAns = null; S.stars++; S.phase = 'trans'; render();
+  if (['story','model-id','model-certainty','q','q-likert'].includes(S.phase)) {
+    S.pendingAns = null; S.pendingModelChoice = null; S.stars++; S.phase = 'trans'; render();
   }
 }
 function skipMidpoint() { stopSpeak(); S.vi = 6; S.qi = 0; S.phase = 'midpoint'; render(); }
@@ -1681,8 +1645,11 @@ function resetGame() {
   stopSpeak();
   Object.assign(S, {
     phase: 'welcome', name: '', age: '', pid: '',
-    vi: 0, qi: 0, eqi: 0, pendingAns: null,
-    modelIdOrder: [], answers: [], stars: 0, adminOpen: false
+    vi: 0, qi: 0, pendingAns: null,
+    pendingModelChoice: null,
+    modelIdOrder: [], answers: [], stars: 0, adminOpen: false,
+    elevenLabsKey:   localStorage.getItem('rad_elKey')   || '',
+    elevenLabsVoice: localStorage.getItem('rad_elVoice') || 'MF3mGyEYCl7XYWbV9V6O'
   });
   render();
 }
@@ -1738,13 +1705,19 @@ function saveVoiceSettings() {
   const st = document.getElementById('voiceStatus');
   S.elevenLabsKey   = ki ? ki.value.trim() : '';
   S.elevenLabsVoice = vs ? vs.value : 'MF3mGyEYCl7XYWbV9V6O';
-  try { localStorage.setItem('rad_elKey', S.elevenLabsKey); localStorage.setItem('rad_elVoice', S.elevenLabsVoice); } catch(e) {}
-  if (st) { st.textContent = S.elevenLabsKey ? 'Saved! ElevenLabs active.' : 'Saved. Using built-in voice.'; setTimeout(()=>{ st.textContent=''; },2500); }
+  try {
+    localStorage.setItem('rad_elKey', S.elevenLabsKey);
+    localStorage.setItem('rad_elVoice', S.elevenLabsVoice);
+  } catch(e) {}
+  if (st) {
+    st.textContent = S.elevenLabsKey ? 'Saved! ElevenLabs active.' : 'Saved. Using built-in voice.';
+    setTimeout(()=>{ st.textContent=''; },2500);
+  }
 }
 
 function testVoice() {
   saveVoiceSettings(); stopSpeak();
-  speak("Hello! I am the Relationship Detective voice. Does this sound good to you?");
+  speak('Hello! I am the Relationship Detective voice. Does this sound good to you?');
 }
 
 function updateAdmin() {
@@ -1752,20 +1725,48 @@ function updateAdmin() {
   if (!el) return;
   if (!S.answers.length) { el.textContent = 'No answers yet.'; return; }
   el.textContent = S.answers.map(a => {
-    if (a.type === 'model-id') return `V${a.vid}[${a.vM}] MODEL-ID: chose ${a.chosen} ${a.correct?'✓':'✗'}`;
+    if (a.type === 'model-id') {
+      return `V${a.vid}[${a.vM}] MODEL-ID: chose ${a.chosen} ${a.correct?'✓':'✗'} (${a.modelCertainty || ''})`;
+    }
     return `V${a.vid}[${a.vM}] Q${a.qi+1} ${a.itemId}[${a.qM}] ${a.congruent?'CON':'INC'}: ${a.ans} key:${a.keyed} ${a.ok?'✓':'✗'}`;
   }).join('\n');
 }
 
 // ── CSV EXPORT ─────────────────────────────────────────
 function exportCSV() {
-  const headers = ['ParticipantID','ChildName','ChildAge','Type','VignetteID','VignetteModel','QuestionIndex','QuestionModel','ItemID','IsCongruent','Answer','InitialYesNo','KeyedAnswer','Correct','ModelIDChosen','ModelIDCorrect','Timestamp'];
+  const headers = [
+    'ParticipantID','ChildName','ChildAge','Type',
+    'VignetteID','VignetteModel','QuestionIndex','QuestionModel',
+    'ItemID','IsCongruent','Answer','InitialYesNo','KeyedAnswer','Correct',
+    'ModelIDChosen','ModelIDCorrect','ModelIDCertainty','Timestamp'
+  ];
   const rows = [headers.join(',')];
   S.answers.forEach(a => {
     if (a.type === 'model-id') {
-      rows.push([S.pid, S.name, S.age, 'MODEL_ID', a.vid, a.vM, '','','','', '','','','', a.chosen, a.correct?'TRUE':'FALSE', a.ts].join(','));
+      rows.push([
+        S.pid, S.name, S.age,
+        'MODEL_ID',
+        a.vid, a.vM,
+        '', '', '', '',
+        '', '', '', '',
+        a.chosen, a.correct ? 'TRUE' : 'FALSE', a.modelCertainty || '',
+        a.ts
+      ].join(','));
     } else {
-      rows.push([S.pid, S.name, S.age, 'TEST_ITEM', a.vid, a.vM, a.qi+1, a.qM, a.itemId||'', a.congruent?'TRUE':'FALSE', a.ans, a.initialAns||(a.ans.includes('YES')?'YES':'NO'), a.keyed, a.ok?'TRUE':'FALSE', '','', a.ts].join(','));
+      rows.push([
+        S.pid, S.name, S.age,
+        'TEST_ITEM',
+        a.vid, a.vM,
+        a.qi+1, a.qM,
+        a.itemId||'',
+        a.congruent?'TRUE':'FALSE',
+        a.ans,
+        a.initialAns||(a.ans.includes('YES')?'YES':'NO'),
+        a.keyed,
+        a.ok?'TRUE':'FALSE',
+        '', '', '',
+        a.ts
+      ].join(','));
     }
   });
   const blob = new Blob([rows.join('\n')], { type: 'text/csv' });

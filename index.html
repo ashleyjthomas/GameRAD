@@ -1326,8 +1326,15 @@ function renderLikert() {
   const qi = S.qi;
   const q  = v.questions[qi];
   const isYes = S.pendingAns === 'YES';
-  const strongStyle = 'background:linear-gradient(135deg,#1e8449,#27AE60);color:white;box-shadow:0 6px 18px rgba(30,132,73,.4);';
-  const mildStyle   = 'background:linear-gradient(135deg,#a8e063,#d0f5a0);color:#1a5e2a;box-shadow:0 4px 12px rgba(168,224,99,.35);';
+
+  // Green for YES certainty, red for NO certainty
+  const strongStyle = isYes
+    ? 'background:linear-gradient(135deg,#1e8449,#27AE60);color:white;box-shadow:0 6px 18px rgba(30,132,73,.4);'
+    : 'background:linear-gradient(135deg,#922b21,#C0392B);color:white;box-shadow:0 6px 18px rgba(146,43,33,.4);';
+
+  const mildStyle = isYes
+    ? 'background:linear-gradient(135deg,#a8e063,#d0f5a0);color:#1a5e2a;box-shadow:0 4px 12px rgba(168,224,99,.35);'
+    : 'background:linear-gradient(135deg,#f45c43,#ffbdad);color:#7B241C;box-shadow:0 4px 12px rgba(244,92,67,.3);';
 
   app.innerHTML = `
   ${starHeaderHTML(S.stars, VIGNETTES.length)}

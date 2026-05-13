@@ -27,7 +27,6 @@ body {
 :fullscreen body, :-webkit-full-screen body { padding:0; align-items:stretch; justify-content:stretch; }
 :fullscreen #app, :-webkit-full-screen #app { max-width:100%; border-radius:0; min-height:100vh; height:100vh; }
 
-/* ── OVERLAY ELEMENTS — fixed to viewport, never wiped by render() ── */
 #fullscreenBtn {
   position: fixed; top: 10px; right: 10px;
   width: 36px; height: 36px; border-radius: 50%;
@@ -65,7 +64,6 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ── FULLSCREEN BANNER ── */
 .fs-banner {
   background: linear-gradient(135deg, #4776e6, #8e54e9); color: white;
   text-align: center; padding: 10px 16px; font-size: 14px; font-weight: 500;
@@ -80,7 +78,6 @@ body {
   font-size: 18px; cursor: pointer; padding: 0 4px;
 }
 
-/* ── ADMIN INTERNALS ── */
 .admin-section-label { font-weight:600; font-size:11px; color:#888; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
 .admin-log { max-height:120px; overflow-y:auto; font-size:10px; font-family:monospace; background:#f8f8f8; border-radius:6px; padding:6px; margin-bottom:7px; white-space:pre; line-height:1.5; }
 .admin-input, .admin-select { width:100%; padding:5px 7px; font-size:11px; border:1px solid #ddd; border-radius:6px; margin-bottom:5px; outline:none; background:white; font-family:inherit; }
@@ -89,7 +86,6 @@ body {
 .admin-btn-blue { background:#4776e6; color:white; border-color:#4776e6; }
 .admin-btn-gold { background:linear-gradient(135deg,#f7971e,#ffd200); color:white; border:none; font-weight:600; }
 
-/* ── STARS / METER ── */
 .star-meter-wrap { display:flex; flex-direction:column; align-items:center; padding:8px 16px 3px; gap:2px; }
 .star-meter { display:flex; gap:2px; justify-content:center; flex-wrap:nowrap; align-items:center; }
 .star-item { font-size:17px; color:#E0E0E0; line-height:1; display:inline-block; transition:color 0.3s; }
@@ -104,7 +100,6 @@ body {
 .meter-pct { position:absolute; top:0; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; font-size:10px; color:#555; font-weight:600; }
 .level-badge { text-align:center; animation:bounceIn .85s cubic-bezier(.17,.67,.37,1.3); }
 
-/* ── LAYOUT ── */
 .screen { flex:1; display:flex; flex-direction:column; align-items:center; padding:11px 17px 17px; animation:fadeIn .35s ease; gap:9px; }
 @keyframes fadeIn { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
 .wt { font-size:36px; font-weight:600; text-align:center; line-height:1.2; background:linear-gradient(135deg,#f7971e,#f64f59); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
@@ -116,7 +111,6 @@ body {
 .name-input { width:180px; } .age-select { width:140px; cursor:pointer; }
 .name-input:focus, .age-select:focus { border-color:#F7971E; box-shadow:0 0 0 4px rgba(247,151,30,.13); }
 
-/* ── BUTTONS ── */
 .btn { font-family:inherit; font-size:17px; font-weight:600; border:none; border-radius:50px; padding:11px 24px; cursor:pointer; transition:transform .1s,box-shadow .1s; display:inline-flex; align-items:center; gap:6px; box-shadow:0 4px 12px rgba(0,0,0,.14); -webkit-tap-highlight-color:transparent; }
 .btn:active { transform:scale(.95); } .btn:disabled { opacity:.44; cursor:not-allowed; }
 .btn-primary { background:linear-gradient(135deg,#f7971e,#ffd200); color:white; }
@@ -136,7 +130,6 @@ body {
 .btn-model-choice:hover { border-color:#4776e6; box-shadow:0 4px 16px rgba(71,118,230,.25); }
 .btn-model-choice:disabled { opacity:.5; cursor:not-allowed; }
 
-/* ── STORY / QUESTION ── */
 .illus { width:100%; border-radius:13px; overflow:hidden; background:#E8F4FF; box-shadow:inset 0 2px 8px rgba(0,0,0,.07); }
 .q-illust { width:100%; max-width:360px; align-self:center; border-radius:12px; overflow:hidden; border:2px solid #F0EDE8; background:#FAFAFA; }
 .story-head { display:flex; justify-content:space-between; align-items:center; width:100%; }
@@ -152,7 +145,6 @@ body {
 .replay-label { font-size:11px; color:#bbb; text-align:center; }
 .replay-btns { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
 
-/* ── SCREENS ── */
 .trans-screen { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:22px; text-align:center; }
 .trans-msg { font-size:22px; font-weight:600; color:#333; }
 .trans-sub { font-size:15px; color:#aaa; }
@@ -188,7 +180,6 @@ body {
   </div>
 </div>
 
-<!-- ── OVERLAY ELEMENTS: outside #app so render() never destroys them ── -->
 <button id="fullscreenBtn" onclick="toggleFullscreen()" title="Go Fullscreen">
   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
        fill="none" stroke="#4776e6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -232,7 +223,7 @@ function updateFullscreenBtn() {
   document.addEventListener(evt, updateFullscreenBtn)
 );
 
-// ── SECRET RESEARCHER UNLOCK (5 taps bottom-right within 3s) ──
+// ── SECRET RESEARCHER UNLOCK ───────────────────────────
 let secretTaps = 0, secretTimer = null;
 
 function setupSecretZone() {
@@ -256,8 +247,6 @@ function revealResearcherControls() {
   btn.classList.add('visible');
   btn.style.background = 'rgba(71,118,230,.85)';
   setTimeout(() => { btn.style.background = ''; }, 700);
-
-  // Stop the invisible zone blocking gear button clicks
   const zone = document.getElementById('secretZone');
   if (zone) zone.style.pointerEvents = 'none';
 }
@@ -304,7 +293,100 @@ function markSessionComplete() {
 }
 
 const W = 600, H = 300, GY = H * 0.70;
-const IMG_BASE = 'https://raw.githubusercontent.com/ashleyjthomas/GameRAD/main/';
+const IMG_BASE   = 'https://raw.githubusercontent.com/ashleyjthomas/GameRAD/main/';
+const AUDIO_BASE = 'https://raw.githubusercontent.com/ashleyjthomas/GameRAD/main/audio/';
+
+// ── AUDIO MAP ─────────────────────────────────────────
+const AUDIO_MAP = {
+  welcome:       'audio_welcome.mp3',
+  name_needed:   'audio_name_needed.mp3',
+  intro:         'audio_intro.mp3',
+  okay_now_what: 'audio_okay_now_what.mp3',
+  you_picked:    'audio_you_picked.mp3',
+  sure_yes:      'audio_sure_yes.mp3',
+  sure_no:       'audio_sure_no.mp3',
+  halfway:       'audio_halfway.mp3',
+  goodbye:       'audio_goodbye.mp3',
+  trans_last:    'audio_trans_last.mp3',
+  trans_halfway: 'audio_trans_halfway_msg.mp3',
+  q_prompt_end:  'audio_q1_prompt_end.mp3',
+  q_remind_end:  'audio_q_remind_end.mp3',
+
+  meet_zumi_blix:'audio_meet_zumi_blix.mp3', meet_orro_fenn:'audio_meet_orro_fenn.mp3',
+  meet_kiva_doop:'audio_meet_kiva_doop.mp3', meet_wex_plara:'audio_meet_wex_plara.mp3',
+  meet_nuu_glim: 'audio_meet_nuu_glim.mp3',  meet_tazo_vebb:'audio_meet_tazo_vebb.mp3',
+  meet_mip_creel:'audio_meet_mip_creel.mp3', meet_yobi_gorp:'audio_meet_yobi_gorp.mp3',
+  meet_fuzz_orlo:'audio_meet_fuzz_orlo.mp3', meet_beem_jovi:'audio_meet_beem_jovi.mp3',
+  meet_plix_zara:'audio_meet_plix_zara.mp3', meet_hoob_nev: 'audio_meet_hoob_nev.mp3',
+
+  ready_zumi_blix:'audio_ready_zumi_blix.mp3', ready_orro_fenn:'audio_ready_orro_fenn.mp3',
+  ready_kiva_doop:'audio_ready_kiva_doop.mp3', ready_wex_plara:'audio_ready_wex_plara.mp3',
+  ready_nuu_glim: 'audio_ready_nuu_glim.mp3',  ready_tazo_vebb:'audio_ready_tazo_vebb.mp3',
+  ready_mip_creel:'audio_ready_mip_creel.mp3', ready_yobi_gorp:'audio_ready_yobi_gorp.mp3',
+  ready_fuzz_orlo:'audio_ready_fuzz_orlo.mp3', ready_beem_jovi:'audio_ready_beem_jovi.mp3',
+  ready_plix_zara:'audio_ready_plix_zara.mp3', ready_hoob_nev: 'audio_ready_hoob_nev.mp3',
+
+  replay_zumi_blix:'audio_replay_zumi_blix.mp3', replay_orro_fenn:'audio_replay_orro_fenn.mp3',
+  replay_kiva_doop:'audio_replay_kiva_doop.mp3', replay_wex_plara:'audio_replay_wex_plara.mp3',
+  replay_nuu_glim: 'audio_replay_nuu_glim.mp3',  replay_tazo_vebb:'audio_replay_tazo_vebb.mp3',
+  replay_mip_creel:'audio_replay_mip_creel.mp3', replay_yobi_gorp:'audio_replay_yobi_gorp.mp3',
+  replay_fuzz_orlo:'audio_replay_fuzz_orlo.mp3', replay_beem_jovi:'audio_replay_beem_jovi.mp3',
+  replay_plix_zara:'audio_replay_plix_zara.mp3', replay_hoob_nev: 'audio_replay_hoob_nev.mp3',
+
+  remind_zumi_blix:'audio_remind_zumi_blix.mp3', remind_orro_fenn:'audio_remind_orro_fenn.mp3',
+  remind_kiva_doop:'audio_remind_kiva_doop.mp3', remind_wex_plara:'audio_remind_wex_plara.mp3',
+  remind_nuu_glim: 'audio_remind_nuu_glim.mp3',  remind_tazo_vebb:'audio_remind_tazo_vebb.mp3',
+  remind_mip_creel:'audio_remind_mip_creel.mp3', remind_yobi_gorp:'audio_remind_yobi_gorp.mp3',
+  remind_fuzz_orlo:'audio_remind_fuzz_orlo.mp3', remind_beem_jovi:'audio_remind_beem_jovi.mp3',
+  remind_plix_zara:'audio_remind_plix_zara.mp3', remind_hoob_nev: 'audio_remind_hoob_nev.mp3',
+
+  model_zumi_blix:'audio_model_zumi_blix.mp3', model_orro_fenn:'audio_model_orro_fenn.mp3',
+  model_kiva_doop:'audio_model_kiva_doop.mp3', model_wex_plara:'audio_model_wex_plara.mp3',
+  model_nuu_glim: 'audio_model_nuu_glim.mp3',  model_tazo_vebb:'audio_model_tazo_vebb.mp3',
+  model_mip_creel:'audio_model_mip_creel.mp3', model_yobi_gorp:'audio_model_yobi_gorp.mp3',
+  model_fuzz_orlo:'audio_model_fuzz_orlo.mp3', model_beem_jovi:'audio_model_beem_jovi.mp3',
+  model_plix_zara:'audio_model_plix_zara.mp3', model_hoob_nev: 'audio_model_hoob_nev.mp3',
+
+  story_1a:'audio_story_1a.mp3',   story_1b:'audio_story_1b.mp3',   story_1c:'audio_story_1c.mp3',
+  story_2a:'audio_story_2a.mp3',   story_2b:'audio_story_2b.mp3',   story_2c:'audio_story_2c.mp3',
+  story_3a:'audio_story_3a.mp3',   story_3b:'audio_story_3b.mp3',   story_3c:'audio_story_3c.mp3',
+  story_4a:'audio_story_4a.mp3',   story_4b:'audio_story_4b.mp3',   story_4c:'audio_story_4c.mp3',
+  story_5a:'audio_story_5a.mp3',   story_5b:'audio_story_5b.mp3',   story_5c:'audio_story_5c.mp3',
+  story_6a:'audio_story_6a.mp3',   story_6b:'audio_story_6b.mp3',   story_6c:'audio_story_6c.mp3',
+  story_7a:'audio_story_7a.mp3',   story_7b:'audio_story_7b.mp3',   story_7c:'audio_story_7c.mp3',
+  story_8a:'audio_story_8a.mp3',   story_8b:'audio_story_8b.mp3',   story_8c:'audio_story_8c.mp3',
+  story_9a:'audio_story_9a.mp3',   story_9b:'audio_story_9b.mp3',   story_9c:'audio_story_9c.mp3',
+  story_10a:'audio_story_10a.mp3', story_10b:'audio_story_10b.mp3', story_10c:'audio_story_10c.mp3',
+  story_11a:'audio_story_11a.mp3', story_11b:'audio_story_11b.mp3', story_11c:'audio_story_11c.mp3',
+  story_12a:'audio_story_12a.mp3', story_12b:'audio_story_12b.mp3', story_12c:'audio_story_12c.mp3',
+
+  q_EM1:'audio_q_EM1.mp3', q_EM2:'audio_q_EM2.mp3', q_EM3:'audio_q_EM3.mp3',
+  q_EM4:'audio_q_EM4.mp3', q_EM5:'audio_q_EM5.mp3', q_EM6:'audio_q_EM6.mp3',
+  q_EM7:'audio_q_EM7.mp3', q_EM8:'audio_q_EM8.mp3',
+  q_CS1:'audio_q_CS1.mp3', q_CS2:'audio_q_CS2.mp3', q_CS3:'audio_q_CS3.mp3',
+  q_CS4:'audio_q_CS4.mp3', q_CS5:'audio_q_CS5.mp3', q_CS6:'audio_q_CS6.mp3',
+  q_CS7:'audio_q_CS7.mp3', q_CS8:'audio_q_CS8.mp3',
+  q_AR1:'audio_q_AR1.mp3', q_AR2:'audio_q_AR2.mp3', q_AR3:'audio_q_AR3.mp3',
+  q_AR4:'audio_q_AR4.mp3', q_AR5:'audio_q_AR5.mp3', q_AR6:'audio_q_AR6.mp3',
+  q_AR7:'audio_q_AR7.mp3', q_AR8:'audio_q_AR8.mp3',
+
+  trans_1star:  'audio_trans_1star.mp3',  trans_2stars: 'audio_trans_2stars.mp3',
+  trans_3stars: 'audio_trans_3stars.mp3', trans_4stars: 'audio_trans_4stars.mp3',
+  trans_5stars: 'audio_trans_5stars.mp3', trans_6stars: 'audio_trans_6stars.mp3',
+  trans_7stars: 'audio_trans_7stars.mp3', trans_8stars: 'audio_trans_8stars.mp3',
+  trans_9stars: 'audio_trans_9stars.mp3', trans_10stars:'audio_trans_10stars.mp3',
+  trans_11stars:'audio_trans_11stars.mp3'
+};
+
+// Maps vignette id → character pair key used in AUDIO_MAP
+function pairKey(v) {
+  const map = {
+    1:'zumi_blix', 2:'orro_fenn',  3:'kiva_doop', 4:'wex_plara',
+    5:'nuu_glim',  6:'tazo_vebb',  7:'mip_creel', 8:'yobi_gorp',
+    9:'fuzz_orlo', 10:'beem_jovi', 11:'plix_zara', 12:'hoob_nev'
+  };
+  return map[v.id] || '';
+}
 
 // ── DETECTIVE LEVELS ───────────────────────────────────
 const DETECTIVE_LEVELS = [
@@ -528,88 +610,47 @@ const S = {
   phase: 'welcome', name: '', age: '', pid: '',
   vi: 0, qi: 0,
   pendingAns: null, pendingModelChoice: null,
-  modelIdOrder: [], answers: [], stars: 0, adminOpen: false,
-  elevenLabsKey:   localStorage.getItem('rad_elKey')   || '',
-  elevenLabsVoice: localStorage.getItem('rad_elVoice') || 'MF3mGyEYCl7XYWbV9V6O'
+  modelIdOrder: [], answers: [], stars: 0, adminOpen: false
 };
 
-// ── SPEECH ─────────────────────────────────────────────
-let voices = [], currentAudio = null, seqGen = 0, audioUnlocked = false;
+// ── AUDIO PLAYBACK ─────────────────────────────────────
+let currentAudio = null;
+let audioSeqId   = 0;   // increment to cancel any in-progress sequence
+let audioUnlocked = false;
 
-function initVoices() {
-  function load() { const v = speechSynthesis.getVoices(); if (v.length) voices = v; }
-  load(); speechSynthesis.onvoiceschanged = load;
+// Play a single pre-recorded file by AUDIO_MAP key.
+// done() is only called if the sequence has not been cancelled.
+function playAudio(key, done) {
+  done = done || function(){};
+  const file = AUDIO_MAP[key];
+  if (!file) { console.warn('No audio for key:', key); done(); return; }
+  const mySeqId = audioSeqId;
+  const audio = new Audio(AUDIO_BASE + file);
+  currentAudio = audio;
+  const finish = () => {
+    currentAudio = null;
+    if (audioSeqId === mySeqId) done();
+  };
+  audio.onended = finish;
+  audio.onerror = finish;
+  audio.play().catch(() => finish());
 }
 
-function unlockAudio(thenSpeak) {
-  if (audioUnlocked) { if (thenSpeak) speak(thenSpeak); return; }
+function stopAudio() {
+  audioSeqId++;   // cancels all ongoing sequences
+  if (currentAudio) { currentAudio.pause(); currentAudio.src = ''; currentAudio = null; }
+}
+
+function unlockAudio(audioKey) {
+  if (audioUnlocked) { if (audioKey) playAudio(audioKey); return; }
   audioUnlocked = true;
+  // Use a silent utterance to unlock AudioContext on iOS/Safari
   if (window.speechSynthesis) {
     const silent = new SpeechSynthesisUtterance(' '); silent.volume = 0;
-    silent.onend = () => { if (thenSpeak) speak(thenSpeak); };
+    silent.onend = () => { if (audioKey) playAudio(audioKey); };
     speechSynthesis.speak(silent);
-  } else { if (thenSpeak) speak(thenSpeak); }
+  } else { if (audioKey) playAudio(audioKey); }
   const ub = document.getElementById('unlockBtn'); if (ub) ub.remove();
-}
-
-function bestVoice() {
-  const prefs = ['Google UK English Female','Samantha','Karen','Moira','Google US English','Microsoft Zira Desktop - English (United States)','Microsoft Zira - English (United States)'];
-  for (const p of prefs) { const v = voices.find(v => v.name === p || v.name.includes(p)); if (v) return v; }
-  return voices.find(v => v.lang && v.lang.startsWith('en') && v.localService) ||
-         voices.find(v => v.lang && v.lang.startsWith('en')) || voices[0] || null;
-}
-
-function speak(text, done) {
-  done = done || function(){};
-  if (!text || !text.trim()) { done(); return; }
-  if (S.elevenLabsKey && S.elevenLabsKey.trim()) { speakElevenLabs(text, done); }
-  else { speakWebSpeech(text, done); }
-}
-
-function speakWebSpeech(text, done) {
-  done = done || function(){};
-  if (!window.speechSynthesis) { done(); return; }
-  speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.voice = bestVoice(); u.rate = 1.06; u.pitch = 1.08; u.volume = 1;
-  u.onend = () => done(); u.onerror = () => done();
-  speechSynthesis.speak(u);
-}
-
-function speakElevenLabs(text, done) {
-  done = done || function(){};
-  const voiceId = S.elevenLabsVoice || 'MF3mGyEYCl7XYWbV9V6O';
-  fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
-    method: 'POST',
-    headers: { 'Accept':'audio/mpeg','Content-Type':'application/json','xi-api-key':S.elevenLabsKey },
-    body: JSON.stringify({ text, model_id:'eleven_turbo_v2', voice_settings:{ stability:0.42, similarity_boost:0.75, style:0.38, use_speaker_boost:true, speed:1.25 } })
-  })
-  .then(r => { if (!r.ok) throw new Error('ElevenLabs ' + r.status); return r.blob(); })
-  .then(blob => {
-    const url = URL.createObjectURL(blob);
-    const audio = new Audio(url); currentAudio = audio;
-    audio.onended = () => { URL.revokeObjectURL(url); currentAudio = null; done(); };
-    audio.onerror = () => { URL.revokeObjectURL(url); currentAudio = null; speakWebSpeech(text, done); };
-    audio.play().catch(() => speakWebSpeech(text, done));
-  })
-  .catch(err => { console.warn('ElevenLabs error:', err.message); speakWebSpeech(text, done); });
-}
-
-function speakSeq(parts, highlightCb, done) {
-  const id = ++seqGen; let i = 0;
-  function next() {
-    if (seqGen !== id) return;
-    if (i >= parts.length) { done(); return; }
-    if (highlightCb) highlightCb(i);
-    speak(parts[i], () => { i++; next(); });
-  }
-  next();
-}
-
-function stopSpeak() {
-  seqGen++;
-  if (currentAudio) { currentAudio.pause(); currentAudio.src = ''; currentAudio = null; }
-  if (window.speechSynthesis) speechSynthesis.cancel();
 }
 
 // ── HELPERS ────────────────────────────────────────────
@@ -667,10 +708,8 @@ function kidSVG(cx, groundY, cfg, animOffset, flip, imgH, imgYOffset) {
   return `<g>${p.join('')}</g>`;
 }
 
-// ── SCENE BACKGROUNDS (asymmetric, swaying plants, rich stars) ───
+// ── SCENE BACKGROUNDS ──────────────────────────────────
 const SCENE_BACKGROUNDS = {
-
-  // 1. Zumi & Blix (CS) — LEFT: organic crystal lamp-tree | RIGHT: round portal window
   home_a: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#0A0820"/>
   <path d="M0 300 L0 98 Q0 18 300 14 Q600 18 600 98 L600 300 Z" fill="#141030"/>
@@ -732,10 +771,8 @@ const SCENE_BACKGROUNDS = {
   <circle cx="390" cy="140" r="1.5" fill="#4ECDC4"><animate attributeName="cy" values="140;116;140" dur="4.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".45;0;.45" dur="4.8s" repeatCount="indefinite"/></circle>
 </svg>`,
 
-  // 2. Orro & Fenn (EM) — LEFT: pink rounded stall | RIGHT: teal angular stall  (no scale)
- market_a: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  market_a: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#FFF0D0"/>
-  <!-- Sun: upper RIGHT only -->
   <circle cx="528" cy="40" r="28" fill="#FFD84D"/>
   <circle cx="528" cy="40" r="20" fill="#FFE566" opacity=".58"/>
   <g stroke="#FFBE00" stroke-linecap="round" stroke-width="2.5" opacity=".52">
@@ -745,30 +782,20 @@ const SCENE_BACKGROUNDS = {
     <line x1="570" y1="55" x2="562" y2="49"/><line x1="486" y1="55" x2="494" y2="49"/>
   </g>
   <circle cx="528" cy="40" r="36" fill="#FFD84D" opacity=".06"><animate attributeName="r" values="32;44;32" dur="2.8s" repeatCount="indefinite"/></circle>
-  <!-- Clouds: LEFT side only -->
   <ellipse cx="115" cy="32" rx="52" ry="18" fill="white" opacity=".58"/>
   <ellipse cx="78"  cy="24" rx="36" ry="14" fill="white" opacity=".48"/>
   <ellipse cx="178" cy="42" rx="30" ry="12" fill="white" opacity=".4"/>
-  <!-- Ground -->
   <rect x="0" y="210" width="600" height="90" fill="#D4A574"/>
   <path d="M0 210 H600" stroke="#B8865A" stroke-width="3" opacity=".6"/>
   <path d="M0 222 Q50 216 100 224 Q150 218 220 225" stroke="#C49050" stroke-width="1.5" fill="none" opacity=".4"/>
   <path d="M390 224 Q440 218 490 225 Q545 220 600 222" stroke="#C8A050" stroke-width="1.2" fill="none" opacity=".38"/>
-
-  <!-- ═══════════════════════════════════════════════════════
-       LEFT: TALL ELABORATE MARKET TOWER  (x=0–220, y=16–210)
-       Very tall peaked building — reaches almost to top of frame
-       ═══════════════════════════════════════════════════════ -->
   <rect x="0" y="68" width="222" height="142" fill="#CC3878"/>
   <rect x="5" y="74" width="212" height="130" rx="3" fill="#E0508A"/>
-  <!-- Sharp peaked roof -->
   <path d="M-4 68 L111 14 L226 68 Z" fill="#AA2058"/>
   <path d="M0 68 L111 20 L222 68" stroke="#FF6EC7" stroke-width="1.5" fill="none" opacity=".38"/>
-  <!-- Roof finial + flag -->
   <line x1="111" y1="14" x2="111" y2="2" stroke="#880A38" stroke-width="3"/>
   <circle cx="111" cy="1" r="5" fill="#FFD84D"/>
   <path d="M111 2 L130 9 L111 18 Z" fill="#FF6EC7"/>
-  <!-- Three decorated windows upper level -->
   <rect x="12" y="82" width="44" height="32" rx="5" fill="#160420" stroke="#FF6EC7" stroke-width="2"/>
   <line x1="34" y1="82" x2="34" y2="114" stroke="#FF6EC7" stroke-width="1.2" opacity=".6"/>
   <line x1="12" y1="98" x2="56" y2="98" stroke="#FF6EC7" stroke-width="1.2" opacity=".6"/>
@@ -779,81 +806,54 @@ const SCENE_BACKGROUNDS = {
   <circle cx="177" cy="92" r="4" fill="#FF6EC7" opacity=".88"><animate attributeName="opacity" values=".65;1;.65" dur="1.8s" repeatCount="indefinite"/></circle>
   <circle cx="198" cy="92" r="4" fill="#FFD84D" opacity=".88"><animate attributeName="opacity" values=".7;1;.7" dur="2.3s" repeatCount="indefinite"/></circle>
   <circle cx="188" cy="106" r="4" fill="#4ECDC4" opacity=".88"><animate attributeName="opacity" values=".75;1;.75" dur="2.0s" repeatCount="indefinite"/></circle>
-  <!-- Six hanging items (vertical orientation — opposite of right table's flat items) -->
-  <line x1="16"  y1="118" x2="16"  y2="142" stroke="#880A38" stroke-width="1.5"/>
-  <circle cx="16"  cy="147" r="9"  fill="#7EDBFF" stroke="#4ECDC4" stroke-width="1.5"/>
-  <circle cx="16"  cy="147" r="5"  fill="#4ECDC4"/>
-  <line x1="48"  y1="118" x2="48"  y2="137" stroke="#880A38" stroke-width="1.5"/>
-  <circle cx="48"  cy="143" r="11" fill="#FFD84D" stroke="#C89B00" stroke-width="1.5"/>
-  <circle cx="48"  cy="143" r="6.5" fill="#F4C300"/>
-  <line x1="80"  y1="118" x2="80"  y2="135" stroke="#880A38" stroke-width="1.5"/>
-  <circle cx="80"  cy="141" r="10" fill="#C09AFF" stroke="#9B5DE5" stroke-width="1.5"/>
-  <circle cx="80"  cy="141" r="5.5" fill="#9B5DE5"/>
+  <line x1="16" y1="118" x2="16" y2="142" stroke="#880A38" stroke-width="1.5"/>
+  <circle cx="16" cy="147" r="9" fill="#7EDBFF" stroke="#4ECDC4" stroke-width="1.5"/><circle cx="16" cy="147" r="5" fill="#4ECDC4"/>
+  <line x1="48" y1="118" x2="48" y2="137" stroke="#880A38" stroke-width="1.5"/>
+  <circle cx="48" cy="143" r="11" fill="#FFD84D" stroke="#C89B00" stroke-width="1.5"/><circle cx="48" cy="143" r="6.5" fill="#F4C300"/>
+  <line x1="80" y1="118" x2="80" y2="135" stroke="#880A38" stroke-width="1.5"/>
+  <circle cx="80" cy="141" r="10" fill="#C09AFF" stroke="#9B5DE5" stroke-width="1.5"/><circle cx="80" cy="141" r="5.5" fill="#9B5DE5"/>
   <line x1="112" y1="118" x2="112" y2="131" stroke="#880A38" stroke-width="1.5"/>
-  <circle cx="112" cy="137" r="13" fill="#FF8FAB" stroke="#E63980" stroke-width="1.5"/>
-  <circle cx="112" cy="137" r="7.5" fill="#E63980"/>
+  <circle cx="112" cy="137" r="13" fill="#FF8FAB" stroke="#E63980" stroke-width="1.5"/><circle cx="112" cy="137" r="7.5" fill="#E63980"/>
   <line x1="146" y1="118" x2="146" y2="139" stroke="#880A38" stroke-width="1.5"/>
-  <circle cx="146" cy="145" r="9"  fill="#6BCB77" stroke="#3E9F4E" stroke-width="1.5"/>
-  <circle cx="146" cy="145" r="5"  fill="#4A9F5A"/>
+  <circle cx="146" cy="145" r="9" fill="#6BCB77" stroke="#3E9F4E" stroke-width="1.5"/><circle cx="146" cy="145" r="5" fill="#4A9F5A"/>
   <line x1="178" y1="118" x2="178" y2="134" stroke="#880A38" stroke-width="1.5"/>
-  <circle cx="178" cy="139" r="8"  fill="#FFD84D" stroke="#C89B00" stroke-width="1.5"/>
-  <circle cx="178" cy="139" r="4.5" fill="#F4C300"/>
+  <circle cx="178" cy="139" r="8" fill="#FFD84D" stroke="#C89B00" stroke-width="1.5"/><circle cx="178" cy="139" r="4.5" fill="#F4C300"/>
   <line x1="208" y1="118" x2="208" y2="137" stroke="#880A38" stroke-width="1.5"/>
-  <circle cx="208" cy="142" r="8"  fill="#FF6EC7" stroke="#D44A9E" stroke-width="1.5"/>
-  <circle cx="208" cy="142" r="4"  fill="#D44A9E"/>
-  <!-- Shelf with round items -->
+  <circle cx="208" cy="142" r="8" fill="#FF6EC7" stroke="#D44A9E" stroke-width="1.5"/><circle cx="208" cy="142" r="4" fill="#D44A9E"/>
   <rect x="5" y="160" width="212" height="5" fill="#880A38" opacity=".8"/>
-  <circle cx="22"  cy="171" r="8" fill="#FFD84D"/>
-  <circle cx="44"  cy="168" r="6" fill="#7EDBFF"/>
-  <circle cx="65"  cy="171" r="8" fill="#FF8FAB"/>
-  <circle cx="87"  cy="168" r="5" fill="#C09AFF"/>
-  <circle cx="107" cy="171" r="8" fill="#FFD84D"/>
-  <circle cx="128" cy="168" r="6" fill="#FF6EC7"/>
-  <circle cx="148" cy="171" r="5" fill="#4ECDC4"/>
-  <circle cx="168" cy="168" r="7" fill="#FFD84D"/>
-  <circle cx="188" cy="171" r="6" fill="#FF8FAB"/>
-  <circle cx="208" cy="168" r="5" fill="#7EDBFF"/>
-  <!-- Arched door centred in tower -->
+  <circle cx="22" cy="171" r="8" fill="#FFD84D"/><circle cx="44" cy="168" r="6" fill="#7EDBFF"/>
+  <circle cx="65" cy="171" r="8" fill="#FF8FAB"/><circle cx="87" cy="168" r="5" fill="#C09AFF"/>
+  <circle cx="107" cy="171" r="8" fill="#FFD84D"/><circle cx="128" cy="168" r="6" fill="#FF6EC7"/>
+  <circle cx="148" cy="171" r="5" fill="#4ECDC4"/><circle cx="168" cy="168" r="7" fill="#FFD84D"/>
+  <circle cx="188" cy="171" r="6" fill="#FF8FAB"/><circle cx="208" cy="168" r="5" fill="#7EDBFF"/>
   <path d="M77 210 L77 188 Q111 174 145 188 L145 210 Z" fill="#880A38"/>
   <path d="M80 210 L80 190 Q111 177 142 190 L142 210 Z" fill="#AA1850"/>
   <circle cx="111" cy="197" r="3.5" fill="#FFD84D" opacity=".8"/>
-  <!-- Vertical banners flanking tower (unique to left) -->
-  <rect x="0"   y="74" width="7" height="54" fill="#FF6EC7" opacity=".72"/>
+  <rect x="0" y="74" width="7" height="54" fill="#FF6EC7" opacity=".72"/>
   <rect x="215" y="74" width="7" height="54" fill="#C09AFF" opacity=".68"/>
-  <!-- Spilled items on ground LEFT only -->
   <circle cx="14" cy="213" r="6" fill="#FFD84D" opacity=".75"/>
   <circle cx="32" cy="212" r="5" fill="#FF8FAB" opacity=".7"/>
   <circle cx="50" cy="213" r="6" fill="#7EDBFF" opacity=".68"/>
   <circle cx="67" cy="212" r="4" fill="#C09AFF" opacity=".62"/>
   <circle cx="82" cy="213" r="5" fill="#FFD84D" opacity=".65"/>
-
-  <!-- ═══════════════════════════════════════════════════════
-       RIGHT: WIDE LOW FLAT MARKET TABLE  (x=368–600, y=132–210)
-       Totally different: horizontal structure, dome umbrella, items flat
-       ═══════════════════════════════════════════════════════ -->
-  <!-- Dome/circular umbrella (not peaked — opposite of left roof) -->
   <line x1="484" y1="78" x2="484" y2="150" stroke="#7A5030" stroke-width="5" stroke-linecap="round"/>
   <ellipse cx="484" cy="80" rx="90" ry="22" fill="#4ECDC4" opacity=".88"/>
   <ellipse cx="484" cy="84" rx="90" ry="18" fill="#3ABFBD" opacity=".35"/>
-  <!-- Umbrella fringe: short horizontal drips (completely unlike left's long vertical items) -->
-  <line x1="396" y1="99"  x2="393" y2="113" stroke="#2ABFBD" stroke-width="2"/>
-  <line x1="417" y1="94"  x2="415" y2="108" stroke="#2ABFBD" stroke-width="2"/>
-  <line x1="438" y1="91"  x2="437" y2="105" stroke="#2ABFBD" stroke-width="2"/>
-  <line x1="459" y1="89"  x2="459" y2="103" stroke="#2ABFBD" stroke-width="2"/>
-  <line x1="509" y1="89"  x2="509" y2="103" stroke="#2ABFBD" stroke-width="2"/>
-  <line x1="530" y1="91"  x2="531" y2="105" stroke="#2ABFBD" stroke-width="2"/>
-  <line x1="551" y1="94"  x2="553" y2="108" stroke="#2ABFBD" stroke-width="2"/>
-  <line x1="572" y1="99"  x2="575" y2="113" stroke="#2ABFBD" stroke-width="2"/>
-  <!-- Table body (very horizontal — contrast with tall tower) -->
+  <line x1="396" y1="99" x2="393" y2="113" stroke="#2ABFBD" stroke-width="2"/>
+  <line x1="417" y1="94" x2="415" y2="108" stroke="#2ABFBD" stroke-width="2"/>
+  <line x1="438" y1="91" x2="437" y2="105" stroke="#2ABFBD" stroke-width="2"/>
+  <line x1="459" y1="89" x2="459" y2="103" stroke="#2ABFBD" stroke-width="2"/>
+  <line x1="509" y1="89" x2="509" y2="103" stroke="#2ABFBD" stroke-width="2"/>
+  <line x1="530" y1="91" x2="531" y2="105" stroke="#2ABFBD" stroke-width="2"/>
+  <line x1="551" y1="94" x2="553" y2="108" stroke="#2ABFBD" stroke-width="2"/>
+  <line x1="572" y1="99" x2="575" y2="113" stroke="#2ABFBD" stroke-width="2"/>
   <rect x="366" y="150" width="234" height="14" rx="4" fill="#8B5E2A"/>
   <rect x="372" y="140" width="222" height="12" rx="3" fill="#A87040"/>
   <rect x="372" y="130" width="222" height="12" rx="2" fill="#C89050"/>
-  <!-- Stubby visible legs (4 short legs, opposite of tall tower) -->
   <rect x="374" y="164" width="14" height="46" rx="4" fill="#6A4420"/>
   <rect x="406" y="164" width="12" height="46" rx="4" fill="#6A4420"/>
   <rect x="568" y="164" width="14" height="46" rx="4" fill="#6A4420"/>
   <rect x="538" y="164" width="12" height="46" rx="4" fill="#6A4420"/>
-  <!-- Items LAID FLAT on table (triangles + rectangles — NOT circles like left) -->
   <path d="M380 138 L390 122 L400 138 Z" fill="#FF6EC7"/>
   <path d="M407 138 L418 121 L429 138 Z" fill="#FFD84D"/>
   <path d="M435 138 L447 122 L459 138 Z" fill="#9B5DE5"/>
@@ -862,22 +862,18 @@ const SCENE_BACKGROUNDS = {
   <path d="M522 138 L533 122 L544 138 Z" fill="#6BCB77"/>
   <rect x="550" y="124" width="17" height="14" rx="2" fill="#FFD84D"/>
   <path d="M574 138 L584 124 L594 138 Z" fill="#7EDBFF"/>
-  <!-- Small sign hanging from pole (right side only) -->
-  <rect x="488" y="98"  width="28" height="20" rx="3" fill="#5A7890" stroke="#4ECDC4" stroke-width="1.5"/>
+  <rect x="488" y="98" width="28" height="20" rx="3" fill="#5A7890" stroke="#4ECDC4" stroke-width="1.5"/>
   <circle cx="502" cy="108" r="6" fill="#FFD84D" opacity=".75"/>
-  <!-- Items on ground RIGHT of table only -->
   <circle cx="374" cy="213" r="5" fill="#4ECDC4" opacity=".7"/>
   <circle cx="390" cy="212" r="4" fill="#FFD84D" opacity=".65"/>
-  <!-- Middle ground pebbles -->
   <circle cx="258" cy="213" r="2.5" fill="#C49050" opacity=".48"/>
-  <circle cx="276" cy="212" r="2"   fill="#B8844A" opacity=".42"/>
+  <circle cx="276" cy="212" r="2" fill="#B8844A" opacity=".42"/>
   <circle cx="294" cy="213" r="2.5" fill="#C49050" opacity=".48"/>
-  <circle cx="312" cy="212" r="2"   fill="#B8844A" opacity=".42"/>
+  <circle cx="312" cy="212" r="2" fill="#B8844A" opacity=".42"/>
   <circle cx="330" cy="213" r="2.5" fill="#C49050" opacity=".45"/>
-  <circle cx="348" cy="212" r="2"   fill="#B8844A" opacity=".4"/>
+  <circle cx="348" cy="212" r="2" fill="#B8844A" opacity=".4"/>
 </svg>`,
 
-  // 3. Kiva & Doop (CS) — LEFT: large moon + multi-layer mushroom tree | RIGHT: ringed planet + spire tree
   meadow_a: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#0D1B3E"/>
   <circle cx="25" cy="18" r="1.5" fill="white" opacity=".8"><animate attributeName="opacity" values=".8;.15;.8" dur="2.3s" repeatCount="indefinite"/></circle>
@@ -947,7 +943,6 @@ const SCENE_BACKGROUNDS = {
   <circle cx="200" cy="145" r="1.5" fill="#C09AFF"><animate attributeName="cy" values="145;125;145" dur="4.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="4.8s" repeatCount="indefinite"/></circle>
 </svg>`,
 
-  // 4. Wex & Plara (AR) — LEFT: stepped dais + ornate throne | RIGHT: tall torch pillar
   throne_a: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#1A0E30"/>
   <path d="M0 300 L0 80 Q0 30 60 30 L540 30 Q600 30 600 80 L600 300 Z" fill="#22194A" opacity=".7"/>
@@ -1001,7 +996,6 @@ const SCENE_BACKGROUNDS = {
   <circle cx="342" cy="168" r="1.5" fill="#C09AFF"><animate attributeName="cy" values="168;142;168" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="5s" repeatCount="indefinite"/></circle>
 </svg>`,
 
-  // 5. Nuu & Glim (EM) — LEFT: tall organic vine arch + lanterns | RIGHT: wide rectangular booth
   market_b: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#FEF0CC"/>
   <circle cx="480" cy="38" r="30" fill="#FFD84D"/>
@@ -1059,7 +1053,6 @@ const SCENE_BACKGROUNDS = {
   <rect x="390" y="203" width="190" height="7" rx="2" fill="#A8844A"/>
 </svg>`,
 
-  // 6. Tazo & Vebb (AR) — LEFT: many small short pink crystals | RIGHT: few very tall teal crystals
   cave_a: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#070710"/>
   <path d="M0 0 L0 65 Q30 95 42 65 Q54 100 70 58 Q88 98 108 56 Q126 96 148 60 Q168 96 188 58 Q208 94 228 60 Q248 96 270 55 Q292 92 310 58 Q330 90 352 55 Q374 90 392 56 Q410 94 430 58 Q450 96 468 55 Q486 95 506 62 Q524 98 542 62 Q558 96 574 66 Q588 98 600 64 L600 0 Z" fill="#1A1530"/>
@@ -1103,7 +1096,6 @@ const SCENE_BACKGROUNDS = {
   <circle cx="550" cy="128" r="1.5" fill="#FFD84D"><animate attributeName="cy" values="128;104;128" dur="3.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".55;0;.55" dur="3.5s" repeatCount="indefinite"/></circle>
 </svg>`,
 
-  // 7. Mip & Creel (CS) — LEFT: busy control panel (tech) | RIGHT: large open viewport window (space)
   home_b: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#0D0B1E"/>
   <path d="M0 300 L0 100 Q0 22 300 18 Q600 22 600 100 L600 300 Z" fill="#141030"/>
@@ -1125,7 +1117,7 @@ const SCENE_BACKGROUNDS = {
   <circle cx="162" cy="108" r="3" fill="#FFD84D" opacity=".9"><animate attributeName="opacity" values=".8;1;.8" dur="2.1s" repeatCount="indefinite"/></circle>
   <circle cx="176" cy="108" r="3" fill="#4ECDC4" opacity=".9"><animate attributeName="opacity" values=".9;1;.9" dur="1.8s" repeatCount="indefinite"/></circle>
   <circle cx="190" cy="108" r="3" fill="#FF8FAB" opacity=".9"><animate attributeName="opacity" values=".75;1;.75" dur="2.4s" repeatCount="indefinite"/></circle>
-  <rect cx="148" r="2" x="146" y="120" width="14" height="5" rx="2" fill="#9B5DE5" opacity=".7"/>
+  <rect x="146" y="120" width="14" height="5" rx="2" fill="#9B5DE5" opacity=".7"/>
   <rect x="166" y="120" width="22" height="5" rx="2" fill="#4776e6" opacity=".7"/>
   <rect x="194" y="120" width="16" height="5" rx="2" fill="#4ECDC4" opacity=".7"/>
   <circle cx="220" cy="108" r="6" fill="#FF6EC7" opacity=".4" stroke="#FF6EC7" stroke-width="1.5"/>
@@ -1152,10 +1144,8 @@ const SCENE_BACKGROUNDS = {
   <circle cx="232" cy="168" r="4" fill="#1A1840" stroke="#4ECDC4" stroke-width="1.5"/>
   <circle cx="232" cy="181" r="4" fill="#1A1840" stroke="#FF6EC7" stroke-width="1.5"/>
   <circle cx="480" cy="128" r="70" fill="#060615" stroke="#4ECDC4" stroke-width="5"/>
-  <circle cx="480" cy="128" rx="70" r="64" fill="#0A0C28"/>
+  <circle cx="480" cy="128" r="64" fill="#0A0C28"/>
   <ellipse cx="480" cy="128" rx="48" ry="36" fill="#12183A" opacity=".8"/>
-  <ellipse cx="468" cy="120" rx="28" ry="20" fill="#FF6EC7" opacity=".08"/>
-  <ellipse cx="492" cy="136" rx="22" ry="18" fill="#4ECDC4" opacity=".08"/>
   <circle cx="455" cy="110" r="2" fill="white" opacity=".9"><animate attributeName="opacity" values=".9;.3;.9" dur="2.2s" repeatCount="indefinite"/></circle>
   <circle cx="490" cy="104" r="1.5" fill="white" opacity=".8"><animate attributeName="opacity" values=".8;.2;.8" dur="3.1s" repeatCount="indefinite"/></circle>
   <circle cx="508" cy="118" r="1.2" fill="#B0E8FF" opacity=".85"><animate attributeName="opacity" values=".85;.2;.85" dur="1.9s" repeatCount="indefinite"/></circle>
@@ -1165,7 +1155,6 @@ const SCENE_BACKGROUNDS = {
   <circle cx="500" cy="130" r="1" fill="white" opacity=".65"><animate attributeName="opacity" values=".65;.1;.65" dur="3.5s" repeatCount="indefinite"/></circle>
   <circle cx="475" cy="150" r="1.3" fill="#B0E8FF" opacity=".72"><animate attributeName="opacity" values=".72;.18;.72" dur="2.3s" repeatCount="indefinite"/></circle>
   <ellipse cx="462" cy="116" rx="12" ry="8" fill="#E8D5A3" opacity=".85"/>
-  <ellipse cx="461" cy="113" rx="5" ry="3" fill="#D4C090" opacity=".35"/>
   <circle cx="498" cy="138" r="7" fill="#4ECDC4" opacity=".6"/>
   <circle cx="496" cy="136" r="3" fill="#9BFFE8" opacity=".45"/>
   <circle cx="414" cy="128" r="5.5" fill="#4ECDC4" opacity=".45"/>
@@ -1177,7 +1166,6 @@ const SCENE_BACKGROUNDS = {
   <circle cx="480" cy="128" r="78" fill="#4ECDC4" opacity=".025"><animate attributeName="r" values="74;84;74" dur="3s" repeatCount="indefinite"/></circle>
 </svg>`,
 
-  // 8. Yobi & Gorp (EM) — LEFT: very tall winding serpentine tree | RIGHT: short wide dome tree
   meadow_b: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#0D1B3E"/>
   <circle cx="28" cy="20" r="1.4" fill="white" opacity=".8"><animate attributeName="opacity" values=".8;.15;.8" dur="2.3s" repeatCount="indefinite"/></circle>
@@ -1215,8 +1203,6 @@ const SCENE_BACKGROUNDS = {
     <circle cx="52" cy="46" r="20" fill="#6B2D8E" opacity=".7"/>
     <circle cx="58" cy="18" r="16" fill="#9B5DE5" opacity=".65"/>
     <circle cx="120" cy="18" r="14" fill="#8B3DB8" opacity=".6"/>
-    <circle cx="45" cy="130" r="8" fill="#9B5DE5" opacity=".5"/>
-    <circle cx="120" cy="86" r="7" fill="#C09AFF" opacity=".5"/>
     <circle cx="38" cy="118" r="5" fill="#FF6EC7" opacity=".9"><animate attributeName="opacity" values=".7;1;.7" dur="1.8s" repeatCount="indefinite"/></circle>
     <circle cx="58" cy="135" r="5" fill="#FFD84D" opacity=".9"><animate attributeName="opacity" values=".8;1;.8" dur="2.2s" repeatCount="indefinite"/></circle>
     <circle cx="112" cy="80" r="4" fill="#7EDBFF" opacity=".9"><animate attributeName="opacity" values=".9;1;.9" dur="1.6s" repeatCount="indefinite"/></circle>
@@ -1251,7 +1237,6 @@ const SCENE_BACKGROUNDS = {
   <circle cx="205" cy="145" r="1.5" fill="#C09AFF"><animate attributeName="cy" values="145;125;145" dur="4.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="4.8s" repeatCount="indefinite"/></circle>
 </svg>`,
 
-  // 9. Fuzz & Orlo (CS) — LEFT: purple waterfall descending | RIGHT: teal coral/plant growing up
   grotto_a: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#080818"/>
   <path d="M0 0 L0 65 Q28 90 40 65 Q52 98 68 56 Q85 97 106 55 Q125 96 145 58 Q164 97 182 56 Q200 95 220 58 Q240 96 260 54 Q278 92 298 56 Q318 90 338 52 Q360 90 380 55 Q398 93 418 57 Q438 96 456 54 Q474 94 495 60 Q515 97 534 60 Q552 95 568 65 Q586 98 600 64 L600 0 Z" fill="#1A1530"/>
@@ -1264,9 +1249,7 @@ const SCENE_BACKGROUNDS = {
   <path d="M0 210 H600" stroke="#4ECDC4" stroke-width="1.5" opacity=".3"/>
   <ellipse cx="300" cy="216" rx="220" ry="14" fill="#4ECDC4" opacity=".06"/>
   <ellipse cx="300" cy="214" rx="180" ry="10" fill="#7EDBFF" opacity=".05"><animate attributeName="rx" values="175;200;175" dur="4s" repeatCount="indefinite"/></ellipse>
-  <rect x="0" y="80" width="28" height="130" rx="0" fill="#1A1538"/>
-  <path d="M0 80 L28 80 L28 210 L0 210 Z" fill="#1A1030"/>
-  <path d="M0 82 Q8 86 16 82 Q22 90 28 86" stroke="#3A2060" stroke-width="2" fill="none" opacity=".6"/>
+  <rect x="0" y="80" width="28" height="130" fill="#1A1538"/>
   <path d="M12 108 Q18 90 12 72" stroke="#8B2DC8" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"/>
   <path d="M20 112 Q28 94 22 76" stroke="#9B3DD8" stroke-width="3.5" fill="none" stroke-linecap="round" opacity=".75"/>
   <path d="M5 116 Q14 98 8 80" stroke="#7B1DB8" stroke-width="4" fill="none" stroke-linecap="round" opacity=".7"/>
@@ -1295,12 +1278,7 @@ const SCENE_BACKGROUNDS = {
   </g>
   <g transform="translate(584,148)">
     <path d="M2 62 L-5 30 L2 16 L9 30 Z" fill="#1E6A6A" opacity=".85"/>
-    <path d="M2 62 L-2 16 L6 16 Z" fill="#4ECDC4" opacity=".4"/>
     <circle cx="2" cy="16" r="5" fill="#7EDBFF" opacity=".82"><animate attributeName="opacity" values=".64;.97;.64" dur="2.0s" repeatCount="indefinite"/></circle>
-  </g>
-  <g transform="translate(596,148)">
-    <path d="M0 62 L-4 40 L0 28 L4 40 Z" fill="#2E7A7A" opacity=".75"/>
-    <circle cx="0" cy="28" r="3.5" fill="#4ECDC4" opacity=".72"><animate attributeName="opacity" values=".55;.88;.55" dur="3.0s" repeatCount="indefinite"/></circle>
   </g>
   <ellipse cx="576" cy="212" rx="32" ry="6" fill="#4ECDC4" opacity=".1"/>
   <path d="M294 210 L286 170 L294 150 L302 170 Z" fill="#9B5DE5" opacity=".48"/>
@@ -1312,7 +1290,6 @@ const SCENE_BACKGROUNDS = {
   <circle cx="280" cy="148" r="1.5" fill="#7EDBFF"><animate attributeName="cy" values="148;124;148" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".48;0;.48" dur="5s" repeatCount="indefinite"/></circle>
 </svg>`,
 
-  // 10. Beem & Jovi (AR) — LEFT: 3 columns + ceremonial banners | RIGHT: single elevated grand throne
   hall_a: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#1A0E30"/>
   <path d="M0 300 L0 80 Q0 28 60 28 L540 28 Q600 28 600 80 L600 300 Z" fill="#22194A" opacity=".7"/>
@@ -1334,7 +1311,6 @@ const SCENE_BACKGROUNDS = {
   <rect x="182" y="208" width="36" height="10" rx="4" fill="#3A2868"/>
   <ellipse cx="200" cy="56" rx="14" ry="6" fill="#9B5DE5" opacity=".3"/>
   <rect x="55" y="78" width="50" height="120" rx="2" fill="#8B1DC8" opacity=".12"/>
-  <rect x="58" y="80" width="44" height="116" rx="2" fill="#7B0DB8" opacity=".1"/>
   <path d="M55 78 L80 66 L105 78" fill="#8B1DC8" opacity=".2"/>
   <path d="M60 92 H100" stroke="#FFD84D" stroke-width="1" opacity=".4"/>
   <path d="M60 110 H100" stroke="#FFD84D" stroke-width="1" opacity=".35"/>
@@ -1367,13 +1343,10 @@ const SCENE_BACKGROUNDS = {
   <circle cx="348" cy="140" r="1.5" fill="#FFD84D"><animate attributeName="cy" values="140;115;140" dur="3.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="3.8s" repeatCount="indefinite"/></circle>
 </svg>`,
 
-  // 11. Plix & Zara (EM) — LEFT: organic curved food stall | RIGHT: geometric angular goods stall
   market_c: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#FFF8E8"/>
-  <!-- Warm afternoon sky gradient — darker right side -->
   <rect x="300" y="0" width="300" height="300" fill="#FFE4AA" opacity=".3"/>
   <rect x="450" y="0" width="150" height="300" fill="#FFD080" opacity=".2"/>
-  <!-- Sun: upper right only -->
   <circle cx="540" cy="42" r="28" fill="#FFD84D"/>
   <circle cx="540" cy="42" r="20" fill="#FFE566" opacity=".6"/>
   <g stroke="#FFBE00" stroke-linecap="round" stroke-width="2.5" opacity=".5">
@@ -1383,33 +1356,23 @@ const SCENE_BACKGROUNDS = {
     <line x1="581" y1="57" x2="573" y2="51"/><line x1="499" y1="57" x2="505" y2="51"/>
   </g>
   <circle cx="540" cy="42" r="36" fill="#FFD84D" opacity=".07"><animate attributeName="r" values="32;44;32" dur="2.8s" repeatCount="indefinite"/></circle>
-  <!-- Clouds: upper LEFT only -->
   <ellipse cx="95"  cy="32" rx="52" ry="18" fill="white" opacity=".62"/>
   <ellipse cx="60"  cy="24" rx="36" ry="15" fill="white" opacity=".52"/>
   <ellipse cx="152" cy="38" rx="28" ry="13" fill="white" opacity=".42"/>
   <ellipse cx="38"  cy="44" rx="20" ry="10" fill="white" opacity=".35"/>
-  <!-- Ground -->
   <rect x="0" y="210" width="600" height="90" fill="#D4A574"/>
   <path d="M0 210 H600" stroke="#B8865A" stroke-width="3" opacity=".6"/>
   <path d="M0 222 Q50 216 100 223 Q160 217 220 224 Q280 218 340 223" stroke="#C49050" stroke-width="1.5" fill="none" opacity=".4"/>
   <path d="M380 224 Q430 218 480 225 Q530 220 600 222" stroke="#C8A050" stroke-width="1.2" fill="none" opacity=".35"/>
-
-  <!-- ══════════════════════════════════════════════════════
-       LEFT: WIDE squat organic food stall (240px × 65px body)
-       Round awning droops more on left. Overflowing produce.
-       ══════════════════════════════════════════════════════ -->
   <rect x="5" y="148" width="242" height="62" rx="8" fill="#C87842"/>
   <rect x="11" y="154" width="230" height="50" rx="6" fill="#D88848"/>
-  <!-- Organic lopsided awning — left droop is 36px lower than right -->
   <path d="M0 148 Q30 100 120 110 Q200 118 252 148 Z" fill="#A05020"/>
   <path d="M0 148 Q30 108 120 118 Q200 126 252 148" fill="#C06028" opacity=".45"/>
-  <!-- Fringe only on drooping left half -->
   <line x1="4"  y1="144" x2="0"  y2="158" stroke="#804018" stroke-width="2"/>
   <line x1="18" y1="136" x2="15" y2="150" stroke="#804018" stroke-width="2"/>
   <line x1="34" y1="128" x2="32" y2="142" stroke="#804018" stroke-width="2"/>
   <line x1="52" y1="122" x2="51" y2="136" stroke="#804018" stroke-width="2"/>
   <line x1="70" y1="118" x2="70" y2="132" stroke="#804018" stroke-width="2"/>
-  <!-- Hanging produce — dense on left, thins out right -->
   <circle cx="25"  cy="110" r="10" fill="#FF6B6B"/><circle cx="25"  cy="110" r="5" fill="#FF3030"/>
   <circle cx="50"  cy="106" r="13" fill="#FFD84D"/><circle cx="50"  cy="106" r="7" fill="#F4C300"/>
   <circle cx="80"  cy="102" r="11" fill="#6BCB77"/><circle cx="80"  cy="102" r="6" fill="#3A9F4E"/>
@@ -1417,88 +1380,63 @@ const SCENE_BACKGROUNDS = {
   <circle cx="142" cy="102" r="10" fill="#4ECDC4"/><circle cx="142" cy="102" r="5" fill="#2ABFBD"/>
   <circle cx="172" cy="106" r="9"  fill="#C09AFF"/><circle cx="172" cy="106" r="4.5" fill="#9B5DE5"/>
   <circle cx="198" cy="110" r="8"  fill="#FFD84D"/><circle cx="198" cy="110" r="4" fill="#F4C300"/>
-  <!-- Shelf -->
   <rect x="11" y="172" width="230" height="10" rx="3" fill="#A05020" opacity=".7"/>
-  <circle cx="32"  cy="177" r="7" fill="#FF6B6B"/>
-  <circle cx="52"  cy="175" r="6" fill="#FFD84D"/>
-  <circle cx="72"  cy="177" r="8" fill="#6BCB77"/>
-  <circle cx="92"  cy="175" r="5" fill="#FF8FAB"/>
-  <circle cx="110" cy="177" r="7" fill="#4ECDC4"/>
-  <circle cx="128" cy="175" r="6" fill="#FFD84D"/>
-  <circle cx="146" cy="177" r="5" fill="#C09AFF"/>
-  <circle cx="164" cy="175" r="7" fill="#FF6B6B"/>
-  <circle cx="182" cy="177" r="6" fill="#7EDBFF"/>
-  <circle cx="200" cy="175" r="5" fill="#FFD84D"/>
-  <circle cx="218" cy="177" r="6" fill="#FF8FAB"/>
-  <circle cx="232" cy="175" r="5" fill="#6BCB77"/>
-  <!-- Produce spilling on ground (LEFT stall only) -->
+  <circle cx="32"  cy="177" r="7" fill="#FF6B6B"/><circle cx="52"  cy="175" r="6" fill="#FFD84D"/>
+  <circle cx="72"  cy="177" r="8" fill="#6BCB77"/><circle cx="92"  cy="175" r="5" fill="#FF8FAB"/>
+  <circle cx="110" cy="177" r="7" fill="#4ECDC4"/><circle cx="128" cy="175" r="6" fill="#FFD84D"/>
+  <circle cx="146" cy="177" r="5" fill="#C09AFF"/><circle cx="164" cy="175" r="7" fill="#FF6B6B"/>
+  <circle cx="182" cy="177" r="6" fill="#7EDBFF"/><circle cx="200" cy="175" r="5" fill="#FFD84D"/>
+  <circle cx="218" cy="177" r="6" fill="#FF8FAB"/><circle cx="232" cy="175" r="5" fill="#6BCB77"/>
   <circle cx="14"  cy="213" r="6" fill="#FFD84D" opacity=".75"/>
   <circle cx="32"  cy="212" r="5" fill="#FF8FAB" opacity=".7"/>
   <circle cx="50"  cy="213" r="7" fill="#6BCB77" opacity=".7"/>
   <circle cx="68"  cy="212" r="5" fill="#FFD84D" opacity=".65"/>
   <circle cx="85"  cy="213" r="6" fill="#FF6B6B" opacity=".68"/>
   <circle cx="102" cy="212" r="4" fill="#4ECDC4" opacity=".6"/>
-
-  <!-- ══════════════════════════════════════════════════════
-       RIGHT: TALL narrow workshop tower (85px wide × 160px tall)
-       Completely different proportions from the squat left stall.
-       ══════════════════════════════════════════════════════ -->
   <rect x="478" y="50" width="106" height="160" rx="4" fill="#4A6080"/>
   <rect x="484" y="56" width="94" height="148" rx="3" fill="#5A7898"/>
-  <!-- Flat roof with crenellations (nothing like organic left awning) -->
   <rect x="472" y="43" width="118" height="12" rx="2" fill="#3A5070"/>
   <rect x="476" y="32" width="18" height="14" rx="1" fill="#3A5070"/>
   <rect x="504" y="26" width="18" height="20" rx="1" fill="#3A5070"/>
   <rect x="532" y="26" width="18" height="20" rx="1" fill="#3A5070"/>
   <rect x="560" y="32" width="18" height="14" rx="1" fill="#3A5070"/>
-  <!-- Flag on right tower top only -->
   <line x1="580" y1="10" x2="580" y2="43" stroke="#3A5070" stroke-width="2.5"/>
   <path d="M580 10 L598 18 L580 28 Z" fill="#FF6EC7" opacity=".9"/>
-  <!-- Evenly spaced rectangular shelves — very geometric -->
   <rect x="484" y="90"  width="94" height="3" fill="#3A5070" opacity=".7"/>
   <rect x="484" y="120" width="94" height="3" fill="#3A5070" opacity=".7"/>
   <rect x="484" y="152" width="94" height="3" fill="#3A5070" opacity=".7"/>
   <rect x="484" y="183" width="94" height="3" fill="#3A5070" opacity=".7"/>
-  <!-- Top shelf: triangle tools only -->
   <path d="M490 87 L499 72 L508 87 Z" fill="#FF6EC7"/>
   <path d="M514 87 L524 70 L534 87 Z" fill="#FFD84D"/>
   <path d="M540 87 L549 74 L558 87 Z" fill="#4ECDC4"/>
   <path d="M562 87 L570 74 L578 87 Z" fill="#9B5DE5"/>
-  <!-- 2nd shelf: rectangular boxes -->
   <rect x="488" y="100" width="22" height="18" rx="2" fill="#4ECDC4" opacity=".88"/>
   <rect x="516" y="96"  width="26" height="22" rx="2" fill="#FF6EC7" opacity=".88"/>
   <rect x="548" y="100" width="22" height="18" rx="2" fill="#FFD84D" opacity=".88"/>
-  <!-- 3rd shelf: mixed angular -->
   <path d="M490 150 L500 138 L510 150 Z" fill="#FF6EC7"/>
   <rect x="516" y="139" width="16" height="11" rx="1" fill="#4ECDC4"/>
   <path d="M538 150 L548 138 L558 150 Z" fill="#FFD84D"/>
   <rect x="562" y="141" width="14" height="9" rx="1" fill="#C09AFF"/>
-  <!-- 4th shelf: cylinders represented as ovals -->
   <ellipse cx="498" cy="178" rx="10" ry="4" fill="#7EDBFF" opacity=".8"/>
   <rect x="488" y="162" width="20" height="16" rx="4" fill="#7EDBFF" opacity=".7"/>
   <ellipse cx="524" cy="178" rx="10" ry="4" fill="#FF8FAB" opacity=".8"/>
   <rect x="514" y="162" width="20" height="16" rx="4" fill="#FF8FAB" opacity=".7"/>
   <ellipse cx="550" cy="178" rx="10" ry="4" fill="#6BCB77" opacity=".8"/>
   <rect x="540" y="162" width="20" height="16" rx="4" fill="#6BCB77" opacity=".7"/>
-  <!-- Window (unique to right tower) -->
   <rect x="497" y="190" width="48" height="18" rx="3" fill="#1A2A3A" stroke="#4ECDC4" stroke-width="2"/>
   <line x1="521" y1="190" x2="521" y2="208" stroke="#4ECDC4" stroke-width="1.2" opacity=".6"/>
   <circle cx="510" cy="199" r="4" fill="#4ECDC4" opacity=".45"/>
   <circle cx="532" cy="199" r="4" fill="#7EDBFF" opacity=".45"/>
-  <!-- Door (only right tower) -->
   <rect x="504" y="198" width="34" height="12" rx="2" fill="#142030"/>
   <circle cx="535" cy="204" r="1.8" fill="#4ECDC4" opacity=".8"/>
-  <!-- Sign hanging outside tower -->
   <rect x="456" y="88" width="24" height="18" rx="3" fill="#3A5070" stroke="#4ECDC4" stroke-width="1.5"/>
   <circle cx="468" cy="97" r="5" fill="#FFD84D" opacity=".7"/>
   <line x1="468" y1="82" x2="468" y2="88" stroke="#3A5070" stroke-width="2"/>
-  <!-- Central gap decoration -->
   <circle cx="310" cy="212" r="4"  fill="#FFD84D" opacity=".6"/>
   <circle cx="328" cy="211" r="3"  fill="#FF6EC7" opacity=".55"/>
   <circle cx="344" cy="212" r="3.5" fill="#7EDBFF" opacity=".55"/>
 </svg>`,
 
-  // 12. Hoob & Nev (AR) — LEFT: tiny humble crystal cluster | RIGHT: massive imposing crystal column
   cave_b: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
   <rect width="600" height="300" fill="#050510"/>
   <path d="M0 0 L0 68 Q22 100 35 68 Q48 105 65 60 Q82 105 100 58 Q120 106 142 62 Q162 106 180 60 Q200 104 220 58 Q242 105 264 56 Q284 100 306 58 Q328 100 348 52 Q368 100 388 56 Q408 104 428 58 Q448 105 466 52 Q484 104 506 62 Q526 106 545 62 Q562 105 578 68 Q594 106 600 66 L600 0 Z" fill="#140E28"/>
@@ -1549,14 +1487,12 @@ const SCENE_BACKGROUNDS = {
   <circle cx="250" cy="148" r="1.5" fill="#9B5DE5"><animate attributeName="cy" values="148;124;148" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".48;0;.48" dur="5s" repeatCount="indefinite"/></circle>
   <circle cx="350" cy="140" r="1.5" fill="#4ECDC4"><animate attributeName="cy" values="140;115;140" dur="4.6s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="4.6s" repeatCount="indefinite"/></circle>
 </svg>`
-
 };
 
 const QUESTION_ILLUSTRATIONS = {
   share_food: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#FFF1C9"/><circle cx="140" cy="56" r="40" fill="#FFFFFF"/><circle cx="140" cy="56" r="31" fill="#E8F7FF"/><g fill="none" stroke="#F4A261" stroke-width="4" stroke-linecap="round"><path d="M116 57 q10 -18 28 -8 q18 10 3 22 q-13 10 -27 0 q-13 -10 1 -22"/></g><circle cx="132" cy="58" r="5" fill="#D94B38"/><circle cx="151" cy="64" r="5" fill="#D94B38"/></svg>`
 };
 
-// throne_room: gy array so char1 sits higher (visual authority cue)
 const CHAR_POS = {
   home_a:   { x: [170, 430], gy: 213, h: 182, yo: 35 },
   market_a: { x: [200, 400], gy: 213, h: 165, yo: 30 },
@@ -1573,7 +1509,7 @@ const CHAR_POS = {
 };
 
 function svgInner(str) { return str.replace(/<svg[^>]*>/i,'').replace(/<\/svg>\s*$/i,''); }
-function bgSVG(scene) { return svgInner(SCENE_BACKGROUNDS[scene]||SCENE_BACKGROUNDS.home_a); }
+function bgSVG(scene)  { return svgInner(SCENE_BACKGROUNDS[scene] || SCENE_BACKGROUNDS.home_a); }
 function sceneSVG(v) {
   const pos=CHAR_POS[v.scene]||{x:[155,445],gy:GY,h:182,yo:35};
   const [c1x,c2x]=pos.x, gys=Array.isArray(pos.gy)?pos.gy:[pos.gy,pos.gy], {h,yo}=pos;
@@ -1619,7 +1555,7 @@ function trophySVG() {
   return `<svg viewBox="0 0 160 175" width="115" height="126" style="display:block;margin:auto;overflow:visible"><circle cx="80" cy="80" r="55" fill="rgba(255,215,0,0.14)"><animate attributeName="r" values="50;66;50" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.14;0.04;0.14" dur="2.2s" repeatCount="indefinite"/></circle><g><animateTransform attributeName="transform" type="translate" values="0,0;0,-7;0,0" dur="2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/><path d="M28,18 L132,18 L117,88 Q80,114 43,88 Z" fill="#FFD700" stroke="#F39C12" stroke-width="3"/><path d="M28,18 Q4,18 4,50 Q4,82 28,82" fill="none" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/><path d="M132,18 Q156,18 156,50 Q156,82 132,82" fill="none" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/><rect x="67" y="108" width="26" height="30" rx="4" fill="#F39C12"/><rect x="43" y="136" width="74" height="19" rx="9" fill="#FFD700" stroke="#F39C12" stroke-width="2"/><polygon points="80,36 86,56 107,56 91,68 97,88 80,76 63,88 69,68 53,56 74,56" fill="white" opacity=".65"/></g></svg>`;
 }
 
-// ── RENDER (no keepOverlayButtons needed — overlays are outside #app) ──
+// ── RENDER ─────────────────────────────────────────────
 const app = document.getElementById('app');
 
 function render() {
@@ -1660,8 +1596,7 @@ function renderWelcome() {
     <div class="wt">Relationship Detective!</div>
     <div class="ws">Can you figure out how these people who live far away act toward each other?</div>
     <div class="illus" style="max-width:330px">${welcomeSVG(pool[wi1],pool[wi2])}</div>
-    <button id="unlockBtn" class="unlock-btn"
-      onclick="unlockAudio('Hello there, and welcome to Relationship Detective! I am so glad you are here today. First, can you type your first name in the box, and then pick your age from the little menu. When you are all ready, press the big orange button that says Let us play!')">
+    <button id="unlockBtn" class="unlock-btn" onclick="unlockAudio('welcome')">
       🔊 Tap here to turn on sound!
     </button>
     <div class="form-row">
@@ -1686,14 +1621,14 @@ function renderWelcome() {
     ${S.pid?`<div style="text-align:center;margin-top:2px"><span style="font-size:11px;color:#ccc">Study ID: </span><input type="text" readonly style="font-family:inherit;font-size:11px;color:#bbb;background:transparent;border:none;outline:none;text-align:center;width:220px;cursor:default" value="${escHtml(S.pid)}"/></div>`:''}
     <button class="btn btn-primary" style="font-size:19px;padding:13px 34px;margin-top:4px" onclick="startGame()">Let's Play!</button>
   </div>`;
-  stopSpeak();
+  stopAudio();
   const inp=document.getElementById('cname'), sel=document.getElementById('cage');
   if(inp) inp.addEventListener('input',  e=>S.name=e.target.value);
   if(sel) sel.addEventListener('change', e=>S.age=e.target.value);
 }
 
+// ── INTRO ──────────────────────────────────────────────
 function renderIntro() {
-  const nm=S.name?`, ${S.name}`:'';
   app.innerHTML=`
   <div class="screen" style="justify-content:center;text-align:center;gap:10px">
     <div style="font-size:44px">🕵️</div>
@@ -1710,10 +1645,11 @@ function renderIntro() {
     <div style="font-size:13px;color:#bbb">When you are ready, we will start with the first pair.</div>
     <button class="btn btn-primary" style="font-size:18px;padding:12px 28px" onclick="startRealGame()">Let us start! 🚀</button>
   </div>`;
-  stopSpeak();
-  speak(`Wonderful${nm}! Here is how our game works. I am going to tell you about two people who live far away and how they act toward each other. These people might do things a little differently from the way you do things — and that is totally okay. Then I will ask if you think those same two people would act a certain way in another situation. Press the big thumbs up if you think YES, or the big thumbs down if you think NO. After you answer, I will ask how sure you are with a big thumb and a smaller thumb. There are no wrong answers — we just want to know what you think. When you are ready, press the big orange button to start!`);
+  stopAudio();
+  playAudio('intro');
 }
 
+// ── STORY ──────────────────────────────────────────────
 function renderStory(v) {
   app.innerHTML=`
   ${starHeaderHTML(S.stars,VIGNETTES.length)}
@@ -1726,33 +1662,54 @@ function renderStory(v) {
       <button class="btn btn-primary" id="readyBtn" style="display:none" onclick="goModelId()">I am ready for questions!</button>
     </div>
   </div>`;
-  stopSpeak();
-  speak(`Now let us meet ${v.char1.name} and ${v.char2.name}.`,()=>{
-    speakSeq(v.parts, i=>{
+  stopAudio();
+  const pk = pairKey(v);
+  playAudio('meet_' + pk, () => {
+    const mySeqId = audioSeqId;
+    let si = 0;
+    function nextPart() {
+      if (audioSeqId !== mySeqId) return;
+      if (si >= v.parts.length) {
+        document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
+        const rb=document.getElementById('readyBtn'); if(rb) rb.style.display='inline-flex';
+        playAudio('ready_' + pk);
+        return;
+      }
       document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
-      const el=document.getElementById(`snt${i}`); if(el) el.classList.add('hi');
-    }, ()=>{
-      document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
-      const rb=document.getElementById('readyBtn'); if(rb) rb.style.display='inline-flex';
-      speak(`Now I will ask you some questions about ${v.char1.name} and ${v.char2.name}. When you are ready, press the big orange button!`);
-    });
+      const el=document.getElementById('snt'+si); if(el) el.classList.add('hi');
+      const partKey = 'story_' + v.id + 'abc'[si];
+      si++;
+      playAudio(partKey, nextPart);
+    }
+    nextPart();
   });
 }
 
 function replayStory() {
-  const v=VIGNETTES[S.vi]; stopSpeak();
+  const v=VIGNETTES[S.vi]; stopAudio();
   const rb=document.getElementById('readyBtn'); if(rb) rb.style.display='none';
-  speak(`Sure! Let me tell you about ${v.char1.name} and ${v.char2.name} one more time.`,()=>{
-    speakSeq(v.parts, i=>{
+  const pk=pairKey(v);
+  playAudio('replay_' + pk, () => {
+    const mySeqId = audioSeqId;
+    let si = 0;
+    function nextPart() {
+      if (audioSeqId !== mySeqId) return;
+      if (si >= v.parts.length) {
+        document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
+        const rb2=document.getElementById('readyBtn'); if(rb2) rb2.style.display='inline-flex';
+        return;
+      }
       document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
-      const el=document.getElementById(`snt${i}`); if(el) el.classList.add('hi');
-    }, ()=>{
-      document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
-      const rb2=document.getElementById('readyBtn'); if(rb2) rb2.style.display='inline-flex';
-    });
+      const el=document.getElementById('snt'+si); if(el) el.classList.add('hi');
+      const partKey = 'story_' + v.id + 'abc'[si];
+      si++;
+      playAudio(partKey, nextPart);
+    }
+    nextPart();
   });
 }
 
+// ── QUESTION ───────────────────────────────────────────
 function renderQuestion(v, qi) {
   const q=v.questions[qi];
   app.innerHTML=`
@@ -1773,22 +1730,40 @@ function renderQuestion(v, qi) {
       </div>
     </div>
   </div>`;
-  stopSpeak();
-  speak(`Question ${qi+1} of 3. ${q.text}. Do you think ${v.char1.name} and ${v.char2.name} would act that way? Press the big thumbs up for YES or the big thumbs down for NO.`);
+  stopAudio();
+  playAudio('q_' + q.id, () => playAudio('q_prompt_end'));
 }
 
-// ── LIKERT: colours now conditional on YES (green) vs NO (red) ──
+function replayQ() {
+  stopAudio();
+  const q = VIGNETTES[S.vi].questions[S.qi];
+  playAudio('q_' + q.id, () => playAudio('q_remind_end'));
+}
+
+function replayStoryQ() {
+  const v=VIGNETTES[S.vi]; stopAudio();
+  const pk=pairKey(v);
+  playAudio('remind_' + pk, () => {
+    const mySeqId = audioSeqId;
+    let si = 0;
+    function nextPart() {
+      if (audioSeqId !== mySeqId) return;
+      if (si >= v.parts.length) { playAudio('okay_now_what'); return; }
+      playAudio('story_' + v.id + 'abc'[si], () => { si++; nextPart(); });
+    }
+    nextPart();
+  });
+}
+
+// ── LIKERT ─────────────────────────────────────────────
 function renderLikert() {
   const v=VIGNETTES[S.vi], qi=S.qi, q=v.questions[qi], isYes=S.pendingAns==='YES';
-
-  // FIX: these were always green — now correctly conditional
   const strongStyle = isYes
     ? 'background:linear-gradient(135deg,#1e8449,#27AE60);color:white;box-shadow:0 6px 18px rgba(30,132,73,.4);'
     : 'background:linear-gradient(135deg,#922b21,#C0392B);color:white;box-shadow:0 6px 18px rgba(146,43,33,.4);';
   const mildStyle = isYes
     ? 'background:linear-gradient(135deg,#a8e063,#d0f5a0);color:#1a5e2a;box-shadow:0 4px 12px rgba(168,224,99,.35);'
     : 'background:linear-gradient(135deg,#f45c43,#ffbdad);color:#7B241C;box-shadow:0 4px 12px rgba(244,92,67,.3);';
-
   app.innerHTML=`
   ${starHeaderHTML(S.stars,VIGNETTES.length)}
   <div class="screen" style="padding-top:4px;gap:9px">
@@ -1809,8 +1784,8 @@ function renderLikert() {
       </button>
     </div>
   </div>`;
-  stopSpeak();
-  speak(`You said ${isYes?'yes':'no'}. Now, how sure are you? Press the big thumb if you are really really sure, or the smaller thumb if you think so but are not totally sure.`);
+  stopAudio();
+  playAudio(isYes ? 'sure_yes' : 'sure_no');
 }
 
 function doLikertAnswer(certainty) {
@@ -1820,10 +1795,11 @@ function doLikertAnswer(certainty) {
   const v=VIGNETTES[S.vi], q=v.questions[S.qi], initAns=S.pendingAns;
   const fullAns=certainty==='DEFINITELY'?(initAns==='YES'?'DEFINITELY_YES':'DEFINITELY_NO'):(initAns==='YES'?'MAYBE_YES':'MAYBE_NO');
   const rec={type:'test',vid:v.id,vM:v.model,qi:S.qi,qM:q.qM,itemId:q.id,ans:fullAns,initialAns:initAns,keyed:q.keyed,ok:initAns===q.keyed,congruent:q.congruent,ts:new Date().toISOString()};
-  S.answers.push(rec); uploadToSheets(rec); S.pendingAns=null; stopSpeak();
+  S.answers.push(rec); uploadToSheets(rec); S.pendingAns=null; stopAudio();
   setTimeout(()=>{if(S.qi<2){S.qi++;S.phase='q';}else{S.stars++;S.phase='trans';}render();},650);
 }
 
+// ── MODEL ID ───────────────────────────────────────────
 function renderModelId() {
   const v=VIGNETTES[S.vi], models=S.modelIdOrder;
   app.innerHTML=`
@@ -1836,16 +1812,17 @@ function renderModelId() {
     </div>
     <div class="replay-section"><div class="replay-label">Need a reminder?</div><div class="replay-btns"><button class="btn-story-replay" onclick="replayStoryQ()">📖 Hear their story again</button></div></div>
   </div>`;
-  stopSpeak();
-  speak(`Which of these pictures shows how ${v.char1.name} and ${v.char2.name} act with each other? Pick the one that you think fits best.`);
+  stopAudio();
+  playAudio('model_' + pairKey(v));
 }
 
 function doModelId(chosenModel) {
   document.querySelectorAll('.btn-model-choice').forEach(b=>b.disabled=true);
-  S.pendingModelChoice=chosenModel; stopSpeak();
+  S.pendingModelChoice=chosenModel; stopAudio();
   setTimeout(()=>{S.phase='model-certainty';render();},300);
 }
 
+// ── MODEL CERTAINTY ────────────────────────────────────
 function renderModelCertainty() {
   const v=VIGNETTES[S.vi], chosen=S.pendingModelChoice;
   app.innerHTML=`
@@ -1874,8 +1851,8 @@ function renderModelCertainty() {
       </button>
     </div>
   </div>`;
-  stopSpeak();
-  speak(`You picked that picture. How sure are you about this choice? Press the big thumbs up if you are really really sure, or the smaller thumbs up if you are not totally sure.`);
+  stopAudio();
+  playAudio('you_picked');
 }
 
 function doModelCertaintyAnswer(certainty) {
@@ -1885,7 +1862,7 @@ function doModelCertaintyAnswer(certainty) {
   const v=VIGNETTES[S.vi], chosen=S.pendingModelChoice;
   const rec={type:'model-id',vid:v.id,vM:v.model,chosen:chosen,correct:chosen===v.model,modelCertainty:certainty,ts:new Date().toISOString()};
   S.answers.push(rec); uploadToSheets(rec);
-  S.pendingModelChoice=null; S.qi=0; stopSpeak();
+  S.pendingModelChoice=null; S.qi=0; stopAudio();
   setTimeout(()=>{S.phase='q';render();},400);
 }
 
@@ -1902,17 +1879,7 @@ function doAnswer(ans) {
   setTimeout(()=>{S.phase='q-likert';render();},480);
 }
 
-function replayQ() {
-  stopSpeak();
-  const v=VIGNETTES[S.vi], qi=S.qi;
-  speak(`Here is the question again. ${v.questions[qi].text}. Do you think ${v.char1.name} and ${v.char2.name} would act that way?`);
-}
-
-function replayStoryQ() {
-  const v=VIGNETTES[S.vi]; stopSpeak();
-  speak(`Sure! Let me remind you about ${v.char1.name} and ${v.char2.name}.`,()=>{speakSeq(v.parts,null,()=>speak(`Okay. Now, what do you think?`));});
-}
-
+// ── TRANSITION ─────────────────────────────────────────
 function renderTrans() {
   const ni=S.vi+1, last=ni>=VIGNETTES.length, isMidpoint=ni===6&&!last, np=last?null:VIGNETTES[ni];
   app.innerHTML=`
@@ -1922,13 +1889,20 @@ function renderTrans() {
     <div style="font-size:19px;font-weight:600;color:#F39C12">${S.stars} star${S.stars===1?'':'s'} collected!</div>
     <div class="trans-sub">${last?'That was the very last pair — you are almost done!':isMidpoint?'You are halfway through — great work!':`Next up: meet <strong>${escHtml(np.char1.name)}</strong> and <strong>${escHtml(np.char2.name)}</strong>!`}</div>
   </div>`;
-  const msg=last?`Thank you for your help. You just finished all twelve pairs and collected ${S.stars} star${S.stars===1?'':'s'}.`
-    :isMidpoint?`Thank you for your help. You have finished six pairs and collected ${S.stars} star${S.stars===1?'':'s'}.`
-    :`Thank you for your help. You now have ${S.stars} star${S.stars===1?'':'s'}. Next, we will meet ${np.char1.name} and ${np.char2.name}.`;
-  stopSpeak();
-  speak(msg,()=>{setTimeout(()=>{if(last){S.phase='end';}else{S.vi++;S.qi=0;S.phase=S.vi===6?'midpoint':'story';}render();},750);});
+  stopAudio();
+  const starKey = last ? 'trans_last'
+    : isMidpoint ? 'trans_halfway'
+    : `trans_${S.stars}star${S.stars===1?'':'s'}`;
+  playAudio(starKey, () => {
+    setTimeout(()=>{
+      if(last){S.phase='end';}
+      else{S.vi++;S.qi=0;S.phase=S.vi===6?'midpoint':'story';}
+      render();
+    }, 500);
+  });
 }
 
+// ── MIDPOINT ───────────────────────────────────────────
 function renderMidpoint() {
   const nm=S.name||'Detective';
   app.innerHTML=`
@@ -1946,21 +1920,21 @@ function renderMidpoint() {
     </div>
     <div style="font-size:11px;color:#ccc;margin-top:4px">Your answers so far have been saved.</div>
   </div>`;
-  stopSpeak();
-  speak(`Wow, ${nm}. You have already met six pairs of friends who live far away. Thank you for your help. Would you like to keep going and meet six more, or say goodbye for now? Press Keep Going to continue, or Bye for now if you are all done today.`);
+  stopAudio();
+  playAudio('halfway');
 }
 
-function continueGame() { stopSpeak(); S.phase='story'; render(); }
+function continueGame() { stopAudio(); S.phase='story'; render(); }
 
 function exitToCHS() {
-  stopSpeak(); markSessionComplete();
-  const nm=S.name||'Detective';
+  stopAudio(); markSessionComplete();
   document.querySelectorAll('.midpoint-screen button').forEach(b=>b.disabled=true);
-  speak(`Goodbye, ${nm}. Thank you for helping today.`,()=>{
+  playAudio('goodbye', () => {
     window.location.href=getUrlParam('return_url')||'https://www.childrenhelpingscience.com';
   });
 }
 
+// ── END ────────────────────────────────────────────────
 function renderEnd() {
   const nm=S.name||'Detective', testAns=S.answers.filter(a=>a.type==='test'), tot=testAns.length, cor=testAns.filter(a=>a.ok).length;
   app.innerHTML=`
@@ -1975,8 +1949,7 @@ function renderEnd() {
       <button class="btn btn-secondary" onclick="resetGame()">Play Again</button>
     </div>
   </div>`;
-  markSessionComplete(); stopSpeak();
-  speak(`${nm}, thank you so much for your help today. You answered questions about all twelve pairs of people who live far away, and you thought carefully about each one. You are a wonderful Relationship Detective.`);
+  markSessionComplete(); stopAudio();
 }
 
 // ── NAVIGATION ─────────────────────────────────────────
@@ -1984,14 +1957,14 @@ function startGame() {
   const inp=document.getElementById('cname'), sel=document.getElementById('cage');
   S.name=(inp?inp.value.trim():'')||''; S.age=(sel?sel.value:'')||'';
   S.pid=getUrlParam('pid')||S.pid||'';
-  if(!S.name){unlockAudio('Oops! Can you type your first name first?');return;}
+  if(!S.name){ unlockAudio('name_needed'); return; }
   audioUnlocked=true;
   for(let i=VIGNETTES.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[VIGNETTES[i],VIGNETTES[j]]=[VIGNETTES[j],VIGNETTES[i]];}
   assignAllQuestions();
   S.phase='intro'; render();
 }
 
-function startRealGame() { stopSpeak(); S.phase='story'; S.vi=0; S.qi=0; render(); }
+function startRealGame() { stopAudio(); S.phase='story'; S.vi=0; S.qi=0; render(); }
 
 function goModelId() {
   S.modelIdOrder=['EM','CS','AR'].sort(()=>Math.random()-.5);
@@ -2003,12 +1976,12 @@ function skipPair() {
     S.pendingAns=null; S.pendingModelChoice=null; S.stars++; S.phase='trans'; render();
   }
 }
-function skipMidpoint() { stopSpeak(); S.vi=6; S.qi=0; S.phase='midpoint'; render(); }
-function skipEnd()      { stopSpeak(); S.phase='end'; render(); }
+function skipMidpoint() { stopAudio(); S.vi=6; S.qi=0; S.phase='midpoint'; render(); }
+function skipEnd()      { stopAudio(); S.phase='end'; render(); }
 
 function resetGame() {
-  stopSpeak();
-  Object.assign(S,{phase:'welcome',name:'',age:'',pid:'',vi:0,qi:0,pendingAns:null,pendingModelChoice:null,modelIdOrder:[],answers:[],stars:0,adminOpen:false,elevenLabsKey:localStorage.getItem('rad_elKey')||'',elevenLabsVoice:localStorage.getItem('rad_elVoice')||'MF3mGyEYCl7XYWbV9V6O'});
+  stopAudio();
+  Object.assign(S,{phase:'welcome',name:'',age:'',pid:'',vi:0,qi:0,pendingAns:null,pendingModelChoice:null,modelIdOrder:[],answers:[],stars:0,adminOpen:false});
   render();
 }
 
@@ -2018,32 +1991,12 @@ function setupAdmin() {
   if(!panel) return;
   panel.innerHTML=`
     <h3>Researcher Panel</h3>
-    <div style="margin-bottom:9px;padding-bottom:9px;border-bottom:1px solid #eee">
-      <div class="admin-section-label">Voice</div>
-      <div style="font-size:10.5px;color:#bbb;margin-bottom:6px;line-height:1.55">For the most natural voice, enter a free <a href="https://elevenlabs.io" target="_blank" style="color:#4776e6">ElevenLabs</a> API key.</div>
-      <input id="elKeyInput" type="password" class="admin-input" placeholder="ElevenLabs API key..."/>
-      <select id="elVoiceSelect" class="admin-select">
-        <option value="MF3mGyEYCl7XYWbV9V6O">Elli — warm, young (recommended)</option>
-        <option value="jBpfuIE2acCO8z3wKNLl">Gigi — upbeat, enthusiastic</option>
-        <option value="21m00Tcm4TlvDq8ikWAM">Rachel — calm, clear</option>
-        <option value="ThT5KcBeYPX3keUQqHPh">Dorothy — warm, pleasant</option>
-        <option value="pNInz6obpgDQGcFmaJgB">Adam — friendly, clear</option>
-      </select>
-      <div class="admin-row">
-        <button class="admin-btn-sm" onclick="saveVoiceSettings()">Save</button>
-        <button class="admin-btn-sm admin-btn-blue" onclick="testVoice()">Test Voice</button>
-      </div>
-      <div id="voiceStatus" style="font-size:10.5px;color:#aaa;text-align:center;min-height:14px"></div>
-    </div>
     <div class="admin-section-label">Responses</div>
     <div class="admin-log" id="adminLog">No answers yet.</div>
     <button class="admin-btn-sm admin-btn-gold" style="width:100%;margin-bottom:4px;padding:8px;font-size:11px;border-radius:7px" onclick="exportCSV()">Download Results (CSV)</button>
     <button class="admin-btn-sm" style="width:100%;margin-bottom:4px;padding:7px;font-size:11px;border-radius:7px" onclick="skipPair()">Skip this pair</button>
     <button class="admin-btn-sm" style="width:100%;margin-bottom:4px;padding:7px;font-size:11px;border-radius:7px" onclick="skipMidpoint()">Skip to midpoint</button>
     <button class="admin-btn-sm" style="width:100%;padding:7px;font-size:11px;border-radius:7px" onclick="skipEnd()">Skip to End</button>`;
-  const ki=document.getElementById('elKeyInput'), vs=document.getElementById('elVoiceSelect');
-  if(ki) ki.value=S.elevenLabsKey;
-  if(vs) vs.value=S.elevenLabsVoice;
   document.getElementById('adminBtn').addEventListener('click',()=>{
     S.adminOpen=!S.adminOpen;
     panel.classList.toggle('open',S.adminOpen);
@@ -2051,15 +2004,6 @@ function setupAdmin() {
   });
   updateAdmin();
 }
-
-function saveVoiceSettings() {
-  const ki=document.getElementById('elKeyInput'), vs=document.getElementById('elVoiceSelect'), st=document.getElementById('voiceStatus');
-  S.elevenLabsKey=ki?ki.value.trim():''; S.elevenLabsVoice=vs?vs.value:'MF3mGyEYCl7XYWbV9V6O';
-  try{localStorage.setItem('rad_elKey',S.elevenLabsKey);localStorage.setItem('rad_elVoice',S.elevenLabsVoice);}catch(e){}
-  if(st){st.textContent=S.elevenLabsKey?'Saved! ElevenLabs active.':'Saved. Using built-in voice.';setTimeout(()=>{st.textContent='';},2500);}
-}
-
-function testVoice() { saveVoiceSettings(); stopSpeak(); speak('Hello! I am the Relationship Detective voice. Does this sound good to you?'); }
 
 function updateAdmin() {
   const el=document.getElementById('adminLog'); if(!el) return;
@@ -2089,9 +2033,8 @@ function exportCSV() {
 // ── INIT ───────────────────────────────────────────────
 window.addEventListener('load', () => {
   try {
-    initVoices();
-    setupAdmin();       // builds panel content + click listener (panel is outside #app, persists)
-    setupSecretZone();  // sets up tap listener (secretZone is outside #app, persists)
+    setupAdmin();
+    setupSecretZone();
     updateFullscreenBtn();
     render();
   } catch(err) {
@@ -2102,11 +2045,7 @@ window.addEventListener('load', () => {
 
 window.addEventListener('keydown', e => {
   if(e.key==='Backspace'&&e.target.tagName!=='INPUT'&&e.target.tagName!=='SELECT') e.preventDefault();
-
-  // Secret researcher shortcut: Shift + Ctrl + R
-  if (e.shiftKey && e.ctrlKey && e.key === 'R') {
-    revealResearcherControls();
-  }
+  if(e.shiftKey && e.ctrlKey && e.key==='R') revealResearcherControls();
 });
 </script>
 </body>

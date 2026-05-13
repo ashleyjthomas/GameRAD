@@ -1573,7 +1573,7 @@ const CHAR_POS = {
 };
 
 function svgInner(str) { return str.replace(/<svg[^>]*>/i,'').replace(/<\/svg>\s*$/i,''); }
-function bgSVG(scene) { return svgInner(SCENE_BACKGROUNDS[scene]||SCENE_BACKGROUNDS.alien_home); }
+function bgSVG(scene) { return svgInner(SCENE_BACKGROUNDS[scene]||SCENE_BACKGROUNDS.home_a); }
 function sceneSVG(v) {
   const pos=CHAR_POS[v.scene]||{x:[155,445],gy:GY,h:182,yo:35};
   const [c1x,c2x]=pos.x, gys=Array.isArray(pos.gy)?pos.gy:[pos.gy,pos.gy], {h,yo}=pos;

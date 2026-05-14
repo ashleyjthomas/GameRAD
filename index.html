@@ -1778,6 +1778,7 @@ function renderLikert() {
     <div class="q-illust">${qIllustHTML(q)}</div>
     <div class="ans-row" style="gap:16px;align-items:flex-end">
       <button class="btn-likert-strong" id="btnDef" style="${strongStyle}" onclick="doLikertAnswer('DEFINITELY')">
+        ${isYes?thumbsUpSVG(54):thumbsDownSVG(54)}
         <span style="margin-top:4px;font-size:15px;font-weight:600">Really sure!<br>${isYes?'YES':'NO'}</span>
       </button>
       <button class="btn-likert-mild" id="btnMay" style="${mildStyle}" onclick="doLikertAnswer('MAYBE')">
@@ -1841,6 +1842,7 @@ function renderModelCertainty() {
       <button class="btn-likert-strong" id="btnModelDef"
         style="background:linear-gradient(135deg,#1e8449,#27AE60);color:white;box-shadow:0 6px 18px rgba(30,132,73,.4);"
         onclick="doModelCertaintyAnswer('DEFINITELY')">
+        ${thumbsUpSVG(54)}
         <span style="margin-top:4px;font-size:15px;font-weight:600">Really sure!<br>This one</span>
       </button>
       <button class="btn-likert-mild" id="btnModelMay"

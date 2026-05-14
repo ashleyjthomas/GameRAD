@@ -1,0 +1,42 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# Backup and temp files
+*.bak
+*.tmp
+*.orig
+*.log
+
+# Node / npm (in case of future tooling)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Python (in case of future tooling)
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS-specific
+.Trashes
+.fseventsd
+.Spotlight-V100

@@ -1875,6 +1875,7 @@ function flashBtn(ans) {
 
 function doAnswer(ans) {
   ['btnY','btnN'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=true;});
+  stopAudio();
   S.pendingAns=ans; flashBtn(ans);
   setTimeout(()=>{S.phase='q-likert';render();},480);
 }
@@ -1958,6 +1959,7 @@ function startGame() {
   S.name=(inp?inp.value.trim():'')||''; S.age=(sel?sel.value:'')||'';
   S.pid=getUrlParam('pid')||S.pid||'';
   if(!S.name){ unlockAudio('name_needed'); return; }
+  stopAudio();
   audioUnlocked=true;
   for(let i=VIGNETTES.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[VIGNETTES[i],VIGNETTES[j]]=[VIGNETTES[j],VIGNETTES[i]];}
   assignAllQuestions();
@@ -1967,12 +1969,14 @@ function startGame() {
 function startRealGame() { stopAudio(); S.phase='story'; S.vi=0; S.qi=0; render(); }
 
 function goModelId() {
+  stopAudio();
   S.modelIdOrder=['EM','CS','AR'].sort(()=>Math.random()-.5);
   S.phase='model-id'; render();
 }
 
 function skipPair() {
   if(['story','model-id','model-certainty','q','q-likert'].includes(S.phase)){
+    stopAudio();
     S.pendingAns=null; S.pendingModelChoice=null; S.stars++; S.phase='trans'; render();
   }
 }

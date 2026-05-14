@@ -617,6 +617,7 @@ const S = {
 let currentAudio = null;
 let audioSeqId   = 0;   // increment to cancel any in-progress sequence
 let audioUnlocked = false;
+const activeAudios = new Set();   // track every Audio we create so stopAudio can kill orphans
 
 // Play a single pre-recorded file by AUDIO_MAP key.
 // done() is only called if the sequence has not been cancelled.
@@ -627,8 +628,10 @@ function playAudio(key, done) {
   const mySeqId = audioSeqId;
   const audio = new Audio(AUDIO_BASE + file);
   currentAudio = audio;
+  activeAudios.add(audio);
   const finish = () => {
-    currentAudio = null;
+    activeAudios.delete(audio);
+    if (currentAudio === audio) currentAudio = null;
     if (audioSeqId === mySeqId) done();
   };
   audio.onended = finish;
@@ -637,8 +640,13 @@ function playAudio(key, done) {
 }
 
 function stopAudio() {
-  audioSeqId++;   // cancels all ongoing sequences
-  if (currentAudio) { currentAudio.pause(); currentAudio.src = ''; currentAudio = null; }
+  audioSeqId++;   // cancels any pending chain callbacks
+  // Force-stop every audio we know about, not just currentAudio.
+  activeAudios.forEach(a => {
+    try { a.pause(); a.src = ''; a.load && a.load(); } catch(e) {}
+  });
+  activeAudios.clear();
+  currentAudio = null;
 }
 
 function unlockAudio(audioKey) {

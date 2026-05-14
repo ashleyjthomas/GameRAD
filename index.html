@@ -25,7 +25,7 @@ body {
   min-height: 580px;
 }
 :fullscreen body, :-webkit-full-screen body { padding:0; align-items:stretch; justify-content:stretch; }
-:fullscreen #app, :-webkit-full-screen #app { max-width:100%; border-radius:0; min-height:100vh; height:100vh; }
+:fullscreen #app, :-webkit-full-screen #app { max-width:100%; border-radius:0; min-height:100vh; height:100vh; overflow-y:auto; -webkit-overflow-scrolling:touch; }
 
 #fullscreenBtn {
   position: fixed; top: 10px; right: 10px;
@@ -1564,10 +1564,10 @@ function render() {
     switch (S.phase) {
       case 'welcome':         renderWelcome();                         break;
       case 'intro':           renderIntro();                           break;
-      case 'story':           renderStory(VIGNETTES[S.vi]);            break;
-      case 'model-id':        renderModelId();                         break;
-      case 'model-certainty': renderModelCertainty();                  break;
-      case 'q':               renderQuestion(VIGNETTES[S.vi], S.qi);   break;
+      case 'story':           if (!VIGNETTES[S.vi]) { S.phase='end'; renderEnd(); } else { renderStory(VIGNETTES[S.vi]); } break;
+      case 'model-id':        if (!VIGNETTES[S.vi]) { S.phase='end'; renderEnd(); } else { renderModelId(); } break;
+      case 'model-certainty': if (!VIGNETTES[S.vi]) { S.phase='end'; renderEnd(); } else { renderModelCertainty(); } break;
+      case 'q':               if (!VIGNETTES[S.vi]) { S.phase='end'; renderEnd(); } else { renderQuestion(VIGNETTES[S.vi], S.qi); } break;
       case 'q-likert':        renderLikert();                          break;
       case 'trans':           renderTrans();                           break;
       case 'midpoint':        renderMidpoint();                        break;

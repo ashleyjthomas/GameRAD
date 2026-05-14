@@ -1640,8 +1640,8 @@ function renderIntro() {
       I will tell you about <strong>two people who live far away</strong> and how they act toward each other.<br><br>
       <em>These people might do things differently from the way you do things — but that is okay!</em><br><br>
       Then I will ask — <strong>would those same two people act that way in another situation?</strong><br><br>
-      <strong>Press the big 👍 thumb UP for YES</strong><br>
-      <strong>Press the big 👎 thumb DOWN for NO</strong><br><br>
+      <strong>Press the big thumb UP for YES</strong><br>
+      <strong>Press the big thumb DOWN for NO</strong><br><br>
       After you pick YES or NO, I will ask <strong>how sure you are</strong> using big and small thumbs.<br><br>
       <strong>There are no wrong answers — just your best guess!</strong>
     </div>
@@ -1772,18 +1772,18 @@ function renderLikert() {
   <div class="screen" style="padding-top:4px;gap:9px">
     <div class="q-header">Question ${qi+1} of 3 &nbsp;&middot;&nbsp; <strong>${escHtml(v.char1.name)}</strong> &amp; <strong>${escHtml(v.char2.name)}</strong></div>
     <div style="text-align:center;font-size:17px;font-weight:600;color:#333">
-      You said <span style="background:${isYes?'linear-gradient(135deg,#56ab2f,#a8e063)':'linear-gradient(135deg,#eb3349,#f45c43)'};color:white;padding:3px 14px;border-radius:20px;font-size:22px;display:inline-block;vertical-align:middle;margin:0 4px">${isYes?'YES 👍':'NO 👎'}</span>
+      You said <span style="background:${isYes?'linear-gradient(135deg,#56ab2f,#a8e063)':'linear-gradient(135deg,#eb3349,#f45c43)'};color:white;padding:3px 14px;border-radius:20px;font-size:22px;display:inline-block;vertical-align:middle;margin:0 4px">${isYes?'YES':'NO'}</span>
     </div>
     <div style="text-align:center;font-size:15px;color:#555;font-weight:500">How sure are you?</div>
     <div class="q-illust">${qIllustHTML(q)}</div>
     <div class="ans-row" style="gap:16px;align-items:flex-end">
       <button class="btn-likert-strong" id="btnDef" style="${strongStyle}" onclick="doLikertAnswer('DEFINITELY')">
         ${isYes?thumbsUpSVG(54):thumbsDownSVG(54)}
-        <span style="margin-top:4px;font-size:15px;font-weight:600">Really sure!<br>${isYes?'👍 YES':'👎 NO'}</span>
+        <span style="margin-top:4px;font-size:15px;font-weight:600">Really sure!<br>${isYes?'YES':'NO'}</span>
       </button>
       <button class="btn-likert-mild" id="btnMay" style="${mildStyle}" onclick="doLikertAnswer('MAYBE')">
         ${isYes?thumbsUpSVG(36):thumbsDownSVG(36)}
-        <span style="margin-top:3px;font-size:13px">A little sure<br>${isYes?'👍 YES':'👎 NO'}</span>
+        <span style="margin-top:3px;font-size:13px">A little sure<br>${isYes?'YES':'NO'}</span>
       </button>
     </div>
   </div>`;
@@ -1844,13 +1844,13 @@ function renderModelCertainty() {
         style="background:linear-gradient(135deg,#1e8449,#27AE60);color:white;box-shadow:0 6px 18px rgba(30,132,73,.4);"
         onclick="doModelCertaintyAnswer('DEFINITELY')">
         ${thumbsUpSVG(54)}
-        <span style="margin-top:4px;font-size:15px;font-weight:600">Really sure!<br>👍 This one</span>
+        <span style="margin-top:4px;font-size:15px;font-weight:600">Really sure!<br>This one</span>
       </button>
       <button class="btn-likert-mild" id="btnModelMay"
         style="background:linear-gradient(135deg,#a8e063,#d0f5a0);color:#1a5e2a;box-shadow:0 4px 12px rgba(168,224,99,.35);"
         onclick="doModelCertaintyAnswer('MAYBE')">
         ${thumbsUpSVG(36)}
-        <span style="margin-top:3px;font-size:13px">A little sure<br>👍 This one</span>
+        <span style="margin-top:3px;font-size:13px">A little sure<br>This one</span>
       </button>
     </div>
   </div>`;

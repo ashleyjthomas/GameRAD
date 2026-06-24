@@ -439,7 +439,9 @@ const TEST_ITEMS = {
 };
 
 function fillNames(text, v) {
-  return text.replace(/\{char1\}/g, v.char1.name).replace(/\{char2\}/g, v.char2.name);
+  // Use generic terms to match the generic audio recordings (which say "one of them"/"the other one"
+  // rather than the specific character names).
+  return text.replace(/\{char1\}/g, 'one of them').replace(/\{char2\}/g, 'the other one');
 }
 
 function assignAllQuestions() {
@@ -1717,10 +1719,14 @@ function replayStory() {
 // ── QUESTION ───────────────────────────────────────────
 function renderQuestion(v, qi) {
   const q=v.questions[qi];
+  const firstQHint = qi===0
+    ? `<div style="font-size:13px;color:#777;font-style:italic;text-align:center;max-width:480px">These next questions are about things that weren't in the story. Just take your best guess based on what you learned about them!</div>`
+    : '';
   app.innerHTML=`
   ${starHeaderHTML(S.stars,VIGNETTES.length)}
   <div class="screen" style="padding-top:4px;gap:7px">
     <div class="q-header">Question ${qi+1} of 3 &nbsp;&middot;&nbsp; <strong>${escHtml(v.char1.name)}</strong> &amp; <strong>${escHtml(v.char2.name)}</strong></div>
+    ${firstQHint}
     <div class="q-illust">${qIllustHTML(q)}</div>
     <div class="q-box">"${escHtml(q.text)}"</div>
     <div class="ans-row">
@@ -1812,6 +1818,7 @@ function renderModelId() {
   <div class="screen" style="padding-top:4px;gap:10px">
     <div class="q-header">🔍 ${escHtml(v.char1.name)} &amp; ${escHtml(v.char2.name)}</div>
     <div class="q-box"><span>Which of these pictures shows how <strong>${escHtml(v.char1.name)}</strong> and <strong>${escHtml(v.char2.name)}</strong> act with each other?</span></div>
+    <div style="font-size:13px;color:#777;font-style:italic;text-align:center;margin-top:-2px">There are no wrong answers — just pick the picture that feels closest.</div>
     <div class="ans-row" style="gap:18px;justify-content:center;flex-wrap:wrap">
       ${models.map(m=>`<button class="btn-model-choice" onclick="doModelId('${m}')"><img src="${IMG_BASE}${m}.png" style="width:100px;height:100px;object-fit:contain;display:block;border-radius:8px" alt="${m}"/></button>`).join('')}
     </div>
@@ -1946,11 +1953,21 @@ function renderMidpoint() {
 function continueGame() { stopAudio(); S.phase='story'; render(); }
 
 function exitToCHS() {
-  stopAudio(); markSessionComplete();
-  document.querySelectorAll('.midpoint-screen button').forEach(b=>b.disabled=true);
-  playAudio('goodbye', () => {
-    window.location.href=getUrlParam('return_url')||'https://www.childrenhelpingscience.com';
-  });
+  stopAudio();
+  markSessionComplete();
+  app.innerHTML = `
+  <div class="end-screen">
+    <div style="font-size:58px;animation:bounceIn .85s cubic-bezier(.17,.67,.37,1.3)">👋</div>
+    <div class="end-title">Thanks for playing!</div>
+    <div class="end-sub" style="margin-top:8px;max-width:480px">Your answers so far have been saved.</div>
+    <div style="font-size:18px;color:#333;font-weight:600;margin-top:14px;max-width:480px;line-height:1.6;padding:14px 20px;background:#F8F4FF;border-radius:14px;border:3px solid #C9B8F0;text-align:center">
+      If your parent isn't with you, please go get them so we can do the last steps of the study.
+    </div>
+    <div style="font-size:16px;color:#333;font-weight:600;margin-top:10px;max-width:480px;line-height:1.55;padding:12px 18px;background:#EFF6FF;border-radius:14px;border:3px solid #93C5FD;text-align:center">
+      <strong>Parents:</strong> Please return to the <strong>Children Helping Science</strong> tab in your browser to finish the study and upload the video. You can close this tab once you are back on CHS.
+    </div>
+  </div>`;
+  playAudio('goodbye', () => playAudio('end_parent'));
 }
 
 // ── END ────────────────────────────────────────────────
@@ -1965,8 +1982,8 @@ function renderEnd() {
     <div style="font-size:18px;color:#333;font-weight:600;margin-top:14px;max-width:480px;line-height:1.6;padding:14px 20px;background:#F8F4FF;border-radius:14px;border:3px solid #C9B8F0;text-align:center">
       If your parent isn't with you, please go get them so we can do the last steps of the study.
     </div>
-    <div style="font-size:14px;color:#666;margin-top:10px;max-width:480px;line-height:1.5;text-align:center">
-      <strong>Parents:</strong> Press the <strong>Escape</strong> key to close this window and return to Children Helping Science.
+    <div style="font-size:16px;color:#333;font-weight:600;margin-top:10px;max-width:480px;line-height:1.55;padding:12px 18px;background:#EFF6FF;border-radius:14px;border:3px solid #93C5FD;text-align:center">
+      <strong>Parents:</strong> Please return to the <strong>Children Helping Science</strong> tab in your browser to finish the study and upload the video. You can close this tab once you are back on CHS.
     </div>
   </div>`;
   markSessionComplete(); stopAudio();

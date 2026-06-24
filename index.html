@@ -292,6 +292,17 @@ function markSessionComplete() {
   if (window.opener) window.opener.postMessage({ type: 'GAME_COMPLETE', pid: S.pid }, '*');
 }
 
+// Bring the original CHS tab to the front and close this game tab.
+// Works because this tab was opened by window.open() from the CHS tab.
+function returnToCHS() {
+  try {
+    if (window.opener && !window.opener.closed) {
+      window.opener.focus();
+    }
+  } catch(e) {}
+  setTimeout(() => { try { window.close(); } catch(e) {} }, 200);
+}
+
 const W = 600, H = 300, GY = H * 0.70;
 const IMG_BASE   = 'https://raw.githubusercontent.com/ashleyjthomas/GameRAD/main/';
 const AUDIO_BASE = 'https://raw.githubusercontent.com/ashleyjthomas/GameRAD/main/';
@@ -1964,8 +1975,9 @@ function exitToCHS() {
       If your parent isn't with you, please go get them so we can do the last steps of the study.
     </div>
     <div style="font-size:16px;color:#333;font-weight:600;margin-top:10px;max-width:480px;line-height:1.55;padding:12px 18px;background:#EFF6FF;border-radius:14px;border:3px solid #93C5FD;text-align:center">
-      <strong>Parents:</strong> Please return to the <strong>Children Helping Science</strong> tab in your browser to finish the study and upload the video. You can close this tab once you are back on CHS.
+      <strong>Parents:</strong> Please return to the <strong>Children Helping Science</strong> tab in your browser to finish the study and upload the video.
     </div>
+    <button class="btn btn-primary" style="font-size:18px;padding:13px 28px;margin-top:10px" onclick="returnToCHS()">Done — Take me back to CHS</button>
   </div>`;
   playAudio('goodbye', () => playAudio('end_parent'));
 }
@@ -1983,8 +1995,9 @@ function renderEnd() {
       If your parent isn't with you, please go get them so we can do the last steps of the study.
     </div>
     <div style="font-size:16px;color:#333;font-weight:600;margin-top:10px;max-width:480px;line-height:1.55;padding:12px 18px;background:#EFF6FF;border-radius:14px;border:3px solid #93C5FD;text-align:center">
-      <strong>Parents:</strong> Please return to the <strong>Children Helping Science</strong> tab in your browser to finish the study and upload the video. You can close this tab once you are back on CHS.
+      <strong>Parents:</strong> Please return to the <strong>Children Helping Science</strong> tab in your browser to finish the study and upload the video.
     </div>
+    <button class="btn btn-primary" style="font-size:18px;padding:13px 28px;margin-top:10px" onclick="returnToCHS()">Done — Take me back to CHS</button>
   </div>`;
   markSessionComplete(); stopAudio();
   playAudio('end_parent');

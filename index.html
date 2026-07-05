@@ -259,12 +259,12 @@ function getUrlParam(name) {
 }
 const CHS_RESPONSE_ID = getUrlParam('chsid');
 
-function uploadToSheets(answerObj) {
-  const row = {
-    CHSResponseID:    CHS_RESPONSE_ID,
-    ParticipantID:    S.pid   || '',
-    ChildName:        S.name  || '',
-    Age:              S.age   || '',
+function buildRow(answerObj, sess) {
+  return {
+    CHSResponseID:    sess.chsResponseId || '',
+    ParticipantID:    sess.pid  || '',
+    ChildName:        sess.name || '',
+    Age:              sess.age  || '',
     Type:             answerObj.type             || '',
     VignetteID:       answerObj.vid              || '',
     VignetteModel:    answerObj.vM               || '',
@@ -281,12 +281,116 @@ function uploadToSheets(answerObj) {
     ModelIDCertainty: answerObj.modelCertainty   || '',
     Timestamp:        answerObj.ts               || ''
   };
+}
+
+function postRow(row) {
   fetch(SHEETS_URL, {
     method: 'POST', mode: 'no-cors',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ rows: [row] })
   }).catch(err => console.warn('Sheets upload failed:', err));
 }
+
+function uploadToSheets(answerObj) {
+  saveSessionToStorage();
+  postRow(buildRow(answerObj, {
+    chsResponseId: CHS_RESPONSE_ID,
+    pid:  S.pid,
+    name: S.name,
+    age:  S.age,
+  }));
+}
+
+// ── LOCAL STORAGE BACKUP ───────────────────────────────
+// Every answer is also saved to localStorage as a backup, because the
+// Sheets fetch above uses no-cors mode and cannot detect server-side
+// failures. On page load we try to re-upload any un-flushed prior
+// sessions. The end screen offers parents a "download my data" button
+// as a last-resort manual export.
+const STORAGE_PREFIX      = 'gamerad_session_';
+const CURRENT_SESSION_KEY = STORAGE_PREFIX + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+const SESSION_STARTED_AT  = new Date().toISOString();
+
+function saveSessionToStorage() {
+  try {
+    const payload = {
+      chsResponseId: CHS_RESPONSE_ID,
+      pid:  S.pid  || '',
+      name: S.name || '',
+      age:  S.age  || '',
+      phase: S.phase,
+      vi: S.vi, qi: S.qi, stars: S.stars,
+      answers: S.answers,
+      startedAt:  SESSION_STARTED_AT,
+      lastUpdate: new Date().toISOString(),
+      sessionKey: CURRENT_SESSION_KEY,
+    };
+    localStorage.setItem(CURRENT_SESSION_KEY, JSON.stringify(payload));
+  } catch(e) { console.warn('localStorage save failed:', e); }
+}
+
+function getStoredSessions() {
+  const out = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (!k || !k.startsWith(STORAGE_PREFIX)) continue;
+    try {
+      const d = JSON.parse(localStorage.getItem(k));
+      if (d && d.answers && d.answers.length) out.push({key: k, data: d});
+    } catch(e) {}
+  }
+  return out;
+}
+
+// Retry any prior sessions still in localStorage. We can't confirm success
+// (no-cors), but retrying gives the data another chance if the original
+// failure was transient. Sessions older than 30 days are dropped.
+function retryPendingSessions() {
+  const now = Date.now();
+  for (const {key, data} of getStoredSessions()) {
+    if (key === CURRENT_SESSION_KEY) continue;
+    const stamp = new Date(data.lastUpdate || data.startedAt || 0).getTime();
+    if (now - stamp > 30 * 24 * 60 * 60 * 1000) {
+      try { localStorage.removeItem(key); } catch(e) {}
+      continue;
+    }
+    for (const rec of (data.answers || [])) {
+      postRow(buildRow(rec, data));
+    }
+  }
+}
+
+// Manual export the parent can trigger if uploads look broken.
+function downloadSessionBackup() {
+  try {
+    saveSessionToStorage();
+    const payload = {
+      exportedAt: new Date().toISOString(),
+      currentSession: {
+        chsResponseId: CHS_RESPONSE_ID,
+        pid:  S.pid  || '',
+        name: S.name || '',
+        age:  S.age  || '',
+        answers: S.answers,
+        startedAt: SESSION_STARTED_AT,
+      },
+      priorSessions: getStoredSessions()
+        .filter(s => s.key !== CURRENT_SESSION_KEY)
+        .map(s => s.data),
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+    a.download = 'GameRAD_backup_' + ((S.name || 'participant').replace(/[^A-Za-z0-9_-]/g, '')) + '_' + stamp + '.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch(e) { console.warn('backup download failed:', e); alert('Sorry, backup download failed.'); }
+}
+
+// Retry any prior sessions a couple seconds after page load.
+setTimeout(retryPendingSessions, 3000);
 
 function markSessionComplete() {
   if (window.opener) window.opener.postMessage({ type: 'GAME_COMPLETE', pid: S.pid }, '*');
@@ -1998,6 +2102,9 @@ function renderEnd() {
       <strong>Parents:</strong> Please return to the <strong>Children Helping Science</strong> tab in your browser to finish the study and upload the video.
     </div>
     <button class="btn btn-primary" style="font-size:18px;padding:13px 28px;margin-top:10px" onclick="returnToCHS()">Done — Take me back to CHS</button>
+    <div style="margin-top:16px;font-size:12px;color:#666;text-align:center">
+      <a href="#" onclick="event.preventDefault();downloadSessionBackup()" style="color:#666;text-decoration:underline">Download a backup of my data</a>
+    </div>
   </div>`;
   markSessionComplete(); stopAudio();
   playAudio('end_parent');

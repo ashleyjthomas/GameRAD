@@ -169,6 +169,7 @@ body {
   .star-meter-large .star-item { font-size:26px; }
 }
 .opt-narrating { outline:4px solid #F39C12; box-shadow:0 0 16px rgba(243,156,18,.55); transform:scale(1.02); transition:all .15s; }
+.choice-card:disabled{opacity:.45;filter:grayscale(.4);cursor:default}
 </style>
 </head>
 <body>
@@ -1917,14 +1918,15 @@ function renderPractice() {
     <div class="q-box" style="font-weight:600">${escHtml(p.q)}</div>
     <div style="display:flex;flex-direction:column;gap:12px;width:100%;max-width:520px">
       ${shown.map((o,i)=>`
-        <button class="btn choice-card" id="opt${i}" onclick="doPractice(${i})"
+        <button class="btn choice-card" id="opt${i}" onclick="doPractice(${i})" disabled
           style="display:flex;align-items:center;gap:14px;text-align:left;padding:14px 18px;font-size:17px;line-height:1.35">
           <span style="font-size:44px">${o.emoji}</span><span>${escHtml(o.text)}</span>
         </button>`).join('')}
     </div>
   </div>`;
   stopAudio();
-  playAudio('practice_'+(S.pi+1), ()=>playPracticeOpt(0, ()=>playPracticeOpt(1)));
+  lockChoiceButtons();
+  playAudio('practice_'+(S.pi+1), ()=>playPracticeOpt(0, ()=>playPracticeOpt(1, unlockChoiceButtons)));
 }
 function playPracticeOpt(idx, done) {
   done = done || function(){};
@@ -1966,6 +1968,18 @@ function playOptAudio(v, o, idx, done) {
   audio.onerror = finish;
   audio.play().catch(() => finish());
 }
+
+// Buttons stay locked until the narration has read both choices (failsafe: 30s)
+let choiceUnlockTimer=null;
+function lockChoiceButtons(){
+  ['opt0','opt1'].forEach(id=>{const b=document.getElementById(id); if(b) b.disabled=true;});
+  clearTimeout(choiceUnlockTimer);
+  choiceUnlockTimer=setTimeout(unlockChoiceButtons,30000);
+}
+function unlockChoiceButtons(){
+  clearTimeout(choiceUnlockTimer);
+  ['opt0','opt1'].forEach(id=>{const b=document.getElementById(id); if(b) b.disabled=false;});
+}
 function renderChoice(v, ti) {
   const t = v.trials[ti];
   const firstHint = ti===0
@@ -1979,7 +1993,7 @@ function renderChoice(v, ti) {
     <div class="q-box" style="font-weight:600">Which one of these do you think ${escHtml(v.char1.name)} and ${escHtml(v.char2.name)} do?</div>
     <div style="display:flex;flex-direction:column;gap:12px;width:100%;max-width:560px">
       ${t.opts.map((o,i)=>`
-        <button class="btn choice-card" id="opt${i}" onclick="doChoice(${i})"
+        <button class="btn choice-card" id="opt${i}" onclick="doChoice(${i})" disabled
           style="display:flex;align-items:center;gap:14px;text-align:left;padding:12px 16px;font-size:16.5px;line-height:1.35">
           ${o.png?`<img src="${o.png}" alt="" style="width:110px;height:110px;object-fit:contain;border-radius:12px;flex:0 0 auto;background:#fff">`:''}
           <span>${escHtml(o.text)}</span>
@@ -1993,12 +2007,13 @@ function renderChoice(v, ti) {
     </div>
   </div>`;
   stopAudio();
-  playAudio('choice_prompt', ()=>playOptAudio(v, t.opts[0], 0, ()=>playOptAudio(v, t.opts[1], 1)));
+  lockChoiceButtons();
+  playAudio('choice_prompt', ()=>playOptAudio(v, t.opts[0], 0, ()=>playOptAudio(v, t.opts[1], 1, unlockChoiceButtons)));
 }
 function replayChoice() {
   stopAudio();
   const t = VIGNETTES[S.vi].trials[S.ti];
-  playAudio('choice_prompt', ()=>playOptAudio(VIGNETTES[S.vi], t.opts[0], 0, ()=>playOptAudio(VIGNETTES[S.vi], t.opts[1], 1)));
+  playAudio('choice_prompt', ()=>playOptAudio(VIGNETTES[S.vi], t.opts[0], 0, ()=>playOptAudio(VIGNETTES[S.vi], t.opts[1], 1, unlockChoiceButtons)));
 }
 function doChoice(i) {
   [0,1].forEach(j=>{const b=document.getElementById('opt'+j);if(b)b.disabled=true;});

@@ -1896,12 +1896,14 @@ function replayStory() {
 
 // ── STUDY 2: PRACTICE + CHOICE SCREENS ─────────────────
 const PRACTICE = [
-  { intro:'This is a glorp. Glorps LOVE crunching rocks for dinner!',
+  { img:'Asset%2051.png',
+    intro:'This is a glorp. Glorps LOVE crunching rocks for dinner!',
     q:'Which one do you think the glorp eats for dinner?',
     opts:[{key:'rocks',emoji:'🪨',text:'A pile of crunchy rocks'},{key:'rainbow',emoji:'🌈',text:'A rainbow'}],
     correct:'rocks', praise:'That\'s right! Glorps love crunching rocks!',
     fix:'Good try! Remember, glorps love crunching rocks — so the rocks!' },
-  { intro:'Two friends are going swimming at the splash-pond.',
+  { emoji:'\u{1F3CA}\u200D\u2640\uFE0F\u{1F4A6}\u{1F3CA}',
+    intro:'Two friends are going swimming at the splash-pond.',
     q:'Which one do you think they bring with them?',
     opts:[{key:'towel',emoji:'🧺',text:'A towel to dry off'},{key:'snowman',emoji:'⛄',text:'A snowman'}],
     correct:'towel', praise:'Yes! A towel is just right for swimming.',
@@ -1914,6 +1916,7 @@ function renderPractice() {
   app.innerHTML=`
   <div class="screen" style="padding-top:10px;gap:12px">
     <div class="q-header">Let's practice! (${S.pi+1} of 2)</div>
+    ${p.img?`<img src="${p.img}" alt="" style="height:130px;object-fit:contain">`:p.emoji?`<div style="font-size:64px;line-height:1">${p.emoji}</div>`:''}
     <div class="q-box">${escHtml(p.intro)}</div>
     <div class="q-box" style="font-weight:600">${escHtml(p.q)}</div>
     <div style="display:flex;flex-direction:column;gap:12px;width:100%;max-width:520px">

@@ -1,0 +1,2402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Which One? — Relationship Detective</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Fredoka', 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+  background: linear-gradient(160deg, #a8edea, #fed6e3);
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 8px;
+}
+#app {
+  width: 100%; max-width: 760px;
+  background: #FFFEF7; border-radius: 22px;
+  box-shadow: 0 8px 40px rgba(0,0,0,.18);
+  overflow: hidden; position: relative;
+  display: flex; flex-direction: column;
+  min-height: 580px;
+}
+:fullscreen body, :-webkit-full-screen body { padding:0; align-items:stretch; justify-content:stretch; }
+:fullscreen #app, :-webkit-full-screen #app { max-width:100%; border-radius:0; min-height:100vh; height:100vh; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+
+#fullscreenBtn {
+  position: fixed; top: 10px; right: 10px;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(71,118,230,.18); border: 2px solid rgba(71,118,230,.35);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  z-index: 9999; transition: background .2s, transform .1s;
+  -webkit-tap-highlight-color: transparent;
+}
+#fullscreenBtn:hover  { background: rgba(71,118,230,.35); }
+#fullscreenBtn:active { transform: scale(.92); }
+
+#adminBtn {
+  position: fixed; bottom: 10px; right: 10px;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(0,0,0,.15); border: none; cursor: pointer;
+  font-size: 15px; display: none;
+  align-items: center; justify-content: center; z-index: 9999;
+}
+#adminBtn.visible { display: flex; }
+
+#adminPanel {
+  position: fixed; bottom: 54px; right: 10px;
+  background: white; border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,.2);
+  padding: 14px; width: 295px; z-index: 9998;
+  font-size: 13px; display: none;
+  font-family: 'Fredoka', sans-serif;
+}
+#adminPanel.open { display: block; }
+#adminPanel h3 { font-size:14px; margin-bottom:8px; color:#333; border-bottom:1px solid #eee; padding-bottom:5px; }
+
+#secretZone {
+  position: fixed; bottom: 0; right: 0;
+  width: 70px; height: 70px; z-index: 10000;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fs-banner {
+  background: linear-gradient(135deg, #4776e6, #8e54e9); color: white;
+  text-align: center; padding: 10px 16px; font-size: 14px; font-weight: 500;
+  display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
+}
+.fs-banner-btn {
+  background: white; color: #4776e6; border: none; border-radius: 50px;
+  font-family: inherit; font-size: 13px; font-weight: 600; padding: 6px 14px; cursor: pointer;
+}
+.fs-banner-dismiss {
+  background: transparent; color: rgba(255,255,255,.7); border: none;
+  font-size: 18px; cursor: pointer; padding: 0 4px;
+}
+
+.admin-section-label { font-weight:600; font-size:11px; color:#888; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px; }
+.admin-log { max-height:120px; overflow-y:auto; font-size:10px; font-family:monospace; background:#f8f8f8; border-radius:6px; padding:6px; margin-bottom:7px; white-space:pre; line-height:1.5; }
+.admin-input, .admin-select { width:100%; padding:5px 7px; font-size:11px; border:1px solid #ddd; border-radius:6px; margin-bottom:5px; outline:none; background:white; font-family:inherit; }
+.admin-row { display:flex; gap:5px; margin-bottom:5px; }
+.admin-btn-sm { flex:1; padding:6px 4px; font-size:11px; font-family:inherit; border-radius:6px; cursor:pointer; border:1px solid #ddd; background:#F0EDE8; color:#555; }
+.admin-btn-blue { background:#4776e6; color:white; border-color:#4776e6; }
+.admin-btn-gold { background:linear-gradient(135deg,#f7971e,#ffd200); color:white; border:none; font-weight:600; }
+
+.star-meter-wrap { display:flex; flex-direction:column; align-items:center; padding:8px 16px 3px; gap:2px; }
+.star-meter { display:flex; gap:2px; justify-content:center; flex-wrap:nowrap; align-items:center; }
+.star-item { font-size:17px; color:#E0E0E0; line-height:1; display:inline-block; transition:color 0.3s; }
+.star-item.filled { color:#FFD700; text-shadow:0 0 5px rgba(255,180,0,.65); }
+.star-item.newly-filled { animation:starPop 0.8s cubic-bezier(0.17,0.67,0.37,1.5) forwards; }
+@keyframes starPop { 0%{transform:scale(0.1) rotate(-190deg);} 65%{transform:scale(1.5) rotate(8deg);} 100%{transform:scale(1) rotate(0deg);} }
+.star-meter-lbl { font-size:10px; color:#ccc; }
+.star-meter-large { flex-wrap:wrap; max-width:220px; gap:6px; }
+.star-meter-large .star-item { font-size:34px; }
+.meter-bar-wrap { width:220px; height:20px; background:#E8E8E8; border-radius:10px; overflow:hidden; position:relative; margin:8px auto 0; }
+.meter-bar { height:100%; border-radius:10px; transition:width 1.2s cubic-bezier(0.4,0,0.2,1); }
+.meter-pct { position:absolute; top:0; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; font-size:10px; color:#555; font-weight:600; }
+.level-badge { text-align:center; animation:bounceIn .85s cubic-bezier(.17,.67,.37,1.3); }
+
+.screen { flex:1; display:flex; flex-direction:column; align-items:center; padding:11px 17px 17px; animation:fadeIn .35s ease; gap:9px; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
+.wt { font-size:36px; font-weight:600; text-align:center; line-height:1.2; background:linear-gradient(135deg,#f7971e,#f64f59); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.ws { font-size:16px; color:#888; text-align:center; }
+.form-row { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; width:100%; }
+.form-group { text-align:center; }
+.form-group label { display:block; font-size:14px; color:#666; margin-bottom:5px; }
+.name-input, .age-select { font-family:inherit; font-size:18px; padding:9px 14px; border:3px solid #FFD200; border-radius:50px; outline:none; text-align:center; color:#333; background:#FFFEF7; }
+.name-input { width:180px; } .age-select { width:140px; cursor:pointer; }
+.name-input:focus, .age-select:focus { border-color:#F7971E; box-shadow:0 0 0 4px rgba(247,151,30,.13); }
+
+.btn { font-family:inherit; font-size:17px; font-weight:600; border:none; border-radius:50px; padding:11px 24px; cursor:pointer; transition:transform .1s,box-shadow .1s; display:inline-flex; align-items:center; gap:6px; box-shadow:0 4px 12px rgba(0,0,0,.14); -webkit-tap-highlight-color:transparent; }
+.btn:active { transform:scale(.95); } .btn:disabled { opacity:.44; cursor:not-allowed; }
+.btn-primary { background:linear-gradient(135deg,#f7971e,#ffd200); color:white; }
+.btn-secondary { background:#F0EDE8; color:#555; font-size:14px; padding:8px 17px; }
+.btn-audio { background:linear-gradient(135deg,#4776e6,#8e54e9); color:white; font-size:14px; padding:8px 16px; }
+.btn-story-replay { background:linear-gradient(135deg,#2196F3,#21CBF3); color:white; font-size:14px; padding:8px 16px; border:none; border-radius:50px; cursor:pointer; font-family:inherit; font-weight:600; box-shadow:0 3px 10px rgba(0,0,0,.12); -webkit-tap-highlight-color:transparent; }
+.btn-story-replay:active { transform:scale(.95); }
+.btn-green { background:linear-gradient(135deg,#56ab2f,#a8e063); color:white; font-size:22px; padding:14px 18px; box-shadow:0 6px 20px rgba(86,171,47,.38); flex:1; max-width:165px; justify-content:center; flex-direction:column; gap:5px; border-radius:20px; }
+.btn-red { background:linear-gradient(135deg,#eb3349,#f45c43); color:white; font-size:22px; padding:14px 18px; box-shadow:0 6px 20px rgba(235,51,73,.38); flex:1; max-width:165px; justify-content:center; flex-direction:column; gap:5px; border-radius:20px; }
+.ans-thumb { display:block; margin:0 auto; object-fit:contain; }
+.btn-likert-strong { font-family:inherit; font-size:15px; font-weight:600; border:none; border-radius:20px; padding:12px 10px; cursor:pointer; transition:transform .1s,box-shadow .1s; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:5px; flex:1; max-width:170px; box-shadow:0 6px 18px rgba(0,0,0,.18); -webkit-tap-highlight-color:transparent; }
+.btn-likert-mild { font-family:inherit; font-size:14px; font-weight:600; border:none; border-radius:20px; padding:10px 8px; cursor:pointer; transition:transform .1s,box-shadow .1s; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:4px; flex:1; max-width:145px; box-shadow:0 4px 12px rgba(0,0,0,.12); -webkit-tap-highlight-color:transparent; }
+.btn-likert-strong:active, .btn-likert-mild:active { transform:scale(.95); }
+.btn-likert-strong:disabled, .btn-likert-mild:disabled { opacity:.44; cursor:not-allowed; }
+.btn-model-choice { background:white; border:3px solid #E0E0E0; border-radius:16px; padding:10px; cursor:pointer; transition:transform .1s,border-color .1s,box-shadow .1s; -webkit-tap-highlight-color:transparent; display:flex; align-items:center; justify-content:center; }
+.btn-model-choice:active { transform:scale(.95); }
+.btn-model-choice:hover { border-color:#4776e6; box-shadow:0 4px 16px rgba(71,118,230,.25); }
+.btn-model-choice:disabled { opacity:.5; cursor:not-allowed; }
+
+.illus { width:100%; border-radius:13px; overflow:hidden; background:#E8F4FF; box-shadow:inset 0 2px 8px rgba(0,0,0,.07); }
+.q-illust { width:100%; max-width:360px; align-self:center; border-radius:12px; overflow:hidden; border:2px solid #F0EDE8; background:#FAFAFA; }
+.story-head { display:flex; justify-content:space-between; align-items:center; width:100%; }
+.pair-title { font-size:18px; font-weight:600; color:#333; }
+.story-box { width:100%; background:white; border-radius:12px; padding:11px 15px; font-size:16px; line-height:1.72; color:#333; border:2px solid #F0EDE8; }
+.sent { display:inline; border-radius:4px; padding:1px 2px; transition:background .3s; }
+.sent.hi { background:#FFF3B0; }
+.story-btns { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; width:100%; }
+.q-header { width:100%; background:linear-gradient(135deg,#4776e6,#8e54e9); border-radius:11px; padding:8px 14px; color:white; font-size:14px; display:flex; align-items:center; gap:6px; }
+.q-box { width:100%; background:#F8F4FF; border-radius:13px; padding:12px 16px; font-size:16px; line-height:1.6; color:#333; border:3px solid #C9B8F0; text-align:center; min-height:66px; display:flex; align-items:center; justify-content:center; }
+.ans-row { display:flex; gap:15px; justify-content:center; width:100%; }
+.replay-section { display:flex; flex-direction:column; align-items:center; gap:5px; width:100%; }
+.replay-label { font-size:11px; color:#bbb; text-align:center; }
+.replay-btns { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+
+.trans-screen { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:22px; text-align:center; }
+.trans-msg { font-size:22px; font-weight:600; color:#333; }
+.trans-sub { font-size:15px; color:#aaa; }
+.midpoint-screen { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:28px; text-align:center; animation:fadeIn .35s ease; }
+.end-screen { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center; gap:10px; }
+.end-trophy-wrap { animation:bounceIn .85s cubic-bezier(.17,.67,.37,1.3); }
+@keyframes bounceIn { 0%{transform:scale(0);} 65%{transform:scale(1.18);} 82%{transform:scale(.94);} 100%{transform:scale(1);} }
+.end-title { font-size:29px; font-weight:600; color:#f7971e; }
+.end-sub { font-size:16px; color:#666; }
+.end-btns { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:4px; }
+.info-box { font-size:15px; color:#555; line-height:1.82; max-width:500px; background:#F8F4FF; padding:14px 18px; border-radius:14px; border:3px solid #C9B8F0; }
+.error-box { padding:28px; font-family:Arial,sans-serif; max-width:600px; margin:auto; text-align:center; }
+.unlock-btn { background:linear-gradient(135deg,#4776e6,#8e54e9); color:white; border:none; border-radius:50px; font-family:inherit; font-size:17px; font-weight:600; padding:13px 28px; cursor:pointer; box-shadow:0 4px 18px rgba(71,118,230,.45); animation:pulse 1.5s ease infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.04);} }
+
+@media (max-width:480px) {
+  .wt { font-size:25px; }
+  .btn-green,.btn-red { font-size:18px; max-width:138px; }
+  .q-box { font-size:14px; }
+  .story-box { font-size:14px; }
+  .trans-msg { font-size:18px; }
+  .star-meter-large .star-item { font-size:26px; }
+}
+.opt-narrating { outline:4px solid #F39C12; box-shadow:0 0 16px rgba(243,156,18,.55); transform:scale(1.02); transition:all .15s; }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <div style="padding:44px;text-align:center;font-family:Arial,sans-serif;color:#aaa">
+    <div style="font-size:54px;margin-bottom:14px">🔍</div>
+    <h2>Loading Relationship Detective...</h2>
+    <p style="margin-top:10px;font-size:14px">If this does not go away, please check that JavaScript is enabled.</p>
+  </div>
+</div>
+
+<button id="fullscreenBtn" onclick="toggleFullscreen()" title="Go Fullscreen">
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+       fill="none" stroke="#4776e6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+    <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+  </svg>
+</button>
+<button id="adminBtn" title="Researcher Panel">⚙️</button>
+<div id="adminPanel"></div>
+<div id="secretZone"></div>
+
+<script>
+'use strict';
+
+// ── FULLSCREEN ─────────────────────────────────────────
+const FS_SVG_ENTER = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4776e6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>`;
+const FS_SVG_EXIT  = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4776e6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="10" y1="14" x2="3" y2="21"/><line x1="21" y1="3" x2="14" y2="10"/></svg>`;
+
+function toggleFullscreen() {
+  const isFs = document.fullscreenElement || document.webkitFullscreenElement;
+  if (!isFs) {
+    const el = document.documentElement;
+    const req = el.requestFullscreen || el.webkitRequestFullscreen;
+    if (req) req.call(el).catch(err => console.warn('Fullscreen:', err.message));
+  } else {
+    const exit = document.exitFullscreen || document.webkitExitFullscreen;
+    if (exit) exit.call(document);
+  }
+}
+
+function updateFullscreenBtn() {
+  const btn = document.getElementById('fullscreenBtn');
+  if (!btn) return;
+  const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+  btn.innerHTML = isFs ? FS_SVG_EXIT : FS_SVG_ENTER;
+  btn.title     = isFs ? 'Exit Fullscreen' : 'Go Fullscreen';
+  const banner = document.getElementById('fsBanner');
+  if (banner) banner.style.display = isFs ? 'none' : '';
+}
+['fullscreenchange','webkitfullscreenchange'].forEach(evt =>
+  document.addEventListener(evt, updateFullscreenBtn)
+);
+
+// ── SECRET RESEARCHER UNLOCK ───────────────────────────
+let secretTaps = 0, secretTimer = null;
+
+function setupSecretZone() {
+  const zone = document.getElementById('secretZone');
+  if (!zone) return;
+  zone.addEventListener('click', () => {
+    secretTaps++;
+    clearTimeout(secretTimer);
+    secretTimer = setTimeout(() => { secretTaps = 0; }, 3000);
+    if (secretTaps >= 5) {
+      secretTaps = 0;
+      clearTimeout(secretTimer);
+      revealResearcherControls();
+    }
+  });
+}
+
+function revealResearcherControls() {
+  const btn = document.getElementById('adminBtn');
+  if (!btn) return;
+  btn.classList.add('visible');
+  btn.style.background = 'rgba(71,118,230,.85)';
+  setTimeout(() => { btn.style.background = ''; }, 700);
+  const zone = document.getElementById('secretZone');
+  if (zone) zone.style.pointerEvents = 'none';
+}
+
+// ── GOOGLE SHEETS UPLOAD ───────────────────────────────
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbx4nFOuoBpILzo-hmoquerENGz6O3CAuen4vf7eCLd6m9zd6tZVFHUhSlgu6TaH29uZ/exec';
+
+function getUrlParam(name) {
+  return new URLSearchParams(window.location.search).get(name) || '';
+}
+const CHS_RESPONSE_ID = getUrlParam('chsid');
+
+function buildRow(answerObj, sess) {
+  return {
+    CHSResponseID:    sess.chsResponseId || '',
+    ParticipantID:    sess.pid  || '',
+    ChildName:        sess.name || '',
+    Age:              sess.age  || '',
+    Type:             answerObj.type             || '',
+    VignetteID:       answerObj.vid              || '',
+    VignetteModel:    answerObj.vM               || '',
+    QuestionIndex:    answerObj.qi != null ? answerObj.qi + 1 : '',
+    QuestionModel:    answerObj.qM               || '',
+    ItemID:           answerObj.itemId           || '',
+    IsCongruent:      answerObj.congruent != null ? String(answerObj.congruent).toUpperCase() : '',
+    Answer:           answerObj.ans              || '',
+    InitialYesNo:     answerObj.initialAns       || '',
+    KeyedAnswer:      answerObj.keyed            || '',
+    Correct:          answerObj.ok        != null ? String(answerObj.ok).toUpperCase()        : '',
+    ModelIDChosen:    answerObj.chosen           || '',
+    ModelIDCorrect:   answerObj.correct   != null ? String(answerObj.correct).toUpperCase()   : '',
+    ModelIDCertainty: answerObj.modelCertainty   || '',
+    Domain:           answerObj.domain           || '',
+    CBList:           answerObj.cbList           || '',
+    Boss:             answerObj.boss             || '',
+    Timestamp:        answerObj.ts               || ''
+  };
+}
+
+function postRow(row) {
+  if (!SHEETS_URL) { console.log('[study2 local-only] row:', row); return; }
+  fetch(SHEETS_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ rows: [row] })
+  }).catch(err => console.warn('Sheets upload failed:', err));
+}
+
+function uploadToSheets(answerObj) {
+  saveSessionToStorage();
+  postRow(buildRow(answerObj, {
+    chsResponseId: CHS_RESPONSE_ID,
+    pid:  S.pid,
+    name: S.name,
+    age:  S.age,
+  }));
+}
+
+// ── LOCAL STORAGE BACKUP ───────────────────────────────
+// Every answer is also saved to localStorage as a backup, because the
+// Sheets fetch above uses no-cors mode and cannot detect server-side
+// failures. On page load we try to re-upload any un-flushed prior
+// sessions. The end screen offers parents a "download my data" button
+// as a last-resort manual export.
+const STORAGE_PREFIX      = 'gamerad_s2_session_';
+const CURRENT_SESSION_KEY = STORAGE_PREFIX + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+const SESSION_STARTED_AT  = new Date().toISOString();
+
+function saveSessionToStorage() {
+  try {
+    const payload = {
+      chsResponseId: CHS_RESPONSE_ID,
+      pid:  S.pid  || '',
+      name: S.name || '',
+      age:  S.age  || '',
+      phase: S.phase,
+      vi: S.vi, qi: S.qi, stars: S.stars,
+      answers: S.answers,
+      startedAt:  SESSION_STARTED_AT,
+      lastUpdate: new Date().toISOString(),
+      sessionKey: CURRENT_SESSION_KEY,
+    };
+    localStorage.setItem(CURRENT_SESSION_KEY, JSON.stringify(payload));
+  } catch(e) { console.warn('localStorage save failed:', e); }
+}
+
+function getStoredSessions() {
+  const out = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (!k || !k.startsWith(STORAGE_PREFIX)) continue;
+    try {
+      const d = JSON.parse(localStorage.getItem(k));
+      if (d && d.answers && d.answers.length) out.push({key: k, data: d});
+    } catch(e) {}
+  }
+  return out;
+}
+
+// Retry any prior sessions still in localStorage. We can't confirm success
+// (no-cors), but retrying gives the data another chance if the original
+// failure was transient. Sessions older than 30 days are dropped.
+function retryPendingSessions() {
+  const now = Date.now();
+  for (const {key, data} of getStoredSessions()) {
+    if (key === CURRENT_SESSION_KEY) continue;
+    const stamp = new Date(data.lastUpdate || data.startedAt || 0).getTime();
+    if (now - stamp > 30 * 24 * 60 * 60 * 1000) {
+      try { localStorage.removeItem(key); } catch(e) {}
+      continue;
+    }
+    for (const rec of (data.answers || [])) {
+      postRow(buildRow(rec, data));
+    }
+  }
+}
+
+// Manual export the parent can trigger if uploads look broken.
+function downloadSessionBackup() {
+  try {
+    saveSessionToStorage();
+    const payload = {
+      exportedAt: new Date().toISOString(),
+      currentSession: {
+        chsResponseId: CHS_RESPONSE_ID,
+        pid:  S.pid  || '',
+        name: S.name || '',
+        age:  S.age  || '',
+        answers: S.answers,
+        startedAt: SESSION_STARTED_AT,
+      },
+      priorSessions: getStoredSessions()
+        .filter(s => s.key !== CURRENT_SESSION_KEY)
+        .map(s => s.data),
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+    a.download = 'GameRAD_backup_' + ((S.name || 'participant').replace(/[^A-Za-z0-9_-]/g, '')) + '_' + stamp + '.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch(e) { console.warn('backup download failed:', e); alert('Sorry, backup download failed.'); }
+}
+
+// Retry any prior sessions a couple seconds after page load.
+setTimeout(retryPendingSessions, 3000);
+
+function markSessionComplete() {
+  if (window.opener) window.opener.postMessage({ type: 'GAME_COMPLETE', pid: S.pid }, '*');
+}
+
+// Bring the original CHS tab to the front and close this game tab.
+// Works because this tab was opened by window.open() from the CHS tab.
+function returnToCHS() {
+  try {
+    if (window.opener && !window.opener.closed) {
+      window.opener.focus();
+    }
+  } catch(e) {}
+  setTimeout(() => { try { window.close(); } catch(e) {} }, 200);
+}
+
+const W = 600, H = 300, GY = H * 0.70;
+const IMG_BASE   = 'https://raw.githubusercontent.com/ashleyjthomas/GameRAD/main/';
+const AUDIO_BASE = (location.protocol === 'file:' || location.hostname === 'localhost')
+  ? ''   // local testing: load audio from the same folder
+  : 'https://raw.githubusercontent.com/ashleyjthomas/GameRAD/main/';
+
+// ── AUDIO MAP ─────────────────────────────────────────
+const AUDIO_MAP = {
+  // Study 2 additions. Option audio is loaded directly by filename via optAudioSrc()
+  // (audio_opt_ITEM.mp3, or audio_opt_VID_ITEM_BossName.mp3 for name-bearing lines).
+  choice_prompt: 'audio_choice_prompt.mp3',
+  practice_1: 'audio_practice_1.mp3',
+  popt_rocks:      'audio_popt_rocks.mp3',
+  popt_rainbow:    'audio_popt_rainbow.mp3',
+  popt_towel:      'audio_popt_towel.mp3',
+  popt_snowman:    'audio_popt_snowman.mp3',
+  practice_1_good: 'audio_practice_1_good.mp3',
+  practice_1_fix:  'audio_practice_1_fix.mp3',
+  practice_2_good: 'audio_practice_2_good.mp3',
+  practice_2_fix:  'audio_practice_2_fix.mp3',
+  practice_2: 'audio_practice_2.mp3',
+  welcome:       'audio_welcome.mp3',
+  name_needed:   'audio_name_needed.mp3',
+  intro:         'audio_intro.mp3',
+  okay_now_what: 'audio_okay_now_what.mp3',
+  you_picked:    'audio_you_picked.mp3',
+  sure_yes:      'audio_sure_yes.mp3',
+  sure_no:       'audio_sure_no.mp3',
+  halfway:       'audio_halfway_s2.mp3',  // Study 2 line (3 stories); old m4a said 6
+  goodbye:       'audio_goodbye.mp3',
+  end_parent:    'audio_end_parent.m4a',
+  mid_parent:    'audio_mid_parent.m4a',
+  trans_last:    'audio_trans_last.mp3',
+  trans_halfway: 'audio_trans_halfway_msg.mp3',
+  q_prompt_end:  'audio_q1_prompt_end.mp3',
+  q_remind_end:  'audio_q_remind_end.mp3',
+
+  meet_zumi_blix:'audio_meet_zumi_blix.mp3', meet_orro_fenn:'audio_meet_orro_fenn.mp3',
+  meet_kiva_doop:'audio_meet_kiva_doop.mp3', meet_wex_plara:'audio_meet_wex_plara.mp3',
+  meet_nuu_glim: 'audio_meet_nuu_glim.mp3',  meet_tazo_vebb:'audio_meet_tazo_vebb.mp3',
+  meet_mip_creel:'audio_meet_mip_creel.mp3', meet_yobi_gorp:'audio_meet_yobi_gorp.mp3',
+  meet_fuzz_orlo:'audio_meet_fuzz_orlo.mp3', meet_beem_jovi:'audio_meet_beem_jovi.mp3',
+  meet_plix_zara:'audio_meet_plix_zara.mp3', meet_hoob_nev: 'audio_meet_hoob_nev.mp3',
+
+  ready_zumi_blix:'audio_ready_zumi_blix.mp3', ready_orro_fenn:'audio_ready_orro_fenn.mp3',
+  ready_kiva_doop:'audio_ready_kiva_doop.mp3', ready_wex_plara:'audio_ready_wex_plara.mp3',
+  ready_nuu_glim: 'audio_ready_nuu_glim.mp3',  ready_tazo_vebb:'audio_ready_tazo_vebb.mp3',
+  ready_mip_creel:'audio_ready_mip_creel.mp3', ready_yobi_gorp:'audio_ready_yobi_gorp.mp3',
+  ready_fuzz_orlo:'audio_ready_fuzz_orlo.mp3', ready_beem_jovi:'audio_ready_beem_jovi.mp3',
+  ready_plix_zara:'audio_ready_plix_zara.mp3', ready_hoob_nev: 'audio_ready_hoob_nev.mp3',
+
+  replay_zumi_blix:'audio_replay_zumi_blix.mp3', replay_orro_fenn:'audio_replay_orro_fenn.mp3',
+  replay_kiva_doop:'audio_replay_kiva_doop.mp3', replay_wex_plara:'audio_replay_wex_plara.mp3',
+  replay_nuu_glim: 'audio_replay_nuu_glim.mp3',  replay_tazo_vebb:'audio_replay_tazo_vebb.mp3',
+  replay_mip_creel:'audio_replay_mip_creel.mp3', replay_yobi_gorp:'audio_replay_yobi_gorp.mp3',
+  replay_fuzz_orlo:'audio_replay_fuzz_orlo.mp3', replay_beem_jovi:'audio_replay_beem_jovi.mp3',
+  replay_plix_zara:'audio_replay_plix_zara.mp3', replay_hoob_nev: 'audio_replay_hoob_nev.mp3',
+
+  remind_zumi_blix:'audio_remind_zumi_blix.mp3', remind_orro_fenn:'audio_remind_orro_fenn.mp3',
+  remind_kiva_doop:'audio_remind_kiva_doop.mp3', remind_wex_plara:'audio_remind_wex_plara.mp3',
+  remind_nuu_glim: 'audio_remind_nuu_glim.mp3',  remind_tazo_vebb:'audio_remind_tazo_vebb.mp3',
+  remind_mip_creel:'audio_remind_mip_creel.mp3', remind_yobi_gorp:'audio_remind_yobi_gorp.mp3',
+  remind_fuzz_orlo:'audio_remind_fuzz_orlo.mp3', remind_beem_jovi:'audio_remind_beem_jovi.mp3',
+  remind_plix_zara:'audio_remind_plix_zara.mp3', remind_hoob_nev: 'audio_remind_hoob_nev.mp3',
+
+  model_zumi_blix:'audio_model_zumi_blix.mp3', model_orro_fenn:'audio_model_orro_fenn.mp3',
+  model_kiva_doop:'audio_model_kiva_doop.mp3', model_wex_plara:'audio_model_wex_plara.mp3',
+  model_nuu_glim: 'audio_model_nuu_glim.mp3',  model_tazo_vebb:'audio_model_tazo_vebb.mp3',
+  model_mip_creel:'audio_model_mip_creel.mp3', model_yobi_gorp:'audio_model_yobi_gorp.mp3',
+  model_fuzz_orlo:'audio_model_fuzz_orlo.mp3', model_beem_jovi:'audio_model_beem_jovi.mp3',
+  model_plix_zara:'audio_model_plix_zara.mp3', model_hoob_nev: 'audio_model_hoob_nev.mp3',
+
+  story_1a:'audio_story_1a.mp3',   story_1b:'audio_story_1b.mp3',   story_1c:'audio_story_1c.mp3',
+  story_2a:'audio_story_2a.mp3',   story_2b:'audio_story_2b.mp3',   story_2c:'audio_story_2c.mp3',
+  story_3a:'audio_story_3a.mp3',   story_3b:'audio_story_3b.mp3',   story_3c:'audio_story_3c.mp3',
+  story_4a:'audio_story_4a.mp3',   story_4b:'audio_story_4b.mp3',   story_4c:'audio_story_4c.mp3',
+  story_5a:'audio_story_5a.mp3',   story_5b:'audio_story_5b.mp3',   story_5c:'audio_story_5c.mp3',
+  story_6a:'audio_story_6a.mp3',   story_6b:'audio_story_6b.mp3',   story_6c:'audio_story_6c.mp3',
+  story_7a:'audio_story_7a.mp3',   story_7b:'audio_story_7b.mp3',   story_7c:'audio_story_7c.mp3',
+  story_8a:'audio_story_8a.mp3',   story_8b:'audio_story_8b.mp3',   story_8c:'audio_story_8c.mp3',
+  story_9a:'audio_story_9a.mp3',   story_9b:'audio_story_9b.mp3',   story_9c:'audio_story_9c.mp3',
+  story_10a:'audio_story_10a.mp3', story_10b:'audio_story_10b.mp3', story_10c:'audio_story_10c.mp3',
+  story_11a:'audio_story_11a.mp3', story_11b:'audio_story_11b.mp3', story_11c:'audio_story_11c.mp3',
+  story_12a:'audio_story_12a.mp3', story_12b:'audio_story_12b.mp3', story_12c:'audio_story_12c.mp3',
+
+  q_EM1:'audio_q_EM1.mp3', q_EM2:'audio_q_EM2.mp3', q_EM3:'audio_q_EM3.mp3',
+  q_EM4:'audio_q_EM4.mp3', q_EM5:'audio_q_EM5.mp3', q_EM6:'audio_q_EM6.mp3',
+  q_EM7:'audio_q_EM7.mp3', q_EM8:'audio_q_EM8.mp3',
+  q_CS1:'audio_q_CS1.mp3', q_CS2:'audio_q_CS2.mp3', q_CS3:'audio_q_CS3.mp3',
+  q_CS4:'audio_q_CS4.mp3', q_CS5:'audio_q_CS5.mp3', q_CS6:'audio_q_CS6.mp3',
+  q_CS7:'audio_q_CS7.mp3', q_CS8:'audio_q_CS8.mp3',
+  q_AR1:'audio_q_AR1.mp3', q_AR2:'audio_q_AR2.mp3', q_AR3:'audio_q_AR3.mp3',
+  q_AR4:'audio_q_AR4.mp3', q_AR5:'audio_q_AR5.mp3', q_AR6:'audio_q_AR6.mp3',
+  q_AR7:'audio_q_AR7.mp3', q_AR8:'audio_q_AR8.mp3',
+
+  trans_1star:  'audio_trans_1star.mp3',  trans_2stars: 'audio_trans_2stars.mp3',
+  trans_3stars: 'audio_trans_3stars.mp3', trans_4stars: 'audio_trans_4stars.mp3',
+  trans_5stars: 'audio_trans_5stars.mp3', trans_6stars: 'audio_trans_6stars.mp3',
+  trans_7stars: 'audio_trans_7stars.mp3', trans_8stars: 'audio_trans_8stars.mp3',
+  trans_9stars: 'audio_trans_9stars.mp3', trans_10stars:'audio_trans_10stars.mp3',
+  trans_11stars:'audio_trans_11stars.mp3'
+};
+
+// Maps vignette id → character pair key used in AUDIO_MAP
+function pairKey(v) {
+  const map = {
+    1:'zumi_blix', 2:'orro_fenn',  3:'kiva_doop', 4:'wex_plara',
+    5:'nuu_glim',  6:'tazo_vebb',  7:'mip_creel', 8:'yobi_gorp',
+    9:'fuzz_orlo', 10:'beem_jovi', 11:'plix_zara', 12:'hoob_nev'
+  };
+  return map[v.id] || '';
+}
+
+// ── DETECTIVE LEVELS ───────────────────────────────────
+const DETECTIVE_LEVELS = [
+  { min:  0, label: 'Rookie Detective',  emoji: '🔍', color: '#7EDBFF', color2: '#4A90D9' },
+  { min:  3, label: 'Detective Cadet',   emoji: '🕵️', color: '#6BCB77', color2: '#27AE60' },
+  { min:  6, label: 'Senior Detective',  emoji: '⭐', color: '#FFD166', color2: '#F39C12' },
+  { min:  9, label: 'Super Detective',   emoji: '💫', color: '#FF8FAB', color2: '#E91E8C' },
+  { min: 12, label: 'Master Detective!', emoji: '🏆', color: '#FFD700', color2: '#F39C12' }
+];
+function getCurrentLevel(stars) {
+  let lv = DETECTIVE_LEVELS[0];
+  for (const l of DETECTIVE_LEVELS) { if (stars >= l.min) lv = l; }
+  return lv;
+}
+
+// ── TEST ITEMS ─────────────────────────────────────────
+const TEST_ITEMS = {
+  EM: [
+    { id: 'EM1', text: '{char1} and {char2} take turns using the star-viewer to make sure they each get the same amount of time.',                                                             png: 'EMstarviewer.png'     },
+    { id: 'EM2', text: 'When their group worked together to build something, {char1} and {char2} each put in the exact same number of moon-rocks.',                                            png: 'EMmoonrocktower.png'  },
+    { id: 'EM3', text: '{char1} and {char2} both carefully keep track of how many times they have borrowed each other\'s things, to make sure it stays even between them.',                    png: 'EMevenborrowing.png'  },
+    { id: 'EM4', text: 'When {char1} and {char2} share things, they make sure each of them has exactly the same amount before anyone takes any.',                                              png: 'EMequalfruit2.png'    },
+    { id: 'EM5', text: '{char1} and {char2} take turns choosing what to do each day, so they each get the same number of choices.',                                                           png: 'EMtaketurnschoice.png'},
+    { id: 'EM6', text: 'When {char1} gave {char2} a glurp, {char2} made sure to give {char1} a glurp of the same size back.',                                                                png: 'EMgift.png'           },
+    { id: 'EM7', text: '{char1} and {char2} keep track of who has used more things so they can balance it out later.',                                                                        png: 'EMtallycave.png'      },
+    { id: 'EM8', text: 'When {char1} and {char2} need to make a choice, they each get one vote — and neither one gets more say than the other.',                                              png: 'EMvoting.png'         }
+  ],
+  CS: [
+    { id: 'CS1', text: 'When {char1} and {char2} share food, they eat from the same big bowl without counting who has more.',                                                                 png: 'CSsamebowl.png'       },
+    { id: 'CS2', text: 'When either {char1} or {char2} wins a prize, both feel happy and proud — as though they both won together.',                                                         png: 'CSsproud.png'         },
+    { id: 'CS3', text: 'When either {char1} or {char2} finds something nice, they bring it straight to the other to share — not because they have to, just because they share everything.',   png: 'CScrystalshare.png'   },
+    { id: 'CS4', text: 'When {char1} and {char2} walk somewhere together, they always hold hands because it makes them feel like one.',                                                       png: 'CSholdinghands.png'   },
+    { id: 'CS5', text: '{char1} and {char2} share all their things freely — if one of them wants to use something, they just take it without asking.',                                        png: 'CSsharedstuff.png'    },
+    { id: 'CS6', text: 'When {char2} felt sad, {char1} felt it too, right in their own chest — as if their feelings were one and the same.',                                                 png: 'CSsharedpain.png'     },
+    { id: 'CS7', text: 'Whenever one of them is feeling sad, the other feels sad too — and they hold each other until they both feel better.',                                                png: 'CShugging.png'        },
+    { id: 'CS8', text: '{char1} and {char2} feel like they have always been together and always will be — like two parts of the same thing.',                                                 png: 'CSpuzzle.png'         }
+  ],
+  AR: [
+    { id: 'AR1', text: '{char1} makes the decisions and {char2} follows them.',                                                                                                               png: 'ARboss.png'           },
+    { id: 'AR2', text: '{char2} is careful not to interrupt {char1} when they are talking, but {char1} interrupts {char2} sometimes.',                                                       png: 'ARinterrupt.png'      },
+    { id: 'AR3', text: '{char1} tells {char2} when they do not like something {char2} did, but {char2} does not tell {char1} when they do not like something {char1} did.',                  png: 'ARfeedback.png'       },
+    { id: 'AR4', text: 'When {char1} and {char2} made something together, {char1} said their name had to go at the top.',                                                                    png: 'ARart.png'            },
+    { id: 'AR5', text: 'When {char1} and {char2} are together, {char1} makes the rules. If {char1} changes a rule, {char2} just goes along with it.',                                       png: 'ARrules.png'          },
+    { id: 'AR6', text: '{char2} always follows {char1}\'s lead because {char1} is the one who decides where they go.',                                                                       png: 'ARpathchoose.png'     },
+    { id: 'AR7', text: '{char1} always picks the best things first, and {char2} takes whatever is left over.',                                                                               png: 'ARbiggerpile.png'     },
+    { id: 'AR8', text: 'When they sit down together, {char1} always gets to sit in the biggest chair. {char2} sits in a smaller one.',                                                       png: 'ARchair.png'          }
+  ]
+};
+
+function fillNames(text, v) {
+  // Use generic terms to match the generic audio recordings (which say "one of them"/"the other one"
+  // rather than the specific character names).
+  return text.replace(/\{char1\}/g, 'one of them').replace(/\{char2\}/g, 'the other one');
+}
+
+
+// ── STUDY 2: 2AFC OPTIONS & TRIALS ─────────────────────
+// png: null -> looked up from TEST_ITEMS by id. NEW_* art is placeholder reuse
+// (TODO: dedicated illustrations for the chair variants + NEW_AR_THINGS).
+const OPTION_DEFS = {
+  CS1:{model:'CS',png:null,text:'They eat from one big bowl and never count who ate more.'},
+  CS3:{model:'CS',png:null,text:'When one of them finds something nice, they bring it straight to the other to share.'},
+  CS5:{model:'CS',png:null,text:"They use each other's things freely, without asking."},
+  EM3:{model:'EM',png:null,text:'They keep careful track of how many things they have borrowed from each other.'},
+  EM4:{model:'EM',png:null,text:'They make sure each of them has exactly the same amount before anyone takes any.'},
+  EM5:{model:'EM',png:null,text:'They take turns choosing what to do each day.'},
+  EM6:{model:'EM',png:null,text:'When one gives the other a glurp, the other gives back a glurp of the same size.'},
+  EM7:{model:'EM',png:null,text:'They keep track of who has used more things so they can even it out later.'},
+  AR1:{model:'AR',png:null,text:'{boss} makes the decisions, and {other} follows them.'},
+  AR6:{model:'AR',png:null,text:'{other} always follows what {boss} does.'},
+  AR7:{model:'AR',png:null,text:'{boss} picks the best food first, and {other} takes what is left over.'},
+  AR8:{model:'AR',png:null,text:'{boss} always gets the big chair, and {other} sits in a smaller one.'},
+  NEW_EM_CHAIR:{model:'EM',png:'NEWEMchair.png',text:'They take turns sitting in the big chair, so each one gets it the same amount.'},
+  NEW_CS_CHAIR:{model:'CS',png:'NEWCSchair.png',text:'They squeeze into the big chair together.'},
+  NEW_CS_DECIDE:{model:'CS',png:'NEWCSdecide.png',text:"They don't take turns or have a boss about it — they just decide everything together."},
+  NEW_AR_THINGS:{model:'AR',png:'NEWARthings.png',text:"{boss} uses {other}'s things whenever they want, but {other} has to ask before using {boss}'s things."},
+  NEW_CS_WORK:{model:'CS',png:'CSpuzzle.png',text:"When they build something, they work on it together and don't pay attention to how much work the other one has done."},
+  NEW_EM_WORK:{model:'EM',png:'EMmoonrocktower.png',text:'When they build something, they each do an equal amount of the work, and they keep track of how much the other one has done.'},
+  NEW_AR_WORK:{model:'AR',png:'NEWARwork.png',text:'{other} does the work, and {boss} tells {other} what to do.'}
+};
+const TRIALS_2AFC = {
+  7:[{d:'giving',a:'CS3',b:'EM6',type:'conf'},{d:'making',a:'NEW_CS_WORK',b:'NEW_AR_WORK',type:'conf'},{d:'deciding',a:'EM5',b:'AR1',type:'expl'}],
+  3:[{d:'mealtime',a:'CS1',b:'AR7',type:'conf'},{d:'things',a:'CS5',b:'EM7',type:'conf'},{d:'chair',a:'NEW_EM_CHAIR',b:'AR8',type:'expl'}],
+  5:[{d:'things',a:'EM3',b:'CS5',type:'conf'},{d:'mealtime',a:'EM4',b:'AR7',type:'conf'},{d:'deciding',a:'NEW_CS_DECIDE',b:'AR1',type:'expl'}],
+  8:[{d:'making',a:'NEW_EM_WORK',b:'NEW_AR_WORK',type:'conf'},{d:'deciding',a:'EM5',b:'NEW_CS_DECIDE',type:'conf'},{d:'chair',a:'NEW_CS_CHAIR',b:'AR8',type:'expl'}],
+  6:[{d:'chair',a:'AR8',b:'NEW_EM_CHAIR',type:'conf'},{d:'things',a:'NEW_AR_THINGS',b:'CS5',type:'conf'},{d:'giving',a:'EM6',b:'CS3',type:'expl'}],
+  4:[{d:'mealtime',a:'AR7',b:'CS1',type:'conf'},{d:'deciding',a:'AR6',b:'EM5',type:'conf'},{d:'things',a:'EM3',b:'CS5',type:'expl'}]
+};
+function itemPng(id){
+  if (OPTION_DEFS[id].png) return OPTION_DEFS[id].png;
+  for (const m of ['EM','CS','AR']) { const f=TEST_ITEMS[m].find(it=>it.id===id); if(f) return f.png; }
+  return null;
+}
+function fillOption(id, v, boss){
+  const other = boss===v.char1?v.char2:v.char1;
+  let t = OPTION_DEFS[id].text
+    .replaceAll('{boss}',boss.name).replaceAll('{other}',other.name)
+    .replaceAll('{char1}',v.char1.name).replaceAll('{char2}',v.char2.name);
+  return { item:id, model:OPTION_DEFS[id].model, text:t, png:itemPng(id) };
+}
+function assignAllQuestions() {
+  S.cbList = Math.random()<0.5?'A':'B';
+  const firstFlags = [true,true,true,true,true,true,false,false,false,false,false,false]
+    .sort(()=>Math.random()-0.5);
+  let ffi = 0;
+  VIGNETTES.forEach(v => {
+    let spec = TRIALS_2AFC[v.id].map(t=>({...t}));
+    if (S.cbList==='B') { const tmp=spec[0]; spec[0]=spec[1]; spec[1]=tmp; }
+    const boss = v.model==='AR' ? v.char1 : (Math.random()<0.5?v.char1:v.char2);
+    v.boss = boss.name;
+    v.trials = spec.map(t=>{
+      const A = fillOption(t.a, v, boss), B = fillOption(t.b, v, boss);
+      const congruentFirst = t.type==='conf' ? firstFlags[ffi++] : (Math.random()<0.5);
+      const shown = congruentFirst ? [A,B] : [B,A];
+      return { type:t.type, domain:t.d, congruentItem:(t.type==='conf'?t.a:''), opts:shown };
+    });
+    v.questions = [];
+  });
+}
+
+// ── VIGNETTES ──────────────────────────────────────────
+const ALL_VIGNETTES = [
+  {
+    id: 1, model: 'CS', excludeItems: ['CS1','CS5'],
+    char1: { name: 'Zumi', img: 'Asset%2027.png', hair: '#9B5DE5', shirt: '#4ECDC4', pants: '#1A3040', style: 'short' },
+    char2: { name: 'Blix', img: 'Asset%2028.png', hair: '#FFD84D', shirt: '#FF6EC7', pants: '#2E1E60', style: 'short' },
+    scene: 'home_a',
+    parts: [
+      'Zumi and Blix share the same sleep pod where they rest. They have one big food bowl that they eat from, and they never count who ate more. Zumi and Blix just take what they need.',
+      'If Zumi finds a special berry in their yard, they just eat it without asking. If Blix uses Zumi\'s shiny stone, that is perfectly fine too. Nothing really belongs to just one of them.',
+      'When Blix got hurt last week, Zumi felt the pain in their own body. They always say "when we got hurt" because it felt exactly the same to both of them.'
+    ]
+  },
+  {
+    id: 2, model: 'EM', excludeItems: ['EM6'],
+    char1: { name: 'Orro', img: 'Asset%2029.png', hair: '#4ECDC4', shirt: '#FF8FAB', pants: '#1A3040', style: 'short' },
+    char2: { name: 'Fenn', img: 'Asset%2030.png', hair: '#FF6EC7', shirt: '#4D96FF', pants: '#2C3E50', style: 'long'  },
+    scene: 'market_a',
+    parts: [
+      'This is Orro and Fenn. When one gives something, the other must give something back of the same size before the next sunrise.',
+      'Last week, Orro brought Fenn a fruit. So Fenn made sure to bring Orro a fruit the very next day.',
+      'When they share the glow-ball, they use a timer so that each one uses it for exactly the same amount of time.'
+    ]
+  },
+  {
+    id: 3, model: 'CS', excludeItems: ['CS8'],
+    char1: { name: 'Kiva', img: 'Asset%2031.png', hair: '#E0A835', shirt: '#6BCB77', pants: '#154360', style: 'long'  },
+    char2: { name: 'Doop', img: 'Asset%2032.png', hair: '#9B5DE5', shirt: '#E74C3C', pants: '#2C3E50', style: 'short' },
+    scene: 'meadow_a',
+    parts: [
+      'Kiva and Doop walk through their meadow together every evening. They plan to live here forever and feel that they have always lived here.',
+      'Whatever Kiva finds in the meadow, Kiva thinks of it as belonging to both of them. A shiny stone, a star-fruit, a sparkle-feather — it is always ours, never just mine.',
+      'When others ask about the meadow, Kiva and Doop always say "our meadow." They have never thought of anything there as just one of theirs alone.'
+    ]
+  },
+  {
+    id: 4, model: 'AR', excludeItems: ['AR1'],
+    char1: { name: 'Wex',   img: 'Asset%2033.png', hair: '#FFD84D', shirt: '#9B5DE5', pants: '#1A0E30', style: 'short'    },
+    char2: { name: 'Plara', img: 'Asset%2034.png', hair: '#4ECDC4', shirt: '#FF8FAB', pants: '#2C3E50', style: 'pigtails' },
+    scene: 'throne_a',
+    parts: [
+      'Wex has a special glow-mark on their arm — it shines brighter than the marks on Plara\'s arm.',
+      'When Wex and Plara need to choose which cave to explore or which activity to do, Wex decides and Plara agrees without question.',
+      'At every meal, Wex picks their food first and takes as much as they want. Plara waits quietly until Wex is completely finished.'
+    ]
+  },
+  {
+    id: 5, model: 'EM', excludeItems: ['EM7'],
+    char1: { name: 'Nuu',  img: 'Asset%2035.png', hair: '#FF6EC7', shirt: '#2980B9', pants: '#1A3040', style: 'pigtails' },
+    char2: { name: 'Glim', img: 'Asset%2036.png', hair: '#6BCB77', shirt: '#E67E22', pants: '#2C3E50', style: 'short'    },
+    scene: 'market_b',
+    parts: [
+      'Nuu and Glim swap stones every single day. Whatever Nuu gives to Glim, Glim makes sure to give something of the same size to Nuu before they head home.',
+      'Last moon-cycle, Glim helped Nuu carry heavy glow-rocks for an afternoon. So the very next day, Nuu helped Glim carry supplies for exactly the same amount of time.',
+      'When they work on things together, they talk about it if one of them did more, and always find a way to balance things out.'
+    ]
+  },
+  {
+    id: 6, model: 'AR', excludeItems: ['AR7'],
+    char1: { name: 'Tazo', img: 'Asset%2037.png', hair: '#9B5DE5', shirt: '#E91E8C', pants: '#1A0E30', style: 'long'  },
+    char2: { name: 'Vebb', img: 'Asset%2038.png', hair: '#FFD84D', shirt: '#3498DB', pants: '#154360', style: 'short' },
+    scene: 'cave_a',
+    parts: [
+      'Tazo speaks first, eats first, and chooses first — always.',
+      'When they find a new glow crystal in the cave, Tazo inspects it first and decides whether to keep it or leave it.',
+      'When visitors come to the cave, they greet Tazo first and ask Tazo\'s permission before they enter the cave.'
+    ]
+  },
+  {
+    id: 7, model: 'CS', excludeItems: ['CS1','CS5'],
+    char1: { name: 'Mip',   img: 'Asset%2039.png', hair: '#4ECDC4', shirt: '#FF6B6B', pants: '#1A3040', style: 'short' },
+    char2: { name: 'Creel', img: 'Asset%2040.png', hair: '#E0A835', shirt: '#27AE60', pants: '#2C3E50', style: 'long'  },
+    scene: 'home_b',
+    parts: [
+      'Mip and Creel have shared the same floating pod for as long as either of them can remember.',
+      'When Creel is hungry, they help themselves to Mip\'s food without asking — and when Mip wants to use Creel\'s glow-brush, they just pick it up. There is no mine and yours between them.',
+      'When others ask whose pod it is, Mip and Creel always answer: "It is ours."'
+    ]
+  },
+  {
+    id: 8, model: 'EM', excludeItems: ['EM6'],
+    char1: { name: 'Yobi', img: 'Asset%2041.png', hair: '#FF6EC7', shirt: '#9B59B6', pants: '#154360', style: 'pigtails' },
+    char2: { name: 'Gorp', img: 'Asset%2042.png', hair: '#9B5DE5', shirt: '#E74C3C', pants: '#2C3E50', style: 'short'    },
+    scene: 'meadow_b',
+    parts: [
+      'Yobi and Gorp always swap star-fruits at the start of each new day. If Yobi brings a red one, Gorp makes sure to bring a red one back.',
+      'When they used the zibble device last week, they used a sand-timer to make sure neither one used it for longer than the other.',
+      'After Gorp missed a day of helping carry supplies, they carried a double load the next day to make things even again.'
+    ]
+  },
+  {
+    id: 9, model: 'CS', excludeItems: ['CS6'],
+    char1: { name: 'Fuzz', img: 'Asset%2043.png', hair: '#FFD84D', shirt: '#1ABC9C', pants: '#1A3040', style: 'short' },
+    char2: { name: 'Orlo', img: 'Asset%2044.png', hair: '#4ECDC4', shirt: '#F39C12', pants: '#2C3E50', style: 'short' },
+    scene: 'grotto_a',
+    parts: [
+      'Fuzz and Orlo discovered the crystal cave together one afternoon. From that first moment, they have always called it "our cave."',
+      'Everything in the cave — the glowing crystals, the cosy moss-nests, the sparkle-pools — belongs to both of them. There is no mine and yours between Fuzz and Orlo.',
+      'When Orlo felt sad one afternoon, Fuzz felt it too, right in their own chest. It was as if their feelings were connected and one feeling.'
+    ]
+  },
+  {
+    id: 10, model: 'AR', excludeItems: ['AR7'],
+    char1: { name: 'Beem', img: 'Asset%2045.png', hair: '#E91E8C', shirt: '#9B5DE5', pants: '#1A0E30', style: 'long'  },
+    char2: { name: 'Jovi', img: 'Asset%2046.png', hair: '#FFD84D', shirt: '#4ECDC4', pants: '#154360', style: 'short' },
+    scene: 'hall_a',
+    parts: [
+      'Beem has a special crystal badge that everyone can see. Beem always speaks for both Beem and Jovi.',
+      'Jovi thinks Beem is the most impressive person they have ever met. Whenever Beem decides something, Jovi feels lucky to go along.',
+      'When they found a fruit, Beem chose the best part to keep. Jovi received what was left over.'
+    ]
+  },
+  {
+    id: 11, model: 'EM', excludeItems: ['EM4','EM6'],
+    char1: { name: 'Plix', img: 'Asset%2047.png', hair: '#4ECDC4', shirt: '#FF8FAB', pants: '#1A3040', style: 'short'    },
+    char2: { name: 'Zara', img: 'Asset%2048.png', hair: '#9B5DE5', shirt: '#E67E22', pants: '#2C3E50', style: 'pigtails' },
+    scene: 'market_c',
+    parts: [
+      'Plix and Zara have a way of doing things: if one of them does something nice, the other must do something just as nice back before the next sun-rise.',
+      'Last week, Plix spent an afternoon helping Zara clean their pod. So Zara spent an afternoon helping Plix clean their pod the following day.',
+      'When they found wubbas together, they counted carefully to make sure they each took the exact same number.'
+    ]
+  },
+  {
+    id: 12, model: 'AR', excludeItems: ['AR1','AR8'],
+    char1: { name: 'Hoob', img: 'Asset%2049.png', hair: '#FFD84D', shirt: '#9B5DE5', pants: '#1A0E30', style: 'short' },
+    char2: { name: 'Nev',  img: 'Asset%2050.png', hair: '#4ECDC4', shirt: '#FF6EC7', pants: '#154360', style: 'long'  },
+    scene: 'cave_b',
+    parts: [
+      'Hoob sits on a taller chair than anyone else.',
+      'Nev does not sit on a tall chair. When they need to choose which crystal tunnel to explore, Hoob decides and Nev follows.',
+      'Hoob drinks from the pool first every morning. Nev waits until Hoob is completely finished before they can drink.'
+    ]
+  }
+];
+const VIGNETTES = ALL_VIGNETTES.filter(v => [3,4,5,6,7,8].includes(v.id));
+
+
+// ── STATE ──────────────────────────────────────────────
+const S = {
+  phase: 'welcome', name: '', age: '', pid: '',
+  vi: 0, qi: 0, ti: 0, pi: 0, cbList: '',
+  pendingAns: null, pendingModelChoice: null,
+  modelIdOrder: [], answers: [], stars: 0, adminOpen: false
+};
+
+// ── AUDIO PLAYBACK ─────────────────────────────────────
+let currentAudio = null;
+let audioSeqId   = 0;   // increment to cancel any in-progress sequence
+let audioUnlocked = false;
+
+// Play a single pre-recorded file by AUDIO_MAP key.
+// done() is only called if the sequence has not been cancelled.
+function playAudio(key, done) {
+  done = done || function(){};
+  const file = AUDIO_MAP[key];
+  if (!file) { console.warn('No audio for key:', key); done(); return; }
+  const mySeqId = audioSeqId;
+  const audio = new Audio(AUDIO_BASE + file);
+  currentAudio = audio;
+  let finished = false;   // ensure finish only runs once per audio (prevents chained done() from firing multiple times)
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    if (currentAudio === audio) currentAudio = null;
+    if (audioSeqId === mySeqId) done();
+  };
+  audio.onended = finish;
+  audio.onerror = finish;
+  audio.play().catch(() => finish());
+}
+
+function stopAudio() {
+  audioSeqId++;   // cancels all ongoing sequences
+  if (currentAudio) { currentAudio.pause(); currentAudio.src = ''; currentAudio = null; }
+}
+
+function unlockAudio(audioKey) {
+  if (audioUnlocked) { if (audioKey) playAudio(audioKey); return; }
+  audioUnlocked = true;
+  // Use a silent utterance to unlock AudioContext on iOS/Safari
+  if (window.speechSynthesis) {
+    const silent = new SpeechSynthesisUtterance(' '); silent.volume = 0;
+    silent.onend = () => { if (audioKey) playAudio(audioKey); };
+    speechSynthesis.speak(silent);
+  } else { if (audioKey) playAudio(audioKey); }
+  const ub = document.getElementById('unlockBtn'); if (ub) ub.remove();
+}
+
+// ── HELPERS ────────────────────────────────────────────
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+const SKINS = ['#FDBCB4','#F0C090','#E0A878','#C87E50','#FDDBB4'];
+function skin(name) { let h=0; for(let i=0;i<name.length;i++) h=(h*31+name.charCodeAt(i))&0xFFFF; return SKINS[h%SKINS.length]; }
+function thumbsUpSVG(sz)   { return `<img class="ans-thumb" src="${IMG_BASE}thumbsup.png"   width="${sz||50}" height="${sz||50}" style="display:block;margin:0 auto;object-fit:contain"/>`; }
+function thumbsDownSVG(sz) { return `<img class="ans-thumb" src="${IMG_BASE}thumbsdown.png" width="${sz||50}" height="${sz||50}" style="display:block;margin:0 auto;object-fit:contain"/>`; }
+
+// ── KID SVG ────────────────────────────────────────────
+function kidSVG(cx, groundY, cfg, animOffset, flip, imgH, imgYOffset) {
+  imgH=imgH||182; imgYOffset=imgYOffset||35; flip=flip||false;
+  const {hair,shirt,pants,style,img}=cfg;
+  if (img && animOffset !== 'wave') {
+    const imgUrl=IMG_BASE+img, imgW=Math.round(imgH*88/182), p=[];
+    p.push(`<ellipse cx="${cx}" cy="${groundY}" rx="26" ry="6" fill="rgba(0,0,0,.10)"/>`);
+    const imgEl=`<image href="${imgUrl}" x="${cx-imgW/2}" y="${groundY-imgH+imgYOffset}" width="${imgW}" height="${imgH}" preserveAspectRatio="xMidYMax meet"/>`;
+    p.push(flip?`<g transform="translate(${cx*2},0) scale(-1,1)">${imgEl}</g>`:imgEl);
+    return `<g>${p.join('')}</g>`;
+  }
+  const sk=skin(cfg.name||''), hR=28, bH=62, bW=50, lH=58, lW=19, aH=44, aW=12;
+  const fY=groundY, lT=fY-lH, bT=lT-bH, hY=bT-hR-3, p=[];
+  p.push(`<ellipse cx="${cx}" cy="${fY}" rx="26" ry="6" fill="rgba(0,0,0,.08)"/>`);
+  p.push(`<rect x="${cx-lW-2}" y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
+  p.push(`<rect x="${cx+2}" y="${lT}" width="${lW}" height="${lH}" rx="6" fill="${pants}"/>`);
+  p.push(`<ellipse cx="${cx-lW*.5-1}" cy="${fY}" rx="13" ry="6" fill="#333"/>`);
+  p.push(`<ellipse cx="${cx+lW*.5+1}" cy="${fY}" rx="13" ry="6" fill="#333"/>`);
+  p.push(`<rect x="${cx-bW*.5-aW}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
+  p.push(`<circle cx="${cx-bW*.5-aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>`);
+  p.push(`<rect x="${cx+bW*.5}" y="${bT+4}" width="${aW}" height="${aH}" rx="5" fill="${shirt}"/>`);
+  p.push(`<circle cx="${cx+bW*.5+aW*.5}" cy="${bT+4+aH}" r="7" fill="${sk}"/>`);
+  p.push(`<rect x="${cx-bW*.5}" y="${bT}" width="${bW}" height="${bH}" rx="10" fill="${shirt}"/>`);
+  p.push(`<path d="M${cx-9},${bT} Q${cx},${bT+13} ${cx+9},${bT}" fill="white" opacity=".2"/>`);
+  p.push(`<circle cx="${cx}" cy="${hY}" r="${hR}" fill="${sk}"/>`);
+  if (style==='short') {
+    p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
+  } else if (style==='long') {
+    p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
+    p.push(`<rect x="${cx-hR-1}" y="${hY-6}" width="13" height="40" rx="6" fill="${hair}"/>`);
+    p.push(`<rect x="${cx+hR-12}" y="${hY-6}" width="13" height="40" rx="6" fill="${hair}"/>`);
+  } else if (style==='pigtails') {
+    p.push(`<ellipse cx="${cx}" cy="${hY-hR+10}" rx="${hR}" ry="${hR*.52}" fill="${hair}"/>`);
+    p.push(`<circle cx="${cx-hR-5}" cy="${hY-3}" r="10" fill="${hair}"/>`);
+    p.push(`<circle cx="${cx+hR+5}" cy="${hY-3}" r="10" fill="${hair}"/>`);
+    p.push(`<line x1="${cx-hR+1}" y1="${hY-1}" x2="${cx-hR-5}" y2="${hY-3}" stroke="${hair}" stroke-width="5"/>`);
+    p.push(`<line x1="${cx+hR-1}" y1="${hY-1}" x2="${cx+hR+5}" y2="${hY-3}" stroke="${hair}" stroke-width="5"/>`);
+  }
+  p.push(`<path d="M${cx-14},${hY-2} Q${cx-8},${hY-12} ${cx-2},${hY-2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
+  p.push(`<path d="M${cx+2},${hY-2} Q${cx+8},${hY-12} ${cx+14},${hY-2}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
+  p.push(`<path d="M${cx-10},${hY+9} Q${cx},${hY+19} ${cx+10},${hY+9}" stroke="#333" stroke-width="2.3" fill="none" stroke-linecap="round"/>`);
+  p.push(`<circle cx="${cx-17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
+  p.push(`<circle cx="${cx+17}" cy="${hY+6}" r="6" fill="#FFA0A0" opacity=".42"/>`);
+  return `<g>${p.join('')}</g>`;
+}
+
+// ── SCENE BACKGROUNDS ──────────────────────────────────
+const SCENE_BACKGROUNDS = {
+  home_a: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#0A0820"/>
+  <path d="M0 300 L0 98 Q0 18 300 14 Q600 18 600 98 L600 300 Z" fill="#141030"/>
+  <path d="M38 300 L38 116 Q38 50 300 46 Q562 50 562 116 L562 300 Z" fill="#181840"/>
+  <circle cx="85" cy="34" r="1.2" fill="white" opacity=".6"><animate attributeName="opacity" values=".6;.1;.6" dur="2.8s" repeatCount="indefinite"/></circle>
+  <circle cx="175" cy="27" r="1" fill="#B0E8FF" opacity=".7"><animate attributeName="opacity" values=".7;.15;.7" dur="3.2s" repeatCount="indefinite"/></circle>
+  <circle cx="258" cy="40" r="1.4" fill="white" opacity=".5"><animate attributeName="opacity" values=".5;.1;.5" dur="4.1s" repeatCount="indefinite"/></circle>
+  <circle cx="348" cy="30" r="1" fill="#FFD4EE" opacity=".7"><animate attributeName="opacity" values=".7;.2;.7" dur="2.5s" repeatCount="indefinite"/></circle>
+  <circle cx="432" cy="24" r="1.3" fill="white" opacity=".6"><animate attributeName="opacity" values=".6;.1;.6" dur="3.5s" repeatCount="indefinite"/></circle>
+  <circle cx="525" cy="38" r="1" fill="#C8FFD4" opacity=".65"><animate attributeName="opacity" values=".65;.1;.65" dur="2.1s" repeatCount="indefinite"/></circle>
+  <circle cx="210" cy="48" r="1" fill="#FFD4EE" opacity=".55"><animate attributeName="opacity" values=".55;.1;.55" dur="3.8s" repeatCount="indefinite"/></circle>
+  <circle cx="390" cy="44" r="1.2" fill="#B0E8FF" opacity=".6"><animate attributeName="opacity" values=".6;.12;.6" dur="2.9s" repeatCount="indefinite"/></circle>
+  <circle cx="145" cy="52" r="1" fill="white" opacity=".5"><animate attributeName="opacity" values=".5;.08;.5" dur="4.5s" repeatCount="indefinite"/></circle>
+  <circle cx="462" cy="46" r="1.1" fill="#D4C8FF" opacity=".6"><animate attributeName="opacity" values=".6;.12;.6" dur="3.1s" repeatCount="indefinite"/></circle>
+  <line x1="300" y1="16" x2="300" y2="58" stroke="#4ECDC4" stroke-width="2" opacity=".4"/>
+  <circle cx="300" cy="68" r="13" fill="#4ECDC4" opacity=".55"><animate attributeName="opacity" values=".42;.78;.42" dur="2.2s" repeatCount="indefinite"/></circle>
+  <circle cx="300" cy="68" r="7" fill="#9BFFE8" opacity=".7"/>
+  <rect x="0" y="210" width="600" height="90" fill="#0D0A22"/>
+  <path d="M0 210 H600" stroke="#4ECDC4" stroke-width="2" opacity=".45"/>
+  <ellipse cx="300" cy="212" rx="200" ry="6" fill="#4ECDC4" opacity=".06"/>
+  <g><animateTransform attributeName="transform" type="rotate" values="-3 70 210; 3.5 70 210; -3 70 210" dur="5s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <line x1="70" y1="210" x2="70" y2="136" stroke="#9B5DE5" stroke-width="5" stroke-linecap="round"/>
+    <path d="M70 178 Q50 168 38 156" stroke="#9B5DE5" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M70 165 Q54 152 42 138" stroke="#7B3DA5" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M70 157 Q90 146 108 134" stroke="#9B5DE5" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <circle cx="38" cy="154" r="12" fill="#C09AFF" opacity=".72"><animate attributeName="opacity" values=".58;.92;.58" dur="2.1s" repeatCount="indefinite"/></circle>
+    <circle cx="42" cy="136" r="9" fill="#FF6EC7" opacity=".68"><animate attributeName="opacity" values=".54;.88;.54" dur="1.8s" repeatCount="indefinite"/></circle>
+    <circle cx="108" cy="132" r="10" fill="#7EDBFF" opacity=".7"><animate attributeName="opacity" values=".56;.9;.56" dur="2.5s" repeatCount="indefinite"/></circle>
+    <circle cx="70" cy="129" r="17" fill="#9B5DE5" opacity=".58"><animate attributeName="opacity" values=".45;.8;.45" dur="2.3s" repeatCount="indefinite"/></circle>
+    <circle cx="70" cy="129" r="9" fill="#D4AAFF" opacity=".75"/>
+    <circle cx="70" cy="129" r="26" fill="none" stroke="#9B5DE5" stroke-width="1.5" opacity=".22"><animate attributeName="r" values="22;30;22" dur="2.3s" repeatCount="indefinite"/></circle>
+  </g>
+  <g><animateTransform attributeName="transform" type="rotate" values="-5 30 210; 4 30 210; -5 30 210" dur="3.6s" begin="0.7s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <line x1="30" y1="210" x2="30" y2="193" stroke="#9B5DE5" stroke-width="2.5" stroke-linecap="round"/>
+    <ellipse cx="30" cy="190" rx="9" ry="5.5" fill="#9B5DE5" opacity=".58"/>
+    <circle cx="25" cy="188" r="3" fill="#FF6EC7" opacity=".68"/>
+  </g>
+  <circle cx="510" cy="130" r="65" fill="#060615" stroke="#4ECDC4" stroke-width="4"/>
+  <circle cx="510" cy="130" r="59" fill="#0B1638"/>
+  <circle cx="493" cy="115" r="1.5" fill="white" opacity=".9"><animate attributeName="opacity" values=".9;.3;.9" dur="2.2s" repeatCount="indefinite"/></circle>
+  <circle cx="523" cy="109" r="1" fill="white" opacity=".8"><animate attributeName="opacity" values=".8;.2;.8" dur="3.1s" repeatCount="indefinite"/></circle>
+  <circle cx="537" cy="127" r="1.3" fill="#B0E8FF" opacity=".85"><animate attributeName="opacity" values=".85;.2;.85" dur="1.9s" repeatCount="indefinite"/></circle>
+  <circle cx="487" cy="143" r="1" fill="white" opacity=".7"><animate attributeName="opacity" values=".7;.15;.7" dur="2.7s" repeatCount="indefinite"/></circle>
+  <circle cx="497" cy="154" r="1.2" fill="#FFD4EE" opacity=".75"><animate attributeName="opacity" values=".75;.2;.75" dur="3.4s" repeatCount="indefinite"/></circle>
+  <circle cx="533" cy="149" r="1" fill="white" opacity=".65"><animate attributeName="opacity" values=".65;.1;.65" dur="2.5s" repeatCount="indefinite"/></circle>
+  <ellipse cx="510" cy="130" rx="32" ry="22" fill="#9B5DE5" opacity=".09"/>
+  <circle cx="490" cy="118" r="12" fill="#E8D5A3"/>
+  <circle cx="487" cy="115" r="4" fill="#D4C090" opacity=".42"/>
+  <circle cx="530" cy="148" r="9" fill="#4ECDC4" opacity=".62"/>
+  <circle cx="528" cy="146" r="3.5" fill="#9BFFE8" opacity=".48"/>
+  <circle cx="452" cy="130" r="5.5" fill="#4ECDC4" opacity=".5"/>
+  <circle cx="568" cy="130" r="5.5" fill="#4ECDC4" opacity=".5"/>
+  <circle cx="510" cy="69" r="5.5" fill="#4ECDC4" opacity=".5"/>
+  <circle cx="510" cy="191" r="5.5" fill="#4ECDC4" opacity=".5"/>
+  <path d="M510 196 Q540 208 560 210" stroke="#4ECDC4" stroke-width="3" fill="none" opacity=".52" stroke-linecap="round"/>
+  <path d="M510 196 Q480 208 460 210" stroke="#9B5DE5" stroke-width="3" fill="none" opacity=".48" stroke-linecap="round"/>
+  <circle cx="182" cy="128" r="1.8" fill="#C09AFF"><animate attributeName="cy" values="128;104;128" dur="4.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="4.5s" repeatCount="indefinite"/></circle>
+  <circle cx="148" cy="162" r="1.5" fill="#FF6EC7"><animate attributeName="cy" values="162;138;162" dur="3.9s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="3.9s" repeatCount="indefinite"/></circle>
+  <circle cx="390" cy="140" r="1.5" fill="#4ECDC4"><animate attributeName="cy" values="140;116;140" dur="4.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".45;0;.45" dur="4.8s" repeatCount="indefinite"/></circle>
+</svg>`,
+
+  market_a: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#FFF0D0"/>
+  <circle cx="528" cy="40" r="28" fill="#FFD84D"/>
+  <circle cx="528" cy="40" r="20" fill="#FFE566" opacity=".58"/>
+  <g stroke="#FFBE00" stroke-linecap="round" stroke-width="2.5" opacity=".52">
+    <line x1="528" y1="5"  x2="528" y2="14"/><line x1="552" y1="11" x2="546" y2="19"/>
+    <line x1="570" y1="25" x2="562" y2="31"/><line x1="576" y1="40" x2="567" y2="40"/>
+    <line x1="504" y1="11" x2="510" y2="19"/><line x1="486" y1="25" x2="494" y2="31"/>
+    <line x1="570" y1="55" x2="562" y2="49"/><line x1="486" y1="55" x2="494" y2="49"/>
+  </g>
+  <circle cx="528" cy="40" r="36" fill="#FFD84D" opacity=".06"><animate attributeName="r" values="32;44;32" dur="2.8s" repeatCount="indefinite"/></circle>
+  <ellipse cx="115" cy="32" rx="52" ry="18" fill="white" opacity=".58"/>
+  <ellipse cx="78"  cy="24" rx="36" ry="14" fill="white" opacity=".48"/>
+  <ellipse cx="178" cy="42" rx="30" ry="12" fill="white" opacity=".4"/>
+  <rect x="0" y="210" width="600" height="90" fill="#D4A574"/>
+  <path d="M0 210 H600" stroke="#B8865A" stroke-width="3" opacity=".6"/>
+  <path d="M0 222 Q50 216 100 224 Q150 218 220 225" stroke="#C49050" stroke-width="1.5" fill="none" opacity=".4"/>
+  <path d="M390 224 Q440 218 490 225 Q545 220 600 222" stroke="#C8A050" stroke-width="1.2" fill="none" opacity=".38"/>
+  <rect x="0" y="68" width="222" height="142" fill="#CC3878"/>
+  <rect x="5" y="74" width="212" height="130" rx="3" fill="#E0508A"/>
+  <path d="M-4 68 L111 14 L226 68 Z" fill="#AA2058"/>
+  <path d="M0 68 L111 20 L222 68" stroke="#FF6EC7" stroke-width="1.5" fill="none" opacity=".38"/>
+  <line x1="111" y1="14" x2="111" y2="2" stroke="#880A38" stroke-width="3"/>
+  <circle cx="111" cy="1" r="5" fill="#FFD84D"/>
+  <path d="M111 2 L130 9 L111 18 Z" fill="#FF6EC7"/>
+  <rect x="12" y="82" width="44" height="32" rx="5" fill="#160420" stroke="#FF6EC7" stroke-width="2"/>
+  <line x1="34" y1="82" x2="34" y2="114" stroke="#FF6EC7" stroke-width="1.2" opacity=".6"/>
+  <line x1="12" y1="98" x2="56" y2="98" stroke="#FF6EC7" stroke-width="1.2" opacity=".6"/>
+  <rect x="76" y="82" width="70" height="32" rx="5" fill="#160420" stroke="#C09AFF" stroke-width="2"/>
+  <circle cx="111" cy="98" r="11" fill="#9B5DE5" opacity=".45"/>
+  <circle cx="111" cy="98" r="6" fill="#C09AFF" opacity=".8"/>
+  <rect x="166" y="82" width="44" height="32" rx="5" fill="#160420" stroke="#FF6EC7" stroke-width="2"/>
+  <circle cx="177" cy="92" r="4" fill="#FF6EC7" opacity=".88"><animate attributeName="opacity" values=".65;1;.65" dur="1.8s" repeatCount="indefinite"/></circle>
+  <circle cx="198" cy="92" r="4" fill="#FFD84D" opacity=".88"><animate attributeName="opacity" values=".7;1;.7" dur="2.3s" repeatCount="indefinite"/></circle>
+  <circle cx="188" cy="106" r="4" fill="#4ECDC4" opacity=".88"><animate attributeName="opacity" values=".75;1;.75" dur="2.0s" repeatCount="indefinite"/></circle>
+  <line x1="16" y1="118" x2="16" y2="142" stroke="#880A38" stroke-width="1.5"/>
+  <circle cx="16" cy="147" r="9" fill="#7EDBFF" stroke="#4ECDC4" stroke-width="1.5"/><circle cx="16" cy="147" r="5" fill="#4ECDC4"/>
+  <line x1="48" y1="118" x2="48" y2="137" stroke="#880A38" stroke-width="1.5"/>
+  <circle cx="48" cy="143" r="11" fill="#FFD84D" stroke="#C89B00" stroke-width="1.5"/><circle cx="48" cy="143" r="6.5" fill="#F4C300"/>
+  <line x1="80" y1="118" x2="80" y2="135" stroke="#880A38" stroke-width="1.5"/>
+  <circle cx="80" cy="141" r="10" fill="#C09AFF" stroke="#9B5DE5" stroke-width="1.5"/><circle cx="80" cy="141" r="5.5" fill="#9B5DE5"/>
+  <line x1="112" y1="118" x2="112" y2="131" stroke="#880A38" stroke-width="1.5"/>
+  <circle cx="112" cy="137" r="13" fill="#FF8FAB" stroke="#E63980" stroke-width="1.5"/><circle cx="112" cy="137" r="7.5" fill="#E63980"/>
+  <line x1="146" y1="118" x2="146" y2="139" stroke="#880A38" stroke-width="1.5"/>
+  <circle cx="146" cy="145" r="9" fill="#6BCB77" stroke="#3E9F4E" stroke-width="1.5"/><circle cx="146" cy="145" r="5" fill="#4A9F5A"/>
+  <line x1="178" y1="118" x2="178" y2="134" stroke="#880A38" stroke-width="1.5"/>
+  <circle cx="178" cy="139" r="8" fill="#FFD84D" stroke="#C89B00" stroke-width="1.5"/><circle cx="178" cy="139" r="4.5" fill="#F4C300"/>
+  <line x1="208" y1="118" x2="208" y2="137" stroke="#880A38" stroke-width="1.5"/>
+  <circle cx="208" cy="142" r="8" fill="#FF6EC7" stroke="#D44A9E" stroke-width="1.5"/><circle cx="208" cy="142" r="4" fill="#D44A9E"/>
+  <rect x="5" y="160" width="212" height="5" fill="#880A38" opacity=".8"/>
+  <circle cx="22" cy="171" r="8" fill="#FFD84D"/><circle cx="44" cy="168" r="6" fill="#7EDBFF"/>
+  <circle cx="65" cy="171" r="8" fill="#FF8FAB"/><circle cx="87" cy="168" r="5" fill="#C09AFF"/>
+  <circle cx="107" cy="171" r="8" fill="#FFD84D"/><circle cx="128" cy="168" r="6" fill="#FF6EC7"/>
+  <circle cx="148" cy="171" r="5" fill="#4ECDC4"/><circle cx="168" cy="168" r="7" fill="#FFD84D"/>
+  <circle cx="188" cy="171" r="6" fill="#FF8FAB"/><circle cx="208" cy="168" r="5" fill="#7EDBFF"/>
+  <path d="M77 210 L77 188 Q111 174 145 188 L145 210 Z" fill="#880A38"/>
+  <path d="M80 210 L80 190 Q111 177 142 190 L142 210 Z" fill="#AA1850"/>
+  <circle cx="111" cy="197" r="3.5" fill="#FFD84D" opacity=".8"/>
+  <rect x="0" y="74" width="7" height="54" fill="#FF6EC7" opacity=".72"/>
+  <rect x="215" y="74" width="7" height="54" fill="#C09AFF" opacity=".68"/>
+  <circle cx="14" cy="213" r="6" fill="#FFD84D" opacity=".75"/>
+  <circle cx="32" cy="212" r="5" fill="#FF8FAB" opacity=".7"/>
+  <circle cx="50" cy="213" r="6" fill="#7EDBFF" opacity=".68"/>
+  <circle cx="67" cy="212" r="4" fill="#C09AFF" opacity=".62"/>
+  <circle cx="82" cy="213" r="5" fill="#FFD84D" opacity=".65"/>
+  <line x1="484" y1="78" x2="484" y2="150" stroke="#7A5030" stroke-width="5" stroke-linecap="round"/>
+  <ellipse cx="484" cy="80" rx="90" ry="22" fill="#4ECDC4" opacity=".88"/>
+  <ellipse cx="484" cy="84" rx="90" ry="18" fill="#3ABFBD" opacity=".35"/>
+  <line x1="396" y1="99" x2="393" y2="113" stroke="#2ABFBD" stroke-width="2"/>
+  <line x1="417" y1="94" x2="415" y2="108" stroke="#2ABFBD" stroke-width="2"/>
+  <line x1="438" y1="91" x2="437" y2="105" stroke="#2ABFBD" stroke-width="2"/>
+  <line x1="459" y1="89" x2="459" y2="103" stroke="#2ABFBD" stroke-width="2"/>
+  <line x1="509" y1="89" x2="509" y2="103" stroke="#2ABFBD" stroke-width="2"/>
+  <line x1="530" y1="91" x2="531" y2="105" stroke="#2ABFBD" stroke-width="2"/>
+  <line x1="551" y1="94" x2="553" y2="108" stroke="#2ABFBD" stroke-width="2"/>
+  <line x1="572" y1="99" x2="575" y2="113" stroke="#2ABFBD" stroke-width="2"/>
+  <rect x="366" y="150" width="234" height="14" rx="4" fill="#8B5E2A"/>
+  <rect x="372" y="140" width="222" height="12" rx="3" fill="#A87040"/>
+  <rect x="372" y="130" width="222" height="12" rx="2" fill="#C89050"/>
+  <rect x="374" y="164" width="14" height="46" rx="4" fill="#6A4420"/>
+  <rect x="406" y="164" width="12" height="46" rx="4" fill="#6A4420"/>
+  <rect x="568" y="164" width="14" height="46" rx="4" fill="#6A4420"/>
+  <rect x="538" y="164" width="12" height="46" rx="4" fill="#6A4420"/>
+  <path d="M380 138 L390 122 L400 138 Z" fill="#FF6EC7"/>
+  <path d="M407 138 L418 121 L429 138 Z" fill="#FFD84D"/>
+  <path d="M435 138 L447 122 L459 138 Z" fill="#9B5DE5"/>
+  <rect x="466" y="122" width="18" height="16" rx="2" fill="#4ECDC4"/>
+  <rect x="491" y="120" width="24" height="18" rx="2" fill="#FF8FAB"/>
+  <path d="M522 138 L533 122 L544 138 Z" fill="#6BCB77"/>
+  <rect x="550" y="124" width="17" height="14" rx="2" fill="#FFD84D"/>
+  <path d="M574 138 L584 124 L594 138 Z" fill="#7EDBFF"/>
+  <rect x="488" y="98" width="28" height="20" rx="3" fill="#5A7890" stroke="#4ECDC4" stroke-width="1.5"/>
+  <circle cx="502" cy="108" r="6" fill="#FFD84D" opacity=".75"/>
+  <circle cx="374" cy="213" r="5" fill="#4ECDC4" opacity=".7"/>
+  <circle cx="390" cy="212" r="4" fill="#FFD84D" opacity=".65"/>
+  <circle cx="258" cy="213" r="2.5" fill="#C49050" opacity=".48"/>
+  <circle cx="276" cy="212" r="2" fill="#B8844A" opacity=".42"/>
+  <circle cx="294" cy="213" r="2.5" fill="#C49050" opacity=".48"/>
+  <circle cx="312" cy="212" r="2" fill="#B8844A" opacity=".42"/>
+  <circle cx="330" cy="213" r="2.5" fill="#C49050" opacity=".45"/>
+  <circle cx="348" cy="212" r="2" fill="#B8844A" opacity=".4"/>
+</svg>`,
+
+  meadow_a: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#0D1B3E"/>
+  <circle cx="25" cy="18" r="1.5" fill="white" opacity=".8"><animate attributeName="opacity" values=".8;.15;.8" dur="2.3s" repeatCount="indefinite"/></circle>
+  <circle cx="78" cy="12" r="1" fill="#FFE8C8" opacity=".7"><animate attributeName="opacity" values=".7;.1;.7" dur="3.8s" repeatCount="indefinite"/></circle>
+  <circle cx="148" cy="25" r="1.8" fill="white" opacity=".9"><animate attributeName="opacity" values=".9;.2;.9" dur="1.7s" repeatCount="indefinite"/></circle>
+  <circle cx="205" cy="14" r="1.2" fill="#B0E8FF" opacity=".75"><animate attributeName="opacity" values=".75;.1;.75" dur="4.4s" repeatCount="indefinite"/></circle>
+  <circle cx="268" cy="30" r="1" fill="white" opacity=".6"><animate attributeName="opacity" values=".6;.05;.6" dur="5.0s" repeatCount="indefinite"/></circle>
+  <circle cx="322" cy="16" r="1.4" fill="#FFD4EE" opacity=".8"><animate attributeName="opacity" values=".8;.2;.8" dur="2.6s" repeatCount="indefinite"/></circle>
+  <circle cx="378" cy="28" r="1.1" fill="white" opacity=".7"><animate attributeName="opacity" values=".7;.15;.7" dur="3.2s" repeatCount="indefinite"/></circle>
+  <circle cx="432" cy="15" r="1.6" fill="#C8FFD4" opacity=".8"><animate attributeName="opacity" values=".8;.2;.8" dur="2.1s" repeatCount="indefinite"/></circle>
+  <circle cx="490" cy="32" r="1" fill="white" opacity=".65"><animate attributeName="opacity" values=".65;.1;.65" dur="4.1s" repeatCount="indefinite"/></circle>
+  <circle cx="558" cy="22" r="1.3" fill="#B0E8FF" opacity=".75"><animate attributeName="opacity" values=".75;.15;.75" dur="3.5s" repeatCount="indefinite"/></circle>
+  <circle cx="112" cy="46" r="1" fill="#FFD4EE" opacity=".55"><animate attributeName="opacity" values=".55;.05;.55" dur="4.8s" repeatCount="indefinite"/></circle>
+  <circle cx="342" cy="44" r="1.2" fill="white" opacity=".6"><animate attributeName="opacity" values=".6;.1;.6" dur="2.9s" repeatCount="indefinite"/></circle>
+  <circle cx="512" cy="48" r="1" fill="#FFE8C8" opacity=".6"><animate attributeName="opacity" values=".6;.1;.6" dur="3.7s" repeatCount="indefinite"/></circle>
+  <circle cx="170" cy="42" r="1.3" fill="white" opacity=".7"><animate attributeName="opacity" values=".7;.15;.7" dur="2.4s" repeatCount="indefinite"/></circle>
+  <circle cx="54" cy="50" r="1" fill="#C8FFD4" opacity=".5"><animate attributeName="opacity" values=".5;.05;.5" dur="6.0s" repeatCount="indefinite"/></circle>
+  <circle cx="88" cy="56" r="40" fill="#E8D5A3"/>
+  <circle cx="77" cy="46" r="7" fill="#D4C090" opacity=".5"/>
+  <circle cx="100" cy="63" r="4" fill="#D4C090" opacity=".4"/>
+  <circle cx="72" cy="68" r="3" fill="#D4C090" opacity=".35"/>
+  <circle cx="516" cy="44" r="22" fill="#2A8A8A"/>
+  <ellipse cx="516" cy="44" rx="34" ry="10" fill="none" stroke="#4ECDC4" stroke-width="2.5" opacity=".75"/>
+  <circle cx="508" cy="38" r="5" fill="#3ABFBD" opacity=".5"/>
+  <path d="M0 208 C90 193 195 213 300 200 C405 187 510 212 600 200 L600 300 L0 300 Z" fill="#1A3D2A"/>
+  <path d="M0 224 C85 210 168 228 255 215 C355 200 455 226 600 210 L600 300 L0 300 Z" fill="#12302A"/>
+  <path d="M0 208 H600" stroke="#4ECDC4" stroke-width="1.5" opacity=".35"/>
+  <g><animateTransform attributeName="transform" type="rotate" values="-2 88 208; 2.5 88 208; -2 88 208" dur="5.5s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <line x1="88" y1="208" x2="88" y2="124" stroke="#4A2D6E" stroke-width="9" stroke-linecap="round"/>
+    <path d="M88 148 C68 132 52 112 38 90" stroke="#4A2D6E" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <path d="M88 160 C110 142 128 122 145 100" stroke="#5A3D7E" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <circle cx="50" cy="92" r="32" fill="#6B2D8E"/>
+    <circle cx="88" cy="102" r="40" fill="#8B3DB8"/>
+    <circle cx="126" cy="94" r="28" fill="#7B2D9E"/>
+    <circle cx="88" cy="82" r="24" fill="#9B5DE5"/>
+    <circle cx="68" cy="96" r="6" fill="#FF6EC7" opacity=".9"><animate attributeName="opacity" values=".7;1;.7" dur="1.8s" repeatCount="indefinite"/></circle>
+    <circle cx="100" cy="108" r="5" fill="#FFD84D" opacity=".9"><animate attributeName="opacity" values=".8;1;.8" dur="2.2s" repeatCount="indefinite"/></circle>
+    <circle cx="112" cy="90" r="5" fill="#7EDBFF" opacity=".9"><animate attributeName="opacity" values=".9;1;.9" dur="1.6s" repeatCount="indefinite"/></circle>
+  </g>
+  <g><animateTransform attributeName="transform" type="rotate" values="-5 120 208; 4 120 208; -5 120 208" dur="3.2s" begin="0.6s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <line x1="120" y1="208" x2="120" y2="193" stroke="#6B2D8E" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="120" cy="191" r="7" fill="#9B5DE5" opacity=".7"/>
+    <circle cx="113" cy="188" r="3" fill="#FF6EC7" opacity=".8"/>
+  </g>
+  <g><animateTransform attributeName="transform" type="rotate" values="2.5 510 208; -2 510 208; 2.5 510 208" dur="4.8s" begin="1.5s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <line x1="510" y1="208" x2="510" y2="148" stroke="#2A4A6E" stroke-width="7" stroke-linecap="round"/>
+    <path d="M510 162 C488 147 472 130 456 110" stroke="#2A4A6E" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M510 167 C532 150 548 132 562 112" stroke="#1E3A5E" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M458 108 L450 86 L456 65 L462 86 Z" fill="#1E5E8E" opacity=".9"/>
+    <path d="M510 118 L502 92 L510 70 L518 92 Z" fill="#2E6E9E" opacity=".9"/>
+    <path d="M562 110 L554 86 L560 66 L567 86 Z" fill="#3E8EBE" opacity=".88"/>
+    <circle cx="456" cy="65" r="5" fill="#7EDBFF" opacity=".9"><animate attributeName="opacity" values=".7;1;.7" dur="2.1s" repeatCount="indefinite"/></circle>
+    <circle cx="510" cy="70" r="8" fill="#4ECDC4" opacity=".9"><animate attributeName="opacity" values=".7;1;.7" dur="2.5s" repeatCount="indefinite"/></circle>
+    <circle cx="560" cy="66" r="5" fill="#7EDBFF" opacity=".85"><animate attributeName="opacity" values=".7;1;.7" dur="1.9s" repeatCount="indefinite"/></circle>
+  </g>
+  <g><animateTransform attributeName="transform" type="rotate" values="-4 480 208; 5 480 208; -4 480 208" dur="3.8s" begin="0.3s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <line x1="480" y1="208" x2="480" y2="195" stroke="#2A4A6E" stroke-width="3" stroke-linecap="round"/>
+    <path d="M480 195 L471 183 L480 188 L489 183 Z" fill="#2E6E9E" opacity=".8"/>
+    <circle cx="480" cy="183" r="3" fill="#4ECDC4" opacity=".9"/>
+  </g>
+  <path d="M185 208 Q242 175 300 188 Q358 201 415 208" stroke="#4ECDC4" stroke-width="2" fill="none" opacity=".4" stroke-dasharray="8 5"/>
+  <circle cx="242" cy="180" r="6" fill="#FFD84D"><animate attributeName="opacity" values=".7;1;.7" dur="2s" repeatCount="indefinite"/></circle>
+  <circle cx="300" cy="176" r="6" fill="#FF6EC7"><animate attributeName="opacity" values=".8;1;.8" dur="2.3s" repeatCount="indefinite"/></circle>
+  <circle cx="358" cy="182" r="6" fill="#7EDBFF"><animate attributeName="opacity" values=".75;1;.75" dur="1.8s" repeatCount="indefinite"/></circle>
+  <circle cx="158" cy="158" r="2" fill="#FFD84D"><animate attributeName="cy" values="158;138;158" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="3s" repeatCount="indefinite"/></circle>
+  <circle cx="440" cy="162" r="2" fill="#FF6EC7"><animate attributeName="cy" values="162;142;162" dur="3.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="3.5s" repeatCount="indefinite"/></circle>
+  <circle cx="200" cy="145" r="1.5" fill="#C09AFF"><animate attributeName="cy" values="145;125;145" dur="4.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="4.8s" repeatCount="indefinite"/></circle>
+</svg>`,
+
+  throne_a: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#1A0E30"/>
+  <path d="M0 300 L0 80 Q0 30 60 30 L540 30 Q600 30 600 80 L600 300 Z" fill="#22194A" opacity=".7"/>
+  <circle cx="130" cy="45" r="1" fill="white" opacity=".5"><animate attributeName="opacity" values=".5;.1;.5" dur="3.5s" repeatCount="indefinite"/></circle>
+  <circle cx="220" cy="35" r="1.2" fill="#D4C8FF" opacity=".6"><animate attributeName="opacity" values=".6;.1;.6" dur="2.8s" repeatCount="indefinite"/></circle>
+  <circle cx="380" cy="38" r="1" fill="white" opacity=".5"><animate attributeName="opacity" values=".5;.1;.5" dur="4.2s" repeatCount="indefinite"/></circle>
+  <circle cx="470" cy="44" r="1.1" fill="#D4C8FF" opacity=".55"><animate attributeName="opacity" values=".55;.1;.55" dur="3.1s" repeatCount="indefinite"/></circle>
+  <circle cx="310" cy="42" r="1" fill="white" opacity=".45"><animate attributeName="opacity" values=".45;.08;.45" dur="5.2s" repeatCount="indefinite"/></circle>
+  <rect x="0" y="196" width="268" height="14" rx="2" fill="#3A2868"/>
+  <rect x="0" y="184" width="248" height="12" rx="2" fill="#4A3878"/>
+  <rect x="0" y="172" width="228" height="12" rx="2" fill="#5A4888"/>
+  <rect x="0" y="162" width="200" height="10" rx="2" fill="#6A5898"/>
+  <path d="M0 162 H200" stroke="#9B5DE5" stroke-width="2" opacity=".6"/>
+  <path d="M0 172 H228" stroke="#9B5DE5" stroke-width="2" opacity=".6"/>
+  <path d="M0 184 H248" stroke="#9B5DE5" stroke-width="2.5" opacity=".7"/>
+  <ellipse cx="100" cy="163" rx="88" ry="5" fill="#9B5DE5" opacity=".08"/>
+  <path d="M228 172 L268 196 L268 210 L228 184 Z" fill="#3A2868"/>
+  <rect x="130" y="120" width="42" height="42" rx="4" fill="#6B4E97" stroke="#9B5DE5" stroke-width="2"/>
+  <path d="M148 120 L130 78 L172 78 L154 120 Z" fill="#7B5EA7" stroke="#9B5DE5" stroke-width="2"/>
+  <path d="M130 78 L134 66 L141 75 L151 63 L161 75 L168 66 L172 78 Z" fill="#FFD84D" opacity=".9"/>
+  <circle cx="151" cy="92" r="14" fill="#FFD84D" opacity=".9"><animate attributeName="opacity" values=".7;1;.7" dur="1.8s" repeatCount="indefinite"/></circle>
+  <circle cx="151" cy="92" r="24" fill="#FFD84D" opacity=".08"><animate attributeName="r" values="18;28;18" dur="1.8s" repeatCount="indefinite"/></circle>
+  <rect x="128" y="148" width="11" height="14" rx="3" fill="#7B5EA7"/>
+  <rect x="163" y="148" width="11" height="14" rx="3" fill="#7B5EA7"/>
+  <ellipse cx="151" cy="163" rx="52" ry="4" fill="#9B5DE5" opacity=".1"/>
+  <rect x="100" y="52" width="100" height="66" rx="4" fill="#2A1848" stroke="#9B5DE5" stroke-width="2"/>
+  <circle cx="150" cy="82" r="18" fill="none" stroke="#FFD84D" stroke-width="2.5" opacity=".7"/>
+  <path d="M142 82 L150 64 L158 82 L150 95 Z" fill="#FFD84D" opacity=".55"/>
+  <rect x="108" y="60" width="34" height="22" rx="2" fill="#3A2060" opacity=".8"/>
+  <rect x="158" y="60" width="34" height="22" rx="2" fill="#1E3060" opacity=".8"/>
+  <rect x="108" y="88" width="34" height="22" rx="2" fill="#1E3060" opacity=".8"/>
+  <rect x="158" y="88" width="34" height="22" rx="2" fill="#3A2060" opacity=".8"/>
+  <rect x="0" y="210" width="600" height="90" fill="#1E1540"/>
+  <path d="M0 210 H600" stroke="#9B5DE5" stroke-width="2" opacity=".4"/>
+  <rect x="442" y="80" width="22" height="130" rx="5" fill="#2E2058" stroke="#7B5EA7" stroke-width="2"/>
+  <rect x="434" y="76" width="38" height="12" rx="4" fill="#3A2868" stroke="#9B5DE5" stroke-width="1.5"/>
+  <rect x="434" y="208" width="38" height="8" rx="3" fill="#3A2868"/>
+  <rect x="442" y="112" width="22" height="4" rx="2" fill="#4A3878"/>
+  <rect x="442" y="144" width="22" height="4" rx="2" fill="#4A3878"/>
+  <rect x="442" y="176" width="22" height="4" rx="2" fill="#4A3878"/>
+  <path d="M453 74 Q446 58 452 44 Q455 37 453 28 Q463 42 460 52 Q467 40 462 28 Q471 44 465 58 Q463 68 453 74 Z" fill="#FF8C00" opacity=".85"/>
+  <path d="M453 74 Q449 60 453 48 Q456 42 453 36 Q461 48 457 58 Q453 68 453 74 Z" fill="#FFD84D" opacity=".8"/>
+  <circle cx="453" cy="48" r="20" fill="#FF8C00" opacity=".12"><animate attributeName="r" values="16;26;16" dur="1.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".12;.04;.12" dur="1.5s" repeatCount="indefinite"/></circle>
+  <rect x="506" y="100" width="18" height="110" rx="4" fill="#2A1E54" stroke="#7B5EA7" stroke-width="1.5"/>
+  <rect x="499" y="95" width="32" height="10" rx="3" fill="#3A2868" stroke="#9B5DE5" stroke-width="1"/>
+  <circle cx="515" cy="90" r="7" fill="#9B5DE5" opacity=".7"><animate attributeName="opacity" values=".5;.9;.5" dur="3.2s" repeatCount="indefinite"/></circle>
+  <circle cx="440" cy="168" r="2" fill="#FF8C00"><animate attributeName="cy" values="168;140;168" dur="3.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="3.5s" repeatCount="indefinite"/></circle>
+  <circle cx="456" cy="175" r="1.5" fill="#FFD84D"><animate attributeName="cy" values="175;148;175" dur="4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="4s" repeatCount="indefinite"/></circle>
+  <circle cx="466" cy="162" r="2" fill="#FF8C00"><animate attributeName="cy" values="162;134;162" dur="3.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".55;0;.55" dur="3.2s" repeatCount="indefinite"/></circle>
+  <circle cx="320" cy="155" r="2" fill="#9B5DE5"><animate attributeName="cy" values="155;130;155" dur="4.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="4.2s" repeatCount="indefinite"/></circle>
+  <circle cx="342" cy="168" r="1.5" fill="#C09AFF"><animate attributeName="cy" values="168;142;168" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="5s" repeatCount="indefinite"/></circle>
+</svg>`,
+
+  market_b: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#FEF0CC"/>
+  <circle cx="480" cy="38" r="30" fill="#FFD84D"/>
+  <circle cx="480" cy="38" r="22" fill="#FFE566" opacity=".55"/>
+  <g stroke="#FFBE00" stroke-linecap="round" stroke-width="2.5" opacity=".5">
+    <line x1="480" y1="2" x2="480" y2="11"/><line x1="504" y1="8" x2="498" y2="16"/>
+    <line x1="522" y1="22" x2="514" y2="28"/><line x1="528" y1="38" x2="519" y2="38"/>
+    <line x1="522" y1="54" x2="514" y2="48"/><line x1="456" y1="8" x2="462" y2="16"/>
+    <line x1="438" y1="22" x2="446" y2="28"/><line x1="432" y1="38" x2="441" y2="38"/>
+    <line x1="438" y1="54" x2="446" y2="48"/>
+  </g>
+  <ellipse cx="180" cy="42" rx="42" ry="16" fill="white" opacity=".5"/>
+  <ellipse cx="148" cy="34" rx="30" ry="14" fill="white" opacity=".4"/>
+  <ellipse cx="88" cy="48" rx="24" ry="12" fill="white" opacity=".35"/>
+  <rect x="0" y="210" width="600" height="90" fill="#D4A574"/>
+  <path d="M0 210 H600" stroke="#B8865A" stroke-width="3" opacity=".6"/>
+  <path d="M210 210 Q255 205 300 210 Q345 205 390 210" stroke="#C49050" stroke-width="1.5" fill="none" opacity=".35"/>
+  <g><animateTransform attributeName="transform" type="rotate" values="-1.5 60 208; 1.5 60 208; -1.5 60 208" dur="4.5s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <path d="M22 208 Q22 120 60 80 Q98 40 98 208" fill="none" stroke="#5A7A22" stroke-width="7" stroke-linecap="round"/>
+    <path d="M22 208 Q30 170 38 140 Q55 100 60 80" stroke="#3A6212" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M98 208 Q90 170 84 140 Q68 100 60 80" stroke="#3A6212" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M35 130 Q25 118 18 108" stroke="#5A7A22" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <path d="M88 125 Q99 113 106 104" stroke="#5A7A22" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <path d="M42 168 Q30 158 22 150" stroke="#6A8A32" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M80 164 Q92 154 100 146" stroke="#6A8A32" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="18" cy="106" r="10" fill="#FFD84D" opacity=".88"><animate attributeName="opacity" values=".7;1;.7" dur="2.1s" repeatCount="indefinite"/></circle>
+    <circle cx="108" cy="102" r="8" fill="#FF6EC7" opacity=".85"><animate attributeName="opacity" values=".65;.95;.65" dur="1.8s" repeatCount="indefinite"/></circle>
+    <circle cx="22" cy="148" r="9" fill="#9B5DE5" opacity=".8"><animate attributeName="opacity" values=".62;.92;.62" dur="2.5s" repeatCount="indefinite"/></circle>
+    <circle cx="100" cy="144" r="7" fill="#4ECDC4" opacity=".8"><animate attributeName="opacity" values=".6;.9;.6" dur="2.8s" repeatCount="indefinite"/></circle>
+    <path d="M38 78 Q60 62 80 78" fill="none" stroke="#5A7A22" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="28" cy="155" r="4" fill="#7EDBFF" opacity=".7"/>
+    <circle cx="94" cy="150" r="4" fill="#FFD84D" opacity=".7"/>
+    <ellipse cx="60" cy="78" rx="12" ry="8" fill="#5A7A22" opacity=".5"/>
+  </g>
+  <rect x="390" y="105" width="190" height="105" rx="6" fill="#C8A468"/>
+  <rect x="390" y="105" width="190" height="8" rx="3" fill="#A8844A"/>
+  <rect x="390" y="155" width="190" height="6" rx="2" fill="#A8844A" opacity=".6"/>
+  <rect x="390" y="186" width="190" height="6" rx="2" fill="#A8844A" opacity=".5"/>
+  <line x1="490" y1="105" x2="490" y2="210" stroke="#A8844A" stroke-width="3" opacity=".5"/>
+  <circle cx="420" cy="134" r="9" fill="#FF8FAB"/>
+  <circle cx="445" cy="130" r="7" fill="#7EDBFF"/>
+  <circle cx="468" cy="134" r="9" fill="#FFD84D"/>
+  <path d="M412 134 L420 120 L428 134 Z" fill="#FF6EC7" opacity=".6"/>
+  <rect x="500" y="122" width="22" height="28" rx="3" fill="#4ECDC4" opacity=".7"/>
+  <rect x="528" y="118" width="18" height="32" rx="3" fill="#9B5DE5" opacity=".7"/>
+  <rect x="552" y="124" width="20" height="26" rx="3" fill="#FFD84D" opacity=".7"/>
+  <circle cx="415" cy="170" r="8" fill="#FF8FAB" opacity=".8"/>
+  <circle cx="438" cy="170" r="6" fill="#7EDBFF" opacity=".8"/>
+  <circle cx="460" cy="170" r="8" fill="#C09AFF" opacity=".8"/>
+  <circle cx="480" cy="170" r="6" fill="#FFD84D" opacity=".8"/>
+  <circle cx="500" cy="170" r="7" fill="#FF6EC7" opacity=".8"/>
+  <rect x="508" y="164" width="16" height="12" rx="2" fill="#6BCB77" opacity=".75"/>
+  <rect x="530" y="162" width="18" height="14" rx="2" fill="#FFD84D" opacity=".75"/>
+  <rect x="554" y="165" width="14" height="11" rx="2" fill="#4ECDC4" opacity=".75"/>
+  <rect x="390" y="203" width="190" height="7" rx="2" fill="#A8844A"/>
+</svg>`,
+
+  cave_a: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#070710"/>
+  <path d="M0 0 L0 65 Q30 95 42 65 Q54 100 70 58 Q88 98 108 56 Q126 96 148 60 Q168 96 188 58 Q208 94 228 60 Q248 96 270 55 Q292 92 310 58 Q330 90 352 55 Q374 90 392 56 Q410 94 430 58 Q450 96 468 55 Q486 95 506 62 Q524 98 542 62 Q558 96 574 66 Q588 98 600 64 L600 0 Z" fill="#1A1530"/>
+  <line x1="42" y1="92" x2="42" y2="115" stroke="#9B5DE5" stroke-width="2" opacity=".4" stroke-linecap="round"/>
+  <line x1="108" y1="96" x2="108" y2="122" stroke="#C09AFF" stroke-width="1.8" opacity=".35" stroke-linecap="round"/>
+  <line x1="188" y1="90" x2="188" y2="118" stroke="#FF8FAB" stroke-width="2" opacity=".38" stroke-linecap="round"/>
+  <line x1="310" y1="88" x2="310" y2="115" stroke="#9B5DE5" stroke-width="2" opacity=".35" stroke-linecap="round"/>
+  <line x1="392" y1="90" x2="392" y2="118" stroke="#4ECDC4" stroke-width="2" opacity=".38" stroke-linecap="round"/>
+  <line x1="468" y1="92" x2="468" y2="120" stroke="#7EDBFF" stroke-width="2" opacity=".4" stroke-linecap="round"/>
+  <line x1="542" y1="88" x2="542" y2="116" stroke="#FFD84D" stroke-width="1.5" opacity=".3" stroke-linecap="round"/>
+  <rect x="0" y="210" width="600" height="90" fill="#0A0A18"/>
+  <path d="M0 210 C60 205 120 215 180 210 C250 205 340 215 420 210 C490 205 550 215 600 210" stroke="#4ECDC4" stroke-width="1.5" fill="none" opacity=".28"/>
+  <ellipse cx="300" cy="220" rx="80" ry="12" fill="#4ECDC4" opacity=".08"/>
+  <ellipse cx="300" cy="218" rx="60" ry="8" fill="#7EDBFF" opacity=".06"><animate attributeName="rx" values="56;70;56" dur="4s" repeatCount="indefinite"/></ellipse>
+  <g transform="translate(22,148)"><path d="M0 62 L-5 40 L0 28 L5 40 Z" fill="#B04EC5" opacity=".8"/><circle cx="0" cy="28" r="4" fill="#FF8FAB" opacity=".82"><animate attributeName="opacity" values=".65;1;.65" dur="2.4s" repeatCount="indefinite"/></circle></g>
+  <g transform="translate(42,148)"><path d="M0 62 L-8 35 L0 20 L8 35 Z" fill="#9B5DE5" opacity=".85"/><path d="M0 62 L-4 20 L4 20 Z" fill="#D4AAFF" opacity=".4"/><circle cx="0" cy="20" r="4.5" fill="#D4AAFF" opacity=".8"><animate attributeName="opacity" values=".62;1;.62" dur="1.9s" repeatCount="indefinite"/></circle></g>
+  <g transform="translate(62,148)"><path d="M0 62 L-6 42 L0 30 L6 42 Z" fill="#7B2DA5" opacity=".82"/><circle cx="0" cy="30" r="3.5" fill="#FF6EC7" opacity=".78"><animate attributeName="opacity" values=".6;.95;.6" dur="2.8s" repeatCount="indefinite"/></circle></g>
+  <g transform="translate(82,148)"><path d="M0 62 L-10 30 L0 12 L10 30 Z" fill="#9B3DB8" opacity=".88"/><path d="M0 62 L-5 12 L5 12 Z" fill="#C09AFF" opacity=".42"/><circle cx="0" cy="12" r="5" fill="#C09AFF" opacity=".85"><animate attributeName="opacity" values=".68;1;.68" dur="2.1s" repeatCount="indefinite"/></circle></g>
+  <g transform="translate(102,148)"><path d="M0 62 L-5 42 L0 30 L5 42 Z" fill="#6B2D8E" opacity=".75"/><circle cx="0" cy="30" r="3" fill="#B04EC5" opacity=".72"><animate attributeName="opacity" values=".55;.9;.55" dur="3.2s" repeatCount="indefinite"/></circle></g>
+  <g transform="translate(118,148)"><path d="M0 62 L-7 35 L0 22 L7 35 Z" fill="#B04EC5" opacity=".8"/><circle cx="0" cy="22" r="4" fill="#FF8FAB" opacity=".78"><animate attributeName="opacity" values=".62;.96;.62" dur="2.6s" repeatCount="indefinite"/></circle></g>
+  <ellipse cx="70" cy="212" rx="62" ry="7" fill="#9B5DE5" opacity=".1"/>
+  <g transform="translate(492,148)">
+    <path d="M0 62 L-7 14 L0 0 L7 14 Z" fill="#2A8A8A" opacity=".92"/>
+    <path d="M0 62 L-3 0 L3 0 Z" fill="#9BFFE8" opacity=".48"/>
+    <circle cx="0" cy="0" r="5" fill="#9BFFE8" opacity=".85"><animate attributeName="opacity" values=".65;1;.65" dur="2.2s" repeatCount="indefinite"/></circle>
+  </g>
+  <g transform="translate(515,148)">
+    <path d="M2 62 L-8 22 L2 4 L12 22 Z" fill="#3ABFBC" opacity=".9"/>
+    <path d="M2 62 L-3 4 L7 4 Z" fill="#9BFFE8" opacity=".45"/>
+    <circle cx="2" cy="4" r="6" fill="#9BFFE8" opacity=".88"><animate attributeName="opacity" values=".7;1;.7" dur="1.9s" repeatCount="indefinite"/></circle>
+  </g>
+  <g transform="translate(544,148)">
+    <path d="M0 62 L-9 18 L0 2 L9 18 Z" fill="#1E6A6A" opacity=".9"/>
+    <path d="M0 62 L-4 2 L4 2 Z" fill="#4ECDC4" opacity=".45"/>
+    <circle cx="0" cy="2" r="5" fill="#4ECDC4" opacity=".82"><animate attributeName="opacity" values=".64;.97;.64" dur="2.8s" repeatCount="indefinite"/></circle>
+  </g>
+  <ellipse cx="524" cy="212" rx="58" ry="7" fill="#4ECDC4" opacity=".1"/>
+  <circle cx="82" cy="140" r="2" fill="#C09AFF"><animate attributeName="cy" values="140;116;140" dur="4.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="4.5s" repeatCount="indefinite"/></circle>
+  <circle cx="42" cy="128" r="1.5" fill="#9B5DE5"><animate attributeName="cy" values="128;106;128" dur="3.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="3.8s" repeatCount="indefinite"/></circle>
+  <circle cx="510" cy="136" r="2" fill="#4ECDC4"><animate attributeName="cy" values="136;112;136" dur="4.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="4.2s" repeatCount="indefinite"/></circle>
+  <circle cx="550" cy="128" r="1.5" fill="#FFD84D"><animate attributeName="cy" values="128;104;128" dur="3.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".55;0;.55" dur="3.5s" repeatCount="indefinite"/></circle>
+</svg>`,
+
+  home_b: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#0D0B1E"/>
+  <path d="M0 300 L0 100 Q0 22 300 18 Q600 22 600 100 L600 300 Z" fill="#141030"/>
+  <path d="M35 300 L35 118 Q35 52 300 48 Q565 52 565 118 L565 300 Z" fill="#181840"/>
+  <circle cx="180" cy="36" r="1.2" fill="white" opacity=".5"><animate attributeName="opacity" values=".5;.1;.5" dur="3.5s" repeatCount="indefinite"/></circle>
+  <circle cx="300" cy="28" r="1" fill="#B0E8FF" opacity=".6"><animate attributeName="opacity" values=".6;.1;.6" dur="2.8s" repeatCount="indefinite"/></circle>
+  <circle cx="420" cy="40" r="1.2" fill="white" opacity=".5"><animate attributeName="opacity" values=".5;.1;.5" dur="4.2s" repeatCount="indefinite"/></circle>
+  <rect x="0" y="210" width="600" height="90" fill="#0D0A22"/>
+  <path d="M0 210 H600" stroke="#4ECDC4" stroke-width="2" opacity=".45"/>
+  <rect x="20" y="75" width="225" height="130" rx="8" fill="#1A1840" stroke="#4ECDC4" stroke-width="2"/>
+  <rect x="28" y="83" width="90" height="50" rx="4" fill="#0D1020" stroke="#4776e6" stroke-width="1.5"/>
+  <rect x="30" y="85" width="86" height="46" rx="3" fill="#0A1528"/>
+  <ellipse cx="73" cy="102" rx="22" ry="15" fill="#1A3050" opacity=".8"/>
+  <ellipse cx="73" cy="102" rx="14" ry="10" fill="#2A5080" opacity=".6"/>
+  <path d="M60 102 Q73 88 86 102" stroke="#4ECDC4" stroke-width="1.5" fill="none" opacity=".7"/>
+  <circle cx="73" cy="102" r="4" fill="#4ECDC4" opacity=".9"/>
+  <rect x="128" y="83" width="110" height="50" rx="4" fill="#0D1020" stroke="#9B5DE5" stroke-width="1.5"/>
+  <circle cx="148" cy="108" r="3" fill="#FF6EC7" opacity=".9"><animate attributeName="opacity" values=".7;1;.7" dur="1.5s" repeatCount="indefinite"/></circle>
+  <circle cx="162" cy="108" r="3" fill="#FFD84D" opacity=".9"><animate attributeName="opacity" values=".8;1;.8" dur="2.1s" repeatCount="indefinite"/></circle>
+  <circle cx="176" cy="108" r="3" fill="#4ECDC4" opacity=".9"><animate attributeName="opacity" values=".9;1;.9" dur="1.8s" repeatCount="indefinite"/></circle>
+  <circle cx="190" cy="108" r="3" fill="#FF8FAB" opacity=".9"><animate attributeName="opacity" values=".75;1;.75" dur="2.4s" repeatCount="indefinite"/></circle>
+  <rect x="146" y="120" width="14" height="5" rx="2" fill="#9B5DE5" opacity=".7"/>
+  <rect x="166" y="120" width="22" height="5" rx="2" fill="#4776e6" opacity=".7"/>
+  <rect x="194" y="120" width="16" height="5" rx="2" fill="#4ECDC4" opacity=".7"/>
+  <circle cx="220" cy="108" r="6" fill="#FF6EC7" opacity=".4" stroke="#FF6EC7" stroke-width="1.5"/>
+  <circle cx="220" cy="108" r="3" fill="#FF6EC7" opacity=".8"/>
+  <rect x="28" y="143" width="209" height="55" rx="4" fill="#141030"/>
+  <rect x="32" y="147" width="40" height="12" rx="2" fill="#1A2858" stroke="#4776e6" stroke-width="1"/>
+  <rect x="32" y="164" width="40" height="10" rx="2" fill="#1A2858" stroke="#4776e6" stroke-width="1"/>
+  <rect x="32" y="179" width="40" height="11" rx="2" fill="#1A2858" stroke="#4776e6" stroke-width="1"/>
+  <circle cx="82" cy="153" r="6" fill="#4776e6" opacity=".6" stroke="#4776e6" stroke-width="1"/>
+  <circle cx="82" cy="169" r="6" fill="#9B5DE5" opacity=".6" stroke="#9B5DE5" stroke-width="1"/>
+  <circle cx="82" cy="185" r="6" fill="#4ECDC4" opacity=".6" stroke="#4ECDC4" stroke-width="1"/>
+  <rect x="96" y="147" width="55" height="6" rx="2" fill="#4ECDC4" opacity=".5"/>
+  <rect x="96" y="158" width="38" height="6" rx="2" fill="#FFD84D" opacity=".5"/>
+  <rect x="96" y="169" width="65" height="6" rx="2" fill="#FF6EC7" opacity=".5"/>
+  <rect x="96" y="180" width="45" height="6" rx="2" fill="#9B5DE5" opacity=".5"/>
+  <circle cx="175" cy="160" r="14" fill="#1A1840" stroke="#9B5DE5" stroke-width="1.5"/>
+  <circle cx="175" cy="160" r="10" fill="#1A1840"/>
+  <circle cx="175" cy="160" r="6" fill="#9B5DE5" opacity=".4"/>
+  <path d="M168 160 L175 154 L182 160 L175 166 Z" fill="#9B5DE5" opacity=".7"/>
+  <circle cx="210" cy="155" r="5" fill="#FF8C00" opacity=".5" stroke="#FF8C00" stroke-width="1"/>
+  <circle cx="210" cy="169" r="5" fill="#4ECDC4" opacity=".5" stroke="#4ECDC4" stroke-width="1"/>
+  <circle cx="210" cy="183" r="5" fill="#FFD84D" opacity=".5" stroke="#FFD84D" stroke-width="1"/>
+  <circle cx="232" cy="155" r="4" fill="#1A1840" stroke="#9B5DE5" stroke-width="1.5"/>
+  <circle cx="232" cy="168" r="4" fill="#1A1840" stroke="#4ECDC4" stroke-width="1.5"/>
+  <circle cx="232" cy="181" r="4" fill="#1A1840" stroke="#FF6EC7" stroke-width="1.5"/>
+  <circle cx="480" cy="128" r="70" fill="#060615" stroke="#4ECDC4" stroke-width="5"/>
+  <circle cx="480" cy="128" r="64" fill="#0A0C28"/>
+  <ellipse cx="480" cy="128" rx="48" ry="36" fill="#12183A" opacity=".8"/>
+  <circle cx="455" cy="110" r="2" fill="white" opacity=".9"><animate attributeName="opacity" values=".9;.3;.9" dur="2.2s" repeatCount="indefinite"/></circle>
+  <circle cx="490" cy="104" r="1.5" fill="white" opacity=".8"><animate attributeName="opacity" values=".8;.2;.8" dur="3.1s" repeatCount="indefinite"/></circle>
+  <circle cx="508" cy="118" r="1.2" fill="#B0E8FF" opacity=".85"><animate attributeName="opacity" values=".85;.2;.85" dur="1.9s" repeatCount="indefinite"/></circle>
+  <circle cx="462" cy="138" r="1.5" fill="white" opacity=".7"><animate attributeName="opacity" values=".7;.15;.7" dur="2.7s" repeatCount="indefinite"/></circle>
+  <circle cx="502" cy="148" r="1" fill="#FFD4EE" opacity=".75"><animate attributeName="opacity" values=".75;.2;.75" dur="3.4s" repeatCount="indefinite"/></circle>
+  <circle cx="458" cy="125" r="1.2" fill="#C8FFD4" opacity=".7"><animate attributeName="opacity" values=".7;.15;.7" dur="2.6s" repeatCount="indefinite"/></circle>
+  <circle cx="500" cy="130" r="1" fill="white" opacity=".65"><animate attributeName="opacity" values=".65;.1;.65" dur="3.5s" repeatCount="indefinite"/></circle>
+  <circle cx="475" cy="150" r="1.3" fill="#B0E8FF" opacity=".72"><animate attributeName="opacity" values=".72;.18;.72" dur="2.3s" repeatCount="indefinite"/></circle>
+  <ellipse cx="462" cy="116" rx="12" ry="8" fill="#E8D5A3" opacity=".85"/>
+  <circle cx="498" cy="138" r="7" fill="#4ECDC4" opacity=".6"/>
+  <circle cx="496" cy="136" r="3" fill="#9BFFE8" opacity=".45"/>
+  <circle cx="414" cy="128" r="5.5" fill="#4ECDC4" opacity=".45"/>
+  <circle cx="546" cy="128" r="5.5" fill="#4ECDC4" opacity=".45"/>
+  <circle cx="480" cy="62" r="5.5" fill="#4ECDC4" opacity=".45"/>
+  <circle cx="480" cy="194" r="5.5" fill="#4ECDC4" opacity=".45"/>
+  <path d="M480 199 Q510 208 530 210" stroke="#4ECDC4" stroke-width="3" fill="none" opacity=".48" stroke-linecap="round"/>
+  <path d="M480 199 Q450 208 430 210" stroke="#9B5DE5" stroke-width="3" fill="none" opacity=".44" stroke-linecap="round"/>
+  <circle cx="480" cy="128" r="78" fill="#4ECDC4" opacity=".025"><animate attributeName="r" values="74;84;74" dur="3s" repeatCount="indefinite"/></circle>
+</svg>`,
+
+  meadow_b: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#0D1B3E"/>
+  <circle cx="28" cy="20" r="1.4" fill="white" opacity=".8"><animate attributeName="opacity" values=".8;.15;.8" dur="2.3s" repeatCount="indefinite"/></circle>
+  <circle cx="75" cy="14" r="1" fill="#FFE8C8" opacity=".7"><animate attributeName="opacity" values=".7;.1;.7" dur="3.8s" repeatCount="indefinite"/></circle>
+  <circle cx="142" cy="26" r="1.5" fill="white" opacity=".85"><animate attributeName="opacity" values=".85;.2;.85" dur="1.7s" repeatCount="indefinite"/></circle>
+  <circle cx="208" cy="16" r="1.2" fill="#B0E8FF" opacity=".75"><animate attributeName="opacity" values=".75;.1;.75" dur="4.4s" repeatCount="indefinite"/></circle>
+  <circle cx="270" cy="32" r="1" fill="white" opacity=".6"><animate attributeName="opacity" values=".6;.05;.6" dur="5.0s" repeatCount="indefinite"/></circle>
+  <circle cx="325" cy="18" r="1.3" fill="#FFD4EE" opacity=".78"><animate attributeName="opacity" values=".78;.2;.78" dur="2.6s" repeatCount="indefinite"/></circle>
+  <circle cx="382" cy="27" r="1" fill="white" opacity=".68"><animate attributeName="opacity" values=".68;.12;.68" dur="3.2s" repeatCount="indefinite"/></circle>
+  <circle cx="436" cy="14" r="1.5" fill="#C8FFD4" opacity=".78"><animate attributeName="opacity" values=".78;.18;.78" dur="2.1s" repeatCount="indefinite"/></circle>
+  <circle cx="492" cy="30" r="1" fill="white" opacity=".62"><animate attributeName="opacity" values=".62;.1;.62" dur="4.1s" repeatCount="indefinite"/></circle>
+  <circle cx="555" cy="20" r="1.2" fill="#B0E8FF" opacity=".72"><animate attributeName="opacity" values=".72;.14;.72" dur="3.5s" repeatCount="indefinite"/></circle>
+  <circle cx="115" cy="45" r="1" fill="#FFD4EE" opacity=".5"><animate attributeName="opacity" values=".5;.05;.5" dur="4.8s" repeatCount="indefinite"/></circle>
+  <circle cx="345" cy="43" r="1.1" fill="white" opacity=".58"><animate attributeName="opacity" values=".58;.1;.58" dur="2.9s" repeatCount="indefinite"/></circle>
+  <circle cx="515" cy="47" r="1" fill="#FFE8C8" opacity=".58"><animate attributeName="opacity" values=".58;.1;.58" dur="3.7s" repeatCount="indefinite"/></circle>
+  <circle cx="55" cy="48" r="1" fill="#C8FFD4" opacity=".48"><animate attributeName="opacity" values=".48;.05;.48" dur="6.0s" repeatCount="indefinite"/></circle>
+  <circle cx="172" cy="44" r="1.2" fill="white" opacity=".68"><animate attributeName="opacity" values=".68;.14;.68" dur="2.4s" repeatCount="indefinite"/></circle>
+  <circle cx="82" cy="26" r="11" fill="#E8D5A3"/>
+  <circle cx="104" cy="22" r="8" fill="#E8C870" opacity=".7"/>
+  <circle cx="82" cy="26" r="4" fill="#D4C090" opacity=".5"/>
+  <path d="M432 12 C450 22 480 8 510 18 C530 24 550 12 572 20" stroke="#FF6EC7" stroke-width="2" fill="none" opacity=".6"/>
+  <path d="M440 22 C460 12 488 26 516 14 C538 8 558 22 578 16" stroke="#4ECDC4" stroke-width="1.5" fill="none" opacity=".5"/>
+  <path d="M445 30 C462 22 490 34 520 24" stroke="#FFD84D" stroke-width="1.5" fill="none" opacity=".4"/>
+  <path d="M0 208 C90 193 195 213 300 200 C405 187 510 212 600 200 L600 300 L0 300 Z" fill="#1A3D2A"/>
+  <path d="M0 224 C85 210 168 228 255 215 C355 200 455 226 600 210 L600 300 L0 300 Z" fill="#12302A"/>
+  <g><animateTransform attributeName="transform" type="rotate" values="-2 80 208; 2.5 80 208; -2 80 208" dur="6s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <path d="M80 208 Q72 180 85 155 Q95 132 78 108 Q65 88 90 68 Q108 54 88 38" stroke="#3A2D5E" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <path d="M85 155 Q65 145 48 132" stroke="#3A2D5E" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M78 108 Q100 100 118 88" stroke="#4A3D6E" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M90 68 Q70 60 55 50" stroke="#3A2D5E" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M88 38 Q72 28 58 20" stroke="#4A3D6E" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M88 38 Q104 28 118 20" stroke="#3A2D5E" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <circle cx="45" cy="130" r="22" fill="#7B2D9E" opacity=".7"/>
+    <circle cx="120" cy="86" r="18" fill="#8B3DB8" opacity=".7"/>
+    <circle cx="52" cy="46" r="20" fill="#6B2D8E" opacity=".7"/>
+    <circle cx="58" cy="18" r="16" fill="#9B5DE5" opacity=".65"/>
+    <circle cx="120" cy="18" r="14" fill="#8B3DB8" opacity=".6"/>
+    <circle cx="38" cy="118" r="5" fill="#FF6EC7" opacity=".9"><animate attributeName="opacity" values=".7;1;.7" dur="1.8s" repeatCount="indefinite"/></circle>
+    <circle cx="58" cy="135" r="5" fill="#FFD84D" opacity=".9"><animate attributeName="opacity" values=".8;1;.8" dur="2.2s" repeatCount="indefinite"/></circle>
+    <circle cx="112" cy="80" r="4" fill="#7EDBFF" opacity=".9"><animate attributeName="opacity" values=".9;1;.9" dur="1.6s" repeatCount="indefinite"/></circle>
+    <circle cx="50" cy="40" r="5" fill="#FF6EC7" opacity=".85"><animate attributeName="opacity" values=".68;.98;.68" dur="2.5s" repeatCount="indefinite"/></circle>
+    <circle cx="115" cy="14" r="4" fill="#7EDBFF" opacity=".8"><animate attributeName="opacity" values=".62;.95;.62" dur="2.0s" repeatCount="indefinite"/></circle>
+  </g>
+  <g><animateTransform attributeName="transform" type="rotate" values="2.5 520 208; -2 520 208; 2.5 520 208" dur="4.5s" begin="1s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <line x1="520" y1="208" x2="520" y2="155" stroke="#2A5A2A" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="520" cy="120" r="52" fill="#1A5E1A"/>
+    <circle cx="520" cy="118" r="44" fill="#2A7A2A"/>
+    <circle cx="520" cy="116" r="34" fill="#3A8A3A"/>
+    <circle cx="520" cy="114" r="22" fill="#4A9A4A"/>
+    <circle cx="520" cy="113" r="12" fill="#5AAA5A"/>
+    <circle cx="498" cy="130" r="6" fill="#7EDBFF" opacity=".8"><animate attributeName="opacity" values=".65;.95;.65" dur="2s" repeatCount="indefinite"/></circle>
+    <circle cx="542" cy="125" r="5" fill="#FFD84D" opacity=".8"><animate attributeName="opacity" values=".65;.95;.65" dur="2.3s" repeatCount="indefinite"/></circle>
+    <circle cx="520" cy="150" r="5" fill="#FF6EC7" opacity=".7"><animate attributeName="opacity" values=".55;.88;.55" dur="1.9s" repeatCount="indefinite"/></circle>
+    <ellipse cx="520" cy="160" rx="28" ry="7" fill="#2A5A2A" opacity=".4"/>
+  </g>
+  <g><animateTransform attributeName="transform" type="rotate" values="-5 118 208; 4 118 208; -5 118 208" dur="3.2s" begin="0.5s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <line x1="118" y1="208" x2="118" y2="193" stroke="#3A2D5E" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="118" cy="191" r="7" fill="#9B5DE5" opacity=".7"/>
+    <circle cx="112" cy="188" r="3" fill="#FF6EC7" opacity=".8"/>
+  </g>
+  <g><animateTransform attributeName="transform" type="rotate" values="-4 478 208; 5 478 208; -4 478 208" dur="3.8s" begin="0.8s" repeatCount="indefinite" calcMode="spline" keySplines="0.45 0 0.55 1;0.45 0 0.55 1"/>
+    <line x1="478" y1="208" x2="478" y2="196" stroke="#2A4A2A" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="478" cy="193" r="8" fill="#3A8A3A" opacity=".7"/>
+    <circle cx="484" cy="191" r="3" fill="#7EDBFF" opacity=".8"/>
+  </g>
+  <circle cx="158" cy="155" r="2" fill="#FFD84D"><animate attributeName="cy" values="155;135;155" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="3s" repeatCount="indefinite"/></circle>
+  <circle cx="350" cy="148" r="2" fill="#4ECDC4"><animate attributeName="cy" values="148;128;148" dur="4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".7;0;.7" dur="4s" repeatCount="indefinite"/></circle>
+  <circle cx="440" cy="162" r="2" fill="#FF6EC7"><animate attributeName="cy" values="162;142;162" dur="3.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="3.5s" repeatCount="indefinite"/></circle>
+  <circle cx="205" cy="145" r="1.5" fill="#C09AFF"><animate attributeName="cy" values="145;125;145" dur="4.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="4.8s" repeatCount="indefinite"/></circle>
+</svg>`,
+
+  grotto_a: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#080818"/>
+  <path d="M0 0 L0 65 Q28 90 40 65 Q52 98 68 56 Q85 97 106 55 Q125 96 145 58 Q164 97 182 56 Q200 95 220 58 Q240 96 260 54 Q278 92 298 56 Q318 90 338 52 Q360 90 380 55 Q398 93 418 57 Q438 96 456 54 Q474 94 495 60 Q515 97 534 60 Q552 95 568 65 Q586 98 600 64 L600 0 Z" fill="#1A1530"/>
+  <line x1="42" y1="90" x2="42" y2="112" stroke="#9B5DE5" stroke-width="2" opacity=".38" stroke-linecap="round"/>
+  <line x1="108" y1="96" x2="108" y2="120" stroke="#C09AFF" stroke-width="1.8" opacity=".32" stroke-linecap="round"/>
+  <line x1="298" y1="86" x2="298" y2="112" stroke="#7EDBFF" stroke-width="2" opacity=".35" stroke-linecap="round"/>
+  <line x1="456" y1="92" x2="456" y2="118" stroke="#4ECDC4" stroke-width="1.8" opacity=".35" stroke-linecap="round"/>
+  <line x1="534" y1="88" x2="534" y2="115" stroke="#FFD84D" stroke-width="1.5" opacity=".28" stroke-linecap="round"/>
+  <rect x="0" y="210" width="600" height="90" fill="#060618"/>
+  <path d="M0 210 H600" stroke="#4ECDC4" stroke-width="1.5" opacity=".3"/>
+  <ellipse cx="300" cy="216" rx="220" ry="14" fill="#4ECDC4" opacity=".06"/>
+  <ellipse cx="300" cy="214" rx="180" ry="10" fill="#7EDBFF" opacity=".05"><animate attributeName="rx" values="175;200;175" dur="4s" repeatCount="indefinite"/></ellipse>
+  <rect x="0" y="80" width="28" height="130" fill="#1A1538"/>
+  <path d="M12 108 Q18 90 12 72" stroke="#8B2DC8" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"/>
+  <path d="M20 112 Q28 94 22 76" stroke="#9B3DD8" stroke-width="3.5" fill="none" stroke-linecap="round" opacity=".75"/>
+  <path d="M5 116 Q14 98 8 80" stroke="#7B1DB8" stroke-width="4" fill="none" stroke-linecap="round" opacity=".7"/>
+  <path d="M12 108 Q18 120 14 140 Q10 160 8 180 Q6 196 8 210" stroke="#9B5DE5" stroke-width="4" fill="none" stroke-linecap="round" opacity=".6"/>
+  <path d="M20 112 Q24 125 22 148 Q20 168 18 188 Q16 200 18 210" stroke="#8B3DC8" stroke-width="3" fill="none" stroke-linecap="round" opacity=".55"/>
+  <path d="M5 116 Q8 130 6 152 Q4 172 5 192 Q4 202 4 210" stroke="#7B2DB8" stroke-width="3.5" fill="none" stroke-linecap="round" opacity=".5"/>
+  <ellipse cx="14" cy="212" rx="22" ry="5" fill="#9B5DE5" opacity=".2"/>
+  <circle cx="10" cy="125" r="3" fill="#C09AFF" opacity=".6"/>
+  <circle cx="22" cy="138" r="2.5" fill="#FF8FAB" opacity=".55"/>
+  <circle cx="6" cy="148" r="2" fill="#9B5DE5" opacity=".5"/>
+  <circle cx="18" cy="165" r="3" fill="#C09AFF" opacity=".6"/>
+  <circle cx="8" cy="178" r="2" fill="#FF6EC7" opacity=".5"/>
+  <circle cx="20" cy="192" r="2.5" fill="#9B5DE5" opacity=".55"/>
+  <g transform="translate(540,148)">
+    <path d="M0 62 L-6 25 L0 10 L6 25 Z" fill="#2A8A8A" opacity=".88"/>
+    <circle cx="0" cy="10" r="5" fill="#9BFFE8" opacity=".85"><animate attributeName="opacity" values=".65;1;.65" dur="2.2s" repeatCount="indefinite"/></circle>
+  </g>
+  <g transform="translate(558,148)">
+    <path d="M0 62 L-9 20 L0 5 L9 20 Z" fill="#3ABFBC" opacity=".9"/>
+    <path d="M0 62 L-4 5 L4 5 Z" fill="#9BFFE8" opacity=".42"/>
+    <circle cx="0" cy="5" r="6" fill="#4ECDC4" opacity=".88"><animate attributeName="opacity" values=".7;1;.7" dur="1.8s" repeatCount="indefinite"/></circle>
+  </g>
+  <g transform="translate(572,148)">
+    <path d="M0 62 L-6 35 L0 22 L6 35 Z" fill="#2A8A8A" opacity=".82"/>
+    <circle cx="0" cy="22" r="4" fill="#9BFFE8" opacity=".78"><animate attributeName="opacity" values=".6;.95;.6" dur="2.6s" repeatCount="indefinite"/></circle>
+  </g>
+  <g transform="translate(584,148)">
+    <path d="M2 62 L-5 30 L2 16 L9 30 Z" fill="#1E6A6A" opacity=".85"/>
+    <circle cx="2" cy="16" r="5" fill="#7EDBFF" opacity=".82"><animate attributeName="opacity" values=".64;.97;.64" dur="2.0s" repeatCount="indefinite"/></circle>
+  </g>
+  <ellipse cx="576" cy="212" rx="32" ry="6" fill="#4ECDC4" opacity=".1"/>
+  <path d="M294 210 L286 170 L294 150 L302 170 Z" fill="#9B5DE5" opacity=".48"/>
+  <path d="M308 210 L302 175 L309 157 L316 175 Z" fill="#4ECDC4" opacity=".46"/>
+  <circle cx="80" cy="155" r="1.8" fill="#C09AFF"><animate attributeName="cy" values="155;130;155" dur="4.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".55;0;.55" dur="4.2s" repeatCount="indefinite"/></circle>
+  <circle cx="120" cy="145" r="1.5" fill="#FF6EC7"><animate attributeName="cy" values="145;120;145" dur="3.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="3.8s" repeatCount="indefinite"/></circle>
+  <circle cx="510" cy="140" r="1.8" fill="#4ECDC4"><animate attributeName="cy" values="140;115;140" dur="4.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".55;0;.55" dur="4.5s" repeatCount="indefinite"/></circle>
+  <circle cx="480" cy="155" r="1.5" fill="#FFD84D"><animate attributeName="cy" values="155;130;155" dur="3.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="3.5s" repeatCount="indefinite"/></circle>
+  <circle cx="280" cy="148" r="1.5" fill="#7EDBFF"><animate attributeName="cy" values="148;124;148" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".48;0;.48" dur="5s" repeatCount="indefinite"/></circle>
+</svg>`,
+
+  hall_a: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#1A0E30"/>
+  <path d="M0 300 L0 80 Q0 28 60 28 L540 28 Q600 28 600 80 L600 300 Z" fill="#22194A" opacity=".7"/>
+  <circle cx="90" cy="45" r="1" fill="white" opacity=".5"><animate attributeName="opacity" values=".5;.1;.5" dur="3.5s" repeatCount="indefinite"/></circle>
+  <circle cx="200" cy="35" r="1.2" fill="#D4C8FF" opacity=".6"><animate attributeName="opacity" values=".6;.1;.6" dur="2.8s" repeatCount="indefinite"/></circle>
+  <circle cx="360" cy="40" r="1" fill="white" opacity=".5"><animate attributeName="opacity" values=".5;.1;.5" dur="4.2s" repeatCount="indefinite"/></circle>
+  <circle cx="480" cy="44" r="1.1" fill="#D4C8FF" opacity=".55"><animate attributeName="opacity" values=".55;.1;.55" dur="3.1s" repeatCount="indefinite"/></circle>
+  <circle cx="290" cy="42" r="1" fill="white" opacity=".45"><animate attributeName="opacity" values=".45;.08;.45" dur="5.2s" repeatCount="indefinite"/></circle>
+  <rect x="30" y="60" width="20" height="150" rx="5" fill="#2E2058" stroke="#9B5DE5" stroke-width="1.5"/>
+  <rect x="22" y="56" width="36" height="12" rx="4" fill="#3A2868" stroke="#9B5DE5" stroke-width="1"/>
+  <rect x="22" y="208" width="36" height="10" rx="4" fill="#3A2868"/>
+  <ellipse cx="40" cy="56" rx="14" ry="6" fill="#9B5DE5" opacity=".3"/>
+  <rect x="110" y="60" width="20" height="150" rx="5" fill="#2E2058" stroke="#9B5DE5" stroke-width="1.5"/>
+  <rect x="102" y="56" width="36" height="12" rx="4" fill="#3A2868" stroke="#9B5DE5" stroke-width="1"/>
+  <rect x="102" y="208" width="36" height="10" rx="4" fill="#3A2868"/>
+  <ellipse cx="120" cy="56" rx="14" ry="6" fill="#9B5DE5" opacity=".3"/>
+  <rect x="190" y="60" width="20" height="150" rx="5" fill="#2E2058" stroke="#9B5DE5" stroke-width="1.5"/>
+  <rect x="182" y="56" width="36" height="12" rx="4" fill="#3A2868" stroke="#9B5DE5" stroke-width="1"/>
+  <rect x="182" y="208" width="36" height="10" rx="4" fill="#3A2868"/>
+  <ellipse cx="200" cy="56" rx="14" ry="6" fill="#9B5DE5" opacity=".3"/>
+  <rect x="55" y="78" width="50" height="120" rx="2" fill="#8B1DC8" opacity=".12"/>
+  <path d="M55 78 L80 66 L105 78" fill="#8B1DC8" opacity=".2"/>
+  <path d="M60 92 H100" stroke="#FFD84D" stroke-width="1" opacity=".4"/>
+  <path d="M60 110 H100" stroke="#FFD84D" stroke-width="1" opacity=".35"/>
+  <path d="M75 80 L75 192" stroke="#9B5DE5" stroke-width="1" opacity=".25"/>
+  <path d="M95 80 L95 192" stroke="#9B5DE5" stroke-width="1" opacity=".25"/>
+  <circle cx="80" cy="80" r="4" fill="#FFD84D" opacity=".6"/>
+  <rect x="135" y="72" width="50" height="128" rx="2" fill="#4776e6" opacity=".1"/>
+  <path d="M135 72 L160 60 L185 72" fill="#4776e6" opacity=".18"/>
+  <path d="M140 86 H182" stroke="#4ECDC4" stroke-width="1" opacity=".38"/>
+  <path d="M155 74 L155 196" stroke="#4ECDC4" stroke-width="1" opacity=".22"/>
+  <path d="M175 74 L175 196" stroke="#4ECDC4" stroke-width="1" opacity=".22"/>
+  <circle cx="160" cy="72" r="4" fill="#4ECDC4" opacity=".55"/>
+  <rect x="0" y="210" width="600" height="90" fill="#1E1540"/>
+  <path d="M0 210 H600" stroke="#9B5DE5" stroke-width="2" opacity=".4"/>
+  <rect x="370" y="185" width="200" height="25" rx="3" fill="#3A2868"/>
+  <rect x="385" y="168" width="170" height="17" rx="3" fill="#4A3878"/>
+  <rect x="400" y="152" width="140" height="16" rx="3" fill="#5A4888"/>
+  <path d="M385 168 H555" stroke="#9B5DE5" stroke-width="1.5" opacity=".5"/>
+  <path d="M400 152 H540" stroke="#9B5DE5" stroke-width="1.5" opacity=".5"/>
+  <rect x="430" y="108" width="80" height="44" rx="5" fill="#6B4E97" stroke="#9B5DE5" stroke-width="2"/>
+  <path d="M448 108 L430 68 L510 68 L492 108 Z" fill="#7B5EA7" stroke="#9B5DE5" stroke-width="2"/>
+  <path d="M430 68 L436 55 L444 65 L455 52 L466 65 L477 52 L488 65 L497 55 L503 65 L510 68 Z" fill="#FFD84D" opacity=".88"/>
+  <circle cx="470" cy="86" r="18" fill="#FFD84D" opacity=".85"><animate attributeName="opacity" values=".65;1;.65" dur="1.8s" repeatCount="indefinite"/></circle>
+  <circle cx="470" cy="86" r="28" fill="#FFD84D" opacity=".08"><animate attributeName="r" values="22;32;22" dur="1.8s" repeatCount="indefinite"/></circle>
+  <rect x="428" y="148" width="12" height="16" rx="3" fill="#7B5EA7"/>
+  <rect x="500" y="148" width="12" height="16" rx="3" fill="#7B5EA7"/>
+  <ellipse cx="470" cy="154" rx="58" ry="5" fill="#9B5DE5" opacity=".12"/>
+  <circle cx="310" cy="155" r="2" fill="#9B5DE5"><animate attributeName="cy" values="155;130;155" dur="4.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="4.2s" repeatCount="indefinite"/></circle>
+  <circle cx="330" cy="168" r="1.5" fill="#C09AFF"><animate attributeName="cy" values="168;142;168" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="5s" repeatCount="indefinite"/></circle>
+  <circle cx="348" cy="140" r="1.5" fill="#FFD84D"><animate attributeName="cy" values="140;115;140" dur="3.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="3.8s" repeatCount="indefinite"/></circle>
+</svg>`,
+
+  market_c: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#FFF8E8"/>
+  <rect x="300" y="0" width="300" height="300" fill="#FFE4AA" opacity=".3"/>
+  <rect x="450" y="0" width="150" height="300" fill="#FFD080" opacity=".2"/>
+  <circle cx="540" cy="42" r="28" fill="#FFD84D"/>
+  <circle cx="540" cy="42" r="20" fill="#FFE566" opacity=".6"/>
+  <g stroke="#FFBE00" stroke-linecap="round" stroke-width="2.5" opacity=".5">
+    <line x1="540" y1="7"  x2="540" y2="16"/><line x1="563" y1="13" x2="557" y2="21"/>
+    <line x1="581" y1="27" x2="573" y2="33"/><line x1="587" y1="42" x2="578" y2="42"/>
+    <line x1="517" y1="7"  x2="523" y2="16"/><line x1="499" y1="13" x2="505" y2="21"/>
+    <line x1="581" y1="57" x2="573" y2="51"/><line x1="499" y1="57" x2="505" y2="51"/>
+  </g>
+  <circle cx="540" cy="42" r="36" fill="#FFD84D" opacity=".07"><animate attributeName="r" values="32;44;32" dur="2.8s" repeatCount="indefinite"/></circle>
+  <ellipse cx="95"  cy="32" rx="52" ry="18" fill="white" opacity=".62"/>
+  <ellipse cx="60"  cy="24" rx="36" ry="15" fill="white" opacity=".52"/>
+  <ellipse cx="152" cy="38" rx="28" ry="13" fill="white" opacity=".42"/>
+  <ellipse cx="38"  cy="44" rx="20" ry="10" fill="white" opacity=".35"/>
+  <rect x="0" y="210" width="600" height="90" fill="#D4A574"/>
+  <path d="M0 210 H600" stroke="#B8865A" stroke-width="3" opacity=".6"/>
+  <path d="M0 222 Q50 216 100 223 Q160 217 220 224 Q280 218 340 223" stroke="#C49050" stroke-width="1.5" fill="none" opacity=".4"/>
+  <path d="M380 224 Q430 218 480 225 Q530 220 600 222" stroke="#C8A050" stroke-width="1.2" fill="none" opacity=".35"/>
+  <rect x="5" y="148" width="242" height="62" rx="8" fill="#C87842"/>
+  <rect x="11" y="154" width="230" height="50" rx="6" fill="#D88848"/>
+  <path d="M0 148 Q30 100 120 110 Q200 118 252 148 Z" fill="#A05020"/>
+  <path d="M0 148 Q30 108 120 118 Q200 126 252 148" fill="#C06028" opacity=".45"/>
+  <line x1="4"  y1="144" x2="0"  y2="158" stroke="#804018" stroke-width="2"/>
+  <line x1="18" y1="136" x2="15" y2="150" stroke="#804018" stroke-width="2"/>
+  <line x1="34" y1="128" x2="32" y2="142" stroke="#804018" stroke-width="2"/>
+  <line x1="52" y1="122" x2="51" y2="136" stroke="#804018" stroke-width="2"/>
+  <line x1="70" y1="118" x2="70" y2="132" stroke="#804018" stroke-width="2"/>
+  <circle cx="25"  cy="110" r="10" fill="#FF6B6B"/><circle cx="25"  cy="110" r="5" fill="#FF3030"/>
+  <circle cx="50"  cy="106" r="13" fill="#FFD84D"/><circle cx="50"  cy="106" r="7" fill="#F4C300"/>
+  <circle cx="80"  cy="102" r="11" fill="#6BCB77"/><circle cx="80"  cy="102" r="6" fill="#3A9F4E"/>
+  <circle cx="110" cy="100" r="12" fill="#FF8FAB"/><circle cx="110" cy="100" r="6" fill="#E63980"/>
+  <circle cx="142" cy="102" r="10" fill="#4ECDC4"/><circle cx="142" cy="102" r="5" fill="#2ABFBD"/>
+  <circle cx="172" cy="106" r="9"  fill="#C09AFF"/><circle cx="172" cy="106" r="4.5" fill="#9B5DE5"/>
+  <circle cx="198" cy="110" r="8"  fill="#FFD84D"/><circle cx="198" cy="110" r="4" fill="#F4C300"/>
+  <rect x="11" y="172" width="230" height="10" rx="3" fill="#A05020" opacity=".7"/>
+  <circle cx="32"  cy="177" r="7" fill="#FF6B6B"/><circle cx="52"  cy="175" r="6" fill="#FFD84D"/>
+  <circle cx="72"  cy="177" r="8" fill="#6BCB77"/><circle cx="92"  cy="175" r="5" fill="#FF8FAB"/>
+  <circle cx="110" cy="177" r="7" fill="#4ECDC4"/><circle cx="128" cy="175" r="6" fill="#FFD84D"/>
+  <circle cx="146" cy="177" r="5" fill="#C09AFF"/><circle cx="164" cy="175" r="7" fill="#FF6B6B"/>
+  <circle cx="182" cy="177" r="6" fill="#7EDBFF"/><circle cx="200" cy="175" r="5" fill="#FFD84D"/>
+  <circle cx="218" cy="177" r="6" fill="#FF8FAB"/><circle cx="232" cy="175" r="5" fill="#6BCB77"/>
+  <circle cx="14"  cy="213" r="6" fill="#FFD84D" opacity=".75"/>
+  <circle cx="32"  cy="212" r="5" fill="#FF8FAB" opacity=".7"/>
+  <circle cx="50"  cy="213" r="7" fill="#6BCB77" opacity=".7"/>
+  <circle cx="68"  cy="212" r="5" fill="#FFD84D" opacity=".65"/>
+  <circle cx="85"  cy="213" r="6" fill="#FF6B6B" opacity=".68"/>
+  <circle cx="102" cy="212" r="4" fill="#4ECDC4" opacity=".6"/>
+  <rect x="478" y="50" width="106" height="160" rx="4" fill="#4A6080"/>
+  <rect x="484" y="56" width="94" height="148" rx="3" fill="#5A7898"/>
+  <rect x="472" y="43" width="118" height="12" rx="2" fill="#3A5070"/>
+  <rect x="476" y="32" width="18" height="14" rx="1" fill="#3A5070"/>
+  <rect x="504" y="26" width="18" height="20" rx="1" fill="#3A5070"/>
+  <rect x="532" y="26" width="18" height="20" rx="1" fill="#3A5070"/>
+  <rect x="560" y="32" width="18" height="14" rx="1" fill="#3A5070"/>
+  <line x1="580" y1="10" x2="580" y2="43" stroke="#3A5070" stroke-width="2.5"/>
+  <path d="M580 10 L598 18 L580 28 Z" fill="#FF6EC7" opacity=".9"/>
+  <rect x="484" y="90"  width="94" height="3" fill="#3A5070" opacity=".7"/>
+  <rect x="484" y="120" width="94" height="3" fill="#3A5070" opacity=".7"/>
+  <rect x="484" y="152" width="94" height="3" fill="#3A5070" opacity=".7"/>
+  <rect x="484" y="183" width="94" height="3" fill="#3A5070" opacity=".7"/>
+  <path d="M490 87 L499 72 L508 87 Z" fill="#FF6EC7"/>
+  <path d="M514 87 L524 70 L534 87 Z" fill="#FFD84D"/>
+  <path d="M540 87 L549 74 L558 87 Z" fill="#4ECDC4"/>
+  <path d="M562 87 L570 74 L578 87 Z" fill="#9B5DE5"/>
+  <rect x="488" y="100" width="22" height="18" rx="2" fill="#4ECDC4" opacity=".88"/>
+  <rect x="516" y="96"  width="26" height="22" rx="2" fill="#FF6EC7" opacity=".88"/>
+  <rect x="548" y="100" width="22" height="18" rx="2" fill="#FFD84D" opacity=".88"/>
+  <path d="M490 150 L500 138 L510 150 Z" fill="#FF6EC7"/>
+  <rect x="516" y="139" width="16" height="11" rx="1" fill="#4ECDC4"/>
+  <path d="M538 150 L548 138 L558 150 Z" fill="#FFD84D"/>
+  <rect x="562" y="141" width="14" height="9" rx="1" fill="#C09AFF"/>
+  <ellipse cx="498" cy="178" rx="10" ry="4" fill="#7EDBFF" opacity=".8"/>
+  <rect x="488" y="162" width="20" height="16" rx="4" fill="#7EDBFF" opacity=".7"/>
+  <ellipse cx="524" cy="178" rx="10" ry="4" fill="#FF8FAB" opacity=".8"/>
+  <rect x="514" y="162" width="20" height="16" rx="4" fill="#FF8FAB" opacity=".7"/>
+  <ellipse cx="550" cy="178" rx="10" ry="4" fill="#6BCB77" opacity=".8"/>
+  <rect x="540" y="162" width="20" height="16" rx="4" fill="#6BCB77" opacity=".7"/>
+  <rect x="497" y="190" width="48" height="18" rx="3" fill="#1A2A3A" stroke="#4ECDC4" stroke-width="2"/>
+  <line x1="521" y1="190" x2="521" y2="208" stroke="#4ECDC4" stroke-width="1.2" opacity=".6"/>
+  <circle cx="510" cy="199" r="4" fill="#4ECDC4" opacity=".45"/>
+  <circle cx="532" cy="199" r="4" fill="#7EDBFF" opacity=".45"/>
+  <rect x="504" y="198" width="34" height="12" rx="2" fill="#142030"/>
+  <circle cx="535" cy="204" r="1.8" fill="#4ECDC4" opacity=".8"/>
+  <rect x="456" y="88" width="24" height="18" rx="3" fill="#3A5070" stroke="#4ECDC4" stroke-width="1.5"/>
+  <circle cx="468" cy="97" r="5" fill="#FFD84D" opacity=".7"/>
+  <line x1="468" y1="82" x2="468" y2="88" stroke="#3A5070" stroke-width="2"/>
+  <circle cx="310" cy="212" r="4"  fill="#FFD84D" opacity=".6"/>
+  <circle cx="328" cy="211" r="3"  fill="#FF6EC7" opacity=".55"/>
+  <circle cx="344" cy="212" r="3.5" fill="#7EDBFF" opacity=".55"/>
+</svg>`,
+
+  cave_b: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" style="width:100%;display:block">
+  <rect width="600" height="300" fill="#050510"/>
+  <path d="M0 0 L0 68 Q22 100 35 68 Q48 105 65 60 Q82 105 100 58 Q120 106 142 62 Q162 106 180 60 Q200 104 220 58 Q242 105 264 56 Q284 100 306 58 Q328 100 348 52 Q368 100 388 56 Q408 104 428 58 Q448 105 466 52 Q484 104 506 62 Q526 106 545 62 Q562 105 578 68 Q594 106 600 66 L600 0 Z" fill="#140E28"/>
+  <line x1="38" y1="100" x2="38" y2="125" stroke="#9B5DE5" stroke-width="2.5" opacity=".5" stroke-linecap="round"/>
+  <line x1="100" y1="106" x2="100" y2="132" stroke="#C09AFF" stroke-width="2" opacity=".45" stroke-linecap="round"/>
+  <line x1="142" y1="102" x2="142" y2="128" stroke="#7B2DA5" stroke-width="2.5" opacity=".48" stroke-linecap="round"/>
+  <line x1="306" y1="96" x2="306" y2="122" stroke="#9B5DE5" stroke-width="2" opacity=".42" stroke-linecap="round"/>
+  <line x1="388" y1="100" x2="388" y2="128" stroke="#4ECDC4" stroke-width="2.5" opacity=".45" stroke-linecap="round"/>
+  <line x1="466" y1="96" x2="466" y2="122" stroke="#7EDBFF" stroke-width="2" opacity=".42" stroke-linecap="round"/>
+  <line x1="545" y1="100" x2="545" y2="128" stroke="#FFD84D" stroke-width="2" opacity=".38" stroke-linecap="round"/>
+  <rect x="0" y="210" width="600" height="90" fill="#060618"/>
+  <path d="M0 210 H600" stroke="#4ECDC4" stroke-width="1.5" opacity=".28"/>
+  <ellipse cx="300" cy="218" rx="240" ry="12" fill="#4ECDC4" opacity=".05"/>
+  <g transform="translate(28,192)">
+    <path d="M0 18 L-4 8 L0 2 L4 8 Z" fill="#6B2D8E" opacity=".75"/>
+    <circle cx="0" cy="2" r="2.5" fill="#C09AFF" opacity=".65"><animate attributeName="opacity" values=".5;.85;.5" dur="2.8s" repeatCount="indefinite"/></circle>
+  </g>
+  <g transform="translate(45,190)">
+    <path d="M0 20 L-5 9 L0 1 L5 9 Z" fill="#9B5DE5" opacity=".8"/>
+    <path d="M0 20 L-2 1 L2 1 Z" fill="#D4AAFF" opacity=".35"/>
+    <circle cx="0" cy="1" r="3" fill="#D4AAFF" opacity=".72"><animate attributeName="opacity" values=".55;.9;.55" dur="2.2s" repeatCount="indefinite"/></circle>
+  </g>
+  <g transform="translate(62,194)">
+    <path d="M0 16 L-3 8 L0 3 L3 8 Z" fill="#7B2DA5" opacity=".72"/>
+    <circle cx="0" cy="3" r="2" fill="#FF8FAB" opacity=".62"><animate attributeName="opacity" values=".48;.82;.48" dur="3.1s" repeatCount="indefinite"/></circle>
+  </g>
+  <ellipse cx="46" cy="212" rx="32" ry="5" fill="#9B5DE5" opacity=".08"/>
+  <g transform="translate(502,45)">
+    <path d="M0 165 L-28 60 L0 0 L28 60 Z" fill="#2A8A8A" opacity=".92"/>
+    <path d="M0 165 L-12 0 L12 0 Z" fill="#9BFFE8" opacity=".45"/>
+    <path d="M-28 60 L-40 90 L-28 60 Z" fill="#1E6A6A" opacity=".6"/>
+    <path d="M28 60 L40 90 L28 60 Z" fill="#3ABFBC" opacity=".6"/>
+    <ellipse cx="0" cy="0" rx="20" ry="10" fill="#9BFFE8" opacity=".35"/>
+    <circle cx="0" cy="0" r="12" fill="#9BFFE8" opacity=".82"><animate attributeName="opacity" values=".65;1;.65" dur="2.2s" repeatCount="indefinite"/></circle>
+    <circle cx="0" cy="0" r="22" fill="#4ECDC4" opacity=".08"><animate attributeName="r" values="18;28;18" dur="2.2s" repeatCount="indefinite"/></circle>
+    <circle cx="-15" cy="8" r="7" fill="#7EDBFF" opacity=".78"><animate attributeName="opacity" values=".62;.95;.62" dur="1.8s" repeatCount="indefinite"/></circle>
+    <circle cx="15" cy="8" r="7" fill="#4ECDC4" opacity=".75"><animate attributeName="opacity" values=".58;.92;.58" dur="2.5s" repeatCount="indefinite"/></circle>
+    <circle cx="-28" cy="60" r="9" fill="#3ABFBC" opacity=".72"><animate attributeName="opacity" values=".56;.9;.56" dur="2.0s" repeatCount="indefinite"/></circle>
+    <circle cx="28" cy="60" r="9" fill="#2A8A8A" opacity=".7"><animate attributeName="opacity" values=".55;.88;.55" dur="2.8s" repeatCount="indefinite"/></circle>
+  </g>
+  <ellipse cx="502" cy="212" rx="48" ry="8" fill="#4ECDC4" opacity=".14"/>
+  <ellipse cx="502" cy="210" rx="36" ry="6" fill="#7EDBFF" opacity=".1"><animate attributeName="rx" values="32;44;32" dur="4s" repeatCount="indefinite"/></ellipse>
+  <circle cx="502" cy="45" r="60" fill="#4ECDC4" opacity=".04"><animate attributeName="r" values="55;70;55" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values=".04;.01;.04" dur="3s" repeatCount="indefinite"/></circle>
+  <circle cx="80" cy="155" r="2" fill="#C09AFF"><animate attributeName="cy" values="155;130;155" dur="4.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="4.5s" repeatCount="indefinite"/></circle>
+  <circle cx="42" cy="145" r="1.5" fill="#9B5DE5"><animate attributeName="cy" values="145;120;145" dur="3.8s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="3.8s" repeatCount="indefinite"/></circle>
+  <circle cx="470" cy="150" r="2" fill="#4ECDC4"><animate attributeName="cy" values="150;125;150" dur="4.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0;.6" dur="4.2s" repeatCount="indefinite"/></circle>
+  <circle cx="538" cy="138" r="1.5" fill="#7EDBFF"><animate attributeName="cy" values="138;112;138" dur="3.5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".55;0;.55" dur="3.5s" repeatCount="indefinite"/></circle>
+  <circle cx="250" cy="148" r="1.5" fill="#9B5DE5"><animate attributeName="cy" values="148;124;148" dur="5s" repeatCount="indefinite"/><animate attributeName="opacity" values=".48;0;.48" dur="5s" repeatCount="indefinite"/></circle>
+  <circle cx="350" cy="140" r="1.5" fill="#4ECDC4"><animate attributeName="cy" values="140;115;140" dur="4.6s" repeatCount="indefinite"/><animate attributeName="opacity" values=".5;0;.5" dur="4.6s" repeatCount="indefinite"/></circle>
+</svg>`
+};
+
+const QUESTION_ILLUSTRATIONS = {
+  share_food: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 108" width="100%" height="108" preserveAspectRatio="xMidYMid meet" style="display:block"><rect width="280" height="108" rx="18" fill="#FFF1C9"/><circle cx="140" cy="56" r="40" fill="#FFFFFF"/><circle cx="140" cy="56" r="31" fill="#E8F7FF"/><g fill="none" stroke="#F4A261" stroke-width="4" stroke-linecap="round"><path d="M116 57 q10 -18 28 -8 q18 10 3 22 q-13 10 -27 0 q-13 -10 1 -22"/></g><circle cx="132" cy="58" r="5" fill="#D94B38"/><circle cx="151" cy="64" r="5" fill="#D94B38"/></svg>`
+};
+
+const CHAR_POS = {
+  home_a:   { x: [170, 430], gy: 213, h: 182, yo: 35 },
+  market_a: { x: [200, 400], gy: 213, h: 165, yo: 30 },
+  meadow_a: { x: [162, 438], gy: 213, h: 182, yo: 35 },
+  throne_a: { x: [172, 432], gy: 216, h: 165, yo: 28 },
+  market_b: { x: [200, 400], gy: 213, h: 165, yo: 30 },
+  cave_a:   { x: [155, 445], gy: 213, h: 182, yo: 35 },
+  home_b:   { x: [170, 430], gy: 213, h: 182, yo: 35 },
+  meadow_b: { x: [162, 438], gy: 213, h: 182, yo: 35 },
+  grotto_a: { x: [155, 445], gy: 213, h: 182, yo: 35 },
+  hall_a:   { x: [172, 432], gy: 216, h: 165, yo: 28 },
+  market_c: { x: [200, 400], gy: 213, h: 165, yo: 30 },
+  cave_b:   { x: [155, 445], gy: 213, h: 182, yo: 35 }
+};
+
+function svgInner(str) { return str.replace(/<svg[^>]*>/i,'').replace(/<\/svg>\s*$/i,''); }
+function bgSVG(scene)  { return svgInner(SCENE_BACKGROUNDS[scene] || SCENE_BACKGROUNDS.home_a); }
+function sceneSVG(v) {
+  const pos=CHAR_POS[v.scene]||{x:[155,445],gy:GY,h:182,yo:35};
+  const [c1x,c2x]=pos.x, gys=Array.isArray(pos.gy)?pos.gy:[pos.gy,pos.gy], {h,yo}=pos;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" style="width:100%;display:block">${bgSVG(v.scene)}${kidSVG(c1x,gys[0],v.char1,'0s',true,h,yo)}${kidSVG(c2x,gys[1],v.char2,'1.3s',false,h,yo)}</svg>`;
+}
+function qIllustHTML(q) {
+  if (q.png) return `<img src="${IMG_BASE}${escHtml(q.png)}" style="width:100%;border-radius:10px;display:block" alt=""/>`;
+  return QUESTION_ILLUSTRATIONS.share_food;
+}
+
+// ── STAR / LEVEL METER ─────────────────────────────────
+function starHeaderHTML(earned, total) {
+  const lv=getCurrentLevel(earned);
+  const items=Array.from({length:total},(_,i)=>`<span class="star-item${i<earned?' filled':''}">\u2605</span>`).join('');
+  return `<div class="star-meter-wrap"><div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:2px"><span style="font-size:14px">${lv.emoji}</span><span style="font-size:10px;font-weight:600;color:${lv.color2}">${lv.label}</span></div><div class="star-meter">${items}</div><div class="star-meter-lbl">Pair ${S.vi+1} of ${total}</div></div>`;
+}
+
+function starTransHTML(earned, total) {
+  const pct=Math.round((earned/total)*100), lv=getCurrentLevel(earned), prev=getCurrentLevel(Math.max(0,earned-1));
+  const levelUp=earned>0&&lv.label!==prev.label;
+  const items=Array.from({length:total},(_,i)=>{const f=i<earned,n=f&&i===earned-1;return `<span class="star-item${f?' filled':''}${n?' newly-filled':''}">\u2605</span>`;}).join('');
+  return `<div style="text-align:center;margin-bottom:6px">${levelUp?`<div class="level-badge"><div style="font-size:44px">${lv.emoji}</div><div style="font-size:18px;font-weight:600;color:${lv.color2};margin-top:2px">⬆ Level Up! ${lv.label}</div></div>`:`<div style="font-size:30px">${lv.emoji}</div><div style="font-size:13px;font-weight:600;color:${lv.color2}">${lv.label}</div>`}</div><div class="star-meter star-meter-large">${items}</div><div class="meter-bar-wrap"><div class="meter-bar" style="width:${pct}%;background:linear-gradient(90deg,${lv.color},${lv.color2})"></div><span class="meter-pct">${earned} / ${total}</span></div>`;
+}
+
+function welcomeSVG(c1, c2) {
+  const gy=165;
+  const k1=c1?kidSVG(74,gy,c1,'0s',true):kidSVG(74,gy,{hair:'#9B5DE5',shirt:'#4ECDC4',pants:'#1A3040',style:'short',name:''},'0s');
+  const k2=c2?kidSVG(306,gy,c2,'1.1s',false):kidSVG(306,gy,{hair:'#FFD84D',shirt:'#FF6EC7',pants:'#2E1E60',style:'short',name:''},'1.1s');
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 205" style="width:100%;display:block">
+    <rect x="0" y="0" width="380" height="${gy}" fill="#0D1B3E"/>
+    <circle cx="20" cy="18" r="1.2" fill="white" opacity=".7"/>
+    <circle cx="60" cy="12" r="1" fill="white" opacity=".8"/>
+    <circle cx="140" cy="22" r="1.2" fill="white" opacity=".6"/>
+    <circle cx="220" cy="8" r="1" fill="white" opacity=".9"/>
+    <circle cx="300" cy="18" r="1.2" fill="white" opacity=".7"/>
+    <circle cx="355" cy="28" r="1" fill="white" opacity=".8"/>
+    <rect x="0" y="${gy}" width="380" height="${205-gy}" fill="#1A3D2A"/>
+    ${k1}${k2}
+  </svg>`;
+}
+
+function trophySVG() {
+  return `<svg viewBox="0 0 160 175" width="115" height="126" style="display:block;margin:auto;overflow:visible"><circle cx="80" cy="80" r="55" fill="rgba(255,215,0,0.14)"><animate attributeName="r" values="50;66;50" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.14;0.04;0.14" dur="2.2s" repeatCount="indefinite"/></circle><g><animateTransform attributeName="transform" type="translate" values="0,0;0,-7;0,0" dur="2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/><path d="M28,18 L132,18 L117,88 Q80,114 43,88 Z" fill="#FFD700" stroke="#F39C12" stroke-width="3"/><path d="M28,18 Q4,18 4,50 Q4,82 28,82" fill="none" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/><path d="M132,18 Q156,18 156,50 Q156,82 132,82" fill="none" stroke="#F39C12" stroke-width="7" stroke-linecap="round"/><rect x="67" y="108" width="26" height="30" rx="4" fill="#F39C12"/><rect x="43" y="136" width="74" height="19" rx="9" fill="#FFD700" stroke="#F39C12" stroke-width="2"/><polygon points="80,36 86,56 107,56 91,68 97,88 80,76 63,88 69,68 53,56 74,56" fill="white" opacity=".65"/></g></svg>`;
+}
+
+// ── RENDER ─────────────────────────────────────────────
+const app = document.getElementById('app');
+
+function render() {
+  updateAdmin();
+  try {
+    switch (S.phase) {
+      case 'welcome':         renderWelcome();                         break;
+      case 'intro':           renderIntro();                           break;
+      case 'story':           if (!VIGNETTES[S.vi]) { S.phase='end'; renderEnd(); } else { renderStory(VIGNETTES[S.vi]); } break;
+      case 'practice':        renderPractice();                        break;
+      case 'choice':          if (!VIGNETTES[S.vi]) { S.phase='end'; renderEnd(); } else { renderChoice(VIGNETTES[S.vi], S.ti); } break;
+      case 'model-id':        if (!VIGNETTES[S.vi]) { S.phase='end'; renderEnd(); } else { renderModelId(); } break;
+      case 'model-certainty': if (!VIGNETTES[S.vi]) { S.phase='end'; renderEnd(); } else { renderModelCertainty(); } break;
+      case 'q':               if (!VIGNETTES[S.vi]) { S.phase='end'; renderEnd(); } else { renderQuestion(VIGNETTES[S.vi], S.qi); } break;
+      case 'q-likert':        renderLikert();                          break;
+      case 'trans':           renderTrans();                           break;
+      case 'midpoint':        renderMidpoint();                        break;
+      case 'end':             renderEnd();                             break;
+    }
+  } catch(err) {
+    app.innerHTML = `<div class="error-box"><h2 style="color:#e74c3c">Something went wrong</h2><p style="margin:10px 0"><strong>${err.message}</strong></p><pre style="background:#f5f5f5;padding:12px;border-radius:8px;font-size:11px;text-align:left;overflow:auto">${err.stack||''}</pre><button class="btn btn-primary" style="margin-top:12px" onclick="resetGame()">Start Over</button></div>`;
+    console.error(err);
+  }
+}
+
+// ── WELCOME ────────────────────────────────────────────
+function renderWelcome() {
+  const pool=[];
+  VIGNETTES.forEach(v=>{pool.push(v.char1);pool.push(v.char2);});
+  const wi1=Math.floor(Math.random()*pool.length); let wi2; do{wi2=Math.floor(Math.random()*pool.length);}while(wi2===wi1);
+  const urlPid=getUrlParam('pid'); if(urlPid) S.pid=urlPid;
+  const isFs=!!(document.fullscreenElement||document.webkitFullscreenElement);
+  app.innerHTML=`
+  ${!isFs?`<div class="fs-banner" id="fsBanner">
+    <span>📺 For the best experience, go fullscreen first!</span>
+    <button class="fs-banner-btn" onclick="toggleFullscreen()">Go Fullscreen ⛶</button>
+    <button class="fs-banner-dismiss" onclick="document.getElementById('fsBanner').style.display='none'" title="Dismiss">✕</button>
+  </div>`:''}
+  <div class="screen" style="justify-content:center;text-align:center;padding-top:14px">
+    <div class="wt">Relationship Detective!</div>
+    <div class="ws">Can you figure out how these people who live far away act toward each other?</div>
+    <div class="illus" style="max-width:330px">${welcomeSVG(pool[wi1],pool[wi2])}</div>
+    <button id="unlockBtn" class="unlock-btn" onclick="unlockAudio('welcome')">
+      🔊 Tap here to turn on sound!
+    </button>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="cname">What is your first name?</label>
+        <input id="cname" class="name-input" type="text" placeholder="Your name!" maxlength="22" value="${escHtml(S.name)}"/>
+      </div>
+      <div class="form-group">
+        <label for="cage">How old are you?</label>
+        <select id="cage" class="age-select">
+          <option value="">Pick your age!</option>
+          <option value="4"  ${S.age==='4'  ?'selected':''}>I am 4</option>
+          <option value="5"  ${S.age==='5'  ?'selected':''}>I am 5</option>
+          <option value="6"  ${S.age==='6'  ?'selected':''}>I am 6</option>
+          <option value="7"  ${S.age==='7'  ?'selected':''}>I am 7</option>
+          <option value="8"  ${S.age==='8'  ?'selected':''}>I am 8</option>
+          <option value="9"  ${S.age==='9'  ?'selected':''}>I am 9</option>
+          <option value="10" ${S.age==='10' ?'selected':''}>I am 10</option>
+        </select>
+      </div>
+    </div>
+    ${S.pid?`<div style="text-align:center;margin-top:2px"><span style="font-size:11px;color:#ccc">Study ID: </span><input type="text" readonly style="font-family:inherit;font-size:11px;color:#bbb;background:transparent;border:none;outline:none;text-align:center;width:220px;cursor:default" value="${escHtml(S.pid)}"/></div>`:''}
+    <button class="btn btn-primary" style="font-size:19px;padding:13px 34px;margin-top:4px" onclick="startGame()">Let's Play!</button>
+  </div>`;
+  stopAudio();
+  const inp=document.getElementById('cname'), sel=document.getElementById('cage');
+  if(inp) inp.addEventListener('input',  e=>S.name=e.target.value);
+  if(sel) sel.addEventListener('change', e=>S.age=e.target.value);
+}
+
+// ── INTRO ──────────────────────────────────────────────
+function renderIntro() {
+  app.innerHTML=`
+  <div class="screen" style="justify-content:center;text-align:center;gap:10px">
+    <div style="font-size:44px">🕵️</div>
+    <div style="font-size:22px;font-weight:600;color:#333">Here is how to play!</div>
+    <div class="info-box" style="font-size:14px;line-height:1.75">
+      I will tell you about <strong>two people who live far away</strong> and how they act toward each other.<br><br>
+      <em>These people might do things differently from the way you do things — but that is okay!</em><br><br>
+      Then I will ask — <strong>would those same two people act that way in another situation?</strong><br><br>
+      <strong>Press the big thumb UP for YES</strong><br>
+      <strong>Press the big thumb DOWN for NO</strong><br><br>
+      After you pick YES or NO, I will ask <strong>how sure you are</strong> using big and small thumbs.<br><br>
+      <strong>There are no wrong answers — just your best guess!</strong>
+    </div>
+    <div style="font-size:13px;color:#bbb">When you are ready, we will start with the first pair.</div>
+    <button class="btn btn-primary" style="font-size:18px;padding:12px 28px" onclick="startRealGame()">Let us start! 🚀</button>
+  </div>`;
+  stopAudio();
+  playAudio('intro');
+}
+
+// ── STORY ──────────────────────────────────────────────
+function renderStory(v) {
+  app.innerHTML=`
+  ${starHeaderHTML(S.stars,VIGNETTES.length)}
+  <div class="screen" style="padding-top:6px">
+    <div class="story-head"><div class="pair-title">Meet ${escHtml(v.char1.name)} and ${escHtml(v.char2.name)}!</div></div>
+    <div class="illus">${sceneSVG(v)}</div>
+    <div class="story-box" id="storyBox">${v.parts.map((s,i)=>`<span class="sent" id="snt${i}">${escHtml(s)} </span>`).join('')}</div>
+    <div class="story-btns">
+      <button class="btn btn-audio" onclick="replayStory()">🔊 Hear the story again</button>
+      <button class="btn btn-primary" id="readyBtn" style="display:none" onclick="goModelId()">I am ready for questions!</button>
+    </div>
+  </div>`;
+  stopAudio();
+  const pk = pairKey(v);
+  playAudio('meet_' + pk, () => {
+    const mySeqId = audioSeqId;
+    let si = 0;
+    function nextPart() {
+      if (audioSeqId !== mySeqId) return;
+      if (si >= v.parts.length) {
+        document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
+        const rb=document.getElementById('readyBtn'); if(rb) rb.style.display='inline-flex';
+        playAudio('ready_' + pk);
+        return;
+      }
+      document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
+      const el=document.getElementById('snt'+si); if(el) el.classList.add('hi');
+      const partKey = 'story_' + v.id + 'abc'[si];
+      si++;
+      playAudio(partKey, nextPart);
+    }
+    nextPart();
+  });
+}
+
+function replayStory() {
+  const v=VIGNETTES[S.vi]; stopAudio();
+  const rb=document.getElementById('readyBtn'); if(rb) rb.style.display='none';
+  const pk=pairKey(v);
+  playAudio('replay_' + pk, () => {
+    const mySeqId = audioSeqId;
+    let si = 0;
+    function nextPart() {
+      if (audioSeqId !== mySeqId) return;
+      if (si >= v.parts.length) {
+        document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
+        const rb2=document.getElementById('readyBtn'); if(rb2) rb2.style.display='inline-flex';
+        return;
+      }
+      document.querySelectorAll('.sent').forEach(el=>el.classList.remove('hi'));
+      const el=document.getElementById('snt'+si); if(el) el.classList.add('hi');
+      const partKey = 'story_' + v.id + 'abc'[si];
+      si++;
+      playAudio(partKey, nextPart);
+    }
+    nextPart();
+  });
+}
+
+// ── QUESTION ───────────────────────────────────────────
+
+// ── STUDY 2: PRACTICE + CHOICE SCREENS ─────────────────
+const PRACTICE = [
+  { intro:'This is a glorp. Glorps LOVE crunching rocks for dinner!',
+    q:'Which one do you think the glorp eats for dinner?',
+    opts:[{key:'rocks',emoji:'🪨',text:'A pile of crunchy rocks'},{key:'rainbow',emoji:'🌈',text:'A rainbow'}],
+    correct:'rocks', praise:'That\'s right! Glorps love crunching rocks!',
+    fix:'Good try! Remember, glorps love crunching rocks — so the rocks!' },
+  { intro:'Two friends are going swimming at the splash-pond.',
+    q:'Which one do you think they bring with them?',
+    opts:[{key:'towel',emoji:'🧺',text:'A towel to dry off'},{key:'snowman',emoji:'⛄',text:'A snowman'}],
+    correct:'towel', praise:'Yes! A towel is just right for swimming.',
+    fix:'Good try! For swimming, a towel works better than a snowman!' }
+];
+function renderPractice() {
+  const p = PRACTICE[S.pi];
+  const shown = [p.opts[0], p.opts[1]];  // fixed order: narration has 'Or a...' baked into the 2nd option
+  S.practiceShown = shown;
+  app.innerHTML=`
+  <div class="screen" style="padding-top:10px;gap:12px">
+    <div class="q-header">Let's practice! (${S.pi+1} of 2)</div>
+    <div class="q-box">${escHtml(p.intro)}</div>
+    <div class="q-box" style="font-weight:600">${escHtml(p.q)}</div>
+    <div style="display:flex;flex-direction:column;gap:12px;width:100%;max-width:520px">
+      ${shown.map((o,i)=>`
+        <button class="btn choice-card" id="opt${i}" onclick="doPractice(${i})"
+          style="display:flex;align-items:center;gap:14px;text-align:left;padding:14px 18px;font-size:17px;line-height:1.35">
+          <span style="font-size:44px">${o.emoji}</span><span>${escHtml(o.text)}</span>
+        </button>`).join('')}
+    </div>
+  </div>`;
+  stopAudio();
+  playAudio('practice_'+(S.pi+1), ()=>playPracticeOpt(0, ()=>playPracticeOpt(1)));
+}
+function playPracticeOpt(idx, done) {
+  done = done || function(){};
+  const el = document.getElementById('opt'+idx);
+  if (el) el.classList.add('opt-narrating');
+  const clear = () => { const e=document.getElementById('opt'+idx); if(e) e.classList.remove('opt-narrating'); };
+  playAudio('popt_'+S.practiceShown[idx].key, () => { clear(); done(); });
+}
+function doPractice(i) {
+  const p=PRACTICE[S.pi], chosen=S.practiceShown[i], ok=chosen.key===p.correct;
+  const rec={type:'2afc-practice',vid:'P'+(S.pi+1),vM:'',qi:S.pi,qM:'',itemId:S.practiceShown.map(o=>o.key).join('_vs_'),
+             ans:chosen.key,initialAns:i===0?'FIRST':'SECOND',keyed:p.correct,ok:ok,congruent:null,ts:new Date().toISOString()};
+  S.answers.push(rec); uploadToSheets(rec); stopAudio();
+  app.innerHTML=`
+  <div class="trans-screen">
+    <div style="font-size:64px">${ok?'🎉':'💪'}</div>
+    <div class="trans-msg">${escHtml(ok?p.praise:p.fix)}</div>
+  </div>`;
+  const advance = () => { if(S.pi<PRACTICE.length-1){S.pi++;S.phase='practice';} else {S.phase='story';S.vi=0;} render(); };
+  playAudio('practice_'+(S.pi+1)+'_'+(ok?'good':'fix'), () => setTimeout(advance, 600));
+}
+function optAudioSrc(v, o) {
+  const nameBearing = /\{boss\}|\{other\}/.test(OPTION_DEFS[o.item].text);
+  return nameBearing ? `audio_opt_${v.id}_${o.item}_${v.boss}.mp3` : `audio_opt_${o.item}.mp3`;
+}
+function playOptAudio(v, o, idx, done) {
+  done = done || function(){};
+  const el = document.getElementById('opt'+idx);
+  if (el) el.classList.add('opt-narrating');
+  const clear = () => { const e=document.getElementById('opt'+idx); if(e) e.classList.remove('opt-narrating'); };
+  const mySeqId = audioSeqId;
+  const audio = new Audio(AUDIO_BASE + optAudioSrc(v, o));
+  currentAudio = audio;
+  let finished = false;
+  const finish = () => { if (finished) return; finished = true; clear();
+    if (currentAudio === audio) currentAudio = null;
+    if (audioSeqId === mySeqId) done(); };
+  audio.onended = finish;
+  audio.onerror = finish;
+  audio.play().catch(() => finish());
+}
+function renderChoice(v, ti) {
+  const t = v.trials[ti];
+  const firstHint = ti===0
+    ? `<div style="font-size:13px;color:#777;font-style:italic;text-align:center;max-width:480px">These are about things that weren't in the story. Just take your best guess based on what you learned about them!</div>`
+    : '';
+  app.innerHTML=`
+  ${starHeaderHTML(S.stars,VIGNETTES.length)}
+  <div class="screen" style="padding-top:4px;gap:8px">
+    <div class="q-header">Question ${ti+1} of 3 &nbsp;&middot;&nbsp; <strong>${escHtml(v.char1.name)}</strong> &amp; <strong>${escHtml(v.char2.name)}</strong></div>
+    ${firstHint}
+    <div class="q-box" style="font-weight:600">Which one of these do you think ${escHtml(v.char1.name)} and ${escHtml(v.char2.name)} do?</div>
+    <div style="display:flex;flex-direction:column;gap:12px;width:100%;max-width:560px">
+      ${t.opts.map((o,i)=>`
+        <button class="btn choice-card" id="opt${i}" onclick="doChoice(${i})"
+          style="display:flex;align-items:center;gap:14px;text-align:left;padding:12px 16px;font-size:16.5px;line-height:1.35">
+          ${o.png?`<img src="${o.png}" alt="" style="width:110px;height:110px;object-fit:contain;border-radius:12px;flex:0 0 auto;background:#fff">`:''}
+          <span>${escHtml(o.text)}</span>
+        </button>`).join('')}
+    </div>
+    <div class="replay-section">
+      <div class="replay-btns">
+        <button class="btn btn-audio" onclick="replayChoice()">🔊 Hear the choices again</button>
+        <button class="btn-story-replay" onclick="replayStoryQ()">📖 Hear their story again</button>
+      </div>
+    </div>
+  </div>`;
+  stopAudio();
+  playAudio('choice_prompt', ()=>playOptAudio(v, t.opts[0], 0, ()=>playOptAudio(v, t.opts[1], 1)));
+}
+function replayChoice() {
+  stopAudio();
+  const t = VIGNETTES[S.vi].trials[S.ti];
+  playAudio('choice_prompt', ()=>playOptAudio(VIGNETTES[S.vi], t.opts[0], 0, ()=>playOptAudio(VIGNETTES[S.vi], t.opts[1], 1)));
+}
+function doChoice(i) {
+  [0,1].forEach(j=>{const b=document.getElementById('opt'+j);if(b)b.disabled=true;});
+  const b=document.getElementById('opt'+i);
+  if(b){b.style.transform='scale(1.04)';b.style.boxShadow='0 0 0 4px #F39C12';}
+  const v=VIGNETTES[S.vi], t=v.trials[S.ti], chosen=t.opts[i];
+  const rec={
+    type: t.type==='conf'?'2afc-conf':'2afc-expl',
+    vid:v.id, vM:v.model, qi:S.ti,
+    qM: chosen.model,
+    itemId: t.opts.map(o=>o.item).join('_vs_'),
+    ans: chosen.item,
+    initialAns: i===0?'FIRST':'SECOND',
+    keyed: t.congruentItem,
+    ok: t.type==='conf' ? (chosen.item===t.congruentItem) : null,
+    congruent: t.type==='conf' ? (chosen.item===t.congruentItem) : null,
+    chosen: chosen.model,
+    domain: t.domain, cbList: S.cbList, boss: v.boss,
+    ts:new Date().toISOString()
+  };
+  S.answers.push(rec); uploadToSheets(rec); stopAudio();
+  setTimeout(()=>{ if(S.ti<2){S.ti++;S.phase='choice';} else {S.stars++;S.phase='trans';} render(); },650);
+}
+function renderQuestion(v, qi) {
+  const q=v.questions[qi];
+  const firstQHint = qi===0
+    ? `<div style="font-size:13px;color:#777;font-style:italic;text-align:center;max-width:480px">These next questions are about things that weren't in the story. Just take your best guess based on what you learned about them!</div>`
+    : '';
+  app.innerHTML=`
+  ${starHeaderHTML(S.stars,VIGNETTES.length)}
+  <div class="screen" style="padding-top:4px;gap:7px">
+    <div class="q-header">Question ${qi+1} of 3 &nbsp;&middot;&nbsp; <strong>${escHtml(v.char1.name)}</strong> &amp; <strong>${escHtml(v.char2.name)}</strong></div>
+    ${firstQHint}
+    <div class="q-illust">${qIllustHTML(q)}</div>
+    <div class="q-box">"${escHtml(q.text)}"</div>
+    <div class="ans-row">
+      <button class="btn btn-green" id="btnY" onclick="doAnswer('YES')">${thumbsUpSVG(48)} YES</button>
+      <button class="btn btn-red"   id="btnN" onclick="doAnswer('NO')">${thumbsDownSVG(48)} NO</button>
+    </div>
+    <div class="replay-section">
+      <div class="replay-label">Need a reminder?</div>
+      <div class="replay-btns">
+        <button class="btn btn-audio" onclick="replayQ()">🔊 Hear the question again</button>
+        <button class="btn-story-replay" onclick="replayStoryQ()">📖 Hear their story again</button>
+      </div>
+    </div>
+  </div>`;
+  stopAudio();
+  playAudio('q_' + q.id, () => playAudio('q_prompt_end'));
+}
+
+function replayQ() {
+  stopAudio();
+  const q = VIGNETTES[S.vi].questions[S.qi];
+  playAudio('q_' + q.id, () => playAudio('q_remind_end'));
+}
+
+function replayStoryQ() {
+  const v=VIGNETTES[S.vi]; stopAudio();
+  const pk=pairKey(v);
+  playAudio('remind_' + pk, () => {
+    const mySeqId = audioSeqId;
+    let si = 0;
+    function nextPart() {
+      if (audioSeqId !== mySeqId) return;
+      if (si >= v.parts.length) { playAudio('okay_now_what'); return; }
+      playAudio('story_' + v.id + 'abc'[si], () => { si++; nextPart(); });
+    }
+    nextPart();
+  });
+}
+
+// ── LIKERT ─────────────────────────────────────────────
+function renderLikert() {
+  const v=VIGNETTES[S.vi], qi=S.qi, q=v.questions[qi], isYes=S.pendingAns==='YES';
+  const strongStyle = isYes
+    ? 'background:linear-gradient(135deg,#1e8449,#27AE60);color:white;box-shadow:0 6px 18px rgba(30,132,73,.4);'
+    : 'background:linear-gradient(135deg,#922b21,#C0392B);color:white;box-shadow:0 6px 18px rgba(146,43,33,.4);';
+  const mildStyle = isYes
+    ? 'background:linear-gradient(135deg,#a8e063,#d0f5a0);color:#1a5e2a;box-shadow:0 4px 12px rgba(168,224,99,.35);'
+    : 'background:linear-gradient(135deg,#f45c43,#ffbdad);color:#7B241C;box-shadow:0 4px 12px rgba(244,92,67,.3);';
+  app.innerHTML=`
+  ${starHeaderHTML(S.stars,VIGNETTES.length)}
+  <div class="screen" style="padding-top:4px;gap:9px">
+    <div class="q-header">Question ${qi+1} of 3 &nbsp;&middot;&nbsp; <strong>${escHtml(v.char1.name)}</strong> &amp; <strong>${escHtml(v.char2.name)}</strong></div>
+    <div style="text-align:center;font-size:17px;font-weight:600;color:#333">
+      You said <span style="background:${isYes?'linear-gradient(135deg,#56ab2f,#a8e063)':'linear-gradient(135deg,#eb3349,#f45c43)'};color:white;padding:3px 14px;border-radius:20px;font-size:22px;display:inline-block;vertical-align:middle;margin:0 4px">${isYes?'YES':'NO'}</span>
+    </div>
+    <div style="text-align:center;font-size:15px;color:#555;font-weight:500">How sure are you?</div>
+    <div class="q-illust">${qIllustHTML(q)}</div>
+    <div class="ans-row" style="gap:16px;align-items:flex-end">
+      <button class="btn-likert-strong" id="btnDef" style="${strongStyle}" onclick="doLikertAnswer('DEFINITELY')">
+        ${isYes?thumbsUpSVG(54):thumbsDownSVG(54)}
+        <span style="margin-top:4px;font-size:15px;font-weight:600">Really sure!<br>${isYes?'YES':'NO'}</span>
+      </button>
+      <button class="btn-likert-mild" id="btnMay" style="${mildStyle}" onclick="doLikertAnswer('MAYBE')">
+        ${isYes?thumbsUpSVG(36):thumbsDownSVG(36)}
+        <span style="margin-top:3px;font-size:13px">A little sure<br>${isYes?'YES':'NO'}</span>
+      </button>
+    </div>
+  </div>`;
+  stopAudio();
+  playAudio(isYes ? 'sure_yes' : 'sure_no');
+}
+
+function doLikertAnswer(certainty) {
+  ['btnDef','btnMay'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=true;});
+  const btn=document.getElementById(certainty==='DEFINITELY'?'btnDef':'btnMay');
+  if(btn){btn.style.transform='scale(1.1)';setTimeout(()=>{if(btn)btn.style.transform='';},300);}
+  const v=VIGNETTES[S.vi], q=v.questions[S.qi], initAns=S.pendingAns;
+  const fullAns=certainty==='DEFINITELY'?(initAns==='YES'?'DEFINITELY_YES':'DEFINITELY_NO'):(initAns==='YES'?'MAYBE_YES':'MAYBE_NO');
+  const rec={type:'test',vid:v.id,vM:v.model,qi:S.qi,qM:q.qM,itemId:q.id,ans:fullAns,initialAns:initAns,keyed:q.keyed,ok:initAns===q.keyed,congruent:q.congruent,ts:new Date().toISOString()};
+  S.answers.push(rec); uploadToSheets(rec); S.pendingAns=null; stopAudio();
+  setTimeout(()=>{if(S.qi<2){S.qi++;S.phase='q';}else{S.stars++;S.phase='trans';}render();},650);
+}
+
+// ── MODEL ID ───────────────────────────────────────────
+function renderModelId() {
+  const v=VIGNETTES[S.vi], models=S.modelIdOrder;
+  app.innerHTML=`
+  ${starHeaderHTML(S.stars,VIGNETTES.length)}
+  <div class="screen" style="padding-top:4px;gap:10px">
+    <div class="q-header">🔍 ${escHtml(v.char1.name)} &amp; ${escHtml(v.char2.name)}</div>
+    <div class="q-box"><span>Which of these pictures shows how <strong>${escHtml(v.char1.name)}</strong> and <strong>${escHtml(v.char2.name)}</strong> act with each other?</span></div>
+    <div style="font-size:13px;color:#777;font-style:italic;text-align:center;margin-top:-2px">There are no wrong answers — just pick the picture that feels closest.</div>
+    <div class="ans-row" style="gap:18px;justify-content:center;flex-wrap:wrap">
+      ${models.map(m=>`<button class="btn-model-choice" onclick="doModelId('${m}')"><img src="${IMG_BASE}${m}.png" style="width:100px;height:100px;object-fit:contain;display:block;border-radius:8px" alt="${m}"/></button>`).join('')}
+    </div>
+    <div class="replay-section"><div class="replay-label">Need a reminder?</div><div class="replay-btns"><button class="btn-story-replay" onclick="replayStoryQ()">📖 Hear their story again</button></div></div>
+  </div>`;
+  stopAudio();
+  playAudio('model_' + pairKey(v));
+}
+
+function doModelId(chosenModel) {
+  document.querySelectorAll('.btn-model-choice').forEach(b=>b.disabled=true);
+  S.pendingModelChoice=chosenModel; stopAudio();
+  setTimeout(()=>{S.phase='model-certainty';render();},300);
+}
+
+// ── MODEL CERTAINTY ────────────────────────────────────
+function renderModelCertainty() {
+  const v=VIGNETTES[S.vi], chosen=S.pendingModelChoice;
+  app.innerHTML=`
+  ${starHeaderHTML(S.stars,VIGNETTES.length)}
+  <div class="screen" style="padding-top:4px;gap:10px">
+    <div class="q-header">🔍 ${escHtml(v.char1.name)} &amp; ${escHtml(v.char2.name)}</div>
+    <div style="text-align:center;font-size:17px;font-weight:600;color:#333;margin-top:4px">You picked this picture:</div>
+    <div style="display:flex;justify-content:center;margin-top:4px">
+      <div style="border-radius:16px;border:3px solid #E0E0E0;padding:10px;background:white">
+        <img src="${IMG_BASE}${chosen}.png" style="width:120px;height:120px;object-fit:contain;display:block;border-radius:8px" alt="${chosen}"/>
+      </div>
+    </div>
+    <div style="text-align:center;font-size:15px;color:#555;font-weight:500;margin-top:8px">How sure are you about this choice?</div>
+    <div class="ans-row" style="gap:16px;align-items:flex-end;margin-top:6px">
+      <button class="btn-likert-strong" id="btnModelDef"
+        style="background:linear-gradient(135deg,#1e8449,#27AE60);color:white;box-shadow:0 6px 18px rgba(30,132,73,.4);"
+        onclick="doModelCertaintyAnswer('DEFINITELY')">
+        ${thumbsUpSVG(54)}
+        <span style="margin-top:4px;font-size:15px;font-weight:600">Really sure!<br>This one</span>
+      </button>
+      <button class="btn-likert-mild" id="btnModelMay"
+        style="background:linear-gradient(135deg,#a8e063,#d0f5a0);color:#1a5e2a;box-shadow:0 4px 12px rgba(168,224,99,.35);"
+        onclick="doModelCertaintyAnswer('MAYBE')">
+        ${thumbsUpSVG(36)}
+        <span style="margin-top:3px;font-size:13px">A little sure<br>This one</span>
+      </button>
+    </div>
+  </div>`;
+  stopAudio();
+  playAudio('you_picked');
+}
+
+function doModelCertaintyAnswer(certainty) {
+  ['btnModelDef','btnModelMay'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=true;});
+  const btn=document.getElementById(certainty==='DEFINITELY'?'btnModelDef':'btnModelMay');
+  if(btn){btn.style.transform='scale(1.1)';setTimeout(()=>{if(btn)btn.style.transform='';},300);}
+  const v=VIGNETTES[S.vi], chosen=S.pendingModelChoice;
+  const rec={type:'model-id',vid:v.id,vM:v.model,chosen:chosen,correct:chosen===v.model,modelCertainty:certainty,ts:new Date().toISOString()};
+  S.answers.push(rec); uploadToSheets(rec);
+  S.pendingModelChoice=null; S.qi=0; stopAudio();
+  setTimeout(()=>{S.phase='q';render();},400);
+}
+
+function flashBtn(ans) {
+  const b=document.getElementById(ans==='YES'?'btnY':'btnN'); if(!b) return;
+  b.style.transition='transform 0.15s, box-shadow 0.15s';
+  b.style.transform='scale(1.14)'; b.style.boxShadow='0 0 0 8px rgba(255,255,255,0.68)';
+  setTimeout(()=>{b.style.transform='';b.style.boxShadow='';},320);
+}
+
+function doAnswer(ans) {
+  ['btnY','btnN'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=true;});
+  stopAudio();
+  S.pendingAns=ans; flashBtn(ans);
+  setTimeout(()=>{S.phase='q-likert';render();},480);
+}
+
+// ── TRANSITION ─────────────────────────────────────────
+function renderTrans() {
+  const ni=S.vi+1, last=ni>=VIGNETTES.length, isMidpoint=ni===3&&!last, np=last?null:VIGNETTES[ni];
+  app.innerHTML=`
+  <div class="trans-screen">
+    ${starTransHTML(S.stars,VIGNETTES.length)}
+    <div class="trans-msg" style="margin-top:8px">Thank you for your help.</div>
+    <div style="font-size:19px;font-weight:600;color:#F39C12">${S.stars} star${S.stars===1?'':'s'} collected!</div>
+    <div class="trans-sub">${last?'That was the very last pair — you are almost done!':isMidpoint?'You are halfway through — great work!':`Next up: meet <strong>${escHtml(np.char1.name)}</strong> and <strong>${escHtml(np.char2.name)}</strong>!`}</div>
+  </div>`;
+  stopAudio();
+  const starKey = last ? 'trans_last'
+    : isMidpoint ? 'trans_halfway'
+    : `trans_${S.stars}star${S.stars===1?'':'s'}`;
+  playAudio(starKey, () => {
+    setTimeout(()=>{
+      if(last){S.phase='end';}
+      else{S.vi++;S.qi=0;S.phase=S.vi===6?'midpoint':'story';}
+      render();
+    }, 500);
+  });
+}
+
+// ── MIDPOINT ───────────────────────────────────────────
+function renderMidpoint() {
+  const nm=S.name||'Detective';
+  const currentLevel = getCurrentLevel(S.stars);
+  const finalLevel = DETECTIVE_LEVELS[DETECTIVE_LEVELS.length - 1];
+  const videoUrl = IMG_BASE + 'mixkit-cute-gray-cat-with-dark-glasses-turning-his-face-to-49058-hd-ready.mp4';
+  app.innerHTML=`
+  <div class="midpoint-screen" style="gap:10px">
+    <div style="font-size:46px;animation:bounceIn .85s cubic-bezier(.17,.67,.37,1.3)">${currentLevel.emoji}</div>
+    <div style="font-size:23px;font-weight:600;color:#333;text-align:center;line-height:1.3">
+      Congratulations, ${escHtml(nm)}!<br>
+      You've made it to <span style="color:${currentLevel.color2}">${escHtml(currentLevel.label)}</span>!
+    </div>
+    <div style="font-size:15px;color:#555;font-weight:500">
+      Here is a funny video for all your help.
+    </div>
+    <video src="${videoUrl}"
+           autoplay muted playsinline loop
+           style="max-width:320px;width:100%;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.18);background:#000"></video>
+    <div style="font-size:16px;color:#333;max-width:400px;line-height:1.5;text-align:center">
+      Do you want to try to make it to <strong style="color:${finalLevel.color2}">${escHtml(finalLevel.label)}</strong> or say goodbye?
+    </div>
+    <div style="font-size:15px;color:#333;font-weight:600;max-width:400px;line-height:1.55;padding:11px 16px;background:#FFF7E0;border-radius:14px;border:3px solid #FFD84D;text-align:center">
+      If you're done and your parent isn't with you, go get them now.
+    </div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:2px">
+      <button class="btn btn-primary" style="font-size:18px;padding:14px 30px" onclick="continueGame()">Keep Going! 🚀</button>
+      <button class="btn btn-secondary" style="font-size:16px;padding:13px 26px" onclick="exitToCHS()">Bye for now! 👋</button>
+    </div>
+    <div style="font-size:11px;color:#ccc;margin-top:2px">Your answers so far have been saved.</div>
+  </div>`;
+  stopAudio();
+  playAudio('halfway', () => playAudio('mid_parent'));
+}
+
+function continueGame() { stopAudio(); S.phase='story'; render(); }
+
+function exitToCHS() {
+  stopAudio();
+  markSessionComplete();
+  app.innerHTML = `
+  <div class="end-screen">
+    <div style="font-size:58px;animation:bounceIn .85s cubic-bezier(.17,.67,.37,1.3)">👋</div>
+    <div class="end-title">Thanks for playing!</div>
+    <div class="end-sub" style="margin-top:8px;max-width:480px">Your answers so far have been saved.</div>
+    <div style="font-size:18px;color:#333;font-weight:600;margin-top:14px;max-width:480px;line-height:1.6;padding:14px 20px;background:#F8F4FF;border-radius:14px;border:3px solid #C9B8F0;text-align:center">
+      If your parent isn't with you, please go get them so we can do the last steps of the study.
+    </div>
+    <div style="font-size:16px;color:#333;font-weight:600;margin-top:10px;max-width:480px;line-height:1.55;padding:12px 18px;background:#EFF6FF;border-radius:14px;border:3px solid #93C5FD;text-align:center">
+      <strong>Parents:</strong> Please return to the <strong>Children Helping Science</strong> tab in your browser to finish the study and upload the video.
+    </div>
+    <button class="btn btn-primary" style="font-size:18px;padding:13px 28px;margin-top:10px" onclick="returnToCHS()">Done — Take me back to CHS</button>
+  </div>`;
+  playAudio('goodbye', () => playAudio('end_parent'));
+}
+
+// ── END ────────────────────────────────────────────────
+function renderEnd() {
+  const nm=S.name||'Detective';
+  app.innerHTML=`
+  <div class="end-screen">
+    <div class="end-trophy-wrap">${trophySVG()}</div>
+    <div class="end-title">Thank you, ${escHtml(nm)}!</div>
+    ${starTransHTML(S.stars,VIGNETTES.length)}
+    <div class="end-sub" style="margin-top:4px">You answered questions about all ${VIGNETTES.length} pairs of people who live far away.</div>
+    <div style="font-size:18px;color:#333;font-weight:600;margin-top:14px;max-width:480px;line-height:1.6;padding:14px 20px;background:#F8F4FF;border-radius:14px;border:3px solid #C9B8F0;text-align:center">
+      If your parent isn't with you, please go get them so we can do the last steps of the study.
+    </div>
+    <div style="font-size:16px;color:#333;font-weight:600;margin-top:10px;max-width:480px;line-height:1.55;padding:12px 18px;background:#EFF6FF;border-radius:14px;border:3px solid #93C5FD;text-align:center">
+      <strong>Parents:</strong> Please return to the <strong>Children Helping Science</strong> tab in your browser to finish the study and upload the video.
+    </div>
+    <button class="btn btn-primary" style="font-size:18px;padding:13px 28px;margin-top:10px" onclick="returnToCHS()">Done — Take me back to CHS</button>
+    <div style="margin-top:16px;font-size:12px;color:#666;text-align:center">
+      <a href="#" onclick="event.preventDefault();downloadSessionBackup()" style="color:#666;text-decoration:underline">Download a backup of my data</a>
+    </div>
+  </div>`;
+  markSessionComplete(); stopAudio();
+  playAudio('end_parent');
+}
+
+// ── NAVIGATION ─────────────────────────────────────────
+function startGame() {
+  const inp=document.getElementById('cname'), sel=document.getElementById('cage');
+  S.name=(inp?inp.value.trim():'')||''; S.age=(sel?sel.value:'')||'';
+  S.pid=getUrlParam('pid')||S.pid||'';
+  if(!S.name){ unlockAudio('name_needed'); return; }
+  stopAudio();
+  audioUnlocked=true;
+  for(let i=VIGNETTES.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[VIGNETTES[i],VIGNETTES[j]]=[VIGNETTES[j],VIGNETTES[i]];}
+  assignAllQuestions();
+  S.phase='intro'; render();
+}
+
+function startRealGame() { stopAudio(); S.phase='practice'; S.pi=0; S.vi=0; S.qi=0; S.ti=0; render(); }
+
+function goModelId() {   // study 2: straight to the choice trials
+  stopAudio();
+  S.ti = 0; S.phase='choice'; render();
+}
+
+function skipPair() {
+  if(['story','model-id','model-certainty','q','q-likert','choice','practice'].includes(S.phase)){
+    stopAudio();
+    S.pendingAns=null; S.pendingModelChoice=null; S.stars++; S.phase='trans'; render();
+  }
+}
+function skipMidpoint() { stopAudio(); S.vi=3; S.qi=0; S.phase='midpoint'; render(); }
+function skipEnd()      { stopAudio(); S.phase='end'; render(); }
+
+function resetGame() {
+  stopAudio();
+  Object.assign(S,{phase:'welcome',name:'',age:'',pid:'',vi:0,qi:0,pendingAns:null,pendingModelChoice:null,modelIdOrder:[],answers:[],stars:0,adminOpen:false});
+  render();
+}
+
+// ── ADMIN ──────────────────────────────────────────────
+function setupAdmin() {
+  const panel=document.getElementById('adminPanel');
+  if(!panel) return;
+  panel.innerHTML=`
+    <h3>Researcher Panel</h3>
+    <div class="admin-section-label">Responses</div>
+    <div class="admin-log" id="adminLog">No answers yet.</div>
+    <button class="admin-btn-sm admin-btn-gold" style="width:100%;margin-bottom:4px;padding:8px;font-size:11px;border-radius:7px" onclick="exportCSV()">Download Results (CSV)</button>
+    <button class="admin-btn-sm" style="width:100%;margin-bottom:4px;padding:7px;font-size:11px;border-radius:7px" onclick="skipPair()">Skip this pair</button>
+    <button class="admin-btn-sm" style="width:100%;margin-bottom:4px;padding:7px;font-size:11px;border-radius:7px" onclick="skipMidpoint()">Skip to midpoint</button>
+    <button class="admin-btn-sm" style="width:100%;padding:7px;font-size:11px;border-radius:7px" onclick="skipEnd()">Skip to End</button>`;
+  document.getElementById('adminBtn').addEventListener('click',()=>{
+    S.adminOpen=!S.adminOpen;
+    panel.classList.toggle('open',S.adminOpen);
+    updateAdmin();
+  });
+  updateAdmin();
+}
+
+function updateAdmin() {
+  const el=document.getElementById('adminLog'); if(!el) return;
+  if(!S.answers.length){el.textContent='No answers yet.';return;}
+  el.textContent=S.answers.map(a=>{
+    if(a.type==='model-id') return `V${a.vid}[${a.vM}] MODEL-ID: chose ${a.chosen} ${a.correct?'✓':'✗'} (${a.modelCertainty||''})`;
+    return `V${a.vid}[${a.vM}] Q${a.qi+1} ${a.itemId}[${a.qM}] ${a.congruent?'CON':'INC'}: ${a.ans} key:${a.keyed} ${a.ok?'✓':'✗'}`;
+  }).join('\n');
+}
+
+// ── CSV EXPORT ─────────────────────────────────────────
+function exportCSV() {
+  const headers=['ParticipantID','ChildName','ChildAge','Type','VignetteID','VignetteModel','QuestionIndex','QuestionModel','ItemID','IsCongruent','Answer','InitialYesNo','KeyedAnswer','Correct','ModelIDChosen','ModelIDCorrect','ModelIDCertainty','Timestamp'];
+  const rows=[headers.join(',')];
+  S.answers.forEach(a=>{
+    if(a.type==='model-id'){
+      rows.push([S.pid,S.name,S.age,'MODEL_ID',a.vid,a.vM,'','','','','','','','',a.chosen,a.correct?'TRUE':'FALSE',a.modelCertainty||'',a.ts].join(','));
+    } else {
+      rows.push([S.pid,S.name,S.age,'TEST_ITEM',a.vid,a.vM,a.qi+1,a.qM,a.itemId||'',a.congruent?'TRUE':'FALSE',a.ans,a.initialAns||(a.ans.includes('YES')?'YES':'NO'),a.keyed,a.ok?'TRUE':'FALSE','','','',a.ts].join(','));
+    }
+  });
+  const blob=new Blob([rows.join('\n')],{type:'text/csv'}), url=URL.createObjectURL(blob), link=document.createElement('a');
+  link.href=url; link.download=`RAD12C_${S.pid||S.name||'child'}_age${S.age||'unknown'}_${new Date().toISOString().slice(0,10)}.csv`;
+  link.click(); URL.revokeObjectURL(url);
+}
+
+// ── INIT ───────────────────────────────────────────────
+window.addEventListener('load', () => {
+  try {
+    setupAdmin();
+    setupSecretZone();
+    updateFullscreenBtn();
+    render();
+  } catch(err) {
+    document.getElementById('app').innerHTML=`<div class="error-box"><h2 style="color:#e74c3c">Could not start the game</h2><p style="margin:10px 0"><strong>${err.message}</strong></p><pre style="background:#f5f5f5;padding:12px;border-radius:8px;font-size:11px;text-align:left;overflow:auto">${err.stack||''}</pre></div>`;
+    console.error(err);
+  }
+});
+
+window.addEventListener('keydown', e => {
+  if(e.key==='Backspace'&&e.target.tagName!=='INPUT'&&e.target.tagName!=='SELECT') e.preventDefault();
+  if(e.shiftKey && e.ctrlKey && e.key==='R') revealResearcherControls();
+});
+</script>
+</body>
+</html>

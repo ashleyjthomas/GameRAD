@@ -40,3 +40,10 @@ venv/
 .Trashes
 .fseventsd
 .Spotlight-V100
+
+# research data & drafts — never push (contains child names / unpublished work)
+Analysis/
+tables/
+Writing/
+figures/
+study2_audio/

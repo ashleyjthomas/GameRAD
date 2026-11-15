@@ -2214,7 +2214,7 @@ function renderTrans() {
   playAudio(starKey, () => {
     setTimeout(()=>{
       if(last){S.phase='end';}
-      else{S.vi++;S.qi=0;S.phase=S.vi===6?'midpoint':'story';}
+      else{S.vi++;S.qi=0;S.phase=S.vi===3?'midpoint':'story';}  // Study 2: midpoint after 3 of 6 vignettes
       render();
     }, 500);
   });
